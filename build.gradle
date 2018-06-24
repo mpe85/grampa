@@ -1,0 +1,162 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+    }
+}
+
+plugins {
+	id 'java'
+	id 'eclipse'
+	id 'checkstyle'
+	id 'maven'
+	id 'maven-publish'
+    id 'com.diffplug.gradle.spotless' version '3.13.0'
+    id "com.jfrog.bintray" version '1.8.2'
+}
+
+group 'com.mpe85'
+
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+	jcenter()
+}
+
+dependencies {
+	implementation(
+		'com.google.guava:guava:25.1-jre',
+		'one.util:streamex:0.6.7'
+	)
+	testImplementation(
+		'org.junit.jupiter:junit-jupiter-api:5.2.0'
+	)
+	testRuntimeOnly(
+		'org.junit.jupiter:junit-jupiter-engine:5.2.0',
+		'org.junit.platform:junit-platform-launcher:1.2.0'
+	)
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+	classifier = 'javadoc'
+	from javadoc.destinationDir
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+artifacts {
+	archives javadocJar, sourcesJar
+}
+
+
+checkstyle {
+	toolVersion '8.10.1'
+}
+
+spotless {
+	java {
+		eclipse().configFile 'eclipse/org.eclipse.jdt.core.prefs'
+	}
+}
+
+test {
+	useJUnitPlatform()
+	
+	dependsOn 'cleanTest'
+	
+	testLogging {
+		events 'passed', 'skipped', 'failed'
+	}
+}
+
+def gitUrl = "https://github.com/mpe85/${project.name}"
+
+def pomConfig = {
+	licenses {
+		license {
+			name 'MIT'
+			url "${gitUrl}/blob/master/LICENSE"
+		}
+	}
+	developers {
+		developer {
+			id 'mpe85'
+			name 'Marco Perazzo'
+			email 'marco.perazzo85@gmail.com'
+		}
+	}
+	scm {
+		url "${gitUrl}"
+	}
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+			artifact sourcesJar {
+				classifier "sources"
+			}
+			artifact javadocJar {
+				classifier "javadoc"
+			}
+			groupId "${group}"
+			artifactId "${project.name}"
+			version "$project.version"
+			pom.withXml {
+				def root = asNode()
+				root.appendNode('description', 'A sample project')
+				root.appendNode('name', "${group}:${project.name}")
+				root.appendNode('url', "${gitUrl}")
+				root.children().last() + pomConfig
+			}
+		}
+	}
+}
+
+bintray {
+	user = bintrayUser
+	key = bintrayKey
+	publications = ['mavenJava']
+
+	pkg {
+		repo = 'maven'
+		name = "${project.name}"
+		licenses = ['MIT']
+		websiteUrl = "${gitUrl}"
+		issueTrackerUrl = "${gitUrl}/issues"
+		vcsUrl = "${gitUrl}.git"
+		version {
+			name = "$project.version"
+			desc = "$project.version"
+			released  = new Date()
+			vcsTag = project.version
+		}
+	}
+}
+
+task eclipseSettings(type: Copy) {
+	description 'Copies eclipse preference files.'
+	from rootProject.files(
+			'eclipse/org.eclipse.jdt.ui.prefs',
+			'eclipse/org.eclipse.jdt.core.prefs',
+			'eclipse/org.eclipse.core.resources.prefs')
+	into project.file('.settings/')
+	outputs.upToDateWhen { false }
+}
+
+task cleanEclipseSettings(type: Delete) {
+	description 'Deletes eclipse preference files.'
+	delete project.files(
+			'.settings/org.eclipse.jdt.ui.prefs',
+			'.settings/org.eclipse.jdt.core.prefs',
+			'.settings/org.eclipse.core.resources.prefs')
+}
+
+tasks['eclipseJdt'].dependsOn(eclipseSettings)
+tasks['cleanEclipse'].dependsOn(cleanEclipseSettings)
