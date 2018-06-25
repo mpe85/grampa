@@ -4,9 +4,12 @@ import java.util.NavigableMap;
 import java.util.Optional;
 import java.util.TreeMap;
 
+import com.google.common.base.Preconditions;
+
 public class LineCounter {
 	
 	public LineCounter(final CharSequence input) {
+		Preconditions.checkNotNull(input, "An 'input' must not be null.");
 		length = input.length();
 		initLines(input);
 	}
@@ -28,6 +31,7 @@ public class LineCounter {
 	}
 	
 	public InputPosition getPosition(final int index) {
+		Preconditions.checkElementIndex(index, length, "An 'index' must not be out of range.");
 		return Optional.of(index)
 				.map(lines::floorEntry)
 				.map(e -> new InputPosition(e.getValue(), index - e.getKey() + 1))
