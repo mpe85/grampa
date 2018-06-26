@@ -1,10 +1,12 @@
-package com.mpe85.grampa.input;
+package com.mpe85.grampa.input.impl;
 
 import java.util.NavigableMap;
 import java.util.Optional;
 import java.util.TreeMap;
 
 import com.google.common.base.Preconditions;
+import com.mpe85.grampa.input.ILineCounter;
+import com.mpe85.grampa.input.InputPosition;
 
 public class CharSequenceLineCounter implements ILineCounter {
 	

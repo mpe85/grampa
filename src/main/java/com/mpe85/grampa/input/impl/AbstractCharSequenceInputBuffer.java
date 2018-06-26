@@ -1,4 +1,7 @@
-package com.mpe85.grampa.input;
+package com.mpe85.grampa.input.impl;
+
+import com.mpe85.grampa.input.IInputBuffer;
+import com.mpe85.grampa.input.InputPosition;
 
 public abstract class AbstractCharSequenceInputBuffer implements IInputBuffer {
 	

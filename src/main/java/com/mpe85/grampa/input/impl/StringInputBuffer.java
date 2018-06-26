@@ -1,4 +1,4 @@
-package com.mpe85.grampa.input;
+package com.mpe85.grampa.input.impl;
 
 public class StringInputBuffer extends AbstractCharSequenceInputBuffer {
 	
