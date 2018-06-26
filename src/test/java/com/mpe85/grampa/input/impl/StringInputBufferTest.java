@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 
 import com.mpe85.grampa.input.IInputBuffer;
+import com.mpe85.grampa.input.ILineCounter;
+import com.mpe85.grampa.input.InputPosition;
 
 public class StringInputBufferTest {
 	
@@ -84,6 +86,19 @@ public class StringInputBufferTest {
 		assertThrows(IndexOutOfBoundsException.class, () -> ib.subSequence(-2, 1));
 		assertThrows(IndexOutOfBoundsException.class, () -> ib.subSequence(0, 7));
 		assertThrows(IndexOutOfBoundsException.class, () -> ib.subSequence(5, 3));
+	}
+	
+	@Test
+	public void test_getPosition_valid() {
+		final ILineCounter lc = new CharSequenceLineCounter("hello\nworld\n");
+		InputPosition pos;
+		
+		assertEquals(2, lc.getLineCount());
+		
+		// 'w'
+		pos = lc.getPosition(6);
+		assertEquals(2, pos.getLine());
+		assertEquals(1, pos.getColumn());
 	}
 	
 }
