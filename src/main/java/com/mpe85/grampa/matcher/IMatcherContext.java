@@ -16,4 +16,10 @@ public interface IMatcherContext {
 	
 	int getLevel();
 	
+	void advanceIndex(int delta);
+	
+	IMatcherContext getChildContext(IMatcher matcher);
+	
+	boolean run(IMatcher matcher);
+	
 }
