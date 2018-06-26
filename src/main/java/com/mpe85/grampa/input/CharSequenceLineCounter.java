@@ -6,7 +6,7 @@ import java.util.TreeMap;
 
 import com.google.common.base.Preconditions;
 
-public class CharSequenceLineCounter {
+public class CharSequenceLineCounter implements ILineCounter {
 	
 	public CharSequenceLineCounter(final CharSequence input) {
 		Preconditions.checkNotNull(input, "An 'input' must not be null.");
@@ -26,10 +26,12 @@ public class CharSequenceLineCounter {
 		}
 	}
 	
+	@Override
 	public int getLineCount() {
 		return lines.size();
 	}
 	
+	@Override
 	public InputPosition getPosition(final int index) {
 		Preconditions.checkElementIndex(index, length, "An 'index' must not be out of range.");
 		return Optional.of(index)
