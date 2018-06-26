@@ -6,27 +6,27 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
-public class LineCounterTest {
+public class CharSequenceLineCounterTest {
 	
 	@Test
 	public void test_getLineCount_valid() {
-		final LineCounter lc = new LineCounter("foo\n  \nbar\n  ");
+		final CharSequenceLineCounter lc = new CharSequenceLineCounter("foo\n  \nbar\n  ");
 		assertEquals(4, lc.getLineCount());
 	}
 	
 	@Test
 	public void test_ctor_valid() {
-		assertDoesNotThrow(() -> new LineCounter("foobar"));
+		assertDoesNotThrow(() -> new CharSequenceLineCounter("foobar"));
 	}
 	
 	@Test
 	public void test_ctor_invalid_nullInput() {
-		assertThrows(NullPointerException.class, () -> new LineCounter(null));
+		assertThrows(NullPointerException.class, () -> new CharSequenceLineCounter(null));
 	}
 	
 	@Test
 	public void test_getPosition_valid_noLineBreakAtEnd() {
-		final LineCounter lc = new LineCounter("foo\nbar");
+		final CharSequenceLineCounter lc = new CharSequenceLineCounter("foo\nbar");
 		InputPosition pos;
 		
 		assertEquals(2, lc.getLineCount());
@@ -69,7 +69,7 @@ public class LineCounterTest {
 	
 	@Test
 	public void test_getPosition_valid_blankLines() {
-		final LineCounter lc = new LineCounter("\n\n\n");
+		final CharSequenceLineCounter lc = new CharSequenceLineCounter("\n\n\n");
 		InputPosition pos;
 		
 		assertEquals(3, lc.getLineCount());
@@ -92,7 +92,7 @@ public class LineCounterTest {
 	
 	@Test
 	public void test_getPosition_invalid_indexOutOfRange() {
-		final LineCounter lc = new LineCounter("foobar");
+		final CharSequenceLineCounter lc = new CharSequenceLineCounter("foobar");
 		
 		assertEquals(1, lc.getLineCount());
 		

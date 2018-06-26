@@ -1,9 +1,10 @@
 package com.mpe85.grampa.input;
 
-public abstract class CharSequenceInputBuffer implements InputBuffer {
+public abstract class AbstractCharSequenceInputBuffer implements IInputBuffer {
 	
-	public CharSequenceInputBuffer(final CharSequence charSequence) {
+	public AbstractCharSequenceInputBuffer(final CharSequence charSequence) {
 		this.charSequence = charSequence;
+		lineCounter = new CharSequenceLineCounter(charSequence);
 	}
 	
 	@Override
@@ -25,11 +26,11 @@ public abstract class CharSequenceInputBuffer implements InputBuffer {
 	
 	@Override
 	public InputPosition getPosition(final int index) {
-		// TODO Auto-generated method stub
-		return null;
+		return lineCounter.getPosition(index);
 	}
 	
 	
 	private final CharSequence charSequence;
+	private final CharSequenceLineCounter lineCounter;
 	
 }

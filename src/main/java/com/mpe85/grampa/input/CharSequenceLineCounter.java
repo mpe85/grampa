@@ -6,9 +6,9 @@ import java.util.TreeMap;
 
 import com.google.common.base.Preconditions;
 
-public class LineCounter {
+public class CharSequenceLineCounter {
 	
-	public LineCounter(final CharSequence input) {
+	public CharSequenceLineCounter(final CharSequence input) {
 		Preconditions.checkNotNull(input, "An 'input' must not be null.");
 		length = input.length();
 		initLines(input);

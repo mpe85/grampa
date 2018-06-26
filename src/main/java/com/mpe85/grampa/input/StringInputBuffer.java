@@ -1,6 +1,6 @@
 package com.mpe85.grampa.input;
 
-public class StringInputBuffer extends CharSequenceInputBuffer {
+public class StringInputBuffer extends AbstractCharSequenceInputBuffer {
 	
 	public StringInputBuffer(final String string) {
 		super(string);
