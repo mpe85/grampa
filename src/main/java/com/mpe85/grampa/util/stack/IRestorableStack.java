@@ -24,6 +24,8 @@ public interface IRestorableStack<E> extends Deque<E> {
 	
 	void dup();
 	
+	void swap();
+	
 	void takeSnapshot();
 	
 	void restoreSnapshot();
@@ -31,5 +33,7 @@ public interface IRestorableStack<E> extends Deque<E> {
 	void discardSnapshot();
 	
 	void clearAllSnapshots();
+	
+	int getSnapshotCount();
 	
 }

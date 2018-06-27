@@ -1,6 +1,7 @@
 package com.mpe85.grampa.util.stack.impl;
 
 import java.util.ArrayDeque;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
 
@@ -9,15 +10,14 @@ import com.mpe85.grampa.util.stack.IRestorableStack;
 
 public class RestorableStack<E> extends LinkedList<E> implements IRestorableStack<E> {
 	
-	
 	@Override
 	public void push(final int down, final E element) {
-		add(size() - checkIndex(down), element);
+		add(checkIndex(down), element);
 	}
 	
 	@Override
 	public E pop(final int down) {
-		return remove(size() - 1 - checkIndex(down));
+		return remove(checkIndex(down));
 	}
 	
 	@Override
@@ -32,32 +32,37 @@ public class RestorableStack<E> extends LinkedList<E> implements IRestorableStac
 	
 	@Override
 	public E peek(final int down) {
-		return get(size() - 1 - checkIndex(down));
+		return get(checkIndex(down));
 	}
 	
 	@Override
 	public <T extends E> T peekAs(final Class<T> type) {
-		return type.cast(get(size() - 1));
+		return type.cast(get(0));
 	}
 	
 	@Override
 	public <T extends E> T peekAs(final int down, final Class<T> type) {
-		return type.cast(get(size() - 1 - checkIndex(down)));
+		return type.cast(get(checkIndex(down)));
 	}
 	
 	@Override
 	public E poke(final E element) {
-		return set(size() - 1, element);
+		return set(0, element);
 	}
 	
 	@Override
 	public E poke(final int down, final E element) {
-		return set(size() - 1 - down, element);
+		return set(down, element);
 	}
 	
 	@Override
 	public void dup() {
 		push(peek());
+	}
+	
+	@Override
+	public void swap() {
+		Collections.swap(this, 0, 1);
 	}
 	
 	@Override
@@ -83,8 +88,13 @@ public class RestorableStack<E> extends LinkedList<E> implements IRestorableStac
 		snapshots.clear();
 	}
 	
+	@Override
+	public int getSnapshotCount() {
+		return snapshots.size();
+	}
+	
 	private int checkIndex(final int down) {
-		return Preconditions.checkElementIndex(down, size(), "A 'down' index must be in range.");
+		return Preconditions.checkPositionIndex(down, size(), "A 'down' index must be in range.");
 	}
 	
 	
