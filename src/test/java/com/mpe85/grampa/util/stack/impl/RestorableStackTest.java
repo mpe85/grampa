@@ -88,6 +88,52 @@ public class RestorableStackTest {
 	}
 	
 	@Test
+	public void test_poke_valid() {
+		final IRestorableStack<Number> stack = new RestorableStack<>();
+		
+		stack.push(1);
+		stack.push(2);
+		stack.push(3);
+		
+		assertEquals(3, stack.size());
+		assertEquals(3, stack.poke(4));
+		assertEquals(4, stack.peek());
+		assertEquals(3, stack.size());
+		assertEquals(2, stack.poke(1, 5));
+		assertEquals(5, stack.peek(1));
+		assertEquals(3, stack.size());
+	}
+	
+	@Test
+	public void test_dup_valid() {
+		final IRestorableStack<Number> stack = new RestorableStack<>();
+		
+		stack.push(1);
+		stack.dup();
+		stack.dup();
+		
+		assertEquals(3, stack.size());
+		assertEquals(1, stack.peek());
+		assertEquals(1, stack.peek(1));
+		assertEquals(1, stack.peek(2));
+	}
+	
+	@Test
+	public void test_swap_valid() {
+		final IRestorableStack<Number> stack = new RestorableStack<>();
+		
+		stack.push(1);
+		stack.push(2);
+		stack.push(3);
+		stack.swap();
+		
+		assertEquals(3, stack.size());
+		assertEquals(2, stack.peek());
+		assertEquals(3, stack.peek(1));
+		assertEquals(1, stack.peek(2));
+	}
+	
+	@Test
 	public void test_restoreSnapshot_valid() {
 		final IRestorableStack<Number> stack = new RestorableStack<>();
 		
@@ -114,6 +160,42 @@ public class RestorableStackTest {
 		
 		assertEquals(1, stack.size());
 		assertEquals(1, stack.peek());
+		assertEquals(0, stack.getSnapshotCount());
+	}
+	
+	@Test
+	public void test_discardSnapshot_valid() {
+		final IRestorableStack<Number> stack = new RestorableStack<>();
+		
+		stack.push(1);
+		stack.takeSnapshot();
+		stack.push(2);
+		stack.takeSnapshot();
+		
+		assertEquals(2, stack.getSnapshotCount());
+		
+		stack.discardSnapshot();
+		
+		assertEquals(1, stack.getSnapshotCount());
+		
+		stack.discardSnapshot();
+		
+		assertEquals(0, stack.getSnapshotCount());
+	}
+	
+	@Test
+	public void test_clearAllSnapshots_valid() {
+		final IRestorableStack<Number> stack = new RestorableStack<>();
+		
+		stack.push(1);
+		stack.takeSnapshot();
+		stack.push(2);
+		stack.takeSnapshot();
+		
+		assertEquals(2, stack.getSnapshotCount());
+		
+		stack.clearAllSnapshots();
+		
 		assertEquals(0, stack.getSnapshotCount());
 	}
 	
