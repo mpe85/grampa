@@ -14,9 +14,11 @@ public interface IMatcherContext {
 	
 	int getCurrentCodePoint();
 	
+	int getNumberOfCharsLeft();
+	
 	int getLevel();
 	
-	void advanceIndex(int delta);
+	boolean advanceIndex(int delta);
 	
 	IMatcherContext getChildContext(IMatcher matcher);
 	

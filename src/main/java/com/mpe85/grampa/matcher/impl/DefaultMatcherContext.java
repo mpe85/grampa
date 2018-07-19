@@ -40,20 +40,28 @@ public class DefaultMatcherContext implements IMatcherContext {
 	}
 	
 	@Override
+	public int getNumberOfCharsLeft() {
+		return inputBuffer.getLength() - currentIndex;
+	}
+	
+	@Override
 	public int getLevel() {
 		return level;
 	}
 	
 	@Override
-	public void advanceIndex(final int delta) {
+	public boolean advanceIndex(final int delta) {
 		Preconditions.checkArgument(delta >= 0, "A 'delta' must be greater or equal 0.");
-		currentIndex = Math.min(currentIndex + delta, inputBuffer.getLength());
+		if (currentIndex + delta <= inputBuffer.getLength()) {
+			currentIndex += delta;
+			return true;
+		}
+		return false;
 	}
 	
 	@Override
 	public IMatcherContext getChildContext(final IMatcher matcher) {
-		// TODO Auto-generated method stub
-		return null;
+		return childContext;
 	}
 	
 	@Override
