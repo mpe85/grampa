@@ -14,7 +14,7 @@ public class StringMatcher extends AbstractMatcher {
 	}
 	
 	@Override
-	public boolean match(final IMatcherContext context) {
+	public <T> boolean match(final IMatcherContext<T> context) {
 		if (context.getNumberOfCharsLeft() >= string.length()) {
 			final CharSequence nextChars = context.getInputBuffer().subSequence(
 					context.getCurrentIndex(),

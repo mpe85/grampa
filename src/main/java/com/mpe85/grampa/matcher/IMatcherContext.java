@@ -1,8 +1,9 @@
 package com.mpe85.grampa.matcher;
 
 import com.mpe85.grampa.input.IInputBuffer;
+import com.mpe85.grampa.util.stack.IRestorableStack;
 
-public interface IMatcherContext {
+public interface IMatcherContext<T> {
 	
 	IInputBuffer getInputBuffer();
 	
@@ -20,8 +21,10 @@ public interface IMatcherContext {
 	
 	boolean advanceIndex(int delta);
 	
-	IMatcherContext getChildContext(IMatcher matcher);
+	IMatcherContext<T> getChildContext(IMatcher matcher);
 	
-	boolean run(IMatcher matcher);
+	boolean run();
+	
+	IRestorableStack<T> getValueStack();
 	
 }

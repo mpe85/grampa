@@ -8,6 +8,6 @@ public interface IMatcher {
 	
 	boolean isPredicate();
 	
-	boolean match(IMatcherContext context);
+	<T> boolean match(IMatcherContext<T> context);
 	
 }

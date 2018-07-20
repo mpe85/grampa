@@ -4,14 +4,22 @@ import com.google.common.base.Preconditions;
 import com.mpe85.grampa.input.IInputBuffer;
 import com.mpe85.grampa.matcher.IMatcher;
 import com.mpe85.grampa.matcher.IMatcherContext;
+import com.mpe85.grampa.util.stack.IRestorableStack;
 
-public class DefaultMatcherContext implements IMatcherContext {
+public class DefaultMatcherContext<T> implements IMatcherContext<T> {
 	
 	public DefaultMatcherContext(
 			final IInputBuffer inputBuffer,
-			final int level) {
+			final int level,
+			final IMatcher matcher,
+			final int startIndex,
+			final IRestorableStack<T> valueStack) {
 		this.inputBuffer = inputBuffer;
 		this.level = level;
+		this.matcher = matcher;
+		this.startIndex = startIndex;
+		this.currentIndex = startIndex;
+		this.valueStack = valueStack;
 	}
 	
 	@Override
@@ -60,12 +68,12 @@ public class DefaultMatcherContext implements IMatcherContext {
 	}
 	
 	@Override
-	public IMatcherContext getChildContext(final IMatcher matcher) {
-		return childContext;
+	public IMatcherContext<T> getChildContext(final IMatcher matcher) {
+		return new DefaultMatcherContext<>(inputBuffer, level + 1, matcher, currentIndex, valueStack);
 	}
 	
 	@Override
-	public boolean run(final IMatcher matcher) {
+	public boolean run() {
 		final boolean matched = matcher.match(this);
 		if (matched && parentContext != null) {
 			parentContext.currentIndex = currentIndex;
@@ -73,12 +81,19 @@ public class DefaultMatcherContext implements IMatcherContext {
 		return matched;
 	}
 	
+	@Override
+	public IRestorableStack<T> getValueStack() {
+		return valueStack;
+	}
+	
 	
 	private final IInputBuffer inputBuffer;
 	private final int level;
+	private final IMatcher matcher;
+	private final int startIndex;
+	private final IRestorableStack<T> valueStack;
 	
 	private int currentIndex;
-	private DefaultMatcherContext parentContext;
-	private DefaultMatcherContext childContext;
+	private DefaultMatcherContext<T> parentContext;
 	
 }
