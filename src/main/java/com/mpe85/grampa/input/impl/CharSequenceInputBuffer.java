@@ -4,9 +4,11 @@ import com.google.common.base.Preconditions;
 import com.mpe85.grampa.input.IInputBuffer;
 import com.mpe85.grampa.input.InputPosition;
 
-public abstract class AbstractCharSequenceInputBuffer implements IInputBuffer {
+import one.util.streamex.IntStreamEx;
+
+public class CharSequenceInputBuffer implements IInputBuffer {
 	
-	public AbstractCharSequenceInputBuffer(final CharSequence charSequence) {
+	public CharSequenceInputBuffer(final CharSequence charSequence) {
 		Preconditions.checkNotNull(charSequence, "A 'charSequence' must not be null.");
 		this.charSequence = charSequence;
 		lineCounter = new CharSequenceLineCounter(charSequence);
@@ -16,6 +18,11 @@ public abstract class AbstractCharSequenceInputBuffer implements IInputBuffer {
 	public char getChar(final int index) {
 		Preconditions.checkElementIndex(index, getLength(), "An 'index' must not be out of range.");
 		return charSequence.charAt(index);
+	}
+	
+	@Override
+	public int getCodePoint(final int index) {
+		return IntStreamEx.of(charSequence.codePoints()).toArray()[index];
 	}
 	
 	@Override
