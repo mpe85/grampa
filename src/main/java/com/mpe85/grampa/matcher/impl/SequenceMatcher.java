@@ -7,14 +7,14 @@ import com.mpe85.grampa.matcher.IMatcherContext;
 
 import one.util.streamex.StreamEx;
 
-public class SequenceMatcher extends AbstractMatcher {
+public class SequenceMatcher<T> extends AbstractMatcher<T> {
 	
-	protected SequenceMatcher(final List<IMatcher> children, final boolean predicate) {
-		super(children, predicate);
+	protected SequenceMatcher(final List<IMatcher<T>> children) {
+		super(children);
 	}
 	
 	@Override
-	public <T> boolean match(final IMatcherContext<T> context) {
+	public boolean match(final IMatcherContext<T> context) {
 		context.getValueStack().takeSnapshot();
 		
 		if (StreamEx.of(getChildren()).allMatch(c -> context.getChildContext(c).run())) {

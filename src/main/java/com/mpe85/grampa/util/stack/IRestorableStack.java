@@ -2,7 +2,7 @@ package com.mpe85.grampa.util.stack;
 
 import java.util.Deque;
 
-public interface IRestorableStack<E> extends Deque<E> {
+public interface IRestorableStack<E> extends Deque<E>, Cloneable {
 	
 	void push(int down, E element);
 	
@@ -32,8 +32,12 @@ public interface IRestorableStack<E> extends Deque<E> {
 	
 	void discardSnapshot();
 	
+	void removeSnapshot(boolean restore);
+	
 	void clearAllSnapshots();
 	
 	int getSnapshotCount();
+	
+	Object clone();
 	
 }

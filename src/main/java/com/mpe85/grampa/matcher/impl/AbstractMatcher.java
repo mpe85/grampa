@@ -5,32 +5,23 @@ import java.util.List;
 
 import com.mpe85.grampa.matcher.IMatcher;
 
-public abstract class AbstractMatcher implements IMatcher {
+public abstract class AbstractMatcher<T> implements IMatcher<T> {
 	
-	protected AbstractMatcher(final boolean predicate) {
-		this(Collections.emptyList(), predicate);
+	protected AbstractMatcher() {
+		this(Collections.emptyList());
 	}
 	
-	protected AbstractMatcher(
-			final List<IMatcher> children,
-			final boolean predicate) {
+	protected AbstractMatcher(final List<IMatcher<T>> children) {
 		super();
 		this.children = children;
-		this.predicate = predicate;
 	}
 	
 	@Override
-	public List<IMatcher> getChildren() {
+	public List<IMatcher<T>> getChildren() {
 		return children;
 	}
 	
-	@Override
-	public boolean isPredicate() {
-		return predicate;
-	}
 	
-	
-	private final List<IMatcher> children;
-	private final boolean predicate;
+	private final List<IMatcher<T>> children;
 	
 }

@@ -84,6 +84,16 @@ public class RestorableStack<E> extends LinkedList<E> implements IRestorableStac
 	}
 	
 	@Override
+	public void removeSnapshot(final boolean restore) {
+		if (restore) {
+			restoreSnapshot();
+		}
+		else {
+			discardSnapshot();
+		}
+	}
+	
+	@Override
 	public void clearAllSnapshots() {
 		snapshots.clear();
 	}
@@ -91,6 +101,11 @@ public class RestorableStack<E> extends LinkedList<E> implements IRestorableStac
 	@Override
 	public int getSnapshotCount() {
 		return snapshots.size();
+	}
+	
+	@Override
+	public Object clone() {
+		return super.clone();
 	}
 	
 	private int checkIndex(final int down) {

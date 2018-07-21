@@ -11,7 +11,7 @@ public class DefaultMatcherContext<T> implements IMatcherContext<T> {
 	public DefaultMatcherContext(
 			final IInputBuffer inputBuffer,
 			final int level,
-			final IMatcher matcher,
+			final IMatcher<T> matcher,
 			final int startIndex,
 			final IRestorableStack<T> valueStack) {
 		this.inputBuffer = inputBuffer;
@@ -68,7 +68,7 @@ public class DefaultMatcherContext<T> implements IMatcherContext<T> {
 	}
 	
 	@Override
-	public IMatcherContext<T> getChildContext(final IMatcher matcher) {
+	public IMatcherContext<T> getChildContext(final IMatcher<T> matcher) {
 		return new DefaultMatcherContext<>(inputBuffer, level + 1, matcher, currentIndex, valueStack);
 	}
 	
@@ -89,7 +89,7 @@ public class DefaultMatcherContext<T> implements IMatcherContext<T> {
 	
 	private final IInputBuffer inputBuffer;
 	private final int level;
-	private final IMatcher matcher;
+	private final IMatcher<T> matcher;
 	private final int startIndex;
 	private final IRestorableStack<T> valueStack;
 	

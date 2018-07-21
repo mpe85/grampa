@@ -21,7 +21,7 @@ public interface IMatcherContext<T> {
 	
 	boolean advanceIndex(int delta);
 	
-	IMatcherContext<T> getChildContext(IMatcher matcher);
+	IMatcherContext<T> getChildContext(IMatcher<T> matcher);
 	
 	boolean run();
 	

@@ -11,25 +11,25 @@ import com.mpe85.grampa.util.stack.impl.RestorableStack;
 
 public class ParseRunner<T> {
 	
-	public ParseRunner(final IMatcher rootMatcher) {
+	public ParseRunner(final IMatcher<T> rootMatcher) {
 		this.rootMatcher = Preconditions.checkNotNull(rootMatcher, "A 'rootMatcher' must not be null.");
 	}
 	
-	public IMatcher getRootMatcher() {
+	public IMatcher<T> getRootMatcher() {
 		return rootMatcher;
 	}
 	
-	public boolean run(final CharSequence charSequence) {
+	public ParseResult<T> run(final CharSequence charSequence) {
 		return run(new CharSequenceInputBuffer(charSequence));
 	}
 	
-	public boolean run(final IInputBuffer inputBuffer) {
+	public ParseResult<T> run(final IInputBuffer inputBuffer) {
 		Preconditions.checkNotNull(inputBuffer, "An 'inputBuffer' must not be null.");
 		resetValueStack();
 		final IMatcherContext<T> context = createRootContext(inputBuffer);
 		
 		final boolean matched = context.run();
-		return matched;
+		return new ParseResult<>(matched, context);
 	}
 	
 	private IMatcherContext<T> createRootContext(final IInputBuffer inputBuffer) {
@@ -40,7 +40,7 @@ public class ParseRunner<T> {
 		valueStack = new RestorableStack<>();
 	}
 	
-	private final IMatcher rootMatcher;
+	private final IMatcher<T> rootMatcher;
 	private IRestorableStack<T> valueStack;
 	
 }
