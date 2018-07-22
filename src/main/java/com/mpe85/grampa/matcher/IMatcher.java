@@ -6,6 +6,8 @@ public interface IMatcher<T> {
 	
 	List<IMatcher<T>> getChildren();
 	
+	IMatcher<T> getChild();
+	
 	boolean match(IMatcherContext<T> context);
 	
 }

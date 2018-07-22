@@ -7,6 +7,7 @@ import com.mpe85.grampa.matcher.AlwaysMatchingAction;
 import com.mpe85.grampa.matcher.IMatcher;
 import com.mpe85.grampa.matcher.ValueSupplier;
 import com.mpe85.grampa.matcher.impl.ActionMatcher;
+import com.mpe85.grampa.matcher.impl.OptionalMatcher;
 import com.mpe85.grampa.matcher.impl.SequenceMatcher;
 import com.mpe85.grampa.matcher.impl.StringMatcher;
 
@@ -22,6 +23,10 @@ public abstract class AbstractParser<T> implements IParser<T> {
 	@SafeVarargs
 	protected final IMatcher<T> sequence(final IMatcher<T>... matchers) {
 		return new SequenceMatcher<>(Arrays.asList(matchers));
+	}
+	
+	protected final IMatcher<T> optional(final IMatcher<T> matcher) {
+		return new OptionalMatcher<>(matcher);
 	}
 	
 	protected final IMatcher<T> action(final Action<T> action) {
