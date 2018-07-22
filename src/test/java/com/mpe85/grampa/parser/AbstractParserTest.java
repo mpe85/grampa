@@ -41,9 +41,9 @@ public class AbstractParserTest {
 			public IMatcher<Integer> root() {
 				return sequence(
 						push(4711),
-						push(ctx -> ctx.getValueStack().peek() + 4),
+						push(ctx -> peek(ctx) + 4),
 						sequence(
-								push(ctx -> ctx.getValueStack().pop(1) + ctx.getValueStack().peek())),
+								push(ctx -> pop(1, ctx) + peek(ctx))),
 						optional(action(ctx -> {
 							ctx.getValueStack().push(0);
 							return false;

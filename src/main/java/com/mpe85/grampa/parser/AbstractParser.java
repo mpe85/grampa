@@ -5,6 +5,7 @@ import java.util.Arrays;
 import com.mpe85.grampa.matcher.Action;
 import com.mpe85.grampa.matcher.AlwaysMatchingAction;
 import com.mpe85.grampa.matcher.IMatcher;
+import com.mpe85.grampa.matcher.IMatcherContext;
 import com.mpe85.grampa.matcher.ValueSupplier;
 import com.mpe85.grampa.matcher.impl.ActionMatcher;
 import com.mpe85.grampa.matcher.impl.OptionalMatcher;
@@ -45,6 +46,22 @@ public abstract class AbstractParser<T> implements IParser<T> {
 			ctx.getValueStack().pop();
 			return true;
 		});
+	}
+	
+	protected final T pop(final IMatcherContext<T> context) {
+		return context.getValueStack().pop();
+	}
+	
+	protected final T pop(final int down, final IMatcherContext<T> context) {
+		return context.getValueStack().pop(down);
+	}
+	
+	protected final T peek(final IMatcherContext<T> context) {
+		return context.getValueStack().peek();
+	}
+	
+	protected final T peek(final int down, final IMatcherContext<T> context) {
+		return context.getValueStack().peek(down);
 	}
 	
 	protected final IMatcher<T> push(final T value) {
