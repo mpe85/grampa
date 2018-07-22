@@ -6,13 +6,15 @@ import com.mpe85.grampa.input.impl.CharSequenceInputBuffer;
 import com.mpe85.grampa.matcher.IMatcher;
 import com.mpe85.grampa.matcher.IMatcherContext;
 import com.mpe85.grampa.matcher.impl.DefaultMatcherContext;
+import com.mpe85.grampa.parser.IParser;
 import com.mpe85.grampa.util.stack.IRestorableStack;
 import com.mpe85.grampa.util.stack.impl.RestorableStack;
 
 public class ParseRunner<T> {
 	
-	public ParseRunner(final IMatcher<T> rootMatcher) {
-		this.rootMatcher = Preconditions.checkNotNull(rootMatcher, "A 'rootMatcher' must not be null.");
+	public ParseRunner(final IParser<T> parser) {
+		Preconditions.checkNotNull(parser, "A 'parser' must not be null.");
+		this.rootMatcher = parser.root();
 	}
 	
 	public IMatcher<T> getRootMatcher() {
