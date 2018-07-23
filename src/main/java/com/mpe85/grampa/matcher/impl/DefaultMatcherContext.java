@@ -1,5 +1,7 @@
 package com.mpe85.grampa.matcher.impl;
 
+import java.util.Optional;
+
 import com.google.common.base.Preconditions;
 import com.mpe85.grampa.input.IInputBuffer;
 import com.mpe85.grampa.matcher.IMatcher;
@@ -14,12 +16,23 @@ public class DefaultMatcherContext<T> implements IMatcherContext<T> {
 			final IMatcher<T> matcher,
 			final int startIndex,
 			final IRestorableStack<T> valueStack) {
-		this.inputBuffer = inputBuffer;
+		this(inputBuffer, level, matcher, startIndex, valueStack, null);
+	}
+	
+	public DefaultMatcherContext(
+			final IInputBuffer inputBuffer,
+			final int level,
+			final IMatcher<T> matcher,
+			final int startIndex,
+			final IRestorableStack<T> valueStack,
+			final IMatcherContext<T> parentContext) {
+		this.inputBuffer = Preconditions.checkNotNull(inputBuffer, "An 'inputBuffer' must not be null.");
 		this.level = level;
-		this.matcher = matcher;
+		this.matcher = Preconditions.checkNotNull(matcher, "A 'matcher' must not be null.");
 		this.startIndex = startIndex;
 		this.currentIndex = startIndex;
-		this.valueStack = valueStack;
+		this.valueStack = Preconditions.checkNotNull(valueStack, "A 'valueStack' must not be null.");
+		this.parentContext = parentContext;
 	}
 	
 	@Override
@@ -30,6 +43,11 @@ public class DefaultMatcherContext<T> implements IMatcherContext<T> {
 	@Override
 	public int getCurrentIndex() {
 		return currentIndex;
+	}
+	
+	@Override
+	public void setCurrentIndex(final int currentIndex) {
+		this.currentIndex = currentIndex;
 	}
 	
 	@Override
@@ -76,7 +94,7 @@ public class DefaultMatcherContext<T> implements IMatcherContext<T> {
 	public boolean run() {
 		final boolean matched = matcher.match(this);
 		if (matched && parentContext != null) {
-			parentContext.currentIndex = currentIndex;
+			parentContext.setCurrentIndex(currentIndex);
 		}
 		return matched;
 	}
@@ -84,6 +102,12 @@ public class DefaultMatcherContext<T> implements IMatcherContext<T> {
 	@Override
 	public IRestorableStack<T> getValueStack() {
 		return valueStack;
+	}
+	
+	@Override
+	public boolean inPredicate() {
+		return matcher.isPredicate()
+				|| Optional.ofNullable(parentContext).map(IMatcherContext::inPredicate).orElse(false);
 	}
 	
 	
@@ -94,6 +118,6 @@ public class DefaultMatcherContext<T> implements IMatcherContext<T> {
 	private final IRestorableStack<T> valueStack;
 	
 	private int currentIndex;
-	private DefaultMatcherContext<T> parentContext;
+	private IMatcherContext<T> parentContext;
 	
 }

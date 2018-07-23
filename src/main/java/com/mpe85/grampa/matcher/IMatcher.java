@@ -10,4 +10,6 @@ public interface IMatcher<T> {
 	
 	boolean match(IMatcherContext<T> context);
 	
+	boolean isPredicate();
+	
 }

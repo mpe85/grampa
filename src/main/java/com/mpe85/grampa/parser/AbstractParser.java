@@ -11,6 +11,8 @@ import com.mpe85.grampa.matcher.impl.ActionMatcher;
 import com.mpe85.grampa.matcher.impl.OptionalMatcher;
 import com.mpe85.grampa.matcher.impl.SequenceMatcher;
 import com.mpe85.grampa.matcher.impl.StringMatcher;
+import com.mpe85.grampa.matcher.impl.TestMatcher;
+import com.mpe85.grampa.matcher.impl.TestNotMatcher;
 
 public abstract class AbstractParser<T> implements IParser<T> {
 	
@@ -28,6 +30,14 @@ public abstract class AbstractParser<T> implements IParser<T> {
 	
 	protected final IMatcher<T> optional(final IMatcher<T> matcher) {
 		return new OptionalMatcher<>(matcher);
+	}
+	
+	protected final IMatcher<T> test(final IMatcher<T> matcher) {
+		return new TestMatcher<>(matcher);
+	}
+	
+	protected final IMatcher<T> testNot(final IMatcher<T> matcher) {
+		return new TestNotMatcher<>(matcher);
 	}
 	
 	protected final IMatcher<T> action(final Action<T> action) {

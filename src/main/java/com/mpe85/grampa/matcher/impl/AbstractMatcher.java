@@ -31,6 +31,11 @@ public abstract class AbstractMatcher<T> implements IMatcher<T> {
 		return children.size() > 0 ? children.get(0) : null;
 	}
 	
+	@Override
+	public boolean isPredicate() {
+		return false;
+	}
+	
 	
 	private final List<IMatcher<T>> children;
 	

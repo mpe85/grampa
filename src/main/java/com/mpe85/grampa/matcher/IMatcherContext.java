@@ -9,6 +9,8 @@ public interface IMatcherContext<T> {
 	
 	int getCurrentIndex();
 	
+	void setCurrentIndex(int currentIndex);
+	
 	boolean isAtEndOfInput();
 	
 	char getCurrentChar();
@@ -26,5 +28,7 @@ public interface IMatcherContext<T> {
 	boolean run();
 	
 	IRestorableStack<T> getValueStack();
+	
+	boolean inPredicate();
 	
 }
