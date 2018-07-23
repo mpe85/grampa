@@ -1,6 +1,7 @@
 package com.mpe85.grampa.matcher;
 
 import com.mpe85.grampa.input.IInputBuffer;
+import com.mpe85.grampa.input.InputPosition;
 import com.mpe85.grampa.util.stack.IRestorableStack;
 
 public interface IMatcherContext<T> {
@@ -10,6 +11,8 @@ public interface IMatcherContext<T> {
 	int getCurrentIndex();
 	
 	void setCurrentIndex(int currentIndex);
+	
+	int getStartIndex();
 	
 	boolean isAtEndOfInput();
 	
@@ -30,5 +33,9 @@ public interface IMatcherContext<T> {
 	IRestorableStack<T> getValueStack();
 	
 	boolean inPredicate();
+	
+	String getMatch();
+	
+	InputPosition getPosition();
 	
 }

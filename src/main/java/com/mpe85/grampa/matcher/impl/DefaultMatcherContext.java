@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import com.google.common.base.Preconditions;
 import com.mpe85.grampa.input.IInputBuffer;
+import com.mpe85.grampa.input.InputPosition;
 import com.mpe85.grampa.matcher.IMatcher;
 import com.mpe85.grampa.matcher.IMatcherContext;
 import com.mpe85.grampa.util.stack.IRestorableStack;
@@ -48,6 +49,11 @@ public class DefaultMatcherContext<T> implements IMatcherContext<T> {
 	@Override
 	public void setCurrentIndex(final int currentIndex) {
 		this.currentIndex = currentIndex;
+	}
+	
+	@Override
+	public int getStartIndex() {
+		return startIndex;
 	}
 	
 	@Override
@@ -108,6 +114,17 @@ public class DefaultMatcherContext<T> implements IMatcherContext<T> {
 	public boolean inPredicate() {
 		return matcher.isPredicate()
 				|| Optional.ofNullable(parentContext).map(IMatcherContext::inPredicate).orElse(false);
+	}
+	
+	@Override
+	public String getMatch() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public InputPosition getPosition() {
+		return inputBuffer.getPosition(currentIndex);
 	}
 	
 	
