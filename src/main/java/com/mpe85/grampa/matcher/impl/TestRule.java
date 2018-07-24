@@ -1,16 +1,16 @@
 package com.mpe85.grampa.matcher.impl;
 
-import com.mpe85.grampa.matcher.IMatcher;
-import com.mpe85.grampa.matcher.IMatcherContext;
+import com.mpe85.grampa.matcher.Rule;
+import com.mpe85.grampa.matcher.RuleContext;
 
-public class TestMatcher<T> extends AbstractMatcher<T> {
+public class TestRule<T> extends AbstractRule<T> {
 	
-	public TestMatcher(final IMatcher<T> matcher) {
+	public TestRule(final Rule<T> matcher) {
 		super(matcher);
 	}
 	
 	@Override
-	public boolean match(final IMatcherContext<T> context) {
+	public boolean match(final RuleContext<T> context) {
 		final int currentIndex = context.getCurrentIndex();
 		context.getValueStack().takeSnapshot();
 		

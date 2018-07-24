@@ -5,29 +5,29 @@ import java.util.List;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import com.mpe85.grampa.matcher.IMatcher;
+import com.mpe85.grampa.matcher.Rule;
 
-public abstract class AbstractMatcher<T> implements IMatcher<T> {
+public abstract class AbstractRule<T> implements Rule<T> {
 	
-	protected AbstractMatcher() {
+	protected AbstractRule() {
 		this(Collections.emptyList());
 	}
 	
-	protected AbstractMatcher(final IMatcher<T> child) {
+	protected AbstractRule(final Rule<T> child) {
 		this(Lists.newArrayList(child));
 	}
 	
-	protected AbstractMatcher(final List<IMatcher<T>> children) {
+	protected AbstractRule(final List<Rule<T>> children) {
 		this.children = Preconditions.checkNotNull(children, "A list of 'children' must not be null.");
 	}
 	
 	@Override
-	public List<IMatcher<T>> getChildren() {
+	public List<Rule<T>> getChildren() {
 		return children;
 	}
 	
 	@Override
-	public IMatcher<T> getChild() {
+	public Rule<T> getChild() {
 		return children.size() > 0 ? children.get(0) : null;
 	}
 	
@@ -37,6 +37,6 @@ public abstract class AbstractMatcher<T> implements IMatcher<T> {
 	}
 	
 	
-	private final List<IMatcher<T>> children;
+	private final List<Rule<T>> children;
 	
 }

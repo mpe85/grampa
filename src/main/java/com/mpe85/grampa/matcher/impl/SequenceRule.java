@@ -2,19 +2,19 @@ package com.mpe85.grampa.matcher.impl;
 
 import java.util.List;
 
-import com.mpe85.grampa.matcher.IMatcher;
-import com.mpe85.grampa.matcher.IMatcherContext;
+import com.mpe85.grampa.matcher.Rule;
+import com.mpe85.grampa.matcher.RuleContext;
 
 import one.util.streamex.StreamEx;
 
-public class SequenceMatcher<T> extends AbstractMatcher<T> {
+public class SequenceRule<T> extends AbstractRule<T> {
 	
-	public SequenceMatcher(final List<IMatcher<T>> children) {
+	public SequenceRule(final List<Rule<T>> children) {
 		super(children);
 	}
 	
 	@Override
-	public boolean match(final IMatcherContext<T> context) {
+	public boolean match(final RuleContext<T> context) {
 		context.getValueStack().takeSnapshot();
 		final boolean matched = StreamEx.of(getChildren()).allMatch(c -> context.getChildContext(c).run());
 		context.getValueStack().removeSnapshot(!matched);

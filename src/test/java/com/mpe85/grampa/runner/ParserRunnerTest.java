@@ -5,14 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import com.mpe85.grampa.matcher.impl.StringMatcher;
-import com.mpe85.grampa.parser.IParser;
+import com.mpe85.grampa.matcher.impl.StringRule;
+import com.mpe85.grampa.parser.Parser;
 
 public class ParserRunnerTest {
 	
 	@Test
 	public void test_run() {
-		final IParser<Void> parser = () -> new StringMatcher<>("foo");
+		final Parser<Void> parser = () -> new StringRule<>("foo");
 		final ParseRunner<Void> runner = new ParseRunner<>(parser);
 		assertTrue(runner.run("foo").matched);
 		assertTrue(runner.run("foobar").matched);

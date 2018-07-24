@@ -5,31 +5,31 @@ import java.util.Optional;
 import com.google.common.base.Preconditions;
 import com.mpe85.grampa.input.IInputBuffer;
 import com.mpe85.grampa.input.InputPosition;
-import com.mpe85.grampa.matcher.IMatcher;
-import com.mpe85.grampa.matcher.IMatcherContext;
+import com.mpe85.grampa.matcher.Rule;
+import com.mpe85.grampa.matcher.RuleContext;
 import com.mpe85.grampa.util.stack.IRestorableStack;
 
-public class DefaultMatcherContext<T> implements IMatcherContext<T> {
+public class DefaultRuleContext<T> implements RuleContext<T> {
 	
-	public DefaultMatcherContext(
+	public DefaultRuleContext(
 			final IInputBuffer inputBuffer,
 			final int level,
-			final IMatcher<T> matcher,
+			final Rule<T> rule,
 			final int startIndex,
 			final IRestorableStack<T> valueStack) {
-		this(inputBuffer, level, matcher, startIndex, valueStack, null);
+		this(inputBuffer, level, rule, startIndex, valueStack, null);
 	}
 	
-	public DefaultMatcherContext(
+	public DefaultRuleContext(
 			final IInputBuffer inputBuffer,
 			final int level,
-			final IMatcher<T> matcher,
+			final Rule<T> rule,
 			final int startIndex,
 			final IRestorableStack<T> valueStack,
-			final IMatcherContext<T> parentContext) {
+			final RuleContext<T> parentContext) {
 		this.inputBuffer = Preconditions.checkNotNull(inputBuffer, "An 'inputBuffer' must not be null.");
 		this.level = level;
-		this.matcher = Preconditions.checkNotNull(matcher, "A 'matcher' must not be null.");
+		this.rule = Preconditions.checkNotNull(rule, "A 'rule' must not be null.");
 		this.startIndex = startIndex;
 		this.currentIndex = startIndex;
 		this.valueStack = Preconditions.checkNotNull(valueStack, "A 'valueStack' must not be null.");
@@ -92,13 +92,13 @@ public class DefaultMatcherContext<T> implements IMatcherContext<T> {
 	}
 	
 	@Override
-	public IMatcherContext<T> getChildContext(final IMatcher<T> matcher) {
-		return new DefaultMatcherContext<>(inputBuffer, level + 1, matcher, currentIndex, valueStack, this);
+	public RuleContext<T> getChildContext(final Rule<T> rule) {
+		return new DefaultRuleContext<>(inputBuffer, level + 1, rule, currentIndex, valueStack, this);
 	}
 	
 	@Override
 	public boolean run() {
-		final boolean matched = matcher.match(this);
+		final boolean matched = rule.match(this);
 		if (matched && parentContext != null) {
 			parentContext.setCurrentIndex(currentIndex);
 		}
@@ -112,8 +112,8 @@ public class DefaultMatcherContext<T> implements IMatcherContext<T> {
 	
 	@Override
 	public boolean inPredicate() {
-		return matcher.isPredicate()
-				|| Optional.ofNullable(parentContext).map(IMatcherContext::inPredicate).orElse(false);
+		return rule.isPredicate()
+				|| Optional.ofNullable(parentContext).map(RuleContext::inPredicate).orElse(false);
 	}
 	
 	@Override
@@ -130,11 +130,11 @@ public class DefaultMatcherContext<T> implements IMatcherContext<T> {
 	
 	private final IInputBuffer inputBuffer;
 	private final int level;
-	private final IMatcher<T> matcher;
+	private final Rule<T> rule;
 	private final int startIndex;
 	private final IRestorableStack<T> valueStack;
 	
 	private int currentIndex;
-	private IMatcherContext<T> parentContext;
+	private RuleContext<T> parentContext;
 	
 }

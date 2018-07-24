@@ -1,12 +1,12 @@
 package com.mpe85.grampa.runner;
 
-import com.mpe85.grampa.matcher.IMatcherContext;
+import com.mpe85.grampa.matcher.RuleContext;
 import com.mpe85.grampa.util.stack.IRestorableStack;
 
 public class ParseResult<T> {
 	
 	@SuppressWarnings("unchecked")
-	public ParseResult(final boolean matched, final IMatcherContext<T> context) {
+	public ParseResult(final boolean matched, final RuleContext<T> context) {
 		this.matched = matched;
 		this.matchedWholeInput = matched && context.isAtEndOfInput();
 		this.valueStack = (IRestorableStack<T>) context.getValueStack().clone();

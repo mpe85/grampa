@@ -1,17 +1,17 @@
 package com.mpe85.grampa.matcher.impl;
 
 import com.google.common.base.Preconditions;
-import com.mpe85.grampa.matcher.IMatcherContext;
+import com.mpe85.grampa.matcher.RuleContext;
 
-public class StringMatcher<T> extends AbstractMatcher<T> {
+public class StringRule<T> extends AbstractRule<T> {
 	
-	public StringMatcher(final String string) {
+	public StringRule(final String string) {
 		Preconditions.checkNotNull(string, "A 'string' must not be null.");
 		this.string = string;
 	}
 	
 	@Override
-	public boolean match(final IMatcherContext<T> context) {
+	public boolean match(final RuleContext<T> context) {
 		if (context.getNumberOfCharsLeft() >= string.length()) {
 			final CharSequence nextChars = context.getInputBuffer().subSequence(
 					context.getCurrentIndex(),

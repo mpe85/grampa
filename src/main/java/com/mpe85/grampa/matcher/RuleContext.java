@@ -4,7 +4,7 @@ import com.mpe85.grampa.input.IInputBuffer;
 import com.mpe85.grampa.input.InputPosition;
 import com.mpe85.grampa.util.stack.IRestorableStack;
 
-public interface IMatcherContext<T> {
+public interface RuleContext<T> {
 	
 	IInputBuffer getInputBuffer();
 	
@@ -26,7 +26,7 @@ public interface IMatcherContext<T> {
 	
 	boolean advanceIndex(int delta);
 	
-	IMatcherContext<T> getChildContext(IMatcher<T> matcher);
+	RuleContext<T> getChildContext(Rule<T> rule);
 	
 	boolean run();
 	
