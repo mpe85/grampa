@@ -93,7 +93,7 @@ public class DefaultMatcherContext<T> implements IMatcherContext<T> {
 	
 	@Override
 	public IMatcherContext<T> getChildContext(final IMatcher<T> matcher) {
-		return new DefaultMatcherContext<>(inputBuffer, level + 1, matcher, currentIndex, valueStack);
+		return new DefaultMatcherContext<>(inputBuffer, level + 1, matcher, currentIndex, valueStack, this);
 	}
 	
 	@Override
