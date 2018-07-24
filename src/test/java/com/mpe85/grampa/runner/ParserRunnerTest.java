@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import com.mpe85.grampa.matcher.impl.StringRule;
 import com.mpe85.grampa.parser.Parser;
+import com.mpe85.grampa.rule.impl.StringRule;
 
 public class ParserRunnerTest {
 	

@@ -1,6 +1,6 @@
 package com.mpe85.grampa.runner;
 
-import com.mpe85.grampa.matcher.RuleContext;
+import com.mpe85.grampa.rule.RuleContext;
 import com.mpe85.grampa.util.stack.IRestorableStack;
 
 public class ParseResult<T> {

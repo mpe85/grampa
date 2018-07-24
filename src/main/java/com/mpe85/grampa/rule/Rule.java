@@ -1,4 +1,4 @@
-package com.mpe85.grampa.matcher;
+package com.mpe85.grampa.rule;
 
 import java.util.List;
 

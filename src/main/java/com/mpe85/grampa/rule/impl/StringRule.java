@@ -1,7 +1,7 @@
-package com.mpe85.grampa.matcher.impl;
+package com.mpe85.grampa.rule.impl;
 
 import com.google.common.base.Preconditions;
-import com.mpe85.grampa.matcher.RuleContext;
+import com.mpe85.grampa.rule.RuleContext;
 
 public class StringRule<T> extends AbstractRule<T> {
 	

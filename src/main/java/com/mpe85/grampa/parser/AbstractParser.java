@@ -2,17 +2,17 @@ package com.mpe85.grampa.parser;
 
 import java.util.Arrays;
 
-import com.mpe85.grampa.matcher.Action;
-import com.mpe85.grampa.matcher.AlwaysMatchingAction;
-import com.mpe85.grampa.matcher.Rule;
-import com.mpe85.grampa.matcher.RuleContext;
-import com.mpe85.grampa.matcher.ValueSupplier;
-import com.mpe85.grampa.matcher.impl.ActionRule;
-import com.mpe85.grampa.matcher.impl.OptionaRule;
-import com.mpe85.grampa.matcher.impl.SequenceRule;
-import com.mpe85.grampa.matcher.impl.StringRule;
-import com.mpe85.grampa.matcher.impl.TestNotRule;
-import com.mpe85.grampa.matcher.impl.TestRule;
+import com.mpe85.grampa.rule.Action;
+import com.mpe85.grampa.rule.AlwaysMatchingAction;
+import com.mpe85.grampa.rule.Rule;
+import com.mpe85.grampa.rule.RuleContext;
+import com.mpe85.grampa.rule.ValueSupplier;
+import com.mpe85.grampa.rule.impl.ActionRule;
+import com.mpe85.grampa.rule.impl.OptionaRule;
+import com.mpe85.grampa.rule.impl.SequenceRule;
+import com.mpe85.grampa.rule.impl.StringRule;
+import com.mpe85.grampa.rule.impl.TestNotRule;
+import com.mpe85.grampa.rule.impl.TestRule;
 
 public abstract class AbstractParser<T> implements Parser<T> {
 	

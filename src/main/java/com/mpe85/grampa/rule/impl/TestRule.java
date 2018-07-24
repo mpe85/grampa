@@ -1,7 +1,7 @@
-package com.mpe85.grampa.matcher.impl;
+package com.mpe85.grampa.rule.impl;
 
-import com.mpe85.grampa.matcher.Rule;
-import com.mpe85.grampa.matcher.RuleContext;
+import com.mpe85.grampa.rule.Rule;
+import com.mpe85.grampa.rule.RuleContext;
 
 public class TestRule<T> extends AbstractRule<T> {
 	

@@ -1,12 +1,12 @@
-package com.mpe85.grampa.matcher.impl;
+package com.mpe85.grampa.rule.impl;
 
 import java.util.Optional;
 
 import com.google.common.base.Preconditions;
 import com.mpe85.grampa.input.IInputBuffer;
 import com.mpe85.grampa.input.InputPosition;
-import com.mpe85.grampa.matcher.Rule;
-import com.mpe85.grampa.matcher.RuleContext;
+import com.mpe85.grampa.rule.Rule;
+import com.mpe85.grampa.rule.RuleContext;
 import com.mpe85.grampa.util.stack.IRestorableStack;
 
 public class DefaultRuleContext<T> implements RuleContext<T> {

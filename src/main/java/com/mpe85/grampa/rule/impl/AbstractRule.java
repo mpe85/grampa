@@ -1,11 +1,11 @@
-package com.mpe85.grampa.matcher.impl;
+package com.mpe85.grampa.rule.impl;
 
 import java.util.Collections;
 import java.util.List;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import com.mpe85.grampa.matcher.Rule;
+import com.mpe85.grampa.rule.Rule;
 
 public abstract class AbstractRule<T> implements Rule<T> {
 	

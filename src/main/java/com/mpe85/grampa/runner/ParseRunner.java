@@ -3,10 +3,10 @@ package com.mpe85.grampa.runner;
 import com.google.common.base.Preconditions;
 import com.mpe85.grampa.input.IInputBuffer;
 import com.mpe85.grampa.input.impl.CharSequenceInputBuffer;
-import com.mpe85.grampa.matcher.Rule;
-import com.mpe85.grampa.matcher.RuleContext;
-import com.mpe85.grampa.matcher.impl.DefaultRuleContext;
 import com.mpe85.grampa.parser.Parser;
+import com.mpe85.grampa.rule.Rule;
+import com.mpe85.grampa.rule.RuleContext;
+import com.mpe85.grampa.rule.impl.DefaultRuleContext;
 import com.mpe85.grampa.util.stack.IRestorableStack;
 import com.mpe85.grampa.util.stack.impl.RestorableStack;
 

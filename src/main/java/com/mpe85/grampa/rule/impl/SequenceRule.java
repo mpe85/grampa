@@ -1,9 +1,9 @@
-package com.mpe85.grampa.matcher.impl;
+package com.mpe85.grampa.rule.impl;
 
 import java.util.List;
 
-import com.mpe85.grampa.matcher.Rule;
-import com.mpe85.grampa.matcher.RuleContext;
+import com.mpe85.grampa.rule.Rule;
+import com.mpe85.grampa.rule.RuleContext;
 
 import one.util.streamex.StreamEx;
 
