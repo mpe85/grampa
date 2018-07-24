@@ -3,7 +3,7 @@ package com.mpe85.grampa.rule.impl;
 import java.util.Optional;
 
 import com.google.common.base.Preconditions;
-import com.mpe85.grampa.input.IInputBuffer;
+import com.mpe85.grampa.input.InputBuffer;
 import com.mpe85.grampa.input.InputPosition;
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.rule.RuleContext;
@@ -12,7 +12,7 @@ import com.mpe85.grampa.util.stack.IRestorableStack;
 public class DefaultRuleContext<T> implements RuleContext<T> {
 	
 	public DefaultRuleContext(
-			final IInputBuffer inputBuffer,
+			final InputBuffer inputBuffer,
 			final int level,
 			final Rule<T> rule,
 			final int startIndex,
@@ -21,7 +21,7 @@ public class DefaultRuleContext<T> implements RuleContext<T> {
 	}
 	
 	public DefaultRuleContext(
-			final IInputBuffer inputBuffer,
+			final InputBuffer inputBuffer,
 			final int level,
 			final Rule<T> rule,
 			final int startIndex,
@@ -37,7 +37,7 @@ public class DefaultRuleContext<T> implements RuleContext<T> {
 	}
 	
 	@Override
-	public IInputBuffer getInputBuffer() {
+	public InputBuffer getInputBuffer() {
 		return inputBuffer;
 	}
 	
@@ -128,7 +128,7 @@ public class DefaultRuleContext<T> implements RuleContext<T> {
 	}
 	
 	
-	private final IInputBuffer inputBuffer;
+	private final InputBuffer inputBuffer;
 	private final int level;
 	private final Rule<T> rule;
 	private final int startIndex;

@@ -6,14 +6,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
-import com.mpe85.grampa.input.ILineCounter;
+import com.mpe85.grampa.input.LineCounter;
 import com.mpe85.grampa.input.InputPosition;
 
 public class CharSequenceLineCounterTest {
 	
 	@Test
 	public void test_getLineCount_valid() {
-		final ILineCounter lc = new CharSequenceLineCounter("foo\n  \nbar\n  ");
+		final LineCounter lc = new CharSequenceLineCounter("foo\n  \nbar\n  ");
 		assertEquals(4, lc.getLineCount());
 	}
 	
@@ -29,7 +29,7 @@ public class CharSequenceLineCounterTest {
 	
 	@Test
 	public void test_getPosition_valid_noLineBreakAtEnd() {
-		final ILineCounter lc = new CharSequenceLineCounter("foo\nbar");
+		final LineCounter lc = new CharSequenceLineCounter("foo\nbar");
 		InputPosition pos;
 		
 		assertEquals(2, lc.getLineCount());
@@ -72,7 +72,7 @@ public class CharSequenceLineCounterTest {
 	
 	@Test
 	public void test_getPosition_valid_blankLines() {
-		final ILineCounter lc = new CharSequenceLineCounter("\n\n\n");
+		final LineCounter lc = new CharSequenceLineCounter("\n\n\n");
 		InputPosition pos;
 		
 		assertEquals(3, lc.getLineCount());
@@ -95,7 +95,7 @@ public class CharSequenceLineCounterTest {
 	
 	@Test
 	public void test_getPosition_invalid_indexOutOfRange() {
-		final ILineCounter lc = new CharSequenceLineCounter("foobar");
+		final LineCounter lc = new CharSequenceLineCounter("foobar");
 		
 		assertEquals(1, lc.getLineCount());
 		

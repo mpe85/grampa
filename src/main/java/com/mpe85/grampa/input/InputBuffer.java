@@ -1,6 +1,6 @@
 package com.mpe85.grampa.input;
 
-public interface IInputBuffer {
+public interface InputBuffer {
 	
 	char getChar(int index);
 	

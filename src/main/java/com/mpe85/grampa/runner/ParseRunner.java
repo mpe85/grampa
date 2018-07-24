@@ -1,7 +1,7 @@
 package com.mpe85.grampa.runner;
 
 import com.google.common.base.Preconditions;
-import com.mpe85.grampa.input.IInputBuffer;
+import com.mpe85.grampa.input.InputBuffer;
 import com.mpe85.grampa.input.impl.CharSequenceInputBuffer;
 import com.mpe85.grampa.parser.Parser;
 import com.mpe85.grampa.rule.Rule;
@@ -25,7 +25,7 @@ public class ParseRunner<T> {
 		return run(new CharSequenceInputBuffer(charSequence));
 	}
 	
-	public ParseResult<T> run(final IInputBuffer inputBuffer) {
+	public ParseResult<T> run(final InputBuffer inputBuffer) {
 		Preconditions.checkNotNull(inputBuffer, "An 'inputBuffer' must not be null.");
 		resetValueStack();
 		final RuleContext<T> context = createRootContext(inputBuffer);
@@ -34,7 +34,7 @@ public class ParseRunner<T> {
 		return new ParseResult<>(matched, context);
 	}
 	
-	private RuleContext<T> createRootContext(final IInputBuffer inputBuffer) {
+	private RuleContext<T> createRootContext(final InputBuffer inputBuffer) {
 		return new DefaultRuleContext<>(inputBuffer, 0, rootRule, 0, valueStack);
 	}
 	

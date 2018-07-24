@@ -1,6 +1,6 @@
 package com.mpe85.grampa.input;
 
-public interface ILineCounter {
+public interface LineCounter {
 	
 	int getLineCount();
 	

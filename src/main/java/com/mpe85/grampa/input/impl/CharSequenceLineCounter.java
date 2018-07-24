@@ -5,10 +5,10 @@ import java.util.Optional;
 import java.util.TreeMap;
 
 import com.google.common.base.Preconditions;
-import com.mpe85.grampa.input.ILineCounter;
+import com.mpe85.grampa.input.LineCounter;
 import com.mpe85.grampa.input.InputPosition;
 
-public class CharSequenceLineCounter implements ILineCounter {
+public class CharSequenceLineCounter implements LineCounter {
 	
 	public CharSequenceLineCounter(final CharSequence input) {
 		Preconditions.checkNotNull(input, "An 'input' must not be null.");

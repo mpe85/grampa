@@ -1,12 +1,12 @@
 package com.mpe85.grampa.rule;
 
-import com.mpe85.grampa.input.IInputBuffer;
+import com.mpe85.grampa.input.InputBuffer;
 import com.mpe85.grampa.input.InputPosition;
 import com.mpe85.grampa.util.stack.IRestorableStack;
 
 public interface RuleContext<T> {
 	
-	IInputBuffer getInputBuffer();
+	InputBuffer getInputBuffer();
 	
 	int getCurrentIndex();
 	

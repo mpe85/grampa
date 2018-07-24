@@ -1,12 +1,12 @@
 package com.mpe85.grampa.input.impl;
 
 import com.google.common.base.Preconditions;
-import com.mpe85.grampa.input.IInputBuffer;
+import com.mpe85.grampa.input.InputBuffer;
 import com.mpe85.grampa.input.InputPosition;
 
 import one.util.streamex.IntStreamEx;
 
-public class CharSequenceInputBuffer implements IInputBuffer {
+public class CharSequenceInputBuffer implements InputBuffer {
 	
 	public CharSequenceInputBuffer(final CharSequence charSequence) {
 		Preconditions.checkNotNull(charSequence, "A 'charSequence' must not be null.");
