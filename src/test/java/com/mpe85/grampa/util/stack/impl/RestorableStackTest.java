@@ -4,14 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import com.mpe85.grampa.util.stack.IRestorableStack;
+import com.mpe85.grampa.util.stack.RestorableStack;
 
 public class RestorableStackTest {
 	
 	@Test
 	public void test_push_valid() {
-		final IRestorableStack<Number> stack1 = new RestorableStack<>();
-		final IRestorableStack<Number> stack2 = new RestorableStack<>();
+		final RestorableStack<Number> stack1 = new LinkedListRestorableStack<>();
+		final RestorableStack<Number> stack2 = new LinkedListRestorableStack<>();
 		
 		stack1.push(1);
 		stack1.push(2);
@@ -28,7 +28,7 @@ public class RestorableStackTest {
 	
 	@Test
 	public void test_peek_valid() {
-		final IRestorableStack<Number> stack = new RestorableStack<>();
+		final RestorableStack<Number> stack = new LinkedListRestorableStack<>();
 		
 		stack.push(1);
 		stack.push(2);
@@ -44,7 +44,7 @@ public class RestorableStackTest {
 	
 	@Test
 	public void test_peekAs_valid() {
-		final IRestorableStack<Number> stack = new RestorableStack<>();
+		final RestorableStack<Number> stack = new LinkedListRestorableStack<>();
 		
 		stack.push(1);
 		stack.push(2);
@@ -58,7 +58,7 @@ public class RestorableStackTest {
 	
 	@Test
 	public void test_pop_valid() {
-		final IRestorableStack<Number> stack = new RestorableStack<>();
+		final RestorableStack<Number> stack = new LinkedListRestorableStack<>();
 		
 		stack.push(1);
 		stack.push(2);
@@ -75,7 +75,7 @@ public class RestorableStackTest {
 	
 	@Test
 	public void test_popAS_valid() {
-		final IRestorableStack<Number> stack = new RestorableStack<>();
+		final RestorableStack<Number> stack = new LinkedListRestorableStack<>();
 		
 		stack.push(1);
 		stack.push(2.2d);
@@ -89,7 +89,7 @@ public class RestorableStackTest {
 	
 	@Test
 	public void test_poke_valid() {
-		final IRestorableStack<Number> stack = new RestorableStack<>();
+		final RestorableStack<Number> stack = new LinkedListRestorableStack<>();
 		
 		stack.push(1);
 		stack.push(2);
@@ -106,7 +106,7 @@ public class RestorableStackTest {
 	
 	@Test
 	public void test_dup_valid() {
-		final IRestorableStack<Number> stack = new RestorableStack<>();
+		final RestorableStack<Number> stack = new LinkedListRestorableStack<>();
 		
 		stack.push(1);
 		stack.dup();
@@ -120,7 +120,7 @@ public class RestorableStackTest {
 	
 	@Test
 	public void test_swap_valid() {
-		final IRestorableStack<Number> stack = new RestorableStack<>();
+		final RestorableStack<Number> stack = new LinkedListRestorableStack<>();
 		
 		stack.push(1);
 		stack.push(2);
@@ -135,7 +135,7 @@ public class RestorableStackTest {
 	
 	@Test
 	public void test_restoreSnapshot_valid() {
-		final IRestorableStack<Number> stack = new RestorableStack<>();
+		final RestorableStack<Number> stack = new LinkedListRestorableStack<>();
 		
 		stack.push(1);
 		stack.takeSnapshot();
@@ -165,7 +165,7 @@ public class RestorableStackTest {
 	
 	@Test
 	public void test_discardSnapshot_valid() {
-		final IRestorableStack<Number> stack = new RestorableStack<>();
+		final RestorableStack<Number> stack = new LinkedListRestorableStack<>();
 		
 		stack.push(1);
 		stack.takeSnapshot();
@@ -185,7 +185,7 @@ public class RestorableStackTest {
 	
 	@Test
 	public void test_clearAllSnapshots_valid() {
-		final IRestorableStack<Number> stack = new RestorableStack<>();
+		final RestorableStack<Number> stack = new LinkedListRestorableStack<>();
 		
 		stack.push(1);
 		stack.takeSnapshot();

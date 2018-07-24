@@ -2,7 +2,7 @@ package com.mpe85.grampa.rule;
 
 import com.mpe85.grampa.input.InputBuffer;
 import com.mpe85.grampa.input.InputPosition;
-import com.mpe85.grampa.util.stack.IRestorableStack;
+import com.mpe85.grampa.util.stack.RestorableStack;
 
 public interface RuleContext<T> {
 	
@@ -30,7 +30,7 @@ public interface RuleContext<T> {
 	
 	boolean run();
 	
-	IRestorableStack<T> getValueStack();
+	RestorableStack<T> getValueStack();
 	
 	boolean inPredicate();
 	

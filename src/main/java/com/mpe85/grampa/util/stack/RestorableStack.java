@@ -2,7 +2,7 @@ package com.mpe85.grampa.util.stack;
 
 import java.util.Deque;
 
-public interface IRestorableStack<E> extends Deque<E>, Cloneable {
+public interface RestorableStack<E> extends Deque<E>, Cloneable {
 	
 	void push(int down, E element);
 	

@@ -6,9 +6,9 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 import com.google.common.base.Preconditions;
-import com.mpe85.grampa.util.stack.IRestorableStack;
+import com.mpe85.grampa.util.stack.RestorableStack;
 
-public class RestorableStack<E> extends LinkedList<E> implements IRestorableStack<E> {
+public class LinkedListRestorableStack<E> extends LinkedList<E> implements RestorableStack<E> {
 	
 	@Override
 	public void push(final int down, final E element) {

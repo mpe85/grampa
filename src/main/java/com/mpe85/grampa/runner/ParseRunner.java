@@ -7,8 +7,8 @@ import com.mpe85.grampa.parser.Parser;
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.rule.RuleContext;
 import com.mpe85.grampa.rule.impl.DefaultRuleContext;
-import com.mpe85.grampa.util.stack.IRestorableStack;
-import com.mpe85.grampa.util.stack.impl.RestorableStack;
+import com.mpe85.grampa.util.stack.RestorableStack;
+import com.mpe85.grampa.util.stack.impl.LinkedListRestorableStack;
 
 public class ParseRunner<T> {
 	
@@ -39,10 +39,10 @@ public class ParseRunner<T> {
 	}
 	
 	private void resetValueStack() {
-		valueStack = new RestorableStack<>();
+		valueStack = new LinkedListRestorableStack<>();
 	}
 	
 	private final Rule<T> rootRule;
-	private IRestorableStack<T> valueStack;
+	private RestorableStack<T> valueStack;
 	
 }

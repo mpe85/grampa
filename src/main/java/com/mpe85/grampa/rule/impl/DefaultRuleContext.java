@@ -7,7 +7,7 @@ import com.mpe85.grampa.input.InputBuffer;
 import com.mpe85.grampa.input.InputPosition;
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.rule.RuleContext;
-import com.mpe85.grampa.util.stack.IRestorableStack;
+import com.mpe85.grampa.util.stack.RestorableStack;
 
 public class DefaultRuleContext<T> implements RuleContext<T> {
 	
@@ -16,7 +16,7 @@ public class DefaultRuleContext<T> implements RuleContext<T> {
 			final int level,
 			final Rule<T> rule,
 			final int startIndex,
-			final IRestorableStack<T> valueStack) {
+			final RestorableStack<T> valueStack) {
 		this(inputBuffer, level, rule, startIndex, valueStack, null);
 	}
 	
@@ -25,7 +25,7 @@ public class DefaultRuleContext<T> implements RuleContext<T> {
 			final int level,
 			final Rule<T> rule,
 			final int startIndex,
-			final IRestorableStack<T> valueStack,
+			final RestorableStack<T> valueStack,
 			final RuleContext<T> parentContext) {
 		this.inputBuffer = Preconditions.checkNotNull(inputBuffer, "An 'inputBuffer' must not be null.");
 		this.level = level;
@@ -106,7 +106,7 @@ public class DefaultRuleContext<T> implements RuleContext<T> {
 	}
 	
 	@Override
-	public IRestorableStack<T> getValueStack() {
+	public RestorableStack<T> getValueStack() {
 		return valueStack;
 	}
 	
@@ -132,7 +132,7 @@ public class DefaultRuleContext<T> implements RuleContext<T> {
 	private final int level;
 	private final Rule<T> rule;
 	private final int startIndex;
-	private final IRestorableStack<T> valueStack;
+	private final RestorableStack<T> valueStack;
 	
 	private int currentIndex;
 	private RuleContext<T> parentContext;

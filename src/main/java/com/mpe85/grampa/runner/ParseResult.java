@@ -1,7 +1,7 @@
 package com.mpe85.grampa.runner;
 
 import com.mpe85.grampa.rule.RuleContext;
-import com.mpe85.grampa.util.stack.IRestorableStack;
+import com.mpe85.grampa.util.stack.RestorableStack;
 
 public class ParseResult<T> {
 	
@@ -9,7 +9,7 @@ public class ParseResult<T> {
 	public ParseResult(final boolean matched, final RuleContext<T> context) {
 		this.matched = matched;
 		this.matchedWholeInput = matched && context.isAtEndOfInput();
-		this.valueStack = (IRestorableStack<T>) context.getValueStack().clone();
+		this.valueStack = (RestorableStack<T>) context.getValueStack().clone();
 	}
 	
 	public boolean isMatched() {
@@ -20,7 +20,7 @@ public class ParseResult<T> {
 		return matchedWholeInput;
 	}
 	
-	public IRestorableStack<T> getValueStack() {
+	public RestorableStack<T> getValueStack() {
 		return valueStack;
 	}
 	
@@ -30,6 +30,6 @@ public class ParseResult<T> {
 	
 	final boolean matched;
 	final boolean matchedWholeInput;
-	final IRestorableStack<T> valueStack;
+	final RestorableStack<T> valueStack;
 	
 }
