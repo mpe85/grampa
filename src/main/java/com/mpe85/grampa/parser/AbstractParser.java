@@ -51,6 +51,17 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		});
 	}
 	
+	protected final Rule<T> skippableAction(final Action<T> action) {
+		return new ActionRule<>(action, true);
+	}
+	
+	protected final Rule<T> skippableAction(final AlwaysMatchingAction<T> action) {
+		return skippableAction(ctx -> {
+			action.run(ctx);
+			return true;
+		});
+	}
+	
 	protected final Rule<T> pop() {
 		return new ActionRule<>(ctx -> {
 			ctx.getValueStack().pop();
