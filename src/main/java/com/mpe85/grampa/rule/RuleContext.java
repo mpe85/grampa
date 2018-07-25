@@ -38,4 +38,6 @@ public interface RuleContext<T> {
 	
 	InputPosition getPosition();
 	
+	CharSequence getRestOfInput();
+	
 }

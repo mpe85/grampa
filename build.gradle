@@ -29,7 +29,8 @@ repositories {
 dependencies {
 	implementation(
 		'com.google.guava:guava:25.1-jre',
-		'one.util:streamex:0.6.7'
+		'one.util:streamex:0.6.7',
+		'com.googlecode.concurrent-trees:concurrent-trees:2.6.1'
 	)
 	testImplementation(
 		'org.junit.jupiter:junit-jupiter-api:5.2.0'

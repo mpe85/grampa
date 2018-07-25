@@ -127,6 +127,11 @@ public class DefaultRuleContext<T> implements RuleContext<T> {
 		return inputBuffer.getPosition(currentIndex);
 	}
 	
+	@Override
+	public CharSequence getRestOfInput() {
+		return inputBuffer.subSequence(currentIndex, inputBuffer.getLength());
+	}
+	
 	
 	private final InputBuffer inputBuffer;
 	private final int level;

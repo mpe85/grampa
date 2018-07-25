@@ -13,6 +13,7 @@ import com.mpe85.grampa.rule.impl.SequenceRule;
 import com.mpe85.grampa.rule.impl.StringRule;
 import com.mpe85.grampa.rule.impl.TestNotRule;
 import com.mpe85.grampa.rule.impl.TestRule;
+import com.mpe85.grampa.rule.impl.TrieRule;
 
 public abstract class AbstractParser<T> implements Parser<T> {
 	
@@ -21,6 +22,10 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	
 	protected final Rule<T> string(final String string) {
 		return new StringRule<>(string);
+	}
+	
+	protected final Rule<T> trie(final String... strings) {
+		return new TrieRule<>(strings);
 	}
 	
 	@SafeVarargs

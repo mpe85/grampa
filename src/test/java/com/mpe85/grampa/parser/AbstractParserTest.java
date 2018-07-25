@@ -124,4 +124,18 @@ public class AbstractParserTest {
 		assertFalse(result.isMatchedWholeInput());
 	}
 	
+	@Test
+	public void trie_valid() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return trie("foo", "football", "foobar");
+			}
+		}
+		final ParseRunner<Integer> runner = new ParseRunner<>(new Parser());
+		final ParseResult<Integer> result = runner.run("fooba");
+		assertTrue(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+	}
+	
 }
