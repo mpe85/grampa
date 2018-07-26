@@ -8,6 +8,8 @@ import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.rule.RuleContext;
 import com.mpe85.grampa.rule.ValueSupplier;
 import com.mpe85.grampa.rule.impl.ActionRule;
+import com.mpe85.grampa.rule.impl.EmptyRule;
+import com.mpe85.grampa.rule.impl.NeverRule;
 import com.mpe85.grampa.rule.impl.OptionaRule;
 import com.mpe85.grampa.rule.impl.RegexRule;
 import com.mpe85.grampa.rule.impl.SequenceRule;
@@ -30,12 +32,26 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	protected final Rule<T> trie(final String... strings) {
-		return new TrieRule<>(strings);
+		switch (strings.length) {
+			case 0:
+				return NEVER;
+			case 1:
+				return new StringRule<>(strings[0]);
+			default:
+				return new TrieRule<>(strings);
+		}
 	}
 	
 	@SafeVarargs
 	protected final Rule<T> sequence(final Rule<T>... rules) {
-		return new SequenceRule<>(Arrays.asList(rules));
+		switch (rules.length) {
+			case 0:
+				return EMPTY;
+			case 1:
+				return rules[0];
+			default:
+				return new SequenceRule<>(Arrays.asList(rules));
+		}
 	}
 	
 	protected final Rule<T> optional(final Rule<T> rule) {
@@ -108,5 +124,9 @@ public abstract class AbstractParser<T> implements Parser<T> {
 			return true;
 		});
 	}
+	
+	
+	protected final Rule<T> EMPTY = new EmptyRule<>();
+	protected final Rule<T> NEVER = new NeverRule<>();
 	
 }
