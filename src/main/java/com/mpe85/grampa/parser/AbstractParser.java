@@ -12,6 +12,7 @@ import com.mpe85.grampa.rule.ValueSupplier;
 import com.mpe85.grampa.rule.impl.ActionRule;
 import com.mpe85.grampa.rule.impl.CharRule;
 import com.mpe85.grampa.rule.impl.EmptyRule;
+import com.mpe85.grampa.rule.impl.EndOfInputRule;
 import com.mpe85.grampa.rule.impl.NeverRule;
 import com.mpe85.grampa.rule.impl.OptionaRule;
 import com.mpe85.grampa.rule.impl.RegexRule;
@@ -25,6 +26,22 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	
 	@Override
 	public abstract Rule<T> root();
+	
+	protected final Rule<T> empty() {
+		return EMPTY;
+	}
+	
+	protected final Rule<T> never() {
+		return NEVER;
+	}
+	
+	protected final Rule<T> eoi() {
+		return EOI;
+	}
+	
+	protected final Rule<T> character(final char character) {
+		return new CharRule<>(character);
+	}
 	
 	protected final Rule<T> string(final String string) {
 		switch (checkNotNull(string, "A 'string' must not be null.").length()) {
@@ -140,5 +157,6 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	
 	protected final Rule<T> EMPTY = new EmptyRule<>();
 	protected final Rule<T> NEVER = new NeverRule<>();
+	protected final Rule<T> EOI = new EndOfInputRule<>();
 	
 }
