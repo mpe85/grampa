@@ -1,5 +1,7 @@
 package com.mpe85.grampa.parser;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Arrays;
 
 import com.mpe85.grampa.rule.Action;
@@ -24,15 +26,16 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	public abstract Rule<T> root();
 	
 	protected final Rule<T> string(final String string) {
+		checkNotNull(string, "A 'string' must not be null.");
 		return new StringRule<>(string);
 	}
 	
 	protected final Rule<T> regex(final String regex) {
-		return new RegexRule<>(regex);
+		return new RegexRule<>(checkNotNull(regex, "A 'regex' must not be null."));
 	}
 	
 	protected final Rule<T> trie(final String... strings) {
-		switch (strings.length) {
+		switch (checkNotNull(strings, "A 'strings' array must not be null.").length) {
 			case 0:
 				return NEVER;
 			case 1:
@@ -44,7 +47,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	
 	@SafeVarargs
 	protected final Rule<T> sequence(final Rule<T>... rules) {
-		switch (rules.length) {
+		switch (checkNotNull(rules, "A 'rules' array must not be null.").length) {
 			case 0:
 				return EMPTY;
 			case 1:
@@ -55,22 +58,23 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	protected final Rule<T> optional(final Rule<T> rule) {
-		return new OptionaRule<>(rule);
+		return new OptionaRule<>(checkNotNull(rule, "A 'rule' must not be null."));
 	}
 	
 	protected final Rule<T> test(final Rule<T> rule) {
-		return new TestRule<>(rule);
+		return new TestRule<>(checkNotNull(rule, "A 'rule' must not be null."));
 	}
 	
 	protected final Rule<T> testNot(final Rule<T> rule) {
-		return new TestNotRule<>(rule);
+		return new TestNotRule<>(checkNotNull(rule, "A 'rule' must not be null."));
 	}
 	
 	protected final Rule<T> action(final Action<T> action) {
-		return new ActionRule<>(action);
+		return new ActionRule<>(checkNotNull(action, "An 'action' must not be null."));
 	}
 	
 	protected final Rule<T> action(final AlwaysMatchingAction<T> action) {
+		checkNotNull(action, "An 'action' must not be null.");
 		return action(ctx -> {
 			action.run(ctx);
 			return true;
@@ -78,10 +82,11 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	protected final Rule<T> skippableAction(final Action<T> action) {
-		return new ActionRule<>(action, true);
+		return new ActionRule<>(checkNotNull(action, "An 'action' must not be null."), true);
 	}
 	
 	protected final Rule<T> skippableAction(final AlwaysMatchingAction<T> action) {
+		checkNotNull(action, "An 'action' must not be null.");
 		return skippableAction(ctx -> {
 			action.run(ctx);
 			return true;
