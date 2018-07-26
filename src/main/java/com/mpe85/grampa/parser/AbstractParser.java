@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Arrays;
 
 import com.mpe85.grampa.rule.Action;
-import com.mpe85.grampa.rule.AlwaysMatchingAction;
+import com.mpe85.grampa.rule.AlwaysSuccessingAction;
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.rule.RuleContext;
 import com.mpe85.grampa.rule.ValueSupplier;
@@ -97,7 +97,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		return new ActionRule<>(checkNotNull(action, "An 'action' must not be null."));
 	}
 	
-	protected final Rule<T> action(final AlwaysMatchingAction<T> action) {
+	protected final Rule<T> action(final AlwaysSuccessingAction<T> action) {
 		checkNotNull(action, "An 'action' must not be null.");
 		return action(ctx -> {
 			action.run(ctx);
@@ -109,7 +109,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		return new ActionRule<>(checkNotNull(action, "An 'action' must not be null."), true);
 	}
 	
-	protected final Rule<T> skippableAction(final AlwaysMatchingAction<T> action) {
+	protected final Rule<T> skippableAction(final AlwaysSuccessingAction<T> action) {
 		checkNotNull(action, "An 'action' must not be null.");
 		return skippableAction(ctx -> {
 			action.run(ctx);

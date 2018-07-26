@@ -1,7 +1,7 @@
 package com.mpe85.grampa.rule;
 
 @FunctionalInterface
-public interface AlwaysMatchingAction<T> {
+public interface AlwaysSuccessingAction<T> {
 	
 	void run(RuleContext<T> context);
 	
