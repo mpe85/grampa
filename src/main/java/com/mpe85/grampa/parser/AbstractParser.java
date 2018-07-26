@@ -10,6 +10,7 @@ import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.rule.RuleContext;
 import com.mpe85.grampa.rule.ValueSupplier;
 import com.mpe85.grampa.rule.impl.ActionRule;
+import com.mpe85.grampa.rule.impl.CharRule;
 import com.mpe85.grampa.rule.impl.EmptyRule;
 import com.mpe85.grampa.rule.impl.NeverRule;
 import com.mpe85.grampa.rule.impl.OptionaRule;
@@ -26,8 +27,14 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	public abstract Rule<T> root();
 	
 	protected final Rule<T> string(final String string) {
-		checkNotNull(string, "A 'string' must not be null.");
-		return new StringRule<>(string);
+		switch (checkNotNull(string, "A 'string' must not be null.").length()) {
+			case 0:
+				return EMPTY;
+			case 1:
+				return new CharRule<>(string.charAt(0));
+			default:
+				return new StringRule<>(string);
+		}
 	}
 	
 	protected final Rule<T> regex(final String regex) {
