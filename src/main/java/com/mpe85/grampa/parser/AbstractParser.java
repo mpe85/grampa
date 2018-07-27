@@ -13,6 +13,7 @@ import com.mpe85.grampa.rule.impl.ActionRule;
 import com.mpe85.grampa.rule.impl.AnyCharRule;
 import com.mpe85.grampa.rule.impl.AnyCodePointRule;
 import com.mpe85.grampa.rule.impl.CharRule;
+import com.mpe85.grampa.rule.impl.CodePointRule;
 import com.mpe85.grampa.rule.impl.EmptyRule;
 import com.mpe85.grampa.rule.impl.EndOfInputRule;
 import com.mpe85.grampa.rule.impl.NeverRule;
@@ -51,6 +52,10 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	
 	protected final Rule<T> character(final char character) {
 		return new CharRule<>(character);
+	}
+	
+	protected final Rule<T> codePoint(final int codePoint) {
+		return new CodePointRule<>(codePoint);
 	}
 	
 	protected final Rule<T> string(final String string) {
