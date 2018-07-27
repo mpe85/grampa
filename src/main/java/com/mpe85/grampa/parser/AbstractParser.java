@@ -10,6 +10,8 @@ import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.rule.RuleContext;
 import com.mpe85.grampa.rule.ValueSupplier;
 import com.mpe85.grampa.rule.impl.ActionRule;
+import com.mpe85.grampa.rule.impl.AnyCharRule;
+import com.mpe85.grampa.rule.impl.AnyCodePointRule;
 import com.mpe85.grampa.rule.impl.CharRule;
 import com.mpe85.grampa.rule.impl.EmptyRule;
 import com.mpe85.grampa.rule.impl.EndOfInputRule;
@@ -37,6 +39,14 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	
 	protected final Rule<T> eoi() {
 		return EOI;
+	}
+	
+	protected final Rule<T> anyChar() {
+		return ANY_CHAR;
+	}
+	
+	protected final Rule<T> anyCodePoint() {
+		return ANY_CODEPOINT;
 	}
 	
 	protected final Rule<T> character(final char character) {
@@ -158,5 +168,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	protected final Rule<T> EMPTY = new EmptyRule<>();
 	protected final Rule<T> NEVER = new NeverRule<>();
 	protected final Rule<T> EOI = new EndOfInputRule<>();
+	protected final Rule<T> ANY_CHAR = new AnyCharRule<>();
+	protected final Rule<T> ANY_CODEPOINT = new AnyCodePointRule<>();
 	
 }
