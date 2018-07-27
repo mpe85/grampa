@@ -10,11 +10,9 @@ public class CharRule<T> extends AbstractRule<T> {
 	
 	@Override
 	public boolean match(final RuleContext<T> context) {
-		if (!context.isAtEndOfInput() && context.getCurrentChar() == character) {
-			context.advanceIndex(1);
-			return true;
-		}
-		return false;
+		return !context.isAtEndOfInput()
+				&& context.getCurrentChar() == character
+				&& context.advanceIndex(1);
 	}
 	
 	

@@ -16,9 +16,7 @@ public class StringRule<T> extends AbstractRule<T> {
 			final CharSequence nextChars = context.getInputBuffer().subSequence(
 					context.getCurrentIndex(),
 					context.getCurrentIndex() + string.length());
-			if (string.equals(nextChars.toString())) {
-				return context.advanceIndex(string.length());
-			}
+			return string.equals(nextChars.toString()) && context.advanceIndex(string.length());
 		}
 		return false;
 	}

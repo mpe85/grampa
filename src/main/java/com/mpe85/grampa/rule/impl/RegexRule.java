@@ -20,14 +20,7 @@ public class RegexRule<T> extends AbstractRule<T> {
 	@Override
 	public boolean match(final RuleContext<T> context) {
 		final Matcher matcher = pattern.matcher(context.getRestOfInput());
-		
-		final boolean matched = matcher.lookingAt();
-		
-		if (matched) {
-			context.advanceIndex(matcher.end());
-		}
-		
-		return matched;
+		return matcher.lookingAt() && context.advanceIndex(matcher.end());
 	}
 	
 	private final Pattern pattern;

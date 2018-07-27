@@ -28,13 +28,7 @@ public class TrieRule<T> extends AbstractRule<T> {
 	@Override
 	public boolean match(final RuleContext<T> context) {
 		final CharSequence longestKey = trie.getLongestKeyPrefixing(context.getRestOfInput());
-		
-		if (longestKey != null) {
-			context.advanceIndex(longestKey.length());
-			return true;
-		}
-		
-		return false;
+		return longestKey != null && context.advanceIndex(longestKey.length());
 	}
 	
 	
