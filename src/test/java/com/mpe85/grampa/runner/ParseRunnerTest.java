@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import com.mpe85.grampa.parser.Parser;
 import com.mpe85.grampa.rule.impl.StringRule;
 
-public class ParserRunnerTest {
+public class ParseRunnerTest {
 	
 	@Test
 	public void test_run() {
