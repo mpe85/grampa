@@ -34,10 +34,12 @@ public interface RuleContext<T> {
 	
 	boolean inPredicate();
 	
-	String getMatch();
+	CharSequence getPreviousMatch();
 	
 	InputPosition getPosition();
 	
 	CharSequence getRestOfInput();
+	
+	RuleContext<T> getParent();
 	
 }

@@ -48,6 +48,7 @@ public class DefaultRuleContext<T> implements RuleContext<T> {
 	
 	@Override
 	public void setCurrentIndex(final int currentIndex) {
+		previousMatch = inputBuffer.subSequence(this.currentIndex, currentIndex);
 		this.currentIndex = currentIndex;
 	}
 	
@@ -117,9 +118,8 @@ public class DefaultRuleContext<T> implements RuleContext<T> {
 	}
 	
 	@Override
-	public String getMatch() {
-		// TODO Auto-generated method stub
-		return null;
+	public CharSequence getPreviousMatch() {
+		return previousMatch;
 	}
 	
 	@Override
@@ -132,6 +132,11 @@ public class DefaultRuleContext<T> implements RuleContext<T> {
 		return inputBuffer.subSequence(currentIndex, inputBuffer.getLength());
 	}
 	
+	@Override
+	public RuleContext<T> getParent() {
+		return parentContext;
+	}
+	
 	
 	private final InputBuffer inputBuffer;
 	private final int level;
@@ -140,6 +145,7 @@ public class DefaultRuleContext<T> implements RuleContext<T> {
 	private final RestorableStack<T> valueStack;
 	
 	private int currentIndex;
+	private CharSequence previousMatch;
 	private RuleContext<T> parentContext;
 	
 }

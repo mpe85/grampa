@@ -138,4 +138,27 @@ public class AbstractParserTest {
 		assertFalse(result.isMatchedWholeInput());
 	}
 	
+	@Test
+	public void previousMatch_valid() {
+		final class Parser extends AbstractParser<CharSequence> {
+			@Override
+			public Rule<CharSequence> root() {
+				return sequence(
+						string("hello"),
+						string("world"),
+						push(ctx -> ctx.getParent().getPreviousMatch()),
+						sequence(
+								string("foo"),
+								string("bar")),
+						push(ctx -> ctx.getParent().getPreviousMatch()));
+			}
+		}
+		final ParseRunner<CharSequence> runner = new ParseRunner<>(new Parser());
+		final ParseResult<CharSequence> result = runner.run("helloworldfoobar");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+		assertEquals("foobar", result.getValueStack().pop());
+		assertEquals("world", result.getValueStackTop());
+	}
+	
 }
