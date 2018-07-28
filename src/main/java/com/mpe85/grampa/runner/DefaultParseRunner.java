@@ -14,9 +14,9 @@ import com.mpe85.grampa.rule.impl.DefaultRuleContext;
 import com.mpe85.grampa.util.stack.RestorableStack;
 import com.mpe85.grampa.util.stack.impl.LinkedListRestorableStack;
 
-public class ParseRunner<T> {
+public class DefaultParseRunner<T> {
 	
-	public ParseRunner(final Parser<T> parser) {
+	public DefaultParseRunner(final Parser<T> parser) {
 		Preconditions.checkNotNull(parser, "A 'parser' must not be null.");
 		this.rootRule = parser.root();
 	}

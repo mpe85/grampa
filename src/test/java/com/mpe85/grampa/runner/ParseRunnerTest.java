@@ -13,7 +13,7 @@ public class ParseRunnerTest {
 	@Test
 	public void test_run() {
 		final Parser<Void> parser = () -> new StringRule<>("foo");
-		final ParseRunner<Void> runner = new ParseRunner<>(parser);
+		final DefaultParseRunner<Void> runner = new DefaultParseRunner<>(parser);
 		assertTrue(runner.run("foo").matched);
 		assertTrue(runner.run("foobar").matched);
 		assertFalse(runner.run("bar").matched);

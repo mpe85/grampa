@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.runner.ParseResult;
-import com.mpe85.grampa.runner.ParseRunner;
+import com.mpe85.grampa.runner.DefaultParseRunner;
 
 public class AbstractParserTest {
 	
@@ -20,7 +20,7 @@ public class AbstractParserTest {
 				return action(ctx -> ctx.getValueStack().push(4711));
 			}
 		}
-		final ParseRunner<Integer> runner = new ParseRunner<>(new Parser());
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
 		assertEquals(Integer.valueOf(4711), runner.run("whatever").getValueStackTop());
 	}
 	
@@ -32,7 +32,7 @@ public class AbstractParserTest {
 				return push(4711);
 			}
 		}
-		final ParseRunner<Integer> runner = new ParseRunner<>(new Parser());
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
 		assertEquals(Integer.valueOf(4711), runner.run("whatever").getValueStackTop());
 	}
 	
@@ -52,7 +52,7 @@ public class AbstractParserTest {
 						})));
 			}
 		}
-		final ParseRunner<Integer> runner = new ParseRunner<>(new Parser());
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
 		final ParseResult<Integer> result = runner.run("whatever");
 		assertEquals(Integer.valueOf(9426), result.getValueStackTop());
 		assertEquals(2, result.getValueStack().size());
@@ -70,7 +70,7 @@ public class AbstractParserTest {
 						string("whatever"));
 			}
 		}
-		final ParseRunner<Integer> runner = new ParseRunner<>(new Parser());
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
 		final ParseResult<Integer> result = runner.run("whatever");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -86,7 +86,7 @@ public class AbstractParserTest {
 						string("whatever"));
 			}
 		}
-		final ParseRunner<Integer> runner = new ParseRunner<>(new Parser());
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
 		final ParseResult<Integer> result = runner.run("whatever");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -102,7 +102,7 @@ public class AbstractParserTest {
 						string("whatever"));
 			}
 		}
-		final ParseRunner<Integer> runner = new ParseRunner<>(new Parser());
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
 		final ParseResult<Integer> result = runner.run("whatever");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -118,7 +118,7 @@ public class AbstractParserTest {
 						string("whatever"));
 			}
 		}
-		final ParseRunner<Integer> runner = new ParseRunner<>(new Parser());
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
 		final ParseResult<Integer> result = runner.run("whatever");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -132,7 +132,7 @@ public class AbstractParserTest {
 				return trie("foo", "football", "foobar");
 			}
 		}
-		final ParseRunner<Integer> runner = new ParseRunner<>(new Parser());
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
 		final ParseResult<Integer> result = runner.run("fooba");
 		assertTrue(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -160,7 +160,7 @@ public class AbstractParserTest {
 						push(ctx -> ctx.getParent().getPreviousMatch()));
 			}
 		}
-		final ParseRunner<CharSequence> runner = new ParseRunner<>(new Parser());
+		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
 		final ParseResult<CharSequence> result = runner.run("helloworldfoobarbaz");
 		assertTrue(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
