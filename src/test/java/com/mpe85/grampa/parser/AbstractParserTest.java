@@ -150,13 +150,22 @@ public class AbstractParserTest {
 						sequence(
 								string("foo"),
 								string("bar")),
+						push(ctx -> ctx.getParent().getPreviousMatch()),
+						test(string("baz")),
+						push(ctx -> ctx.getParent().getPreviousMatch()),
+						sequence(
+								test(string("ba")),
+								string("b"),
+								test(string("az"))),
 						push(ctx -> ctx.getParent().getPreviousMatch()));
 			}
 		}
 		final ParseRunner<CharSequence> runner = new ParseRunner<>(new Parser());
-		final ParseResult<CharSequence> result = runner.run("helloworldfoobar");
+		final ParseResult<CharSequence> result = runner.run("helloworldfoobarbaz");
 		assertTrue(result.isMatched());
-		assertTrue(result.isMatchedWholeInput());
+		assertFalse(result.isMatchedWholeInput());
+		assertEquals("b", result.getValueStack().pop());
+		assertEquals("foobar", result.getValueStack().pop());
 		assertEquals("foobar", result.getValueStack().pop());
 		assertEquals("world", result.getValueStackTop());
 	}

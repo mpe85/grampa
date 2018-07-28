@@ -48,7 +48,9 @@ public class DefaultRuleContext<T> implements RuleContext<T> {
 	
 	@Override
 	public void setCurrentIndex(final int currentIndex) {
-		previousMatch = inputBuffer.subSequence(this.currentIndex, currentIndex);
+		if (currentIndex > this.currentIndex) {
+			previousMatch = inputBuffer.subSequence(this.currentIndex, currentIndex);
+		}
 		this.currentIndex = currentIndex;
 	}
 	
