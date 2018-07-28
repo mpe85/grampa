@@ -3,6 +3,10 @@ package com.mpe85.grampa.rule.impl;
 import java.util.Optional;
 
 import com.google.common.base.Preconditions;
+import com.google.common.eventbus.EventBus;
+import com.mpe85.grampa.event.MatchFailureEvent;
+import com.mpe85.grampa.event.MatchSuccessEvent;
+import com.mpe85.grampa.event.PreMatchEvent;
 import com.mpe85.grampa.input.InputBuffer;
 import com.mpe85.grampa.input.InputPosition;
 import com.mpe85.grampa.rule.Rule;
@@ -16,8 +20,9 @@ public class DefaultRuleContext<T> implements RuleContext<T> {
 			final int level,
 			final Rule<T> rule,
 			final int startIndex,
-			final RestorableStack<T> valueStack) {
-		this(inputBuffer, level, rule, startIndex, valueStack, null);
+			final RestorableStack<T> valueStack,
+			final EventBus bus) {
+		this(inputBuffer, level, rule, startIndex, valueStack, bus, null);
 	}
 	
 	public DefaultRuleContext(
@@ -26,6 +31,7 @@ public class DefaultRuleContext<T> implements RuleContext<T> {
 			final Rule<T> rule,
 			final int startIndex,
 			final RestorableStack<T> valueStack,
+			final EventBus bus,
 			final RuleContext<T> parentContext) {
 		this.inputBuffer = Preconditions.checkNotNull(inputBuffer, "An 'inputBuffer' must not be null.");
 		this.level = level;
@@ -33,6 +39,7 @@ public class DefaultRuleContext<T> implements RuleContext<T> {
 		this.startIndex = startIndex;
 		this.currentIndex = startIndex;
 		this.valueStack = Preconditions.checkNotNull(valueStack, "A 'valueStack' must not be null.");
+		this.bus = Preconditions.checkNotNull(bus, "A 'bus' must not be null.");
 		this.parentContext = parentContext;
 	}
 	
@@ -96,14 +103,21 @@ public class DefaultRuleContext<T> implements RuleContext<T> {
 	
 	@Override
 	public RuleContext<T> getChildContext(final Rule<T> rule) {
-		return new DefaultRuleContext<>(inputBuffer, level + 1, rule, currentIndex, valueStack, this);
+		return new DefaultRuleContext<>(inputBuffer, level + 1, rule, currentIndex, valueStack, bus, this);
 	}
 	
 	@Override
 	public boolean run() {
+		bus.post(new PreMatchEvent<>(this));
 		final boolean matched = rule.match(this);
 		if (matched && parentContext != null) {
 			parentContext.setCurrentIndex(currentIndex);
+		}
+		if (matched) {
+			bus.post(new MatchSuccessEvent<>(this));
+		}
+		else {
+			bus.post(new MatchFailureEvent<>(this));
 		}
 		return matched;
 	}
@@ -145,6 +159,7 @@ public class DefaultRuleContext<T> implements RuleContext<T> {
 	private final Rule<T> rule;
 	private final int startIndex;
 	private final RestorableStack<T> valueStack;
+	private final EventBus bus;
 	
 	private int currentIndex;
 	private CharSequence previousMatch;

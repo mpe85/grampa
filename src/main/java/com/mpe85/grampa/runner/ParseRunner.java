@@ -1,6 +1,10 @@
 package com.mpe85.grampa.runner;
 
 import com.google.common.base.Preconditions;
+import com.google.common.eventbus.EventBus;
+import com.mpe85.grampa.event.ParseEventListener;
+import com.mpe85.grampa.event.PostParseEvent;
+import com.mpe85.grampa.event.PreParseEvent;
 import com.mpe85.grampa.input.InputBuffer;
 import com.mpe85.grampa.input.impl.CharSequenceInputBuffer;
 import com.mpe85.grampa.parser.Parser;
@@ -21,6 +25,14 @@ public class ParseRunner<T> {
 		return rootRule;
 	}
 	
+	public void registerListener(final ParseEventListener<T> listener) {
+		bus.register(listener);
+	}
+	
+	public void unregisterListener(final ParseEventListener<T> listener) {
+		bus.unregister(listener);
+	}
+	
 	public ParseResult<T> run(final CharSequence charSequence) {
 		return run(new CharSequenceInputBuffer(charSequence));
 	}
@@ -30,12 +42,18 @@ public class ParseRunner<T> {
 		resetValueStack();
 		final RuleContext<T> context = createRootContext(inputBuffer);
 		
+		bus.post(new PreParseEvent<>(context));
+		
 		final boolean matched = context.run();
-		return new ParseResult<>(matched, context);
+		final ParseResult<T> result = new ParseResult<>(matched, context);
+		
+		bus.post(new PostParseEvent<>(result));
+		
+		return result;
 	}
 	
-	private RuleContext<T> createRootContext(final InputBuffer inputBuffer) {
-		return new DefaultRuleContext<>(inputBuffer, 0, rootRule, 0, valueStack);
+	protected RuleContext<T> createRootContext(final InputBuffer inputBuffer) {
+		return new DefaultRuleContext<>(inputBuffer, 0, rootRule, 0, valueStack, bus);
 	}
 	
 	private void resetValueStack() {
@@ -44,5 +62,6 @@ public class ParseRunner<T> {
 	
 	private final Rule<T> rootRule;
 	private RestorableStack<T> valueStack;
+	private final EventBus bus = new EventBus();
 	
 }
