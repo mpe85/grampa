@@ -54,8 +54,16 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		return new CharRule<>(character);
 	}
 	
+	protected final Rule<T> ignoreCase(final char character) {
+		return new CharRule<>(character, true);
+	}
+	
 	protected final Rule<T> codePoint(final int codePoint) {
 		return new CodePointRule<>(codePoint);
+	}
+	
+	protected final Rule<T> ignoreCase(final int codePoint) {
+		return new CodePointRule<>(codePoint, true);
 	}
 	
 	protected final Rule<T> string(final String string) {
