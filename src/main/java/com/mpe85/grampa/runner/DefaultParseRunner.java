@@ -10,7 +10,7 @@ import com.mpe85.grampa.input.impl.CharSequenceInputBuffer;
 import com.mpe85.grampa.parser.Parser;
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.rule.RuleContext;
-import com.mpe85.grampa.rule.impl.DefaultRuleContext;
+import com.mpe85.grampa.rule.impl.DefaultContext;
 import com.mpe85.grampa.util.stack.RestorableStack;
 import com.mpe85.grampa.util.stack.impl.LinkedListRestorableStack;
 
@@ -53,7 +53,7 @@ public class DefaultParseRunner<T> {
 	}
 	
 	protected RuleContext<T> createRootContext(final InputBuffer inputBuffer) {
-		return new DefaultRuleContext<>(inputBuffer, 0, rootRule, 0, valueStack, bus);
+		return new DefaultContext<>(inputBuffer, 0, rootRule, 0, valueStack, bus);
 	}
 	
 	private void resetValueStack() {

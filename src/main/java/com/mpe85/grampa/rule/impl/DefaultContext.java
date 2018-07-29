@@ -9,13 +9,14 @@ import com.mpe85.grampa.event.MatchSuccessEvent;
 import com.mpe85.grampa.event.PreMatchEvent;
 import com.mpe85.grampa.input.InputBuffer;
 import com.mpe85.grampa.input.InputPosition;
+import com.mpe85.grampa.rule.ActionContext;
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.rule.RuleContext;
 import com.mpe85.grampa.util.stack.RestorableStack;
 
-public class DefaultRuleContext<T> implements RuleContext<T> {
+public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 	
-	public DefaultRuleContext(
+	public DefaultContext(
 			final InputBuffer inputBuffer,
 			final int level,
 			final Rule<T> rule,
@@ -25,7 +26,7 @@ public class DefaultRuleContext<T> implements RuleContext<T> {
 		this(inputBuffer, level, rule, startIndex, valueStack, bus, null);
 	}
 	
-	public DefaultRuleContext(
+	public DefaultContext(
 			final InputBuffer inputBuffer,
 			final int level,
 			final Rule<T> rule,
@@ -103,7 +104,7 @@ public class DefaultRuleContext<T> implements RuleContext<T> {
 	
 	@Override
 	public RuleContext<T> getChildContext(final Rule<T> rule) {
-		return new DefaultRuleContext<>(inputBuffer, level + 1, rule, currentIndex, valueStack, bus, this);
+		return new DefaultContext<>(inputBuffer, level + 1, rule, currentIndex, valueStack, bus, this);
 	}
 	
 	@Override
