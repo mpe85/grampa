@@ -14,6 +14,7 @@ public interface RuleContext<T> extends ActionContext<T> {
 	
 	boolean run();
 	
+	@Override
 	RuleContext<T> getParent();
 	
 }

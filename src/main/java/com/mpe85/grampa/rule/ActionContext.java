@@ -29,4 +29,6 @@ public interface ActionContext<T> {
 	
 	RestorableStack<T> getStack();
 	
+	ActionContext<T> getParent();
+	
 }
