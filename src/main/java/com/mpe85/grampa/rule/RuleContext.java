@@ -15,6 +15,6 @@ public interface RuleContext<T> extends ActionContext<T> {
 	@Override
 	RuleContext<T> getParent();
 	
-	RuleContext<T> getChildContext(Rule<T> rule);
+	RuleContext<T> createChildContext(Rule<T> rule);
 	
 }

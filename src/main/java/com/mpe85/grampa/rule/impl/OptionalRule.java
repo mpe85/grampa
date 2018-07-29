@@ -12,7 +12,7 @@ public class OptionalRule<T> extends AbstractRule<T> {
 	
 	@Override
 	public boolean match(final RuleContext<T> context) {
-		context.getChildContext(getChild()).run();
+		context.createChildContext(getChild()).run();
 		return true;
 	}
 	

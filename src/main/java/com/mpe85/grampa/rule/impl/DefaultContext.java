@@ -150,7 +150,7 @@ public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 	}
 	
 	@Override
-	public RuleContext<T> getChildContext(final Rule<T> rule) {
+	public RuleContext<T> createChildContext(final Rule<T> rule) {
 		return new DefaultContext<>(inputBuffer, level + 1, rule, currentIndex, stack, bus, this);
 	}
 	
