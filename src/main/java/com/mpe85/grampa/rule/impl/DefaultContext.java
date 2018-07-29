@@ -45,26 +45,18 @@ public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 	}
 	
 	@Override
-	public InputBuffer getInputBuffer() {
-		return inputBuffer;
-	}
-	
-	@Override
-	public int getCurrentIndex() {
-		return currentIndex;
-	}
-	
-	@Override
-	public void setCurrentIndex(final int currentIndex) {
-		if (currentIndex > this.currentIndex) {
-			previousMatch = inputBuffer.subSequence(this.currentIndex, currentIndex);
-		}
-		this.currentIndex = currentIndex;
+	public int getLevel() {
+		return level;
 	}
 	
 	@Override
 	public int getStartIndex() {
 		return startIndex;
+	}
+	
+	@Override
+	public int getCurrentIndex() {
+		return currentIndex;
 	}
 	
 	@Override
@@ -88,8 +80,47 @@ public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 	}
 	
 	@Override
-	public int getLevel() {
-		return level;
+	public CharSequence getRestOfInput() {
+		return inputBuffer.subSequence(currentIndex, inputBuffer.getLength());
+	}
+	
+	@Override
+	public CharSequence getPreviousMatch() {
+		return previousMatch;
+	}
+	
+	@Override
+	public InputPosition getPosition() {
+		return inputBuffer.getPosition(currentIndex);
+	}
+	
+	@Override
+	public boolean inPredicate() {
+		return rule.isPredicate()
+				|| Optional.ofNullable(parentContext).map(RuleContext::inPredicate).orElse(false);
+	}
+	
+	@Override
+	public RestorableStack<T> getStack() {
+		return stack;
+	}
+	
+	@Override
+	public RuleContext<T> getParent() {
+		return parentContext;
+	}
+	
+	@Override
+	public InputBuffer getInputBuffer() {
+		return inputBuffer;
+	}
+	
+	@Override
+	public void setCurrentIndex(final int currentIndex) {
+		if (currentIndex > this.currentIndex) {
+			previousMatch = inputBuffer.subSequence(this.currentIndex, currentIndex);
+		}
+		this.currentIndex = currentIndex;
 	}
 	
 	@Override
@@ -100,11 +131,6 @@ public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 			return true;
 		}
 		return false;
-	}
-	
-	@Override
-	public RuleContext<T> getChildContext(final Rule<T> rule) {
-		return new DefaultContext<>(inputBuffer, level + 1, rule, currentIndex, stack, bus, this);
 	}
 	
 	@Override
@@ -124,34 +150,8 @@ public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 	}
 	
 	@Override
-	public RestorableStack<T> getStack() {
-		return stack;
-	}
-	
-	@Override
-	public boolean inPredicate() {
-		return rule.isPredicate()
-				|| Optional.ofNullable(parentContext).map(RuleContext::inPredicate).orElse(false);
-	}
-	
-	@Override
-	public CharSequence getPreviousMatch() {
-		return previousMatch;
-	}
-	
-	@Override
-	public InputPosition getPosition() {
-		return inputBuffer.getPosition(currentIndex);
-	}
-	
-	@Override
-	public CharSequence getRestOfInput() {
-		return inputBuffer.subSequence(currentIndex, inputBuffer.getLength());
-	}
-	
-	@Override
-	public RuleContext<T> getParent() {
-		return parentContext;
+	public RuleContext<T> getChildContext(final Rule<T> rule) {
+		return new DefaultContext<>(inputBuffer, level + 1, rule, currentIndex, stack, bus, this);
 	}
 	
 	

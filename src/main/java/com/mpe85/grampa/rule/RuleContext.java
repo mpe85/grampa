@@ -10,11 +10,11 @@ public interface RuleContext<T> extends ActionContext<T> {
 	
 	boolean advanceIndex(int delta);
 	
-	RuleContext<T> getChildContext(Rule<T> rule);
-	
 	boolean run();
 	
 	@Override
 	RuleContext<T> getParent();
+	
+	RuleContext<T> getChildContext(Rule<T> rule);
 	
 }

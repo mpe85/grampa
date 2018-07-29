@@ -5,9 +5,11 @@ import com.mpe85.grampa.util.stack.RestorableStack;
 
 public interface ActionContext<T> {
 	
-	int getCurrentIndex();
+	int getLevel();
 	
 	int getStartIndex();
+	
+	int getCurrentIndex();
 	
 	boolean isAtEndOfInput();
 	
@@ -17,15 +19,13 @@ public interface ActionContext<T> {
 	
 	int getNumberOfCharsLeft();
 	
-	int getLevel();
-	
-	boolean inPredicate();
+	CharSequence getRestOfInput();
 	
 	CharSequence getPreviousMatch();
 	
 	InputPosition getPosition();
 	
-	CharSequence getRestOfInput();
+	boolean inPredicate();
 	
 	RestorableStack<T> getStack();
 	
