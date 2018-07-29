@@ -5,9 +5,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Arrays;
 
 import com.mpe85.grampa.rule.Action;
+import com.mpe85.grampa.rule.ActionContext;
 import com.mpe85.grampa.rule.AlwaysSuccessingAction;
 import com.mpe85.grampa.rule.Rule;
-import com.mpe85.grampa.rule.RuleContext;
 import com.mpe85.grampa.rule.ValueSupplier;
 import com.mpe85.grampa.rule.impl.ActionRule;
 import com.mpe85.grampa.rule.impl.AnyCharRule;
@@ -139,19 +139,19 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		});
 	}
 	
-	protected final T pop(final RuleContext<T> context) {
+	protected final T pop(final ActionContext<T> context) {
 		return context.getStack().pop();
 	}
 	
-	protected final T pop(final int down, final RuleContext<T> context) {
+	protected final T pop(final int down, final ActionContext<T> context) {
 		return context.getStack().pop(down);
 	}
 	
-	protected final T peek(final RuleContext<T> context) {
+	protected final T peek(final ActionContext<T> context) {
 		return context.getStack().peek();
 	}
 	
-	protected final T peek(final int down, final RuleContext<T> context) {
+	protected final T peek(final int down, final ActionContext<T> context) {
 		return context.getStack().peek(down);
 	}
 	
