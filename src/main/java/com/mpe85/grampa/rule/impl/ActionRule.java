@@ -22,9 +22,9 @@ public class ActionRule<T> extends AbstractRule<T> {
 		if (context.inPredicate() && skippable) {
 			return true;
 		}
-		context.getValueStack().takeSnapshot();
+		context.getStack().takeSnapshot();
 		final boolean matched = action.run(context);
-		context.getValueStack().removeSnapshot(!matched);
+		context.getStack().removeSnapshot(!matched);
 		return matched;
 	}
 	

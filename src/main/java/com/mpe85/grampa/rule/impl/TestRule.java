@@ -12,11 +12,11 @@ public class TestRule<T> extends AbstractRule<T> {
 	@Override
 	public boolean match(final RuleContext<T> context) {
 		final int currentIndex = context.getCurrentIndex();
-		context.getValueStack().takeSnapshot();
+		context.getStack().takeSnapshot();
 		
 		if (context.getChildContext(getChild()).run()) {
 			context.setCurrentIndex(currentIndex);
-			context.getValueStack().restoreSnapshot();
+			context.getStack().restoreSnapshot();
 			return true;
 		}
 		return false;

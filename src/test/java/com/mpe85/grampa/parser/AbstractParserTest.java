@@ -17,7 +17,7 @@ public class AbstractParserTest {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
 			public Rule<Integer> root() {
-				return action(ctx -> ctx.getValueStack().push(4711));
+				return action(ctx -> ctx.getStack().push(4711));
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
@@ -47,7 +47,7 @@ public class AbstractParserTest {
 						sequence(
 								push(ctx -> pop(1, ctx) + peek(ctx))),
 						optional(action(ctx -> {
-							ctx.getValueStack().push(0);
+							ctx.getStack().push(0);
 							return false;
 						})));
 			}

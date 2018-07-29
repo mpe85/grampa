@@ -15,9 +15,9 @@ public class SequenceRule<T> extends AbstractRule<T> {
 	
 	@Override
 	public boolean match(final RuleContext<T> context) {
-		context.getValueStack().takeSnapshot();
+		context.getStack().takeSnapshot();
 		final boolean matched = StreamEx.of(getChildren()).allMatch(c -> context.getChildContext(c).run());
-		context.getValueStack().removeSnapshot(!matched);
+		context.getStack().removeSnapshot(!matched);
 		return matched;
 	}
 	

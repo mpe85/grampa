@@ -9,7 +9,7 @@ public class ParseResult<T> {
 	public ParseResult(final boolean matched, final RuleContext<T> context) {
 		this.matched = matched;
 		this.matchedWholeInput = matched && context.isAtEndOfInput();
-		this.valueStack = (RestorableStack<T>) context.getValueStack().clone();
+		this.valueStack = (RestorableStack<T>) context.getStack().clone();
 	}
 	
 	public boolean isMatched() {

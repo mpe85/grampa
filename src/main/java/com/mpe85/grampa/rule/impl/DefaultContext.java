@@ -21,9 +21,9 @@ public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 			final int level,
 			final Rule<T> rule,
 			final int startIndex,
-			final RestorableStack<T> valueStack,
+			final RestorableStack<T> stack,
 			final EventBus bus) {
-		this(inputBuffer, level, rule, startIndex, valueStack, bus, null);
+		this(inputBuffer, level, rule, startIndex, stack, bus, null);
 	}
 	
 	public DefaultContext(
@@ -31,7 +31,7 @@ public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 			final int level,
 			final Rule<T> rule,
 			final int startIndex,
-			final RestorableStack<T> valueStack,
+			final RestorableStack<T> stack,
 			final EventBus bus,
 			final RuleContext<T> parentContext) {
 		this.inputBuffer = Preconditions.checkNotNull(inputBuffer, "An 'inputBuffer' must not be null.");
@@ -39,7 +39,7 @@ public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 		this.rule = Preconditions.checkNotNull(rule, "A 'rule' must not be null.");
 		this.startIndex = startIndex;
 		this.currentIndex = startIndex;
-		this.valueStack = Preconditions.checkNotNull(valueStack, "A 'valueStack' must not be null.");
+		this.stack = Preconditions.checkNotNull(stack, "A 'stack' must not be null.");
 		this.bus = Preconditions.checkNotNull(bus, "A 'bus' must not be null.");
 		this.parentContext = parentContext;
 	}
@@ -104,7 +104,7 @@ public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 	
 	@Override
 	public RuleContext<T> getChildContext(final Rule<T> rule) {
-		return new DefaultContext<>(inputBuffer, level + 1, rule, currentIndex, valueStack, bus, this);
+		return new DefaultContext<>(inputBuffer, level + 1, rule, currentIndex, stack, bus, this);
 	}
 	
 	@Override
@@ -124,8 +124,8 @@ public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 	}
 	
 	@Override
-	public RestorableStack<T> getValueStack() {
-		return valueStack;
+	public RestorableStack<T> getStack() {
+		return stack;
 	}
 	
 	@Override
@@ -159,7 +159,7 @@ public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 	private final int level;
 	private final Rule<T> rule;
 	private final int startIndex;
-	private final RestorableStack<T> valueStack;
+	private final RestorableStack<T> stack;
 	private final EventBus bus;
 	
 	private int currentIndex;

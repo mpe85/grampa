@@ -134,37 +134,37 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	
 	protected final Rule<T> pop() {
 		return new ActionRule<>(ctx -> {
-			ctx.getValueStack().pop();
+			ctx.getStack().pop();
 			return true;
 		});
 	}
 	
 	protected final T pop(final RuleContext<T> context) {
-		return context.getValueStack().pop();
+		return context.getStack().pop();
 	}
 	
 	protected final T pop(final int down, final RuleContext<T> context) {
-		return context.getValueStack().pop(down);
+		return context.getStack().pop(down);
 	}
 	
 	protected final T peek(final RuleContext<T> context) {
-		return context.getValueStack().peek();
+		return context.getStack().peek();
 	}
 	
 	protected final T peek(final int down, final RuleContext<T> context) {
-		return context.getValueStack().peek(down);
+		return context.getStack().peek(down);
 	}
 	
 	protected final Rule<T> push(final T value) {
 		return new ActionRule<>(ctx -> {
-			ctx.getValueStack().push(value);
+			ctx.getStack().push(value);
 			return true;
 		});
 	}
 	
 	protected final Rule<T> push(final ValueSupplier<T> supplier) {
 		return new ActionRule<>(ctx -> {
-			ctx.getValueStack().push(supplier.supply(ctx));
+			ctx.getStack().push(supplier.supply(ctx));
 			return true;
 		});
 	}

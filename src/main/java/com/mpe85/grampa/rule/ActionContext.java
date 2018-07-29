@@ -27,6 +27,6 @@ public interface ActionContext<T> {
 	
 	CharSequence getRestOfInput();
 	
-	RestorableStack<T> getValueStack();
+	RestorableStack<T> getStack();
 	
 }
