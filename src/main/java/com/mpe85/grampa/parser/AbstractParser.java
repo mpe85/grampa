@@ -17,7 +17,7 @@ import com.mpe85.grampa.rule.impl.CodePointRule;
 import com.mpe85.grampa.rule.impl.EmptyRule;
 import com.mpe85.grampa.rule.impl.EndOfInputRule;
 import com.mpe85.grampa.rule.impl.NeverRule;
-import com.mpe85.grampa.rule.impl.OptionaRule;
+import com.mpe85.grampa.rule.impl.OptionalRule;
 import com.mpe85.grampa.rule.impl.RegexRule;
 import com.mpe85.grampa.rule.impl.SequenceRule;
 import com.mpe85.grampa.rule.impl.StringRule;
@@ -97,7 +97,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	protected final Rule<T> optional(final Rule<T> rule) {
-		return new OptionaRule<>(checkNotNull(rule, "A 'rule' must not be null."));
+		return new OptionalRule<>(checkNotNull(rule, "A 'rule' must not be null."));
 	}
 	
 	protected final Rule<T> test(final Rule<T> rule) {

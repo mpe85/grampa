@@ -4,9 +4,9 @@ import com.google.common.base.Preconditions;
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.rule.RuleContext;
 
-public class OptionaRule<T> extends AbstractRule<T> {
+public class OptionalRule<T> extends AbstractRule<T> {
 	
-	public OptionaRule(final Rule<T> matcher) {
+	public OptionalRule(final Rule<T> matcher) {
 		super(Preconditions.checkNotNull(matcher, "A 'matcher' must not be null."));
 	}
 	
