@@ -14,7 +14,7 @@ plugins {
 	id 'maven'
 	id 'maven-publish'
     id 'com.diffplug.gradle.spotless' version '3.13.0'
-    id "com.jfrog.bintray" version '1.8.2'
+    id 'com.jfrog.bintray' version '1.8.2'
 }
 
 group 'com.mpe85'
@@ -30,7 +30,8 @@ dependencies {
 	implementation(
 		'com.google.guava:guava:25.1-jre',
 		'one.util:streamex:0.6.7',
-		'com.googlecode.concurrent-trees:concurrent-trees:2.6.1'
+		'com.googlecode.concurrent-trees:concurrent-trees:2.6.1',
+		'cglib:cglib:3.2.7'
 	)
 	testImplementation(
 		'org.junit.jupiter:junit-jupiter-api:5.2.0'
