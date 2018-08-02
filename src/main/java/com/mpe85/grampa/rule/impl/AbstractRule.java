@@ -42,6 +42,15 @@ public abstract class AbstractRule<T> implements Rule<T> {
 		return Objects.hash(children);
 	}
 	
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj != null && getClass() == obj.getClass()) {
+			final AbstractRule<?> other = (AbstractRule<?>) obj;
+			return Objects.equals(this.children, other.children);
+		}
+		return false;
+	}
+	
 	
 	private final List<Rule<T>> children;
 	

@@ -40,6 +40,16 @@ public class TrieRule<T> extends AbstractRule<T> {
 		return Objects.hash(super.hashCode(), strings);
 	}
 	
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj != null && getClass() == obj.getClass()) {
+			final TrieRule<?> other = (TrieRule<?>) obj;
+			return super.equals(other)
+					&& Objects.equals(strings, other.strings);
+		}
+		return false;
+	}
+	
 	private final Set<String> strings = new HashSet<>();
 	private final InvertedRadixTree<VoidValue> trie =
 			new ConcurrentInvertedRadixTree<>(new SmartArrayBasedNodeFactory());

@@ -35,6 +35,17 @@ public class CharRule<T> extends AbstractRule<T> {
 		return Objects.hash(super.hashCode(), character, ignoreCase);
 	}
 	
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj != null && getClass() == obj.getClass()) {
+			final CharRule<?> other = (CharRule<?>) obj;
+			return super.equals(other)
+					&& Objects.equals(character, other.character)
+					&& Objects.equals(ignoreCase, other.ignoreCase);
+		}
+		return false;
+	}
+	
 	
 	private final char character;
 	private final boolean ignoreCase;

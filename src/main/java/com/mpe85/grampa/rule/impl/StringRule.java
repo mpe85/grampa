@@ -28,6 +28,16 @@ public class StringRule<T> extends AbstractRule<T> {
 		return Objects.hash(super.hashCode(), string);
 	}
 	
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj != null && getClass() == obj.getClass()) {
+			final StringRule<?> other = (StringRule<?>) obj;
+			return super.equals(other)
+					&& Objects.equals(string, other.string);
+		}
+		return false;
+	}
+	
 	
 	private final String string;
 	

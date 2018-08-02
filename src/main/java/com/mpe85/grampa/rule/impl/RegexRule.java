@@ -29,6 +29,17 @@ public class RegexRule<T> extends AbstractRule<T> {
 		return Objects.hash(super.hashCode(), pattern);
 	}
 	
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj != null && getClass() == obj.getClass()) {
+			final RegexRule<?> other = (RegexRule<?>) obj;
+			return super.equals(other)
+					&& Objects.equals(pattern, other.pattern);
+		}
+		return false;
+	}
+	
+	
 	private final Pattern pattern;
 	
 }

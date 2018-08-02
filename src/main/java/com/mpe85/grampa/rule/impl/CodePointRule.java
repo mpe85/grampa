@@ -37,6 +37,17 @@ public class CodePointRule<T> extends AbstractRule<T> {
 		return Objects.hash(super.hashCode(), codePoint, ignoreCase);
 	}
 	
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj != null && getClass() == obj.getClass()) {
+			final CodePointRule<?> other = (CodePointRule<?>) obj;
+			return super.equals(other)
+					&& Objects.equals(codePoint, other.codePoint)
+					&& Objects.equals(ignoreCase, other.ignoreCase);
+		}
+		return false;
+	}
+	
 	
 	private final int codePoint;
 	private final boolean ignoreCase;

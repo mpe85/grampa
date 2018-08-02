@@ -35,6 +35,18 @@ public class ActionRule<T> extends AbstractRule<T> {
 		return Objects.hash(super.hashCode(), action, skippable);
 	}
 	
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj != null && getClass() == obj.getClass()) {
+			final ActionRule<?> other = (ActionRule<?>) obj;
+			return super.equals(other)
+					&& Objects.equals(action, other.action)
+					&& Objects.equals(skippable, other.skippable);
+		}
+		return false;
+	}
+	
+	
 	private final Action<T> action;
 	private final boolean skippable;
 	
