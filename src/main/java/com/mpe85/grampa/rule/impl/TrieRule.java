@@ -13,8 +13,6 @@ import com.googlecode.concurrenttrees.radixinverted.ConcurrentInvertedRadixTree;
 import com.googlecode.concurrenttrees.radixinverted.InvertedRadixTree;
 import com.mpe85.grampa.rule.RuleContext;
 
-import one.util.streamex.StreamEx;
-
 public class TrieRule<T> extends AbstractRule<T> {
 	
 	public TrieRule(final String... strings) {
@@ -23,10 +21,9 @@ public class TrieRule<T> extends AbstractRule<T> {
 	
 	public TrieRule(final Collection<String> strings) {
 		this.strings.addAll(strings);
-		StreamEx.of(strings)
-				.forEach(s -> trie.put(
-						Preconditions.checkNotNull(s, "A 'string' must not be null."),
-						VoidValue.SINGLETON));
+		strings.forEach(s -> trie.put(
+				Preconditions.checkNotNull(s, "A 'string' must not be null."),
+				VoidValue.SINGLETON));
 	}
 	
 	@Override
