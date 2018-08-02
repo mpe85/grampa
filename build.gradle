@@ -13,8 +13,8 @@ plugins {
 	id 'checkstyle'
 	id 'maven'
 	id 'maven-publish'
-    id 'com.diffplug.gradle.spotless' version '3.13.0'
-    id 'com.jfrog.bintray' version '1.8.2'
+    id 'com.diffplug.gradle.spotless' version '3.14.0'
+    id 'com.jfrog.bintray' version '1.8.4'
 }
 
 group 'com.mpe85'
