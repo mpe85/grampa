@@ -1,5 +1,6 @@
 package com.mpe85.grampa.rule.impl;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,6 +22,11 @@ public class RegexRule<T> extends AbstractRule<T> {
 	public boolean match(final RuleContext<T> context) {
 		final Matcher matcher = pattern.matcher(context.getRestOfInput());
 		return matcher.lookingAt() && context.advanceIndex(matcher.end());
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), pattern);
 	}
 	
 	private final Pattern pattern;

@@ -1,5 +1,7 @@
 package com.mpe85.grampa.rule.impl;
 
+import java.util.Objects;
+
 import com.mpe85.grampa.rule.RuleContext;
 
 public class CharRule<T> extends AbstractRule<T> {
@@ -26,6 +28,11 @@ public class CharRule<T> extends AbstractRule<T> {
 		return ignoreCase
 				? currentChar == Character.toLowerCase(character) || currentChar == Character.toUpperCase(character)
 				: currentChar == character;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), character, ignoreCase);
 	}
 	
 	

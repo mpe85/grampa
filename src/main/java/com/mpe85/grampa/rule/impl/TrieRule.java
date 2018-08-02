@@ -1,6 +1,9 @@
 package com.mpe85.grampa.rule.impl;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
@@ -19,6 +22,7 @@ public class TrieRule<T> extends AbstractRule<T> {
 	}
 	
 	public TrieRule(final Collection<String> strings) {
+		this.strings.addAll(strings);
 		StreamEx.of(strings)
 				.forEach(s -> trie.put(
 						Preconditions.checkNotNull(s, "A 'string' must not be null."),
@@ -31,7 +35,12 @@ public class TrieRule<T> extends AbstractRule<T> {
 		return longestKey != null && context.advanceIndex(longestKey.length());
 	}
 	
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), strings);
+	}
 	
+	private final Set<String> strings = new HashSet<>();
 	private final InvertedRadixTree<VoidValue> trie =
 			new ConcurrentInvertedRadixTree<>(new SmartArrayBasedNodeFactory());
 	

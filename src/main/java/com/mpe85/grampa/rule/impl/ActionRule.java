@@ -1,5 +1,7 @@
 package com.mpe85.grampa.rule.impl;
 
+import java.util.Objects;
+
 import com.google.common.base.Preconditions;
 import com.mpe85.grampa.rule.Action;
 import com.mpe85.grampa.rule.RuleContext;
@@ -26,6 +28,11 @@ public class ActionRule<T> extends AbstractRule<T> {
 		final boolean matched = action.run(context);
 		context.getStack().removeSnapshot(!matched);
 		return matched;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), action, skippable);
 	}
 	
 	private final Action<T> action;

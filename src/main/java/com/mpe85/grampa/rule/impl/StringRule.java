@@ -1,5 +1,7 @@
 package com.mpe85.grampa.rule.impl;
 
+import java.util.Objects;
+
 import com.google.common.base.Preconditions;
 import com.mpe85.grampa.rule.RuleContext;
 
@@ -19,6 +21,11 @@ public class StringRule<T> extends AbstractRule<T> {
 			return string.equals(nextChars.toString()) && context.advanceIndex(string.length());
 		}
 		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), string);
 	}
 	
 	

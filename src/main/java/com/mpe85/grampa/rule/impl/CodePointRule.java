@@ -1,5 +1,7 @@
 package com.mpe85.grampa.rule.impl;
 
+import java.util.Objects;
+
 import com.mpe85.grampa.rule.RuleContext;
 
 public class CodePointRule<T> extends AbstractRule<T> {
@@ -28,6 +30,11 @@ public class CodePointRule<T> extends AbstractRule<T> {
 				? currentCodePoint == Character.toLowerCase(codePoint)
 						|| currentCodePoint == Character.toUpperCase(codePoint)
 				: currentCodePoint == codePoint;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), codePoint, ignoreCase);
 	}
 	
 	

@@ -2,6 +2,7 @@ package com.mpe85.grampa.rule.impl;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -34,6 +35,11 @@ public abstract class AbstractRule<T> implements Rule<T> {
 	@Override
 	public boolean isPredicate() {
 		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(children);
 	}
 	
 	
