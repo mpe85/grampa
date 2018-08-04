@@ -30,43 +30,43 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	@Override
 	public abstract Rule<T> root();
 	
-	protected final Rule<T> empty() {
+	protected Rule<T> empty() {
 		return EMPTY;
 	}
 	
-	protected final Rule<T> never() {
+	protected Rule<T> never() {
 		return NEVER;
 	}
 	
-	protected final Rule<T> eoi() {
+	protected Rule<T> eoi() {
 		return EOI;
 	}
 	
-	protected final Rule<T> anyChar() {
+	protected Rule<T> anyChar() {
 		return ANY_CHAR;
 	}
 	
-	protected final Rule<T> anyCodePoint() {
+	protected Rule<T> anyCodePoint() {
 		return ANY_CODEPOINT;
 	}
 	
-	protected final Rule<T> character(final char character) {
+	protected Rule<T> character(final char character) {
 		return new CharRule<>(character);
 	}
 	
-	protected final Rule<T> ignoreCase(final char character) {
+	protected Rule<T> ignoreCase(final char character) {
 		return new CharRule<>(character, true);
 	}
 	
-	protected final Rule<T> codePoint(final int codePoint) {
+	protected Rule<T> codePoint(final int codePoint) {
 		return new CodePointRule<>(codePoint);
 	}
 	
-	protected final Rule<T> ignoreCase(final int codePoint) {
+	protected Rule<T> ignoreCase(final int codePoint) {
 		return new CodePointRule<>(codePoint, true);
 	}
 	
-	protected final Rule<T> string(final String string) {
+	protected Rule<T> string(final String string) {
 		switch (checkNotNull(string, "A 'string' must not be null.").length()) {
 			case 0:
 				return EMPTY;
@@ -77,11 +77,11 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		}
 	}
 	
-	protected final Rule<T> regex(final String regex) {
+	protected Rule<T> regex(final String regex) {
 		return new RegexRule<>(checkNotNull(regex, "A 'regex' must not be null."));
 	}
 	
-	protected final Rule<T> trie(final String... strings) {
+	protected Rule<T> trie(final String... strings) {
 		switch (checkNotNull(strings, "A 'strings' array must not be null.").length) {
 			case 0:
 				return NEVER;
@@ -92,8 +92,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		}
 	}
 	
-	@SafeVarargs
-	protected final Rule<T> sequence(final Rule<T>... rules) {
+	protected Rule<T> sequence(final Rule<T>... rules) {
 		switch (checkNotNull(rules, "A 'rules' array must not be null.").length) {
 			case 0:
 				return EMPTY;
@@ -104,23 +103,23 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		}
 	}
 	
-	protected final Rule<T> optional(final Rule<T> rule) {
+	protected Rule<T> optional(final Rule<T> rule) {
 		return new OptionalRule<>(checkNotNull(rule, "A 'rule' must not be null."));
 	}
 	
-	protected final Rule<T> test(final Rule<T> rule) {
+	protected Rule<T> test(final Rule<T> rule) {
 		return new TestRule<>(checkNotNull(rule, "A 'rule' must not be null."));
 	}
 	
-	protected final Rule<T> testNot(final Rule<T> rule) {
+	protected Rule<T> testNot(final Rule<T> rule) {
 		return new TestNotRule<>(checkNotNull(rule, "A 'rule' must not be null."));
 	}
 	
-	protected final Rule<T> action(final Action<T> action) {
+	protected Rule<T> action(final Action<T> action) {
 		return new ActionRule<>(checkNotNull(action, "An 'action' must not be null."));
 	}
 	
-	protected final Rule<T> action(final AlwaysSuccessingAction<T> action) {
+	protected Rule<T> action(final AlwaysSuccessingAction<T> action) {
 		checkNotNull(action, "An 'action' must not be null.");
 		return action(ctx -> {
 			action.run(ctx);
@@ -128,11 +127,11 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		});
 	}
 	
-	protected final Rule<T> skippableAction(final Action<T> action) {
+	protected Rule<T> skippableAction(final Action<T> action) {
 		return new ActionRule<>(checkNotNull(action, "An 'action' must not be null."), true);
 	}
 	
-	protected final Rule<T> skippableAction(final AlwaysSuccessingAction<T> action) {
+	protected Rule<T> skippableAction(final AlwaysSuccessingAction<T> action) {
 		checkNotNull(action, "An 'action' must not be null.");
 		return skippableAction(ctx -> {
 			action.run(ctx);
@@ -140,7 +139,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		});
 	}
 	
-	protected final Rule<T> pop() {
+	protected Rule<T> pop() {
 		return new ActionRule<>(ctx -> {
 			ctx.getStack().pop();
 			return true;
@@ -163,14 +162,14 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		return context.getStack().peek(down);
 	}
 	
-	protected final Rule<T> push(final T value) {
+	protected Rule<T> push(final T value) {
 		return new ActionRule<>(ctx -> {
 			ctx.getStack().push(value);
 			return true;
 		});
 	}
 	
-	protected final Rule<T> push(final ValueSupplier<T> supplier) {
+	protected Rule<T> push(final ValueSupplier<T> supplier) {
 		return new ActionRule<>(ctx -> {
 			ctx.getStack().push(supplier.supply(ctx));
 			return true;
