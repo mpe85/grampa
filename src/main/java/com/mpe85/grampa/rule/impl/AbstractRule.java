@@ -8,6 +8,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.mpe85.grampa.rule.Rule;
 
+import one.util.streamex.StreamEx;
+
 public abstract class AbstractRule<T> implements Rule<T> {
 	
 	protected AbstractRule() {
@@ -39,7 +41,9 @@ public abstract class AbstractRule<T> implements Rule<T> {
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(children);
+		return Objects.hash(StreamEx.of(children)
+				.mapToInt(System::identityHashCode)
+				.toArray());
 	}
 	
 	@Override
