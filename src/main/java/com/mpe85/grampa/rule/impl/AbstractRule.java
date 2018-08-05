@@ -1,12 +1,15 @@
 package com.mpe85.grampa.rule.impl;
 
+import static com.google.common.base.Preconditions.checkElementIndex;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.mpe85.grampa.rule.Rule;
+import com.mpe85.grampa.visitor.RuleVisitor;
 
 import one.util.streamex.StreamEx;
 
@@ -21,12 +24,12 @@ public abstract class AbstractRule<T> implements Rule<T> {
 	}
 	
 	protected AbstractRule(final List<Rule<T>> children) {
-		this.children = Preconditions.checkNotNull(children, "A list of 'children' must not be null.");
+		this.children = checkNotNull(children, "A list of 'children' must not be null.");
 	}
 	
 	@Override
 	public List<Rule<T>> getChildren() {
-		return children;
+		return Collections.unmodifiableList(children);
 	}
 	
 	@Override
@@ -35,8 +38,23 @@ public abstract class AbstractRule<T> implements Rule<T> {
 	}
 	
 	@Override
+	public Rule<T> replaceReferenceRule(final int index, final Rule<T> replacementRule) {
+		checkElementIndex(index, children.size(), "An 'index' must not be out of range.");
+		checkNotNull(replacementRule, "A 'replacementRule' must not be null.");
+		if (!(children.get(index) instanceof ReferenceRule)) {
+			throw new IllegalArgumentException("Other rules than reference rules cannot be replaced.");
+		}
+		return children.set(index, replacementRule);
+	}
+	
+	@Override
 	public boolean isPredicate() {
 		return false;
+	}
+	
+	@Override
+	public void accept(final RuleVisitor<T> visitor) {
+		visitor.visit(this);
 	}
 	
 	@Override
