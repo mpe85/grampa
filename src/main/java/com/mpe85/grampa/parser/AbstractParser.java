@@ -3,6 +3,7 @@ package com.mpe85.grampa.parser;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Arrays;
+import java.util.List;
 
 import com.mpe85.grampa.rule.Action;
 import com.mpe85.grampa.rule.ActionContext;
@@ -93,25 +94,35 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		}
 	}
 	
-	protected Rule<T> sequence(final Rule<T>... rules) {
-		switch (checkNotNull(rules, "A 'rules' array must not be null.").length) {
+	@SafeVarargs
+	protected final Rule<T> sequence(final Rule<T>... rules) {
+		return sequence(Arrays.asList(checkNotNull(rules, "A 'rules' array must not be null.")));
+	}
+	
+	protected Rule<T> sequence(final List<Rule<T>> rules) {
+		switch (checkNotNull(rules, "A 'rules' list must not be null.").size()) {
 			case 0:
 				return EMPTY;
 			case 1:
-				return rules[0];
+				return rules.get(0);
 			default:
-				return new SequenceRule<>(Arrays.asList(rules));
+				return new SequenceRule<>(rules);
 		}
 	}
 	
-	protected Rule<T> first(final Rule<T>... rules) {
-		switch (checkNotNull(rules, "A 'rules' array must not be null.").length) {
+	@SafeVarargs
+	protected final Rule<T> first(final Rule<T>... rules) {
+		return first(Arrays.asList(checkNotNull(rules, "A 'rules' array must not be null.")));
+	}
+	
+	protected Rule<T> first(final List<Rule<T>> rules) {
+		switch (checkNotNull(rules, "A 'rules' list must not be null.").size()) {
 			case 0:
 				return NEVER;
 			case 1:
-				return rules[0];
+				return rules.get(0);
 			default:
-				return new FirstRule<>(Arrays.asList(rules));
+				return new FirstRule<>(rules);
 		}
 	}
 	
