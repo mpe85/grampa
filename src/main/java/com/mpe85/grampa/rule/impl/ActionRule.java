@@ -2,6 +2,7 @@ package com.mpe85.grampa.rule.impl;
 
 import java.util.Objects;
 
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Preconditions;
 import com.mpe85.grampa.rule.Action;
 import com.mpe85.grampa.rule.RuleContext;
@@ -44,6 +45,13 @@ public class ActionRule<T> extends AbstractRule<T> {
 					&& Objects.equals(skippable, other.skippable);
 		}
 		return false;
+	}
+	
+	@Override
+	protected ToStringHelper toStringHelper() {
+		return super.toStringHelper()
+				.add("action", action)
+				.add("skippable", skippable);
 	}
 	
 	

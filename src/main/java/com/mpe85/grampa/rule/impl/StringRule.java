@@ -2,6 +2,7 @@ package com.mpe85.grampa.rule.impl;
 
 import java.util.Objects;
 
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Preconditions;
 import com.mpe85.grampa.rule.RuleContext;
 
@@ -36,6 +37,12 @@ public class StringRule<T> extends AbstractRule<T> {
 					&& Objects.equals(string, other.string);
 		}
 		return false;
+	}
+	
+	@Override
+	protected ToStringHelper toStringHelper() {
+		return super.toStringHelper()
+				.add("string", string);
 	}
 	
 	

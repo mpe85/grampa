@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.googlecode.concurrenttrees.radix.node.concrete.SmartArrayBasedNodeFactory;
@@ -46,6 +47,13 @@ public class TrieRule<T> extends AbstractRule<T> {
 		}
 		return false;
 	}
+	
+	@Override
+	protected ToStringHelper toStringHelper() {
+		return super.toStringHelper()
+				.add("strings", strings);
+	}
+	
 	
 	private final Set<String> strings = new HashSet<>();
 	private final InvertedRadixTree<VoidValue> trie =

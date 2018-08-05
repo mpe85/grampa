@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.Lists;
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.visitor.RuleVisitor;
@@ -71,6 +73,16 @@ public abstract class AbstractRule<T> implements Rule<T> {
 			return Objects.equals(this.children, other.children);
 		}
 		return false;
+	}
+	
+	protected ToStringHelper toStringHelper() {
+		return MoreObjects.toStringHelper(this)
+				.add("#children", children.size());
+	}
+	
+	@Override
+	public String toString() {
+		return toStringHelper().toString();
 	}
 	
 	

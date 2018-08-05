@@ -2,6 +2,7 @@ package com.mpe85.grampa.rule.impl;
 
 import java.util.Objects;
 
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.mpe85.grampa.rule.RuleContext;
 
 public class ReferenceRule<T> extends AbstractRule<T> {
@@ -28,6 +29,12 @@ public class ReferenceRule<T> extends AbstractRule<T> {
 			return Objects.equals(hashCode, other.hashCode);
 		}
 		return false;
+	}
+	
+	@Override
+	protected ToStringHelper toStringHelper() {
+		return super.toStringHelper()
+				.add("hashCode", hashCode);
 	}
 	
 	
