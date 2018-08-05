@@ -1,6 +1,10 @@
 package com.mpe85.grampa.input.impl;
 
-import com.google.common.base.Preconditions;
+import static com.google.common.base.Preconditions.checkElementIndex;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkPositionIndex;
+import static com.google.common.base.Preconditions.checkPositionIndexes;
+
 import com.mpe85.grampa.input.InputBuffer;
 import com.mpe85.grampa.input.InputPosition;
 
@@ -9,15 +13,14 @@ import one.util.streamex.IntStreamEx;
 public class CharSequenceInputBuffer implements InputBuffer {
 	
 	public CharSequenceInputBuffer(final CharSequence charSequence) {
-		Preconditions.checkNotNull(charSequence, "A 'charSequence' must not be null.");
-		this.charSequence = charSequence;
+		this.charSequence = checkNotNull(charSequence, "A 'charSequence' must not be null.");
 		lineCounter = new CharSequenceLineCounter(charSequence);
 	}
 	
 	@Override
 	public char getChar(final int index) {
-		Preconditions.checkElementIndex(index, getLength(), "An 'index' must not be out of range.");
-		return charSequence.charAt(index);
+		return charSequence.charAt(
+				checkElementIndex(index, getLength(), "An 'index' must not be out of range."));
 	}
 	
 	@Override
@@ -32,16 +35,16 @@ public class CharSequenceInputBuffer implements InputBuffer {
 	
 	@Override
 	public CharSequence subSequence(final int startIndex, final int endIndex) {
-		Preconditions.checkPositionIndex(startIndex, getLength(), "A 'startIndex' must not be out of range.");
-		Preconditions.checkPositionIndex(endIndex, getLength(), "An 'endIndex' must not be out of range.");
-		Preconditions.checkPositionIndexes(startIndex, endIndex, getLength());
+		checkPositionIndex(startIndex, getLength(), "A 'startIndex' must not be out of range.");
+		checkPositionIndex(endIndex, getLength(), "An 'endIndex' must not be out of range.");
+		checkPositionIndexes(startIndex, endIndex, getLength());
 		return charSequence.subSequence(startIndex, endIndex);
 	}
 	
 	@Override
 	public InputPosition getPosition(final int index) {
-		Preconditions.checkElementIndex(index, getLength(), "A 'startIndex' must not be out of range.");
-		return lineCounter.getPosition(index);
+		return lineCounter.getPosition(
+				checkElementIndex(index, getLength(), "A 'startIndex' must not be out of range."));
 	}
 	
 	
