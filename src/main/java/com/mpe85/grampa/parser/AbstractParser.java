@@ -13,7 +13,9 @@ import com.mpe85.grampa.rule.ValueSupplier;
 import com.mpe85.grampa.rule.impl.ActionRule;
 import com.mpe85.grampa.rule.impl.AnyCharRule;
 import com.mpe85.grampa.rule.impl.AnyCodePointRule;
+import com.mpe85.grampa.rule.impl.CharRangeRule;
 import com.mpe85.grampa.rule.impl.CharRule;
+import com.mpe85.grampa.rule.impl.CodePointRangeRule;
 import com.mpe85.grampa.rule.impl.CodePointRule;
 import com.mpe85.grampa.rule.impl.EmptyRule;
 import com.mpe85.grampa.rule.impl.EndOfInputRule;
@@ -60,12 +62,24 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		return new CharRule<>(character, true);
 	}
 	
+	protected Rule<T> charRange(final char lowerBound, final char upperBound) {
+		return lowerBound == upperBound
+				? new CharRule<>(lowerBound)
+				: new CharRangeRule<>(lowerBound, upperBound);
+	}
+	
 	protected Rule<T> codePoint(final int codePoint) {
 		return new CodePointRule<>(codePoint);
 	}
 	
 	protected Rule<T> ignoreCase(final int codePoint) {
 		return new CodePointRule<>(codePoint, true);
+	}
+	
+	protected Rule<T> codePointRange(final int lowerBound, final int upperBound) {
+		return lowerBound == upperBound
+				? new CodePointRule<>(lowerBound)
+				: new CodePointRangeRule<>(lowerBound, upperBound);
 	}
 	
 	protected Rule<T> string(final String string) {

@@ -1,8 +1,10 @@
 package com.mpe85.grampa.rule.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Optional;
 
-import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 import com.mpe85.grampa.event.MatchFailureEvent;
 import com.mpe85.grampa.event.MatchSuccessEvent;
@@ -34,13 +36,13 @@ public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 			final RestorableStack<T> stack,
 			final EventBus bus,
 			final RuleContext<T> parentContext) {
-		this.inputBuffer = Preconditions.checkNotNull(inputBuffer, "An 'inputBuffer' must not be null.");
+		this.inputBuffer = checkNotNull(inputBuffer, "An 'inputBuffer' must not be null.");
 		this.level = level;
-		this.rule = Preconditions.checkNotNull(rule, "A 'rule' must not be null.");
+		this.rule = checkNotNull(rule, "A 'rule' must not be null.");
 		this.startIndex = startIndex;
 		this.currentIndex = startIndex;
-		this.stack = Preconditions.checkNotNull(stack, "A 'stack' must not be null.");
-		this.bus = Preconditions.checkNotNull(bus, "A 'bus' must not be null.");
+		this.stack = checkNotNull(stack, "A 'stack' must not be null.");
+		this.bus = checkNotNull(bus, "A 'bus' must not be null.");
 		this.parentContext = parentContext;
 	}
 	
@@ -125,7 +127,7 @@ public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 	
 	@Override
 	public boolean advanceIndex(final int delta) {
-		Preconditions.checkArgument(delta >= 0, "A 'delta' must be greater or equal 0.");
+		checkArgument(delta >= 0, "A 'delta' must be greater or equal 0.");
 		if (currentIndex + delta <= inputBuffer.getLength()) {
 			currentIndex += delta;
 			return true;
