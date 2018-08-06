@@ -2,6 +2,7 @@ package com.mpe85.grampa.rule.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkPositionIndex;
 
 import java.util.Optional;
 
@@ -68,12 +69,18 @@ public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 	
 	@Override
 	public char getCurrentChar() {
-		return inputBuffer.getChar(currentIndex);
+		if (cachedCurrentChar == null) {
+			cachedCurrentChar = inputBuffer.getChar(currentIndex);
+		}
+		return cachedCurrentChar;
 	}
 	
 	@Override
 	public int getCurrentCodePoint() {
-		return inputBuffer.getCodePoint(currentIndex);
+		if (cachedCurrentCodePoint == null) {
+			cachedCurrentCodePoint = inputBuffer.getCodePoint(currentIndex);
+		}
+		return cachedCurrentCodePoint;
 	}
 	
 	@Override
@@ -119,9 +126,11 @@ public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 	
 	@Override
 	public void setCurrentIndex(final int currentIndex) {
+		checkPositionIndex(currentIndex, inputBuffer.getLength(), "A 'currentIndex' must be in range.");
 		if (currentIndex > this.currentIndex) {
 			previousMatch = inputBuffer.subSequence(this.currentIndex, currentIndex);
 		}
+		invalidateCache();
 		this.currentIndex = currentIndex;
 	}
 	
@@ -130,6 +139,7 @@ public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 		checkArgument(delta >= 0, "A 'delta' must be greater or equal 0.");
 		if (currentIndex + delta <= inputBuffer.getLength()) {
 			currentIndex += delta;
+			invalidateCache();
 			return true;
 		}
 		return false;
@@ -156,6 +166,11 @@ public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 		return new DefaultContext<>(inputBuffer, level + 1, rule, currentIndex, stack, bus, this);
 	}
 	
+	private void invalidateCache() {
+		cachedCurrentChar = null;
+		cachedCurrentCodePoint = null;
+	}
+	
 	
 	private final InputBuffer inputBuffer;
 	private final int level;
@@ -165,6 +180,8 @@ public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 	private final EventBus bus;
 	
 	private int currentIndex;
+	private Character cachedCurrentChar;
+	private Integer cachedCurrentCodePoint;
 	private CharSequence previousMatch;
 	private RuleContext<T> parentContext;
 	
