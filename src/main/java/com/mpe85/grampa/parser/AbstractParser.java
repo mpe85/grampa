@@ -19,7 +19,7 @@ import com.mpe85.grampa.rule.impl.CodePointRangeRule;
 import com.mpe85.grampa.rule.impl.CodePointRule;
 import com.mpe85.grampa.rule.impl.EmptyRule;
 import com.mpe85.grampa.rule.impl.EndOfInputRule;
-import com.mpe85.grampa.rule.impl.FirstRule;
+import com.mpe85.grampa.rule.impl.FirstOfRule;
 import com.mpe85.grampa.rule.impl.NeverRule;
 import com.mpe85.grampa.rule.impl.OptionalRule;
 import com.mpe85.grampa.rule.impl.RegexRule;
@@ -125,18 +125,18 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	@SafeVarargs
-	protected final Rule<T> first(final Rule<T>... rules) {
-		return first(Arrays.asList(checkNotNull(rules, "A 'rules' array must not be null.")));
+	protected final Rule<T> firstOf(final Rule<T>... rules) {
+		return firstOf(Arrays.asList(checkNotNull(rules, "A 'rules' array must not be null.")));
 	}
 	
-	protected Rule<T> first(final List<Rule<T>> rules) {
+	protected Rule<T> firstOf(final List<Rule<T>> rules) {
 		switch (checkNotNull(rules, "A 'rules' list must not be null.").size()) {
 			case 0:
 				return NEVER;
 			case 1:
 				return rules.get(0);
 			default:
-				return new FirstRule<>(rules);
+				return new FirstOfRule<>(rules);
 		}
 	}
 	

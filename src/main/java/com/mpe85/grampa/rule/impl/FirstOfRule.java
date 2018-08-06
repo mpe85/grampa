@@ -5,9 +5,9 @@ import java.util.List;
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.rule.RuleContext;
 
-public class FirstRule<T> extends AbstractRule<T> {
+public class FirstOfRule<T> extends AbstractRule<T> {
 	
-	public FirstRule(final List<Rule<T>> children) {
+	public FirstOfRule(final List<Rule<T>> children) {
 		super(children);
 	}
 	

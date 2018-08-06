@@ -22,7 +22,7 @@ public class TestParser extends AbstractParser<String> {
 	}
 	
 	protected Rule<String> expr(final char c) {
-		return first(
+		return firstOf(
 				character(c),
 				sequence(
 						empty(),
