@@ -8,13 +8,13 @@ import java.util.Set;
 import com.google.common.base.MoreObjects.ToStringHelper;
 import com.mpe85.grampa.rule.RuleContext;
 
-public class AnyOfRule<T> extends AbstractRule<T> {
+public class AnyOfCharsRule<T> extends AbstractRule<T> {
 	
-	public AnyOfRule(final Set<Character> characters) {
+	public AnyOfCharsRule(final Set<Character> characters) {
 		this(characters, false);
 	}
 	
-	public AnyOfRule(
+	public AnyOfCharsRule(
 			final Set<Character> characters,
 			final boolean negated) {
 		this.characters = checkNotNull(characters, "A set of 'characters' must not be null.");
@@ -36,7 +36,7 @@ public class AnyOfRule<T> extends AbstractRule<T> {
 	@Override
 	public boolean equals(final Object obj) {
 		if (obj != null && getClass() == obj.getClass()) {
-			final AnyOfRule<?> other = (AnyOfRule<?>) obj;
+			final AnyOfCharsRule<?> other = (AnyOfCharsRule<?>) obj;
 			return super.equals(other)
 					&& Objects.equals(characters, other.characters);
 		}

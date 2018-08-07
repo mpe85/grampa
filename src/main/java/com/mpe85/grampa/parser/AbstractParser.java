@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
+import com.google.common.primitives.Chars;
+import com.google.common.primitives.Ints;
 import com.mpe85.grampa.rule.Action;
 import com.mpe85.grampa.rule.ActionContext;
 import com.mpe85.grampa.rule.AlwaysSuccessingAction;
@@ -15,7 +17,8 @@ import com.mpe85.grampa.rule.ValueSupplier;
 import com.mpe85.grampa.rule.impl.ActionRule;
 import com.mpe85.grampa.rule.impl.AnyCharRule;
 import com.mpe85.grampa.rule.impl.AnyCodePointRule;
-import com.mpe85.grampa.rule.impl.AnyOfRule;
+import com.mpe85.grampa.rule.impl.AnyOfCharsRule;
+import com.mpe85.grampa.rule.impl.AnyOfCodePointsRule;
 import com.mpe85.grampa.rule.impl.CharRangeRule;
 import com.mpe85.grampa.rule.impl.CharRule;
 import com.mpe85.grampa.rule.impl.CodePointRangeRule;
@@ -73,47 +76,43 @@ public abstract class AbstractParser<T> implements Parser<T> {
 				: new CharRangeRule<>(lowerBound, upperBound);
 	}
 	
-	protected Rule<T> anyOf(final char... characters) {
-		return anyOf(IntStreamEx.of(characters)
+	protected Rule<T> anyOfChars(final char... characters) {
+		return anyOfChars(Sets.newHashSet(Chars.asList(characters)));
+	}
+	
+	protected Rule<T> anyOfChars(final String characters) {
+		return anyOfChars(IntStreamEx.ofChars(checkNotNull(characters, "A 'characters' string must not be null."))
 				.mapToObj(Character.class::cast)
 				.toSet());
 	}
 	
-	protected Rule<T> anyOf(final String characters) {
-		return anyOf(IntStreamEx.ofChars(checkNotNull(characters, "A 'characters' string must not be null."))
-				.mapToObj(Character.class::cast)
-				.toSet());
-	}
-	
-	protected Rule<T> anyOf(final Set<Character> characters) {
-		switch (checkNotNull(characters, "A 'characters' array must not be null.").size()) {
+	protected Rule<T> anyOfChars(final Set<Character> characters) {
+		switch (checkNotNull(characters, "A set of 'characters' must not be null.").size()) {
 			case 0:
 				return NEVER;
 			case 1:
 				return new CharRule<>(characters.iterator().next());
 			default:
-				return new AnyOfRule<>(characters);
+				return new AnyOfCharsRule<>(characters);
 		}
 	}
 	
-	protected Rule<T> noneOf(final char... characters) {
-		return noneOf(IntStreamEx.of(characters)
+	protected Rule<T> noneOfChars(final char... characters) {
+		return noneOfChars(Sets.newHashSet(Chars.asList(characters)));
+	}
+	
+	protected Rule<T> noneOfChars(final String characters) {
+		return noneOfChars(IntStreamEx.ofChars(checkNotNull(characters, "A 'characters' string must not be null."))
 				.mapToObj(Character.class::cast)
 				.toSet());
 	}
 	
-	protected Rule<T> noneOf(final String characters) {
-		return anyOf(IntStreamEx.ofChars(checkNotNull(characters, "A 'characters' string must not be null."))
-				.mapToObj(Character.class::cast)
-				.toSet());
-	}
-	
-	protected Rule<T> noneOf(final Set<Character> characters) {
-		switch (checkNotNull(characters, "A 'characters' array must not be null.").size()) {
+	protected Rule<T> noneOfChars(final Set<Character> characters) {
+		switch (checkNotNull(characters, "A set of 'characters' must not be null.").size()) {
 			case 0:
 				return ANY_CHAR;
 			default:
-				return new AnyOfRule<>(characters, true);
+				return new AnyOfCharsRule<>(characters, true);
 		}
 	}
 	
@@ -129,6 +128,48 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		return lowerBound == upperBound
 				? new CodePointRule<>(lowerBound)
 				: new CodePointRangeRule<>(lowerBound, upperBound);
+	}
+	
+	protected Rule<T> anyOfCodePoints(final int... codePoints) {
+		return anyOfCodePoints(Sets.newHashSet(Ints.asList(codePoints)));
+	}
+	
+	protected Rule<T> anyOfCodePoints(final String codePoints) {
+		return anyOfCodePoints(
+				IntStreamEx.ofCodePoints(checkNotNull(codePoints, "A 'codePoints' string must not be null."))
+						.mapToObj(Integer.class::cast)
+						.toSet());
+	}
+	
+	protected Rule<T> anyOfCodePoints(final Set<Integer> codePoints) {
+		switch (checkNotNull(codePoints, "A set of 'codePoints' must not be null.").size()) {
+			case 0:
+				return NEVER;
+			case 1:
+				return new CodePointRule<>(codePoints.iterator().next());
+			default:
+				return new AnyOfCodePointsRule<>(codePoints);
+		}
+	}
+	
+	protected Rule<T> noneOfCodePoints(final int... codePoints) {
+		return noneOfCodePoints(Sets.newHashSet(Ints.asList(codePoints)));
+	}
+	
+	protected Rule<T> noneOfCodePoints(final String codePoints) {
+		return noneOfCodePoints(
+				IntStreamEx.ofCodePoints(checkNotNull(codePoints, "A 'codePoints' string must not be null."))
+						.mapToObj(Integer.class::cast)
+						.toSet());
+	}
+	
+	protected Rule<T> noneOfCodePoints(final Set<Integer> codePoints) {
+		switch (checkNotNull(codePoints, "A set of 'codePoints' must not be null.").size()) {
+			case 0:
+				return ANY_CODEPOINT;
+			default:
+				return new AnyOfCodePointsRule<>(codePoints, true);
+		}
 	}
 	
 	protected Rule<T> string(final String string) {
