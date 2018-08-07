@@ -31,9 +31,9 @@ import com.mpe85.grampa.rule.impl.OptionalRule;
 import com.mpe85.grampa.rule.impl.RegexRule;
 import com.mpe85.grampa.rule.impl.SequenceRule;
 import com.mpe85.grampa.rule.impl.StringRule;
+import com.mpe85.grampa.rule.impl.StringsRule;
 import com.mpe85.grampa.rule.impl.TestNotRule;
 import com.mpe85.grampa.rule.impl.TestRule;
-import com.mpe85.grampa.rule.impl.TrieRule;
 
 import one.util.streamex.IntStreamEx;
 
@@ -187,18 +187,18 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		return new RegexRule<>(checkNotNull(regex, "A 'regex' must not be null."));
 	}
 	
-	protected Rule<T> trie(final String... strings) {
-		return trie(Sets.newHashSet(strings));
+	protected Rule<T> strings(final String... strings) {
+		return strings(Sets.newHashSet(strings));
 	}
 	
-	protected Rule<T> trie(final Set<String> strings) {
+	protected Rule<T> strings(final Set<String> strings) {
 		switch (checkNotNull(strings, "A set of 'strings' must not be null.").size()) {
 			case 0:
 				return NEVER;
 			case 1:
 				return new StringRule<>(strings.iterator().next());
 			default:
-				return new TrieRule<>(strings);
+				return new StringsRule<>(strings);
 		}
 	}
 	

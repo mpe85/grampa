@@ -1,12 +1,11 @@
 package com.mpe85.grampa.rule.impl;
 
-import java.util.Collection;
-import java.util.HashSet;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Objects;
 import java.util.Set;
 
 import com.google.common.base.MoreObjects.ToStringHelper;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.googlecode.concurrenttrees.radix.node.concrete.SmartArrayBasedNodeFactory;
 import com.googlecode.concurrenttrees.radix.node.concrete.voidvalue.VoidValue;
@@ -14,16 +13,16 @@ import com.googlecode.concurrenttrees.radixinverted.ConcurrentInvertedRadixTree;
 import com.googlecode.concurrenttrees.radixinverted.InvertedRadixTree;
 import com.mpe85.grampa.rule.RuleContext;
 
-public class TrieRule<T> extends AbstractRule<T> {
+public class StringsRule<T> extends AbstractRule<T> {
 	
-	public TrieRule(final String... strings) {
+	public StringsRule(final String... strings) {
 		this(Sets.newHashSet(strings));
 	}
 	
-	public TrieRule(final Collection<String> strings) {
-		this.strings.addAll(strings);
+	public StringsRule(final Set<String> strings) {
+		this.strings = strings;
 		strings.forEach(s -> trie.put(
-				Preconditions.checkNotNull(s, "A 'string' must not be null."),
+				checkNotNull(s, "A 'string' must not be null."),
 				VoidValue.SINGLETON));
 	}
 	
@@ -41,7 +40,7 @@ public class TrieRule<T> extends AbstractRule<T> {
 	@Override
 	public boolean equals(final Object obj) {
 		if (obj != null && getClass() == obj.getClass()) {
-			final TrieRule<?> other = (TrieRule<?>) obj;
+			final StringsRule<?> other = (StringsRule<?>) obj;
 			return super.equals(other)
 					&& Objects.equals(strings, other.strings);
 		}
@@ -55,7 +54,7 @@ public class TrieRule<T> extends AbstractRule<T> {
 	}
 	
 	
-	private final Set<String> strings = new HashSet<>();
+	private final Set<String> strings;
 	private final InvertedRadixTree<VoidValue> trie =
 			new ConcurrentInvertedRadixTree<>(new SmartArrayBasedNodeFactory());
 	
