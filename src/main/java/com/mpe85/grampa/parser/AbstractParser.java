@@ -6,21 +6,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Chars;
 import com.google.common.primitives.Ints;
+import com.ibm.icu.lang.UCharacter;
 import com.mpe85.grampa.rule.Action;
 import com.mpe85.grampa.rule.ActionContext;
 import com.mpe85.grampa.rule.AlwaysSuccessingAction;
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.rule.ValueSupplier;
 import com.mpe85.grampa.rule.impl.ActionRule;
-import com.mpe85.grampa.rule.impl.AnyCharRule;
-import com.mpe85.grampa.rule.impl.AnyCodePointRule;
 import com.mpe85.grampa.rule.impl.AnyOfCharsRule;
 import com.mpe85.grampa.rule.impl.AnyOfCodePointsRule;
+import com.mpe85.grampa.rule.impl.CharPredicateRule;
 import com.mpe85.grampa.rule.impl.CharRangeRule;
-import com.mpe85.grampa.rule.impl.CharRule;
+import com.mpe85.grampa.rule.impl.CodePointPredicateRule;
 import com.mpe85.grampa.rule.impl.CodePointRangeRule;
 import com.mpe85.grampa.rule.impl.CodePointRule;
 import com.mpe85.grampa.rule.impl.EmptyRule;
@@ -63,16 +64,18 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	protected Rule<T> character(final char character) {
-		return new CharRule<>(character);
+		return new CharPredicateRule<>(CharMatcher.is(character));
 	}
 	
 	protected Rule<T> ignoreCase(final char character) {
-		return new CharRule<>(character, true);
+		return new CharPredicateRule<>(
+				CharMatcher.is(Character.toLowerCase(character))
+						.or(CharMatcher.is(Character.toUpperCase(character))));
 	}
 	
 	protected Rule<T> charRange(final char lowerBound, final char upperBound) {
 		return lowerBound == upperBound
-				? new CharRule<>(lowerBound)
+				? character(lowerBound)
 				: new CharRangeRule<>(lowerBound, upperBound);
 	}
 	
@@ -91,7 +94,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 			case 0:
 				return NEVER;
 			case 1:
-				return new CharRule<>(characters.iterator().next());
+				return character(characters.iterator().next());
 			default:
 				return new AnyOfCharsRule<>(characters);
 		}
@@ -117,7 +120,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	protected Rule<T> codePoint(final int codePoint) {
-		return new CodePointRule<>(codePoint);
+		return new CodePointPredicateRule<>(cp -> cp == codePoint);
 	}
 	
 	protected Rule<T> ignoreCase(final int codePoint) {
@@ -177,7 +180,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 			case 0:
 				return EMPTY;
 			case 1:
-				return new CharRule<>(string.charAt(0));
+				return character(string.charAt(0));
 			default:
 				return new StringRule<>(string);
 		}
@@ -311,7 +314,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	protected final Rule<T> EMPTY = new EmptyRule<>();
 	protected final Rule<T> NEVER = new NeverRule<>();
 	protected final Rule<T> EOI = new EndOfInputRule<>();
-	protected final Rule<T> ANY_CHAR = new AnyCharRule<>();
-	protected final Rule<T> ANY_CODEPOINT = new AnyCodePointRule<>();
+	protected final Rule<T> ANY_CHAR = new CharPredicateRule<>(CharMatcher.any());
+	protected final Rule<T> ANY_CODEPOINT = new CodePointPredicateRule<>(UCharacter::isLegal);
 	
 }
