@@ -1,5 +1,6 @@
 package com.mpe85.grampa.parser;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Arrays;
@@ -19,8 +20,6 @@ import com.mpe85.grampa.rule.impl.ActionRule;
 import com.mpe85.grampa.rule.impl.AnyOfCodePointsRule;
 import com.mpe85.grampa.rule.impl.CharPredicateRule;
 import com.mpe85.grampa.rule.impl.CodePointPredicateRule;
-import com.mpe85.grampa.rule.impl.CodePointRangeRule;
-import com.mpe85.grampa.rule.impl.CodePointRule;
 import com.mpe85.grampa.rule.impl.EmptyRule;
 import com.mpe85.grampa.rule.impl.EndOfInputRule;
 import com.mpe85.grampa.rule.impl.FirstOfRule;
@@ -108,13 +107,13 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	protected Rule<T> ignoreCase(final int codePoint) {
-		return new CodePointRule<>(codePoint, true);
+		return new CodePointPredicateRule<>(
+				cp -> cp == Character.toLowerCase(codePoint) || cp == Character.toUpperCase(codePoint));
 	}
 	
 	protected Rule<T> codePointRange(final int lowerBound, final int upperBound) {
-		return lowerBound == upperBound
-				? new CodePointRule<>(lowerBound)
-				: new CodePointRangeRule<>(lowerBound, upperBound);
+		checkArgument(lowerBound <= upperBound, "A 'lowerBound' must not be greater than an 'upperBound'.");
+		return new CodePointPredicateRule<>(cp -> cp >= lowerBound && cp <= upperBound);
 	}
 	
 	protected Rule<T> anyOfCodePoints(final int... codePoints) {
@@ -132,8 +131,6 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		switch (checkNotNull(codePoints, "A set of 'codePoints' must not be null.").size()) {
 			case 0:
 				return NEVER;
-			case 1:
-				return new CodePointRule<>(codePoints.iterator().next());
 			default:
 				return new AnyOfCodePointsRule<>(codePoints);
 		}
