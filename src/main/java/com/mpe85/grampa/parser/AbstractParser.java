@@ -8,7 +8,6 @@ import java.util.Set;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.collect.Sets;
-import com.google.common.primitives.Chars;
 import com.google.common.primitives.Ints;
 import com.ibm.icu.lang.UCharacter;
 import com.mpe85.grampa.rule.Action;
@@ -17,10 +16,8 @@ import com.mpe85.grampa.rule.AlwaysSuccessingAction;
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.rule.ValueSupplier;
 import com.mpe85.grampa.rule.impl.ActionRule;
-import com.mpe85.grampa.rule.impl.AnyOfCharsRule;
 import com.mpe85.grampa.rule.impl.AnyOfCodePointsRule;
 import com.mpe85.grampa.rule.impl.CharPredicateRule;
-import com.mpe85.grampa.rule.impl.CharRangeRule;
 import com.mpe85.grampa.rule.impl.CodePointPredicateRule;
 import com.mpe85.grampa.rule.impl.CodePointRangeRule;
 import com.mpe85.grampa.rule.impl.CodePointRule;
@@ -37,6 +34,7 @@ import com.mpe85.grampa.rule.impl.TestNotRule;
 import com.mpe85.grampa.rule.impl.TestRule;
 
 import one.util.streamex.IntStreamEx;
+import one.util.streamex.StreamEx;
 
 public abstract class AbstractParser<T> implements Parser<T> {
 	
@@ -74,49 +72,35 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	protected Rule<T> charRange(final char lowerBound, final char upperBound) {
-		return lowerBound == upperBound
-				? character(lowerBound)
-				: new CharRangeRule<>(lowerBound, upperBound);
+		return new CharPredicateRule<>(CharMatcher.inRange(lowerBound, upperBound));
 	}
 	
 	protected Rule<T> anyOfChars(final char... characters) {
-		return anyOfChars(Sets.newHashSet(Chars.asList(characters)));
-	}
-	
-	protected Rule<T> anyOfChars(final String characters) {
-		return anyOfChars(IntStreamEx.ofChars(checkNotNull(characters, "A 'characters' string must not be null."))
-				.mapToObj(Character.class::cast)
-				.toSet());
+		return anyOfChars(String.valueOf(characters));
 	}
 	
 	protected Rule<T> anyOfChars(final Set<Character> characters) {
-		switch (checkNotNull(characters, "A set of 'characters' must not be null.").size()) {
-			case 0:
-				return NEVER;
-			case 1:
-				return character(characters.iterator().next());
-			default:
-				return new AnyOfCharsRule<>(characters);
-		}
+		checkNotNull(characters, "A set of 'characters' must not be null.");
+		return anyOfChars(StreamEx.of(characters).joining());
+	}
+	
+	protected Rule<T> anyOfChars(final String characters) {
+		checkNotNull(characters, "A 'characters' string must not be null.");
+		return new CharPredicateRule<>(CharMatcher.anyOf(characters));
 	}
 	
 	protected Rule<T> noneOfChars(final char... characters) {
-		return noneOfChars(Sets.newHashSet(Chars.asList(characters)));
-	}
-	
-	protected Rule<T> noneOfChars(final String characters) {
-		return noneOfChars(IntStreamEx.ofChars(checkNotNull(characters, "A 'characters' string must not be null."))
-				.mapToObj(Character.class::cast)
-				.toSet());
+		return noneOfChars(String.valueOf(characters));
 	}
 	
 	protected Rule<T> noneOfChars(final Set<Character> characters) {
-		switch (checkNotNull(characters, "A set of 'characters' must not be null.").size()) {
-			case 0:
-				return ANY_CHAR;
-			default:
-				return new AnyOfCharsRule<>(characters, true);
-		}
+		checkNotNull(characters, "A set of 'characters' must not be null.");
+		return noneOfChars(StreamEx.of(characters).joining());
+	}
+	
+	protected Rule<T> noneOfChars(final String characters) {
+		checkNotNull(characters, "A 'characters' string must not be null.");
+		return new CharPredicateRule<>(CharMatcher.noneOf(characters));
 	}
 	
 	protected Rule<T> codePoint(final int codePoint) {
