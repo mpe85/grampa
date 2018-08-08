@@ -28,10 +28,10 @@ repositories {
 
 dependencies {
 	implementation(
-		'com.google.guava:guava:25.1-jre',
+		'com.google.guava:guava:26.0-jre',
 		'one.util:streamex:0.6.7',
 		'com.googlecode.concurrent-trees:concurrent-trees:2.6.1',
-		'net.bytebuddy:byte-buddy:1.8.16',
+		'net.bytebuddy:byte-buddy:1.8.17',
 		'com.ibm.icu:icu4j:62.1'
 	)
 	testImplementation(
