@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import com.mpe85.grampa.rule.Rule;
-import com.mpe85.grampa.runner.ParseResult;
 import com.mpe85.grampa.runner.DefaultParseRunner;
+import com.mpe85.grampa.runner.ParseResult;
 
 public class AbstractParserTest {
 	
@@ -125,11 +125,11 @@ public class AbstractParserTest {
 	}
 	
 	@Test
-	public void trie_valid() {
+	public void strings_valid() {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
 			public Rule<Integer> root() {
-				return trie("foo", "football", "foobar");
+				return strings("foo", "football", "foobar");
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
