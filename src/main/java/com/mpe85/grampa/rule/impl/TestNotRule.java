@@ -13,11 +13,9 @@ public class TestNotRule<T> extends AbstractRule<T> {
 	
 	@Override
 	public boolean match(final RuleContext<T> context) {
-		final int currentIndex = context.getCurrentIndex();
 		context.getStack().takeSnapshot();
 		
 		if (context.createChildContext(getChild()).run()) {
-			context.setCurrentIndex(currentIndex);
 			context.getStack().restoreSnapshot();
 			return false;
 		}
