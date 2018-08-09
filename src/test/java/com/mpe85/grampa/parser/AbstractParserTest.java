@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 import org.junit.jupiter.api.Test;
 
 import com.mpe85.grampa.rule.Rule;
@@ -126,16 +128,21 @@ public class AbstractParserTest {
 	
 	@Test
 	public void strings_valid() {
+		final AtomicReference<CharSequence> stringsRuleMatch = new AtomicReference<>();
 		final class Parser extends AbstractParser<Integer> {
 			@Override
 			public Rule<Integer> root() {
-				return strings("foo", "football", "foobar");
+				return sequence(
+						strings("football", "foo", "foobar"),
+						action(ctx -> stringsRuleMatch.set(ctx.getPreviousMatch())),
+						string("baz"));
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-		final ParseResult<Integer> result = runner.run("fooba");
+		final ParseResult<Integer> result = runner.run("foobaz");
 		assertTrue(result.isMatched());
-		assertFalse(result.isMatchedWholeInput());
+		assertTrue(result.isMatchedWholeInput());
+		assertEquals("foo", stringsRuleMatch.get());
 	}
 	
 	@Test

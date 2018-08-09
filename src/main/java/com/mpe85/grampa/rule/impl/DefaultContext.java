@@ -45,6 +45,7 @@ public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 		this.stack = checkNotNull(stack, "A 'stack' must not be null.");
 		this.bus = checkNotNull(bus, "A 'bus' must not be null.");
 		this.parentContext = parentContext;
+		this.previousMatch = Optional.ofNullable(parentContext).map(RuleContext::getPreviousMatch).orElse(null);
 	}
 	
 	@Override

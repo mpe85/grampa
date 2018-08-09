@@ -26,7 +26,7 @@ import com.mpe85.grampa.rule.impl.OptionalRule;
 import com.mpe85.grampa.rule.impl.RegexRule;
 import com.mpe85.grampa.rule.impl.SequenceRule;
 import com.mpe85.grampa.rule.impl.StringRule;
-import com.mpe85.grampa.rule.impl.StringsRule;
+import com.mpe85.grampa.rule.impl.TrieRule;
 import com.mpe85.grampa.rule.impl.TestNotRule;
 import com.mpe85.grampa.rule.impl.TestRule;
 
@@ -170,7 +170,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 			case 1:
 				return new StringRule<>(strings.iterator().next());
 			default:
-				return new StringsRule<>(strings);
+				return new TrieRule<>(strings);
 		}
 	}
 	
