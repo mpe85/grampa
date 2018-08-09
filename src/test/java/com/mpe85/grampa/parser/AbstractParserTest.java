@@ -62,6 +62,25 @@ public class AbstractParserTest {
 		assertEquals(Integer.valueOf(4715), result.getValueStack().peek(1));
 	}
 	
+	
+	@Test
+	public void sequence_fail_success() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return sequence(
+						firstOf(
+								sequence(string("foo"), string("bar")),
+								sequence(string("foo"), string("baz"))),
+						string("xxx"));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<Integer> result = runner.run("foobazxxx");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+	}
+	
 	@Test
 	public void test_valid() {
 		final class Parser extends AbstractParser<Integer> {
