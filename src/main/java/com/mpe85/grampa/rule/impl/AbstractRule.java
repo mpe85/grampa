@@ -22,7 +22,7 @@ public abstract class AbstractRule<T> implements Rule<T> {
 	}
 	
 	protected AbstractRule(final Rule<T> child) {
-		this(Lists.newArrayList(child));
+		this(Lists.newArrayList(checkNotNull(child, "A 'child' must not be null.")));
 	}
 	
 	protected AbstractRule(final List<Rule<T>> children) {

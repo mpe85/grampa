@@ -1,5 +1,7 @@
 package com.mpe85.grampa.rule.impl;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 
 import com.mpe85.grampa.rule.Rule;
@@ -9,8 +11,8 @@ import one.util.streamex.StreamEx;
 
 public class SequenceRule<T> extends AbstractRule<T> {
 	
-	public SequenceRule(final List<Rule<T>> children) {
-		super(children);
+	public SequenceRule(final List<Rule<T>> rules) {
+		super(checkNotNull(rules, "A list of 'rules' must not be null."));
 	}
 	
 	@Override

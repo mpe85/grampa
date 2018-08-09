@@ -1,12 +1,14 @@
 package com.mpe85.grampa.rule.impl;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.rule.RuleContext;
 
 public class TestRule<T> extends AbstractRule<T> {
 	
-	public TestRule(final Rule<T> matcher) {
-		super(matcher);
+	public TestRule(final Rule<T> rule) {
+		super(checkNotNull(rule, "A 'rule' must not be null."));
 	}
 	
 	@Override
