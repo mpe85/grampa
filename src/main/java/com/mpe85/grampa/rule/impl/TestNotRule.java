@@ -16,12 +16,12 @@ public class TestNotRule<T> extends AbstractRule<T> {
 		final int currentIndex = context.getCurrentIndex();
 		context.getStack().takeSnapshot();
 		
-		if (!context.createChildContext(getChild()).run()) {
+		if (context.createChildContext(getChild()).run()) {
 			context.setCurrentIndex(currentIndex);
 			context.getStack().restoreSnapshot();
-			return true;
+			return false;
 		}
-		return false;
+		return true;
 	}
 	
 	@Override
