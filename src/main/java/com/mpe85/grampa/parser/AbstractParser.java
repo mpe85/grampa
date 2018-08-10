@@ -10,6 +10,7 @@ import java.util.Set;
 import com.google.common.base.CharMatcher;
 import com.google.common.collect.Sets;
 import com.ibm.icu.lang.UCharacter;
+import com.mpe85.grampa.builder.RepeatRuleBuilder;
 import com.mpe85.grampa.rule.Action;
 import com.mpe85.grampa.rule.ActionContext;
 import com.mpe85.grampa.rule.AlwaysSuccessingAction;
@@ -22,13 +23,12 @@ import com.mpe85.grampa.rule.impl.EmptyRule;
 import com.mpe85.grampa.rule.impl.EndOfInputRule;
 import com.mpe85.grampa.rule.impl.FirstOfRule;
 import com.mpe85.grampa.rule.impl.NeverRule;
-import com.mpe85.grampa.rule.impl.OptionalRule;
 import com.mpe85.grampa.rule.impl.RegexRule;
 import com.mpe85.grampa.rule.impl.SequenceRule;
 import com.mpe85.grampa.rule.impl.StringRule;
-import com.mpe85.grampa.rule.impl.TrieRule;
 import com.mpe85.grampa.rule.impl.TestNotRule;
 import com.mpe85.grampa.rule.impl.TestRule;
+import com.mpe85.grampa.rule.impl.TrieRule;
 
 import one.util.streamex.IntStreamEx;
 import one.util.streamex.StreamEx;
@@ -207,7 +207,11 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	protected Rule<T> optional(final Rule<T> rule) {
-		return new OptionalRule<>(checkNotNull(rule, "A 'rule' must not be null."));
+		return repeat(rule).times(0, 1);
+	}
+	
+	protected RepeatRuleBuilder<T> repeat(final Rule<T> rule) {
+		return new RepeatRuleBuilder<>(checkNotNull(rule, "A 'rule' must not be null."));
 	}
 	
 	protected Rule<T> test(final Rule<T> rule) {

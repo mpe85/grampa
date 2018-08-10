@@ -64,7 +64,7 @@ public class AbstractParserTest {
 	
 	
 	@Test
-	public void sequence_fail_success() {
+	public void firstOf() {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
 			public Rule<Integer> root() {
@@ -194,6 +194,62 @@ public class AbstractParserTest {
 		assertEquals("foobar", result.getValueStack().pop());
 		assertEquals("foobar", result.getValueStack().pop());
 		assertEquals("world", result.getValueStackTop());
+	}
+	
+	@Test
+	public void repeat_valid_times() {
+		final class Parser extends AbstractParser<CharSequence> {
+			@Override
+			public Rule<CharSequence> root() {
+				return repeat(character('z')).times(4, 7);
+			}
+		}
+		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<CharSequence> result = runner.run("zzzzz");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+	}
+	
+	@Test
+	public void repeat_invalid_times() {
+		final class Parser extends AbstractParser<CharSequence> {
+			@Override
+			public Rule<CharSequence> root() {
+				return repeat(character('z')).times(6, 7);
+			}
+		}
+		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<CharSequence> result = runner.run("zzzzz");
+		assertFalse(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+	}
+	
+	@Test
+	public void repeat_valid_min() {
+		final class Parser extends AbstractParser<CharSequence> {
+			@Override
+			public Rule<CharSequence> root() {
+				return repeat(character('z')).min(3);
+			}
+		}
+		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<CharSequence> result = runner.run("zzzzz");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+	}
+	
+	@Test
+	public void repeat_invalid_min() {
+		final class Parser extends AbstractParser<CharSequence> {
+			@Override
+			public Rule<CharSequence> root() {
+				return repeat(character('z')).min(8);
+			}
+		}
+		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<CharSequence> result = runner.run("zzzzz");
+		assertFalse(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
 	}
 	
 }
