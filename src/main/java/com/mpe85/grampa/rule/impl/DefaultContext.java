@@ -148,6 +148,7 @@ public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 	
 	@Override
 	public boolean run() {
+		stack.takeSnapshot();
 		bus.post(new PreMatchEvent<>(this));
 		final boolean matched = rule.match(this);
 		if (matched && parentContext != null) {
@@ -159,6 +160,7 @@ public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 		else {
 			bus.post(new MatchFailureEvent<>(this));
 		}
+		stack.removeSnapshot(!matched);
 		return matched;
 	}
 	

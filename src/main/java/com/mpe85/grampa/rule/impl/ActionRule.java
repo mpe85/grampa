@@ -25,10 +25,7 @@ public class ActionRule<T> extends AbstractRule<T> {
 		if (context.inPredicate() && skippable) {
 			return true;
 		}
-		context.getStack().takeSnapshot();
-		final boolean matched = action.run(context);
-		context.getStack().removeSnapshot(!matched);
-		return matched;
+		return action.run(context);
 	}
 	
 	@Override
