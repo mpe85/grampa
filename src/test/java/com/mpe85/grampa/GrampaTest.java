@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.mpe85.grampa.rule.Rule;
@@ -30,6 +31,20 @@ public class GrampaTest {
 		
 		final Rule<String> root = p.root();
 		verifyTestParserRules(root);
+	}
+	
+	@Test
+	public void createParser_invalid_ctor() {
+		Assertions.assertThrows(
+				RuntimeException.class,
+				() -> Grampa.createParser(TestParser.class, Integer.class).withArgs(4711));
+	}
+	
+	@Test
+	public void createParser_invalid_args() {
+		Assertions.assertThrows(
+				RuntimeException.class,
+				() -> Grampa.createParser(TestParser.class, String.class).withArgs(4711));
 	}
 	
 	private void verifyTestParserRules(final Rule<String> root) {
