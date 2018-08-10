@@ -23,14 +23,13 @@ public class RuleMethodInterceptor<T> {
 			@SuperCall final Callable<Rule<T>> zuper,
 			@AllArguments final Object... args)
 			throws Exception {
-		final boolean root = isRoot(method);
 		final int hash = Objects.hash(method.getName(), Objects.hash(args));
 		
 		if (!rules.containsKey(hash)) {
 			rules.put(hash, null);
 			final Rule<T> rule = zuper.call();
 			rules.put(hash, rule);
-			if (root) {
+			if (isRoot(method)) {
 				rule.accept(new ReferenceRuleReplaceVisitor<>(rules));
 			}
 			return rule;
