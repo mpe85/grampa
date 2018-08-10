@@ -17,6 +17,7 @@ public class TestRule<T> extends AbstractRule<T> {
 		context.getStack().takeSnapshot();
 		
 		if (context.createChildContext(getChild()).run()) {
+			// reset current index and stack
 			context.setCurrentIndex(currentIndex);
 			context.getStack().restoreSnapshot();
 			return true;

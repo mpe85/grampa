@@ -13,13 +13,7 @@ public class TestNotRule<T> extends AbstractRule<T> {
 	
 	@Override
 	public boolean match(final RuleContext<T> context) {
-		context.getStack().takeSnapshot();
-		
-		if (context.createChildContext(getChild()).run()) {
-			context.getStack().restoreSnapshot();
-			return false;
-		}
-		return true;
+		return !context.createChildContext(getChild()).run();
 	}
 	
 	@Override
