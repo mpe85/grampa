@@ -18,34 +18,19 @@ import net.bytebuddy.implementation.bind.annotation.SuperCall;
 public class RuleMethodInterceptor<T> {
 	
 	@RuntimeType
-	public Rule<T> root(
-			@Origin final Method method,
-			@SuperCall final Callable<Rule<T>> zuper)
-			throws Exception {
-		return intercept(method.getName(), method.getParameterCount() == 0, zuper);
-	}
-	
-	@RuntimeType
-	public Rule<T> other(
+	public Rule<T> intercept(
 			@Origin final Method method,
 			@SuperCall final Callable<Rule<T>> zuper,
 			@AllArguments final Object... args)
 			throws Exception {
-		return intercept(method.getName(), false, zuper, args);
-	}
-	
-	private Rule<T> intercept(
-			final String ruleName,
-			final boolean isRoot,
-			final Callable<Rule<T>> zuper,
-			final Object... args) throws Exception {
-		final int hash = Objects.hash(ruleName, Objects.hash(args));
+		final boolean root = isRoot(method);
+		final int hash = Objects.hash(method.getName(), Objects.hash(args));
 		
 		if (!rules.containsKey(hash)) {
 			rules.put(hash, null);
 			final Rule<T> rule = zuper.call();
 			rules.put(hash, rule);
-			if (isRoot) {
+			if (root) {
 				rule.accept(new ReferenceRuleReplaceVisitor<>(rules));
 			}
 			return rule;
@@ -53,6 +38,12 @@ public class RuleMethodInterceptor<T> {
 		return new ReferenceRule<>(hash);
 	}
 	
+	private boolean isRoot(final Method method) {
+		return ROOT.equals(method.getName()) && method.getParameterCount() == 0;
+	}
+	
+	
+	private static final String ROOT = "root";
 	
 	private final Map<Integer, Rule<T>> rules = new HashMap<>();
 	

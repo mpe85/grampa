@@ -1,22 +1,52 @@
 package com.mpe85.grampa;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 
 import com.mpe85.grampa.rule.Rule;
+import com.mpe85.grampa.rule.impl.CharPredicateRule;
+import com.mpe85.grampa.rule.impl.EmptyRule;
+import com.mpe85.grampa.rule.impl.FirstOfRule;
+import com.mpe85.grampa.rule.impl.SequenceRule;
 
 public class GrampaTest {
 	
 	@Test
-	public void testCreateParser() {
+	public void createParser_valid_noArgs() {
 		final TestParser p = Grampa.createParser(TestParser.class);
+		assertNull(p.getDummy());
+		
 		final Rule<String> root = p.root();
-		// TODO test...
+		verifyTestParserRules(root);
 	}
 	
 	@Test
-	public void testCreateParser2() {
+	public void createParser_valid_withArgs() {
 		final TestParser p = Grampa.createParser(TestParser.class, String.class).withArgs("foo");
+		assertEquals("foo", p.getDummy());
+		
 		final Rule<String> root = p.root();
-		// TODO test...
+		verifyTestParserRules(root);
+	}
+	
+	private void verifyTestParserRules(final Rule<String> root) {
+		assertTrue(root instanceof FirstOfRule);
+		assertEquals(2, root.getChildren().size());
+		assertTrue(root.getChildren().get(0) instanceof CharPredicateRule);
+		assertTrue(root.getChildren().get(1) instanceof SequenceRule);
+		
+		final SequenceRule<String> sequenceRule = (SequenceRule<String>) root.getChildren().get(1);
+		assertEquals(6, sequenceRule.getChildren().size());
+		assertTrue(sequenceRule.getChildren().get(0) instanceof EmptyRule);
+		assertTrue(sequenceRule.getChildren().get(1) instanceof EmptyRule);
+		assertTrue(sequenceRule.getChildren().get(2) instanceof EmptyRule);
+		assertTrue(sequenceRule.getChildren().get(3) instanceof CharPredicateRule);
+		assertTrue(sequenceRule.getChildren().get(4) instanceof FirstOfRule);
+		assertTrue(sequenceRule.getChildren().get(5) instanceof CharPredicateRule);
+		
+		assertEquals(root, sequenceRule.getChildren().get(4));
 	}
 }

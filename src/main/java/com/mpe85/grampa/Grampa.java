@@ -1,5 +1,7 @@
 package com.mpe85.grampa;
 
+import static net.bytebuddy.matcher.ElementMatchers.returns;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
@@ -9,7 +11,6 @@ import com.mpe85.grampa.rule.Rule;
 
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.implementation.MethodDelegation;
-import net.bytebuddy.matcher.ElementMatchers;
 
 public class Grampa {
 	
@@ -39,10 +40,10 @@ public class Grampa {
 	private static <U extends Parser<T>, T> Class<? extends U> createParserSubClass(final Class<U> parserClass) {
 		return new ByteBuddy()
 				.subclass(parserClass)
-				.method(ElementMatchers.returns(Rule.class))
+				.method(returns(Rule.class))
 				.intercept(MethodDelegation
 						.withDefaultConfiguration()
-						.to(new RuleMethodInterceptor<T>()))
+						.to(new RuleMethodInterceptor<>()))
 				.make()
 				.load(parserClass.getClassLoader())
 				.getLoaded();

@@ -27,13 +27,17 @@ public class TestParser extends AbstractParser<String> {
 				sequence(
 						empty(),
 						root(66),
+						noop(),
 						character('('),
 						root(),
 						character(')')));
-		
 	}
 	
 	protected Rule<String> root(final int i) {
+		return empty();
+	}
+	
+	protected Rule<String> noop() {
 		return empty();
 	}
 	
