@@ -106,7 +106,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	
 	protected Rule<T> ignoreCase(final int codePoint) {
 		return new CodePointPredicateRule<>(
-				cp -> cp == Character.toLowerCase(codePoint) || cp == Character.toUpperCase(codePoint));
+				cp -> cp == UCharacter.toLowerCase(codePoint) || cp == UCharacter.toUpperCase(codePoint));
 	}
 	
 	protected Rule<T> codePointRange(final int lowerBound, final int upperBound) {
