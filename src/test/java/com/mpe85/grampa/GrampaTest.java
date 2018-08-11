@@ -47,6 +47,15 @@ public class GrampaTest {
 				() -> Grampa.createParser(TestParser.class, String.class).withArgs(4711));
 	}
 	
+	@Test
+	public void createParser_valid_inheritance() {
+		final SuperParser superParser = Grampa.createParser(SuperParser.class);
+		verifySuperParserRules(superParser.root());
+		
+		final SubParser subParser = Grampa.createParser(SubParser.class);
+		verifySuperParserRules(subParser.root());
+	}
+	
 	private void verifyTestParserRules(final Rule<String> root) {
 		assertTrue(root instanceof FirstOfRule);
 		assertEquals(2, root.getChildren().size());
@@ -63,5 +72,14 @@ public class GrampaTest {
 		assertTrue(sequenceRule.getChildren().get(5) instanceof CharPredicateRule);
 		
 		assertEquals(root, sequenceRule.getChildren().get(4));
+	}
+	
+	private void verifySuperParserRules(final Rule<String> root) {
+		assertTrue(root instanceof SequenceRule);
+		assertEquals(2, root.getChildren().size());
+		assertTrue(root.getChildren().get(0) instanceof CharPredicateRule);
+		assertTrue(root.getChildren().get(1) instanceof SequenceRule);
+		
+		assertEquals(root, root.getChildren().get(1));
 	}
 }
