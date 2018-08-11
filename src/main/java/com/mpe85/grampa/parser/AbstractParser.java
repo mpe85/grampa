@@ -155,6 +155,17 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		}
 	}
 	
+	protected Rule<T> stringIgnoreCase(final String string) {
+		switch (checkNotNull(string, "A 'string' must not be null.").length()) {
+			case 0:
+				return EMPTY;
+			case 1:
+				return ignoreCase(string.charAt(0));
+			default:
+				return new StringRule<>(string, true);
+		}
+	}
+	
 	protected Rule<T> regex(final String regex) {
 		return new RegexRule<>(checkNotNull(regex, "A 'regex' must not be null."));
 	}
@@ -171,6 +182,21 @@ public abstract class AbstractParser<T> implements Parser<T> {
 				return new StringRule<>(strings.iterator().next());
 			default:
 				return new TrieRule<>(strings);
+		}
+	}
+	
+	protected Rule<T> stringsIgnoreCase(final String... strings) {
+		return stringsIgnoreCase(Sets.newHashSet(strings));
+	}
+	
+	protected Rule<T> stringsIgnoreCase(final Set<String> strings) {
+		switch (checkNotNull(strings, "A set of 'strings' must not be null.").size()) {
+			case 0:
+				return NEVER;
+			case 1:
+				return new StringRule<>(strings.iterator().next(), true);
+			default:
+				return new TrieRule<>(strings, true);
 		}
 	}
 	

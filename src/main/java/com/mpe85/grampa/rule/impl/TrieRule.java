@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.Sets;
+import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.util.CharsTrie;
 import com.ibm.icu.util.CharsTrieBuilder;
 import com.ibm.icu.util.StringTrieBuilder.Option;
@@ -17,13 +18,27 @@ import one.util.streamex.StreamEx;
 public class TrieRule<T> extends AbstractRule<T> {
 	
 	public TrieRule(final String... strings) {
-		this(Sets.newHashSet(strings));
+		this(false, strings);
+	}
+	
+	public TrieRule(final boolean ignoreCase, final String... strings) {
+		this(Sets.newHashSet(strings), ignoreCase);
 	}
 	
 	public TrieRule(final Set<String> strings) {
+		this(strings, false);
+	}
+	
+	public TrieRule(
+			final Set<String> strings,
+			final boolean ignoreCase) {
 		final CharsTrieBuilder builder = new CharsTrieBuilder();
-		strings.forEach(s -> builder.add(checkNotNull(s, "A 'string' must not be null."), 0));
+		strings.forEach(s -> {
+			checkNotNull(s, "A 'string' must not be null.");
+			builder.add(ignoreCase ? UCharacter.toLowerCase(s) : s, 0);
+		});
 		trie = builder.build(Option.FAST);
+		this.ignoreCase = ignoreCase;
 	}
 	
 	public Set<String> getStrings() {
@@ -35,7 +50,7 @@ public class TrieRule<T> extends AbstractRule<T> {
 		int longestMatch = 0;
 		final int[] codePoints = context.getRestOfInput().codePoints().toArray();
 		loop: for (int i = 0; i < codePoints.length; i++) {
-			switch (trie.next(codePoints[i])) {
+			switch (trie.next(ignoreCase ? UCharacter.toLowerCase(codePoints[i]) : codePoints[i])) {
 				case FINAL_VALUE:
 					longestMatch = i + 1;
 					break loop;
@@ -54,7 +69,7 @@ public class TrieRule<T> extends AbstractRule<T> {
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(super.hashCode(), getStrings());
+		return Objects.hash(super.hashCode(), getStrings(), ignoreCase);
 	}
 	
 	@Override
@@ -62,7 +77,8 @@ public class TrieRule<T> extends AbstractRule<T> {
 		if (obj != null && getClass() == obj.getClass()) {
 			final TrieRule<?> other = (TrieRule<?>) obj;
 			return super.equals(other)
-					&& Objects.equals(getStrings(), other.getStrings());
+					&& Objects.equals(getStrings(), other.getStrings())
+					&& Objects.equals(ignoreCase, other.ignoreCase);
 		}
 		return false;
 	}
@@ -70,9 +86,11 @@ public class TrieRule<T> extends AbstractRule<T> {
 	@Override
 	protected ToStringHelper toStringHelper() {
 		return super.toStringHelper()
-				.add("strings", getStrings());
+				.add("strings", getStrings())
+				.add("ignoreCase", ignoreCase);
 	}
 	
 	
 	private final CharsTrie trie;
+	private final boolean ignoreCase;
 }
