@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import com.mpe85.grampa.exception.ParserCreateException;
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.rule.impl.CharPredicateRule;
 import com.mpe85.grampa.rule.impl.EmptyRule;
@@ -36,14 +37,14 @@ public class GrampaTest {
 	@Test
 	public void createParser_invalid_ctor() {
 		Assertions.assertThrows(
-				RuntimeException.class,
+				ParserCreateException.class,
 				() -> Grampa.createParser(TestParser.class, Integer.class).withArgs(4711));
 	}
 	
 	@Test
 	public void createParser_invalid_args() {
 		Assertions.assertThrows(
-				RuntimeException.class,
+				ParserCreateException.class,
 				() -> Grampa.createParser(TestParser.class, String.class).withArgs(4711));
 	}
 	
