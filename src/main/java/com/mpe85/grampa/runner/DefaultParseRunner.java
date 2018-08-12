@@ -1,7 +1,9 @@
 package com.mpe85.grampa.runner;
 
-import com.google.common.base.Preconditions;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.SubscriberExceptionHandler;
 import com.mpe85.grampa.event.ParseEventListener;
 import com.mpe85.grampa.event.PostParseEvent;
 import com.mpe85.grampa.event.PreParseEvent;
@@ -17,8 +19,13 @@ import com.mpe85.grampa.util.stack.impl.LinkedListRestorableStack;
 public class DefaultParseRunner<T> {
 	
 	public DefaultParseRunner(final Parser<T> parser) {
-		Preconditions.checkNotNull(parser, "A 'parser' must not be null.");
+		this(parser, null);
+	}
+	
+	public DefaultParseRunner(final Parser<T> parser, final SubscriberExceptionHandler handler) {
+		checkNotNull(parser, "A 'parser' must not be null.");
 		this.rootRule = parser.root();
+		this.bus = handler != null ? new EventBus(handler) : new EventBus();
 	}
 	
 	public Rule<T> getRootRule() {
@@ -38,7 +45,7 @@ public class DefaultParseRunner<T> {
 	}
 	
 	public ParseResult<T> run(final InputBuffer inputBuffer) {
-		Preconditions.checkNotNull(inputBuffer, "An 'inputBuffer' must not be null.");
+		checkNotNull(inputBuffer, "An 'inputBuffer' must not be null.");
 		resetValueStack();
 		final RuleContext<T> context = createRootContext(inputBuffer);
 		
@@ -60,8 +67,9 @@ public class DefaultParseRunner<T> {
 		valueStack = new LinkedListRestorableStack<>();
 	}
 	
+	
 	private final Rule<T> rootRule;
+	private final EventBus bus;
 	private RestorableStack<T> valueStack;
-	private final EventBus bus = new EventBus();
 	
 }
