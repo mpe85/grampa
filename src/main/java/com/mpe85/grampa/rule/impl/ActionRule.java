@@ -1,9 +1,11 @@
 package com.mpe85.grampa.rule.impl;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Objects;
 
 import com.google.common.base.MoreObjects.ToStringHelper;
-import com.google.common.base.Preconditions;
+import com.mpe85.grampa.exception.ActionRunException;
 import com.mpe85.grampa.rule.Action;
 import com.mpe85.grampa.rule.RuleContext;
 
@@ -16,7 +18,7 @@ public class ActionRule<T> extends AbstractRule<T> {
 	public ActionRule(
 			final Action<T> action,
 			final boolean skippable) {
-		this.action = Preconditions.checkNotNull(action, "An 'action' must not be null.");
+		this.action = checkNotNull(action, "An 'action' must not be null.");
 		this.skippable = skippable;
 	}
 	
@@ -25,7 +27,12 @@ public class ActionRule<T> extends AbstractRule<T> {
 		if (context.inPredicate() && skippable) {
 			return true;
 		}
-		return action.run(context);
+		try {
+			return action.run(context);
+		}
+		catch (final RuntimeException ex) {
+			throw new ActionRunException("Failed to to run action.", ex);
+		}
 	}
 	
 	@Override
