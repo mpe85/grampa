@@ -1,11 +1,13 @@
 package com.mpe85.grampa.util.stack.impl;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkPositionIndex;
+
 import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
 
-import com.google.common.base.Preconditions;
 import com.mpe85.grampa.util.stack.RestorableStack;
 
 public class LinkedListRestorableStack<E> extends LinkedList<E> implements RestorableStack<E> {
@@ -22,11 +24,13 @@ public class LinkedListRestorableStack<E> extends LinkedList<E> implements Resto
 	
 	@Override
 	public <T extends E> T popAs(final Class<T> type) {
+		checkNotNull(type, "A 'type' must not be null.");
 		return type.cast(pop());
 	}
 	
 	@Override
 	public <T extends E> T popAs(final int down, final Class<T> type) {
+		checkNotNull(type, "A 'type' must not be null.");
 		return type.cast(pop(checkIndex(down)));
 	}
 	
@@ -37,11 +41,13 @@ public class LinkedListRestorableStack<E> extends LinkedList<E> implements Resto
 	
 	@Override
 	public <T extends E> T peekAs(final Class<T> type) {
+		checkNotNull(type, "A 'type' must not be null.");
 		return type.cast(get(0));
 	}
 	
 	@Override
 	public <T extends E> T peekAs(final int down, final Class<T> type) {
+		checkNotNull(type, "A 'type' must not be null.");
 		return type.cast(get(checkIndex(down)));
 	}
 	
@@ -109,7 +115,7 @@ public class LinkedListRestorableStack<E> extends LinkedList<E> implements Resto
 	}
 	
 	private int checkIndex(final int down) {
-		return Preconditions.checkPositionIndex(down, size(), "A 'down' index must be in range.");
+		return checkPositionIndex(down, size(), "A 'down' index must be in range.");
 	}
 	
 	
