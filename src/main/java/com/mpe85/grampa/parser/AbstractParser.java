@@ -200,6 +200,58 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		}
 	}
 	
+	protected Rule<T> ascii() {
+		return new CharPredicateRule<>(CharMatcher.ascii());
+	}
+	
+	protected Rule<T> bmp() {
+		return new CodePointPredicateRule<>(UCharacter::isBMP);
+	}
+	
+	protected Rule<T> digit() {
+		return new CodePointPredicateRule<>(UCharacter::isDigit);
+	}
+	
+	protected Rule<T> javaIdentifierStart() {
+		return new CodePointPredicateRule<>(Character::isJavaIdentifierStart);
+	}
+	
+	protected Rule<T> javaIdentifierPart() {
+		return new CodePointPredicateRule<>(Character::isJavaIdentifierPart);
+	}
+	
+	protected Rule<T> letter() {
+		return new CodePointPredicateRule<>(UCharacter::isLetter);
+	}
+	
+	protected Rule<T> letterOrDigit() {
+		return new CodePointPredicateRule<>(UCharacter::isLetterOrDigit);
+	}
+	
+	protected Rule<T> printable() {
+		return new CodePointPredicateRule<>(UCharacter::isPrintable);
+	}
+	
+	protected Rule<T> spaceChar() {
+		return new CodePointPredicateRule<>(UCharacter::isSpaceChar);
+	}
+	
+	protected Rule<T> whitespace() {
+		return new CodePointPredicateRule<>(UCharacter::isWhitespace);
+	}
+	
+	protected Rule<T> cr() {
+		return new CharPredicateRule<>('\r');
+	}
+	
+	protected Rule<T> lf() {
+		return new CharPredicateRule<>('\n');
+	}
+	
+	protected Rule<T> crlf() {
+		return string("\r\n");
+	}
+	
 	@SafeVarargs
 	protected final Rule<T> sequence(final Rule<T>... rules) {
 		return sequence(Arrays.asList(checkNotNull(rules, "A 'rules' array must not be null.")));
@@ -234,6 +286,14 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	
 	protected Rule<T> optional(final Rule<T> rule) {
 		return repeat(rule).times(0, 1);
+	}
+	
+	protected Rule<T> zeroOrMore(final Rule<T> rule) {
+		return repeat(rule).min(0);
+	}
+	
+	protected Rule<T> oneOrMore(final Rule<T> rule) {
+		return repeat(rule).min(1);
 	}
 	
 	protected RepeatRuleBuilder<T> repeat(final Rule<T> rule) {
