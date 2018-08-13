@@ -10,6 +10,10 @@ import com.mpe85.grampa.rule.RuleContext;
 
 public class CharPredicateRule<T> extends AbstractRule<T> {
 	
+	public CharPredicateRule(final char character) {
+		this(c -> c == character);
+	}
+	
 	public CharPredicateRule(final Predicate<Character> predicate) {
 		this.predicate = checkNotNull(predicate, "A 'predicate' must not be null.");
 	}

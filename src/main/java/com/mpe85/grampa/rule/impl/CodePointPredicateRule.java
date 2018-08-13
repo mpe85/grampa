@@ -11,6 +11,10 @@ import com.mpe85.grampa.rule.RuleContext;
 
 public class CodePointPredicateRule<T> extends AbstractRule<T> {
 	
+	public CodePointPredicateRule(final int codePoint) {
+		this(cp -> cp == codePoint);
+	}
+	
 	public CodePointPredicateRule(final Predicate<Integer> predicate) {
 		this.predicate = checkNotNull(predicate, "A 'predicate' must not be null.");
 	}
