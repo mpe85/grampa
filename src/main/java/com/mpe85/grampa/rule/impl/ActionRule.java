@@ -31,7 +31,7 @@ public class ActionRule<T> extends AbstractRule<T> {
 			return action.run(context);
 		}
 		catch (final RuntimeException ex) {
-			throw new ActionRunException("Failed to to run action.", ex);
+			throw new ActionRunException("Failed to run action.", ex);
 		}
 	}
 	
