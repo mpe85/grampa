@@ -273,40 +273,101 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	protected Rule<T> pop() {
-		return new ActionRule<>(ctx -> {
+		return action(ctx -> {
 			ctx.getStack().pop();
 			return true;
 		});
 	}
 	
+	protected Rule<T> poke(final T value) {
+		return action(ctx -> {
+			ctx.getStack().poke(value);
+			return true;
+		});
+	}
+	
+	protected Rule<T> poke(final int down, final T value) {
+		return action(ctx -> {
+			ctx.getStack().poke(down, value);
+			return true;
+		});
+	}
+	
+	protected Rule<T> poke(final ValueSupplier<T> supplier) {
+		checkNotNull(supplier, "A 'supplier' must not be null.");
+		return action(ctx -> {
+			ctx.getStack().poke(supplier.supply(ctx));
+			return true;
+		});
+	}
+	
+	protected Rule<T> poke(final int down, final ValueSupplier<T> supplier) {
+		checkNotNull(supplier, "A 'supplier' must not be null.");
+		return action(ctx -> {
+			ctx.getStack().poke(down, supplier.supply(ctx));
+			return true;
+		});
+	}
+	
+	protected Rule<T> push(final T value) {
+		return action(ctx -> ctx.getStack().push(value));
+	}
+	
+	protected Rule<T> push(final ValueSupplier<T> supplier) {
+		checkNotNull(supplier, "A 'supplier' must not be null.");
+		return action(ctx -> ctx.getStack().push(supplier.supply(ctx)));
+	}
+	
+	protected Rule<T> dup() {
+		return action(ctx -> ctx.getStack().dup());
+	}
+	
+	protected Rule<T> swap() {
+		return action(ctx -> ctx.getStack().swap());
+	}
+	
 	protected final T pop(final ActionContext<T> context) {
+		checkNotNull(context, "A 'context' must not be null.");
 		return context.getStack().pop();
 	}
 	
 	protected final T pop(final int down, final ActionContext<T> context) {
+		checkNotNull(context, "A 'context' must not be null.");
 		return context.getStack().pop(down);
 	}
 	
+	protected final <U extends T> U popAs(final Class<U> clazz, final ActionContext<T> context) {
+		checkNotNull(clazz, "A 'clazz' must not be null.");
+		checkNotNull(context, "A 'context' must not be null.");
+		return clazz.cast(context.getStack().pop());
+	}
+	
+	protected final <U extends T> U popAs(final Class<U> clazz, final int down, final ActionContext<T> context) {
+		checkNotNull(clazz, "A 'clazz' must not be null.");
+		checkNotNull(context, "A 'context' must not be null.");
+		return clazz.cast(context.getStack().pop(down));
+	}
+	
 	protected final T peek(final ActionContext<T> context) {
+		checkNotNull(context, "A 'context' must not be null.");
 		return context.getStack().peek();
 	}
 	
 	protected final T peek(final int down, final ActionContext<T> context) {
+		checkNotNull(context, "A 'context' must not be null.");
 		return context.getStack().peek(down);
 	}
 	
-	protected Rule<T> push(final T value) {
-		return new ActionRule<>(ctx -> {
-			ctx.getStack().push(value);
-			return true;
-		});
+	protected final <U extends T> U peekAs(final Class<U> clazz, final ActionContext<T> context) {
+		checkNotNull(clazz, "A 'clazz' must not be null.");
+		checkNotNull(context, "A 'context' must not be null.");
+		return clazz.cast(context.getStack().peek());
 	}
 	
-	protected Rule<T> push(final ValueSupplier<T> supplier) {
-		return new ActionRule<>(ctx -> {
-			ctx.getStack().push(supplier.supply(ctx));
-			return true;
-		});
+	protected final <U extends T> U peekAs(final Class<U> clazz, final int down, final ActionContext<T> context) {
+		checkNotNull(clazz, "A 'clazz' must not be null.");
+		checkNotNull(context, "A 'context' must not be null.");
+		return clazz.cast(context.getStack().peek(down));
 	}
 	
 	
