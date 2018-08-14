@@ -73,7 +73,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	protected Rule<T> anyOfChars(final char... characters) {
-		return anyOfChars(String.valueOf(characters));
+		return anyOfChars(String.valueOf(checkNotNull(characters, "A 'characters' array must not be null.")));
 	}
 	
 	protected Rule<T> anyOfChars(final Set<Character> characters) {
@@ -83,11 +83,17 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	
 	protected Rule<T> anyOfChars(final String characters) {
 		checkNotNull(characters, "A 'characters' string must not be null.");
+		if (characters.length() == 0) {
+			return NEVER;
+		}
+		else if (characters.length() == 1) {
+			return character(characters.charAt(0));
+		}
 		return new CharPredicateRule<>(CharMatcher.anyOf(characters));
 	}
 	
 	protected Rule<T> noneOfChars(final char... characters) {
-		return noneOfChars(String.valueOf(characters));
+		return noneOfChars(String.valueOf(checkNotNull(characters, "A 'characters' array must not be null.")));
 	}
 	
 	protected Rule<T> noneOfChars(final Set<Character> characters) {
@@ -97,6 +103,9 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	
 	protected Rule<T> noneOfChars(final String characters) {
 		checkNotNull(characters, "A 'characters' string must not be null.");
+		if (characters.length() == 0) {
+			return ANY_CHAR;
+		}
 		return new CharPredicateRule<>(CharMatcher.noneOf(characters));
 	}
 	
@@ -115,6 +124,13 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	protected Rule<T> anyOfCodePoints(final int... codePoints) {
+		checkNotNull(codePoints, "A 'codePoints' array must not be null.");
+		if (codePoints.length == 0) {
+			return NEVER;
+		}
+		else if (codePoints.length == 1) {
+			return codePoint(codePoints[0]);
+		}
 		Arrays.sort(codePoints);
 		return new CodePointPredicateRule<>(cp -> Arrays.binarySearch(codePoints, cp) >= 0);
 	}
@@ -130,6 +146,10 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	protected Rule<T> noneOfCodePoints(final int... codePoints) {
+		checkNotNull(codePoints, "A 'codePoints' array must not be null.");
+		if (codePoints.length == 0) {
+			return ANY_CODEPOINT;
+		}
 		Arrays.sort(codePoints);
 		return new CodePointPredicateRule<>(cp -> Arrays.binarySearch(codePoints, cp) < 0);
 	}
@@ -145,25 +165,26 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	protected Rule<T> string(final String string) {
-		switch (checkNotNull(string, "A 'string' must not be null.").length()) {
-			case 0:
-				return EMPTY;
-			case 1:
-				return character(string.charAt(0));
-			default:
-				return new StringRule<>(string);
+		checkNotNull(string, "A 'string' must not be null.");
+		if (string.length() == 0) {
+			return EMPTY;
 		}
+		else if (string.length() == 1) {
+			return character(string.charAt(0));
+		}
+		return new StringRule<>(string);
 	}
 	
 	protected Rule<T> stringIgnoreCase(final String string) {
-		switch (checkNotNull(string, "A 'string' must not be null.").length()) {
-			case 0:
-				return EMPTY;
-			case 1:
-				return ignoreCase(string.charAt(0));
-			default:
-				return new StringRule<>(string, true);
+		checkNotNull(string, "A 'string' must not be null.");
+		if (string.length() == 0) {
+			return EMPTY;
 		}
+		else if (string.length() == 1) {
+			return ignoreCase(string.charAt(0));
+		}
+		return new StringRule<>(string, true);
+		
 	}
 	
 	protected Rule<T> regex(final String regex) {
@@ -171,85 +192,85 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	protected Rule<T> strings(final String... strings) {
-		return strings(Sets.newHashSet(strings));
+		return strings(Sets.newHashSet(checkNotNull(strings, "A set of 'strings' must not be null.")));
 	}
 	
 	protected Rule<T> strings(final Set<String> strings) {
-		switch (checkNotNull(strings, "A set of 'strings' must not be null.").size()) {
-			case 0:
-				return NEVER;
-			case 1:
-				return new StringRule<>(strings.iterator().next());
-			default:
-				return new TrieRule<>(strings);
+		checkNotNull(strings, "A set of 'strings' must not be null.");
+		if (strings.size() == 0) {
+			return NEVER;
 		}
+		else if (strings.size() == 1) {
+			return string(strings.iterator().next());
+		}
+		return new TrieRule<>(strings);
 	}
 	
 	protected Rule<T> stringsIgnoreCase(final String... strings) {
-		return stringsIgnoreCase(Sets.newHashSet(strings));
+		return stringsIgnoreCase(Sets.newHashSet(checkNotNull(strings, "A set of 'strings' must not be null.")));
 	}
 	
 	protected Rule<T> stringsIgnoreCase(final Set<String> strings) {
-		switch (checkNotNull(strings, "A set of 'strings' must not be null.").size()) {
-			case 0:
-				return NEVER;
-			case 1:
-				return new StringRule<>(strings.iterator().next(), true);
-			default:
-				return new TrieRule<>(strings, true);
+		checkNotNull(strings, "A set of 'strings' must not be null.");
+		if (strings.size() == 0) {
+			return NEVER;
 		}
+		else if (strings.size() == 1) {
+			return stringIgnoreCase(strings.iterator().next());
+		}
+		return new TrieRule<>(strings, true);
 	}
 	
 	protected Rule<T> ascii() {
-		return new CharPredicateRule<>(CharMatcher.ascii());
+		return ASCII;
 	}
 	
 	protected Rule<T> bmp() {
-		return new CodePointPredicateRule<>(UCharacter::isBMP);
+		return BMP;
 	}
 	
 	protected Rule<T> digit() {
-		return new CodePointPredicateRule<>(UCharacter::isDigit);
+		return DIGIT;
 	}
 	
 	protected Rule<T> javaIdentifierStart() {
-		return new CodePointPredicateRule<>(Character::isJavaIdentifierStart);
+		return JAVA_IDENTIFIER_START;
 	}
 	
 	protected Rule<T> javaIdentifierPart() {
-		return new CodePointPredicateRule<>(Character::isJavaIdentifierPart);
+		return JAVA_IDENTIFIER_PART;
 	}
 	
 	protected Rule<T> letter() {
-		return new CodePointPredicateRule<>(UCharacter::isLetter);
+		return LETTER;
 	}
 	
 	protected Rule<T> letterOrDigit() {
-		return new CodePointPredicateRule<>(UCharacter::isLetterOrDigit);
+		return LETTER_OR_DIGIT;
 	}
 	
 	protected Rule<T> printable() {
-		return new CodePointPredicateRule<>(UCharacter::isPrintable);
+		return PRINTABLE;
 	}
 	
 	protected Rule<T> spaceChar() {
-		return new CodePointPredicateRule<>(UCharacter::isSpaceChar);
+		return SPACE_CHAR;
 	}
 	
 	protected Rule<T> whitespace() {
-		return new CodePointPredicateRule<>(UCharacter::isWhitespace);
+		return WHITESPACE;
 	}
 	
 	protected Rule<T> cr() {
-		return new CharPredicateRule<>('\r');
+		return CR;
 	}
 	
 	protected Rule<T> lf() {
-		return new CharPredicateRule<>('\n');
+		return LF;
 	}
 	
 	protected Rule<T> crlf() {
-		return string("\r\n");
+		return CRLF;
 	}
 	
 	@SafeVarargs
@@ -258,14 +279,14 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	protected Rule<T> sequence(final List<Rule<T>> rules) {
-		switch (checkNotNull(rules, "A 'rules' list must not be null.").size()) {
-			case 0:
-				return EMPTY;
-			case 1:
-				return rules.get(0);
-			default:
-				return new SequenceRule<>(rules);
+		checkNotNull(rules, "A 'rules' list must not be null.");
+		if (rules.size() == 0) {
+			return EMPTY;
 		}
+		else if (rules.size() == 1) {
+			return rules.get(0);
+		}
+		return new SequenceRule<>(rules);
 	}
 	
 	@SafeVarargs
@@ -274,14 +295,14 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	protected Rule<T> firstOf(final List<Rule<T>> rules) {
-		switch (checkNotNull(rules, "A 'rules' list must not be null.").size()) {
-			case 0:
-				return NEVER;
-			case 1:
-				return rules.get(0);
-			default:
-				return new FirstOfRule<>(rules);
+		checkNotNull(rules, "A 'rules' list must not be null.");
+		if (rules.size() == 0) {
+			return EMPTY;
 		}
+		else if (rules.size() == 1) {
+			return rules.get(0);
+		}
+		return new FirstOfRule<>(rules);
 	}
 	
 	protected Rule<T> optional(final Rule<T> rule) {
@@ -436,5 +457,18 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	protected final Rule<T> EOI = new EndOfInputRule<>();
 	protected final Rule<T> ANY_CHAR = new CharPredicateRule<>(CharMatcher.any());
 	protected final Rule<T> ANY_CODEPOINT = new CodePointPredicateRule<>(UCharacter::isLegal);
+	protected final Rule<T> ASCII = new CharPredicateRule<>(CharMatcher.ascii());
+	protected final Rule<T> BMP = new CodePointPredicateRule<>(UCharacter::isBMP);
+	protected final Rule<T> DIGIT = new CodePointPredicateRule<>(UCharacter::isDigit);
+	protected final Rule<T> JAVA_IDENTIFIER_START = new CodePointPredicateRule<>(Character::isJavaIdentifierStart);
+	protected final Rule<T> JAVA_IDENTIFIER_PART = new CodePointPredicateRule<>(Character::isJavaIdentifierPart);
+	protected final Rule<T> LETTER = new CodePointPredicateRule<>(UCharacter::isLetter);
+	protected final Rule<T> LETTER_OR_DIGIT = new CodePointPredicateRule<>(UCharacter::isLetterOrDigit);
+	protected final Rule<T> PRINTABLE = new CodePointPredicateRule<>(UCharacter::isPrintable);
+	protected final Rule<T> SPACE_CHAR = new CodePointPredicateRule<>(UCharacter::isSpaceChar);
+	protected final Rule<T> WHITESPACE = new CodePointPredicateRule<>(UCharacter::isWhitespace);
+	protected final Rule<T> CR = new CharPredicateRule<>('\r');
+	protected final Rule<T> LF = new CharPredicateRule<>('\n');
+	protected final Rule<T> CRLF = new StringRule<>("\r\n");
 	
 }
