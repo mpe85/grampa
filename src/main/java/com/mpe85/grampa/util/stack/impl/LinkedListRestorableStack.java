@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkPositionIndex;
 
 import java.util.ArrayDeque;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -11,6 +12,13 @@ import java.util.LinkedList;
 import com.mpe85.grampa.util.stack.RestorableStack;
 
 public class LinkedListRestorableStack<E> extends LinkedList<E> implements RestorableStack<E> {
+	
+	public LinkedListRestorableStack() {
+	}
+	
+	public LinkedListRestorableStack(final Collection<? extends E> c) {
+		super(c);
+	}
 	
 	@Override
 	public void push(final int down, final E element) {
@@ -73,13 +81,12 @@ public class LinkedListRestorableStack<E> extends LinkedList<E> implements Resto
 	
 	@Override
 	public void takeSnapshot() {
-		@SuppressWarnings("unchecked") final LinkedList<E> clone = (LinkedList<E>) clone();
-		snapshots.push(clone);
+		snapshots.push(copy());
 	}
 	
 	@Override
 	public void restoreSnapshot() {
-		final LinkedList<E> snapshot = snapshots.pop();
+		final Deque<E> snapshot = snapshots.pop();
 		clear();
 		addAll(snapshot);
 	}
@@ -110,8 +117,8 @@ public class LinkedListRestorableStack<E> extends LinkedList<E> implements Resto
 	}
 	
 	@Override
-	public Object clone() {
-		return super.clone();
+	public RestorableStack<E> copy() {
+		return new LinkedListRestorableStack<>(this);
 	}
 	
 	private int checkIndex(final int down) {
@@ -121,6 +128,6 @@ public class LinkedListRestorableStack<E> extends LinkedList<E> implements Resto
 	
 	private static final long serialVersionUID = 3875323652049358971L;
 	
-	private final Deque<LinkedList<E>> snapshots = new ArrayDeque<>();
+	private final Deque<Deque<E>> snapshots = new ArrayDeque<>();
 	
 }

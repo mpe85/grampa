@@ -38,6 +38,6 @@ public interface RestorableStack<E> extends Deque<E>, Cloneable {
 	
 	int getSnapshotCount();
 	
-	Object clone();
+	RestorableStack<E> copy();
 	
 }
