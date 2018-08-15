@@ -10,11 +10,11 @@ buildscript {
 plugins {
 	id 'java'
 	id 'eclipse'
-	id 'checkstyle'
 	id 'maven'
 	id 'maven-publish'
     id 'com.diffplug.gradle.spotless' version '3.14.0'
     id 'com.jfrog.bintray' version '1.8.4'
+    id 'com.github.spotbugs' version '1.6.2'
 }
 
 group 'com.mpe85'
@@ -56,9 +56,18 @@ artifacts {
 	archives javadocJar, sourcesJar
 }
 
+spotbugs {
+	toolVersion = '3.1.6'
+	ignoreFailures = true
+	effort = 'max'
+	reportLevel = 'low'
+}
 
-checkstyle {
-	toolVersion '8.10.1'
+tasks.withType(com.github.spotbugs.SpotBugsTask) {
+	reports {
+		html.enabled = true
+		xml.enabled = false
+	}
 }
 
 spotless {
