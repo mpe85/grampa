@@ -28,8 +28,8 @@ public class ParseResult<T> {
 	}
 	
 	
-	final boolean matched;
-	final boolean matchedWholeInput;
-	final RestorableStack<T> valueStack;
+	private final boolean matched;
+	private final boolean matchedWholeInput;
+	private final RestorableStack<T> valueStack;
 	
 }
