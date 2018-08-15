@@ -13,7 +13,7 @@ import com.ibm.icu.lang.UCharacter;
 import com.mpe85.grampa.builder.RepeatRuleBuilder;
 import com.mpe85.grampa.rule.Action;
 import com.mpe85.grampa.rule.ActionContext;
-import com.mpe85.grampa.rule.AlwaysSuccessingAction;
+import com.mpe85.grampa.rule.Command;
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.rule.ValueSupplier;
 import com.mpe85.grampa.rule.impl.ActionRule;
@@ -333,24 +333,18 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		return new ActionRule<>(checkNotNull(action, "An 'action' must not be null."));
 	}
 	
-	protected Rule<T> action(final AlwaysSuccessingAction<T> action) {
-		checkNotNull(action, "An 'action' must not be null.");
-		return action(ctx -> {
-			action.run(ctx);
-			return true;
-		});
+	protected Rule<T> command(final Command<T> command) {
+		checkNotNull(command, "A 'command' must not be null.");
+		return action(command.toAction());
 	}
 	
 	protected Rule<T> skippableAction(final Action<T> action) {
 		return new ActionRule<>(checkNotNull(action, "An 'action' must not be null."), true);
 	}
 	
-	protected Rule<T> skippableAction(final AlwaysSuccessingAction<T> action) {
-		checkNotNull(action, "An 'action' must not be null.");
-		return skippableAction(ctx -> {
-			action.run(ctx);
-			return true;
-		});
+	protected Rule<T> skippableCommand(final Command<T> command) {
+		checkNotNull(command, "A 'command' must not be null.");
+		return skippableAction(command.toAction());
 	}
 	
 	protected Rule<T> pop() {
@@ -391,20 +385,20 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	protected Rule<T> push(final T value) {
-		return action(ctx -> ctx.getStack().push(value));
+		return command(ctx -> ctx.getStack().push(value));
 	}
 	
 	protected Rule<T> push(final ValueSupplier<T> supplier) {
 		checkNotNull(supplier, "A 'supplier' must not be null.");
-		return action(ctx -> ctx.getStack().push(supplier.supply(ctx)));
+		return command(ctx -> ctx.getStack().push(supplier.supply(ctx)));
 	}
 	
 	protected Rule<T> dup() {
-		return action(ctx -> ctx.getStack().dup());
+		return command(ctx -> ctx.getStack().dup());
 	}
 	
 	protected Rule<T> swap() {
-		return action(ctx -> ctx.getStack().swap());
+		return command(ctx -> ctx.getStack().swap());
 	}
 	
 	protected final T pop(final ActionContext<T> context) {
