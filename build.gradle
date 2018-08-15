@@ -26,12 +26,19 @@ repositories {
 	jcenter()
 }
 
+configurations {
+	testCompileOnly.extendsFrom compileOnly
+}
+
 dependencies {
 	implementation(
 		'com.google.guava:guava:26.0-jre',
 		'one.util:streamex:0.6.7',
 		'net.bytebuddy:byte-buddy:1.8.17',
 		'com.ibm.icu:icu4j:62.1'
+	)
+	compileOnly(
+		'com.github.spotbugs:spotbugs-annotations:3.1.6'
 	)
 	testImplementation(
 		'org.junit.jupiter:junit-jupiter-api:5.2.0'
@@ -40,6 +47,7 @@ dependencies {
 		'org.junit.jupiter:junit-jupiter-engine:5.2.0',
 		'org.junit.platform:junit-platform-launcher:1.2.0'
 	)
+	spotless
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
