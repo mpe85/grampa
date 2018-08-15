@@ -19,7 +19,7 @@ public class AbstractParserTest {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
 			public Rule<Integer> root() {
-				return action(ctx -> ctx.getStack().push(4711));
+				return command(ctx -> ctx.getStack().push(4711));
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
@@ -153,7 +153,7 @@ public class AbstractParserTest {
 			public Rule<Integer> root() {
 				return sequence(
 						strings("football", "foo", "foobar"),
-						action(ctx -> stringsRuleMatch.set(ctx.getPreviousMatch())),
+						command(ctx -> stringsRuleMatch.set(ctx.getPreviousMatch())),
 						string("baz"));
 			}
 		}
