@@ -26,7 +26,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-		assertEquals(Integer.valueOf(4711), runner.run("whatever").getValueStackTop());
+		assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
 	}
 	
 	@Test
@@ -38,7 +38,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-		assertEquals(Integer.valueOf(4711), runner.run("whatever").getValueStackTop());
+		assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
 	}
 	
 	@Test
@@ -59,10 +59,10 @@ public class AbstractParserTest {
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
 		final ParseResult<Integer> result = runner.run("whatever");
-		assertEquals(Integer.valueOf(9426), result.getValueStackTop());
-		assertEquals(2, result.getValueStack().size());
-		assertEquals(Integer.valueOf(9426), result.getValueStack().peek());
-		assertEquals(Integer.valueOf(4715), result.getValueStack().peek(1));
+		assertEquals(Integer.valueOf(9426), result.getStackTop());
+		assertEquals(2, result.getStack().size());
+		assertEquals(Integer.valueOf(9426), result.getStack().peek());
+		assertEquals(Integer.valueOf(4715), result.getStack().peek(1));
 	}
 	
 	
@@ -193,10 +193,10 @@ public class AbstractParserTest {
 		final ParseResult<CharSequence> result = runner.run("helloworldfoobarbaz");
 		assertTrue(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
-		assertEquals("b", result.getValueStack().pop());
-		assertEquals("foobar", result.getValueStack().pop());
-		assertEquals("foobar", result.getValueStack().pop());
-		assertEquals("world", result.getValueStackTop());
+		assertEquals("b", result.getStack().pop());
+		assertEquals("foobar", result.getStack().pop());
+		assertEquals("foobar", result.getStack().pop());
+		assertEquals("world", result.getStackTop());
 	}
 	
 	@Test

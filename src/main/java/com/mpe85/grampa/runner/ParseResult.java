@@ -8,7 +8,9 @@ public class ParseResult<T> {
 	public ParseResult(final boolean matched, final RuleContext<T> context) {
 		this.matched = matched;
 		this.matchedWholeInput = matched && context.isAtEndOfInput();
-		this.valueStack = context.getStack().copy();
+		this.matchedInput = context.getMatchedInput();
+		this.restOfInput = context.getRestOfInput();
+		this.stack = context.getStack().copy();
 	}
 	
 	public boolean isMatched() {
@@ -19,17 +21,27 @@ public class ParseResult<T> {
 		return matchedWholeInput;
 	}
 	
-	public RestorableStack<T> getValueStack() {
-		return valueStack;
+	public CharSequence getMatchedInput() {
+		return matchedInput;
 	}
 	
-	public T getValueStackTop() {
-		return valueStack.size() > 0 ? valueStack.peek() : null;
+	public CharSequence getRestOfInput() {
+		return restOfInput;
+	}
+	
+	public RestorableStack<T> getStack() {
+		return stack;
+	}
+	
+	public T getStackTop() {
+		return stack.size() > 0 ? stack.peek() : null;
 	}
 	
 	
 	private final boolean matched;
 	private final boolean matchedWholeInput;
-	private final RestorableStack<T> valueStack;
+	private final CharSequence matchedInput;
+	private final CharSequence restOfInput;
+	private final RestorableStack<T> stack;
 	
 }

@@ -19,6 +19,8 @@ public interface ActionContext<T> {
 	
 	int getNumberOfCharsLeft();
 	
+	CharSequence getMatchedInput();
+	
 	CharSequence getRestOfInput();
 	
 	CharSequence getPreviousMatch();
