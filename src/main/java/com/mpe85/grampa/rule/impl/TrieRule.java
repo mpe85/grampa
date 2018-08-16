@@ -8,6 +8,7 @@ import java.util.Set;
 import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.Sets;
 import com.ibm.icu.lang.UCharacter;
+import com.ibm.icu.util.BytesTrie.Result;
 import com.ibm.icu.util.CharsTrie;
 import com.ibm.icu.util.CharsTrieBuilder;
 import com.ibm.icu.util.StringTrieBuilder.Option;
@@ -49,18 +50,13 @@ public class TrieRule<T> extends AbstractRule<T> {
 	public boolean match(final RuleContext<T> context) {
 		int longestMatch = 0;
 		final int[] codePoints = context.getRestOfInput().codePoints().toArray();
-		loop: for (int i = 0; i < codePoints.length; i++) {
-			switch (trie.next(ignoreCase ? UCharacter.toLowerCase(codePoints[i]) : codePoints[i])) {
-				case FINAL_VALUE:
-					longestMatch = i + 1;
-					break loop;
-				case INTERMEDIATE_VALUE:
-					longestMatch = i + 1;
-					continue loop;
-				case NO_MATCH:
-					break loop;
-				case NO_VALUE:
-					continue loop;
+		for (int i = 0; i < codePoints.length; i++) {
+			final Result result = trie.next(ignoreCase ? UCharacter.toLowerCase(codePoints[i]) : codePoints[i]);
+			if (result == Result.FINAL_VALUE || result == Result.INTERMEDIATE_VALUE) {
+				longestMatch = i + 1;
+			}
+			if (result == Result.FINAL_VALUE || result == Result.NO_MATCH) {
+				break;
 			}
 		}
 		trie.reset();
