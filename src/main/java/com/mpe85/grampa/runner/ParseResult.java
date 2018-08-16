@@ -8,8 +8,8 @@ public class ParseResult<T> {
 	public ParseResult(final boolean matched, final RuleContext<T> context) {
 		this.matched = matched;
 		this.matchedWholeInput = matched && context.isAtEndOfInput();
-		this.matchedInput = context.getMatchedInput();
-		this.restOfInput = context.getRestOfInput();
+		this.matchedInput = matched ? context.getMatchedInput() : null;
+		this.restOfInput = matched ? context.getRestOfInput() : context.getInput();
 		this.stack = context.getStack().copy();
 	}
 	

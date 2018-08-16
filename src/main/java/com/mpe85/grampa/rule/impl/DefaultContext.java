@@ -90,6 +90,11 @@ public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 	}
 	
 	@Override
+	public CharSequence getInput() {
+		return inputBuffer.subSequence(0, inputBuffer.getLength());
+	}
+	
+	@Override
 	public CharSequence getMatchedInput() {
 		return inputBuffer.subSequence(0, currentIndex);
 	}

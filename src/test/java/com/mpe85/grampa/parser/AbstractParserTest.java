@@ -2,6 +2,7 @@ package com.mpe85.grampa.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -16,6 +17,134 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings(value = "SIC_INNER_SHOULD_BE_STATIC_ANON", justification = "Performance is not of great importance in unit tests.")
 public class AbstractParserTest {
+	
+	@Test
+	public void empty_valid() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return empty();
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<Integer> result = runner.run("foo");
+		assertTrue(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+		assertEquals("", result.getMatchedInput());
+		assertEquals("foo", result.getRestOfInput());
+	}
+	
+	@Test
+	public void never_valid() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return never();
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<Integer> result = runner.run("foo");
+		assertFalse(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+		assertNull(result.getMatchedInput());
+		assertEquals("foo", result.getRestOfInput());
+	}
+	
+	@Test
+	public void eoi_valid() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return sequence(string("foo"), eoi());
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<Integer> result = runner.run("foo");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+		assertEquals("foo", result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
+	}
+	
+	@Test
+	public void eoi_invalid() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return sequence(string("foo"), eoi());
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<Integer> result = runner.run("foo ");
+		assertFalse(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+		assertNull(result.getMatchedInput());
+		assertEquals("foo ", result.getRestOfInput());
+	}
+	
+	@Test
+	public void anyChar_valid() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return anyChar();
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<Integer> result = runner.run("f");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+		assertEquals("f", result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
+	}
+	
+	@Test
+	public void anyChar_invalid() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return anyChar();
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<Integer> result = runner.run("");
+		assertFalse(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+		assertNull(result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
+	}
+	
+	@Test
+	public void anyCodePoint_valid() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return anyCodePoint();
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<Integer> result = runner.run("\uD835\uDD38");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+		assertEquals("\uD835\uDD38", result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
+	}
+	
+	@Test
+	public void anyCodePoint_invalid() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return anyCodePoint();
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<Integer> result = runner.run("");
+		assertFalse(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+		assertNull(result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
+	}
 	
 	@Test
 	public void action() {
