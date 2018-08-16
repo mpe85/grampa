@@ -12,6 +12,9 @@ import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.runner.DefaultParseRunner;
 import com.mpe85.grampa.runner.ParseResult;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+@SuppressFBWarnings(value = "SIC_INNER_SHOULD_BE_STATIC_ANON", justification = "Performance is not of great importance in unit tests.")
 public class AbstractParserTest {
 	
 	@Test
