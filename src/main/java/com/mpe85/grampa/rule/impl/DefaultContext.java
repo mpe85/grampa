@@ -131,6 +131,11 @@ public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 	}
 	
 	@Override
+	public void post(final Object event) {
+		bus.post(checkNotNull(event, "An 'event' must not be null."));
+	}
+	
+	@Override
 	public InputBuffer getInputBuffer() {
 		return inputBuffer;
 	}

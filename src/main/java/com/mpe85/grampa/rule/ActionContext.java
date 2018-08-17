@@ -35,4 +35,6 @@ public interface ActionContext<T> {
 	
 	ActionContext<T> getParent();
 	
+	void post(Object event);
+	
 }

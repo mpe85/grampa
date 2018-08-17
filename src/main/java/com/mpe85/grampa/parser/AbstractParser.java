@@ -14,6 +14,7 @@ import com.mpe85.grampa.builder.RepeatRuleBuilder;
 import com.mpe85.grampa.rule.Action;
 import com.mpe85.grampa.rule.ActionContext;
 import com.mpe85.grampa.rule.Command;
+import com.mpe85.grampa.rule.EventSupplier;
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.rule.ValueSupplier;
 import com.mpe85.grampa.rule.impl.ActionRule;
@@ -345,6 +346,16 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	protected Rule<T> skippableCommand(final Command<T> command) {
 		checkNotNull(command, "A 'command' must not be null.");
 		return skippableAction(command.toAction());
+	}
+	
+	protected Rule<T> post(final Object event) {
+		checkNotNull(event, "An 'event' must not be null.");
+		return skippableCommand(ctx -> ctx.post(event));
+	}
+	
+	protected Rule<T> post(final EventSupplier<T> supplier) {
+		checkNotNull(supplier, "A 'supplier' must not be null.");
+		return skippableCommand(ctx -> ctx.post(supplier.supply(ctx)));
 	}
 	
 	protected Rule<T> pop() {
