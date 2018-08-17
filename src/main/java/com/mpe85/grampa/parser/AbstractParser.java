@@ -176,7 +176,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		return new StringRule<>(string);
 	}
 	
-	protected Rule<T> stringIgnoreCase(final String string) {
+	protected Rule<T> ignoreCase(final String string) {
 		checkNotNull(string, "A 'string' must not be null.");
 		if (string.length() == 0) {
 			return EMPTY;
@@ -207,17 +207,17 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		return new TrieRule<>(strings);
 	}
 	
-	protected Rule<T> stringsIgnoreCase(final String... strings) {
-		return stringsIgnoreCase(Sets.newHashSet(checkNotNull(strings, "A set of 'strings' must not be null.")));
+	protected Rule<T> ignoreCase(final String... strings) {
+		return ignoreCase(Sets.newHashSet(checkNotNull(strings, "A set of 'strings' must not be null.")));
 	}
 	
-	protected Rule<T> stringsIgnoreCase(final Set<String> strings) {
+	protected Rule<T> ignoreCase(final Set<String> strings) {
 		checkNotNull(strings, "A set of 'strings' must not be null.");
 		if (strings.size() == 0) {
 			return NEVER;
 		}
 		else if (strings.size() == 1) {
-			return stringIgnoreCase(strings.iterator().next());
+			return ignoreCase(strings.iterator().next());
 		}
 		return new TrieRule<>(strings, true);
 	}
