@@ -26,6 +26,13 @@ public class GrampaTest {
 	}
 	
 	@Test
+	public void createParser_invalid_privateRuleMethod() {
+		Assertions.assertThrows(
+				ParserCreateException.class,
+				() -> Grampa.createParser(InvalidParser.class));
+	}
+	
+	@Test
 	public void createParser_valid_withArgs() {
 		final TestParser p = Grampa.createParser(TestParser.class, String.class).withArgs("foo");
 		assertEquals("foo", p.getDummy());
