@@ -3,12 +3,16 @@ package com.mpe85.grampa.parser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.Test;
 
+import com.google.common.eventbus.Subscribe;
+import com.mpe85.grampa.event.ParseEventListener;
+import com.mpe85.grampa.exception.ActionRunException;
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.runner.DefaultParseRunner;
 import com.mpe85.grampa.runner.ParseResult;
@@ -1534,6 +1538,73 @@ public class AbstractParserTest {
 		assertNull(runner.run("whatever").getStackTop());
 	}
 	
+	
+	@Test
+	public void post_valid() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return sequence(
+						string("whatever"),
+						post(ctx -> ctx.getPreviousMatch()));
+			}
+		}
+		final class Listener extends ParseEventListener<Integer> {
+			@Subscribe
+			public void stringEvent(final String event) {
+				string = event;
+			}
+			
+			public String getString() {
+				return string;
+			}
+			
+			private String string;
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		final Listener listener = new Listener();
+		runner.registerListener(listener);
+		runner.run("whatever");
+		assertEquals("whatever", listener.getString());
+	}
+	
+	@Test
+	public void pop_valid() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return sequence(push(4711), pop());
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		assertNull(runner.run("whatever").getStackTop());
+	}
+	
+	@Test
+	public void poke_valid() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return sequence(push(4711), poke(4712));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		assertEquals(Integer.valueOf(4712), runner.run("whatever").getStackTop());
+		assertEquals(1, runner.run("whatever").getStack().size());
+	}
+	
+	@Test
+	public void poke_invalid() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return poke(4712);
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		assertThrows(ActionRunException.class, () -> runner.run("whatever"));
+	}
+	
 	@Test
 	public void push_valid() {
 		final class Parser extends AbstractParser<Integer> {
@@ -1544,6 +1615,58 @@ public class AbstractParserTest {
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
 		assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
+	}
+	
+	@Test
+	public void dup_valid() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return sequence(push(4711), dup());
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		assertEquals(2, runner.run("whatever").getStack().size());
+		assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
+		assertEquals(Integer.valueOf(4711), runner.run("whatever").getStack().peek(1));
+	}
+	
+	@Test
+	public void dup_invalid() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return dup();
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		assertThrows(ActionRunException.class, () -> runner.run("whatever"));
+	}
+	
+	@Test
+	public void swap_valid() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return sequence(push(4711), push(4712), swap());
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		assertEquals(2, runner.run("whatever").getStack().size());
+		assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
+		assertEquals(Integer.valueOf(4712), runner.run("whatever").getStack().peek(1));
+	}
+	
+	@Test
+	public void swap_invalid() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return sequence(push(4711), swap());
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		assertThrows(ActionRunException.class, () -> runner.run("whatever"));
 	}
 	
 	@Test
