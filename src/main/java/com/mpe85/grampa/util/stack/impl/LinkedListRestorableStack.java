@@ -17,7 +17,7 @@ import com.mpe85.grampa.util.stack.RestorableStack;
  * @author mpe85
  *
  * @param <E>
- *        the type of the stack elements
+ *            the type of the stack elements
  */
 public class LinkedListRestorableStack<E> extends LinkedList<E> implements RestorableStack<E> {
 	
@@ -31,7 +31,7 @@ public class LinkedListRestorableStack<E> extends LinkedList<E> implements Resto
 	 * C'tor.
 	 * 
 	 * @param c
-	 *        the initial elements of the stack.
+	 *            the initial elements of the stack.
 	 */
 	public LinkedListRestorableStack(final Collection<? extends E> c) {
 		super(c);

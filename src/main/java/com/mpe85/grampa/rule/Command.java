@@ -6,7 +6,7 @@ package com.mpe85.grampa.rule;
  * @author mpe85
  *
  * @param <T>
- *        the type of the stack elements
+ *            the type of the stack elements
  */
 @FunctionalInterface
 public interface Command<T> {
@@ -15,7 +15,7 @@ public interface Command<T> {
 	 * Executes the parser command.
 	 * 
 	 * @param context
-	 *        an action context
+	 *            an action context
 	 */
 	void execute(ActionContext<T> context);
 	

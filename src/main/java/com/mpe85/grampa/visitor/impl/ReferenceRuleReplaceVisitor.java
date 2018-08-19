@@ -14,7 +14,7 @@ import com.mpe85.grampa.visitor.RuleVisitor;
  * @author mpe85
  *
  * @param <T>
- *        type of the parser stack values
+ *            type of the parser stack values
  */
 public class ReferenceRuleReplaceVisitor<T> implements RuleVisitor<T> {
 	
@@ -22,8 +22,8 @@ public class ReferenceRuleReplaceVisitor<T> implements RuleVisitor<T> {
 	 * C'tor.
 	 * 
 	 * @param replacementRules
-	 *        A map containing the replacement rules, hashed by the hash code of the rule methods they were created by
-	 *        (see {@link RuleMethodInterceptor}).
+	 *            A map containing the replacement rules, hashed by the hash code of the rule methods they were created
+	 *            by (see {@link RuleMethodInterceptor}).
 	 */
 	public ReferenceRuleReplaceVisitor(final Map<Integer, Rule<T>> replacementRules) {
 		this.replacementRules = replacementRules;

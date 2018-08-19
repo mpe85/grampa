@@ -8,7 +8,7 @@ import com.mpe85.grampa.rule.Rule;
  * @author mpe85
  *
  * @param <T>
- *        the type of the stack elements
+ *            the type of the stack elements
  */
 public interface Parser<T> {
 	

@@ -9,7 +9,7 @@ import com.mpe85.grampa.util.stack.RestorableStack;
  * @author mpe85
  *
  * @param <T>
- *        the type of the stack elements
+ *            the type of the stack elements
  */
 public interface ActionContext<T> {
 	
@@ -122,7 +122,7 @@ public interface ActionContext<T> {
 	 * Posts a parser event to the event bus.
 	 * 
 	 * @param event
-	 *        an event to post
+	 *            an event to post
 	 */
 	void post(Object event);
 	

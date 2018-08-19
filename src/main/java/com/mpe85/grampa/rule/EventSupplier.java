@@ -6,7 +6,7 @@ package com.mpe85.grampa.rule;
  * @author mpe85
  *
  * @param <T>
- *        the type of the stack elements
+ *            the type of the stack elements
  */
 @FunctionalInterface
 public interface EventSupplier<T> {
@@ -15,7 +15,7 @@ public interface EventSupplier<T> {
 	 * Supplies a parser event.
 	 * 
 	 * @param context
-	 *        an action context
+	 *            an action context
 	 * @return an event
 	 */
 	Object supply(ActionContext<T> context);

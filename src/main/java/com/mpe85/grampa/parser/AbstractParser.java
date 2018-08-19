@@ -41,7 +41,7 @@ import one.util.streamex.StreamEx;
  * @author mpe85
  *
  * @param <T>
- *        the type of the stack elements
+ *            the type of the stack elements
  */
 public abstract class AbstractParser<T> implements Parser<T> {
 	

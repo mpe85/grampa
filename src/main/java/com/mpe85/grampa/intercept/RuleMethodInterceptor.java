@@ -23,7 +23,7 @@ import net.bytebuddy.implementation.bind.annotation.SuperCall;
  * @author mpe85
  *
  * @param <T>
- *        the type of the stack elements
+ *            the type of the stack elements
  */
 public class RuleMethodInterceptor<T> {
 	
@@ -31,20 +31,23 @@ public class RuleMethodInterceptor<T> {
 	 * Intercepts rule methods.
 	 * 
 	 * @param method
-	 *        a rule method
+	 *            a rule method
 	 * @param zuper
-	 *        the method body wrapped inside a callable
+	 *            the method body wrapped inside a callable
 	 * @param args
-	 *        the arguments with which the method was called
+	 *            the arguments with which the method was called
 	 * @return a parser rule
 	 * @throws Exception
-	 *         may be thrown when the actual method is called via the callable
+	 *             may be thrown when the actual method is called via the callable
 	 */
 	@RuntimeType
 	public Rule<T> intercept(
-			@Origin final Method method,
-			@SuperCall final Callable<Rule<T>> zuper,
-			@AllArguments final Object... args)
+			@Origin
+			final Method method,
+			@SuperCall
+			final Callable<Rule<T>> zuper,
+			@AllArguments
+			final Object... args)
 			throws Exception {
 		final int hash = Objects.hash(method.getName(), Objects.hash(args));
 		
@@ -64,7 +67,7 @@ public class RuleMethodInterceptor<T> {
 	 * Checks if a rule method is the root rule method.
 	 * 
 	 * @param method
-	 *        the method to check
+	 *            the method to check
 	 * @return true if it is the root rule method, false otherwise
 	 */
 	private boolean isRoot(final Method method) {

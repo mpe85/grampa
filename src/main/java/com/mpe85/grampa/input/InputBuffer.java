@@ -12,7 +12,7 @@ public interface InputBuffer {
 	 * Gets the character at a given index.
 	 * 
 	 * @param index
-	 *        a valid index inside the input
+	 *            a valid index inside the input
 	 * @return a character
 	 */
 	char getChar(int index);
@@ -21,7 +21,7 @@ public interface InputBuffer {
 	 * Gets the code point at a given index.
 	 * 
 	 * @param index
-	 *        a valid index inside the input
+	 *            a valid index inside the input
 	 * @return a code point
 	 */
 	int getCodePoint(int index);
@@ -37,9 +37,9 @@ public interface InputBuffer {
 	 * Gets a sub sequence of the input.
 	 * 
 	 * @param startIndex
-	 *        a valid start index
+	 *            a valid start index
 	 * @param endIndex
-	 *        a valid end index
+	 *            a valid end index
 	 * @return the sub sequence
 	 */
 	CharSequence subSequence(int startIndex, int endIndex);
@@ -48,7 +48,7 @@ public interface InputBuffer {
 	 * Gets the position (line and column) of a character at a given index inside the input.
 	 * 
 	 * @param index
-	 *        a valid index
+	 *            a valid index
 	 * @return a position
 	 */
 	InputPosition getPosition(int index);
