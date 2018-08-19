@@ -36,6 +36,8 @@ public interface RestorableStack<E> extends Deque<E> {
 	/**
 	 * Retries and removes an element from the stack and casts it to the specified sub type.
 	 * 
+	 * @param      <T>
+	 *             a sub type of E
 	 * @param type
 	 *             the type to cast the element to
 	 * @return the popped element
@@ -45,6 +47,8 @@ public interface RestorableStack<E> extends Deque<E> {
 	/**
 	 * Retries and removes an element from the stack at a given position and casts it to the specified sub type.
 	 * 
+	 * @param      <T>
+	 *             a sub type of E
 	 * @param down
 	 *             the position where the element is popped, counted downwards beginning at the top of the stack (i.e.
 	 *             the number of elements on the stack to skip).
@@ -67,6 +71,8 @@ public interface RestorableStack<E> extends Deque<E> {
 	/**
 	 * Retrieves, but does not remove an element from the stack and casts it to the specified sub type.
 	 * 
+	 * @param      <T>
+	 *             a sub type of E
 	 * @param type
 	 *             the type to cast the element to
 	 * @return the peeked element
@@ -77,6 +83,8 @@ public interface RestorableStack<E> extends Deque<E> {
 	 * Retrieves, but does not remove an element from the stack at a given position and casts it to the specified sub
 	 * type.
 	 * 
+	 * @param      <T>
+	 *             a sub type of E
 	 * @param down
 	 *             the position where the element is peeked, counted downwards beginning at the top of the stack (i.e.
 	 *             the number of elements on the stack to skip).

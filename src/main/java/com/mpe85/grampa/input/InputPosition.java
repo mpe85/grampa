@@ -1,5 +1,11 @@
 package com.mpe85.grampa.input;
 
+/**
+ * Defines a position inside a text input (line and column)
+ * 
+ * @author mpe85
+ *
+ */
 public class InputPosition {
 	
 	public InputPosition(

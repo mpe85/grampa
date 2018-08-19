@@ -11,11 +11,28 @@ import java.util.LinkedList;
 
 import com.mpe85.grampa.util.stack.RestorableStack;
 
+/**
+ * A linked list implementation of a restorable stack.
+ * 
+ * @author mpe85
+ *
+ * @param <E>
+ *        the type of the stack elements
+ */
 public class LinkedListRestorableStack<E> extends LinkedList<E> implements RestorableStack<E> {
 	
+	/**
+	 * Default c'tor.
+	 */
 	public LinkedListRestorableStack() {
 	}
 	
+	/**
+	 * C'tor.
+	 * 
+	 * @param c
+	 *          the initial elements of the stack.
+	 */
 	public LinkedListRestorableStack(final Collection<? extends E> c) {
 		super(c);
 	}

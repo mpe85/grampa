@@ -2,13 +2,29 @@ package com.mpe85.grampa.visitor.impl;
 
 import java.util.Map;
 
+import com.mpe85.grampa.intercept.RuleMethodInterceptor;
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.rule.impl.AbstractRule;
 import com.mpe85.grampa.rule.impl.ReferenceRule;
 import com.mpe85.grampa.visitor.RuleVisitor;
 
+/**
+ * A rule visitor that replaces reference rules with the rules that they reference.
+ * 
+ * @author mpe85
+ *
+ * @param <T>
+ *        type of the parser stack values
+ */
 public class ReferenceRuleReplaceVisitor<T> implements RuleVisitor<T> {
 	
+	/**
+	 * C'tor.
+	 * 
+	 * @param replacementRules
+	 *                         A map containing the replacement rules, hashed by the hash code of the rule methods they
+	 *                         were created by (see {@link RuleMethodInterceptor}).
+	 */
 	public ReferenceRuleReplaceVisitor(final Map<Integer, Rule<T>> replacementRules) {
 		this.replacementRules = replacementRules;
 	}
