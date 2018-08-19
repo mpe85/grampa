@@ -23,7 +23,7 @@ public interface RuleContext<T> extends ActionContext<T> {
 	 * Sets the current index inside the parser input.
 	 * 
 	 * @param currentIndex
-	 *                     a valid index
+	 *        a valid index
 	 */
 	void setCurrentIndex(int currentIndex);
 	
@@ -31,7 +31,7 @@ public interface RuleContext<T> extends ActionContext<T> {
 	 * Advances the current index inside the parser input.
 	 * 
 	 * @param delta
-	 *              number of characters to advance
+	 *        number of characters to advance
 	 * @return true if the advancing was possible, otherwise false
 	 */
 	boolean advanceIndex(int delta);
@@ -50,7 +50,7 @@ public interface RuleContext<T> extends ActionContext<T> {
 	 * Creates a child context out of the context that is used to run child rules.
 	 * 
 	 * @param rule
-	 *             a child rule for which the child context should be created for
+	 *        a child rule for which the child context should be created for
 	 * @return a rule contexts
 	 */
 	RuleContext<T> createChildContext(Rule<T> rule);

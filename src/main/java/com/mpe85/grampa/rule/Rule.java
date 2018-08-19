@@ -32,9 +32,9 @@ public interface Rule<T> {
 	 * Replaces a reference rule inside the list of child rules.
 	 * 
 	 * @param index
-	 *                        the position if the reference rule inside the list of child rules
+	 *        the position if the reference rule inside the list of child rules
 	 * @param replacementRule
-	 *                        a replacement rule
+	 *        a replacement rule
 	 * @return the replaced reference rule
 	 */
 	Rule<T> replaceReferenceRule(int index, Rule<T> replacementRule);
@@ -43,7 +43,7 @@ public interface Rule<T> {
 	 * Try to match the rule
 	 * 
 	 * @param context
-	 *                a rule context.
+	 *        a rule context.
 	 * @return true if the rule matched successfully, otherwise false
 	 */
 	boolean match(RuleContext<T> context);
@@ -59,7 +59,7 @@ public interface Rule<T> {
 	 * Accepts a rule visitor.
 	 * 
 	 * @param visitor
-	 *                a rule visitor
+	 *        a rule visitor
 	 */
 	void accept(RuleVisitor<T> visitor);
 	

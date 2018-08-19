@@ -15,7 +15,7 @@ public interface EventSupplier<T> {
 	 * Supplies a parser event.
 	 * 
 	 * @param context
-	 *                an action context
+	 *        an action context
 	 * @return an event
 	 */
 	Object supply(ActionContext<T> context);

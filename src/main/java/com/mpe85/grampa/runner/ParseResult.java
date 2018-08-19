@@ -17,9 +17,9 @@ public class ParseResult<T> {
 	 * C'tor.
 	 * 
 	 * @param matched
-	 *                if the parse run matched successfully
+	 *        if the parse run matched successfully
 	 * @param context
-	 *                the root context after the parse run
+	 *        the root context after the parse run
 	 */
 	public ParseResult(final boolean matched, final RuleContext<T> context) {
 		this.matched = matched;

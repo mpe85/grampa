@@ -30,7 +30,7 @@ public class DefaultParseRunner<T> {
 	 * C'tor.
 	 * 
 	 * @param parser
-	 *               a parser instance
+	 *        a parser instance
 	 */
 	public DefaultParseRunner(final Parser<T> parser) {
 		this(parser, null);
@@ -40,9 +40,9 @@ public class DefaultParseRunner<T> {
 	 * C'tor.
 	 * 
 	 * @param parser
-	 *                a parser instance
+	 *        a parser instance
 	 * @param handler
-	 *                a handler for parser events
+	 *        a handler for parser events
 	 */
 	public DefaultParseRunner(final Parser<T> parser, final SubscriberExceptionHandler handler) {
 		checkNotNull(parser, "A 'parser' must not be null.");
@@ -63,7 +63,7 @@ public class DefaultParseRunner<T> {
 	 * Registers a listener to the parser event bus.
 	 * 
 	 * @param listener
-	 *                 a parse event listener
+	 *        a parse event listener
 	 */
 	public void registerListener(final ParseEventListener<T> listener) {
 		bus.register(listener);
@@ -73,7 +73,7 @@ public class DefaultParseRunner<T> {
 	 * Unregisters a listener to the parser event bus.
 	 * 
 	 * @param listener
-	 *                 a parse event listener
+	 *        a parse event listener
 	 */
 	public void unregisterListener(final ParseEventListener<T> listener) {
 		bus.unregister(listener);
@@ -83,7 +83,7 @@ public class DefaultParseRunner<T> {
 	 * Runs the parser against a character sequence.
 	 * 
 	 * @param charSequence
-	 *                     a character sequence
+	 *        a character sequence
 	 * @return the parse result
 	 */
 	public ParseResult<T> run(final CharSequence charSequence) {
@@ -94,7 +94,7 @@ public class DefaultParseRunner<T> {
 	 * Runs the parser against an input buffer.
 	 * 
 	 * @param inputBuffer
-	 *                    an input buffer
+	 *        an input buffer
 	 * @return the parse result
 	 */
 	public ParseResult<T> run(final InputBuffer inputBuffer) {
@@ -116,7 +116,7 @@ public class DefaultParseRunner<T> {
 	 * Creates the initial root context for the parser's root rule.
 	 * 
 	 * @param inputBuffer
-	 *                    an input buffer
+	 *        an input buffer
 	 * @return a rule context
 	 */
 	protected RuleContext<T> createRootContext(final InputBuffer inputBuffer) {

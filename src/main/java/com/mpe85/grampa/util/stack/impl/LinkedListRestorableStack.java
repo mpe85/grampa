@@ -31,7 +31,7 @@ public class LinkedListRestorableStack<E> extends LinkedList<E> implements Resto
 	 * C'tor.
 	 * 
 	 * @param c
-	 *          the initial elements of the stack.
+	 *        the initial elements of the stack.
 	 */
 	public LinkedListRestorableStack(final Collection<? extends E> c) {
 		super(c);

@@ -17,7 +17,7 @@ public interface RuleVisitor<T> {
 	 * Visits an abstract rule.
 	 * 
 	 * @param rule
-	 *             the rule to visit
+	 *        the rule to visit
 	 */
 	void visit(AbstractRule<T> rule);
 	
