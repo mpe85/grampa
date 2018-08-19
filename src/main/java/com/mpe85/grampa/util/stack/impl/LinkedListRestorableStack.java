@@ -71,11 +71,18 @@ public class LinkedListRestorableStack<E> extends LinkedList<E> implements Resto
 	
 	@Override
 	public void dup() {
+		if (size() == 0) {
+			throw new IllegalStateException("Duplicating the top stack value is not possible when the stack is empty.");
+		}
 		push(peek());
 	}
 	
 	@Override
 	public void swap() {
+		if (size() < 2) {
+			throw new IllegalStateException(
+					"Swapping the two top stack values not possible when the stack contains lesser than two values.");
+		}
 		Collections.swap(this, 0, 1);
 	}
 	
