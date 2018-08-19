@@ -34,6 +34,15 @@ import com.mpe85.grampa.rule.impl.TrieRule;
 import one.util.streamex.IntStreamEx;
 import one.util.streamex.StreamEx;
 
+/**
+ * An abstract parser that defines a bunch of useful parser rules and actions. A concrete parser class should usually
+ * extend this class.
+ * 
+ * @author mpe85
+ *
+ * @param <T>
+ *        the type of the stack elements
+ */
 public abstract class AbstractParser<T> implements Parser<T> {
 	
 	@Override
