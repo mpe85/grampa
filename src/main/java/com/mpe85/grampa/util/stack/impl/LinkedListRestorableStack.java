@@ -98,7 +98,7 @@ public class LinkedListRestorableStack<E> extends LinkedList<E> implements Resto
 	public void swap() {
 		if (size() < 2) {
 			throw new IllegalStateException(
-					"Swapping the two top stack values not possible when the stack contains lesser than two values.");
+					"Swapping the two top stack values is not possible when the stack contains lesser than two values.");
 		}
 		Collections.swap(this, 0, 1);
 	}
