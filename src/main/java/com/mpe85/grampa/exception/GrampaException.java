@@ -1,6 +1,5 @@
 package com.mpe85.grampa.exception;
 
-
 /**
  * Base class for all Grampa exceptions
  * 
