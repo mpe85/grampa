@@ -17,8 +17,9 @@ import net.bytebuddy.implementation.bind.annotation.SuperCall;
 
 /**
  * An interceptor for the rule methods of a parser. If a rule method gets called for the second time, the actual rule is
- * replaced by a reference rule, which is replaced by the real rule at the very ending of the call hierarchy (i.e. the
- * first call of the root rule method). This is done to avoid endless recursions caused by circular rule dependencies.
+ * replaced by a reference rule in the first place. At the very ending of the parser creating process (i.e. the first
+ * call of the root rule method) all reference rules are replaced by the 'real' rules. This is done to avoid endless
+ * recursions caused by circular rule dependencies.
  * 
  * @author mpe85
  *
@@ -42,12 +43,9 @@ public class RuleMethodInterceptor<T> {
 	 */
 	@RuntimeType
 	public Rule<T> intercept(
-			@Origin
-			final Method method,
-			@SuperCall
-			final Callable<Rule<T>> zuper,
-			@AllArguments
-			final Object... args)
+			@Origin final Method method,
+			@SuperCall final Callable<Rule<T>> zuper,
+			@AllArguments final Object... args)
 			throws Exception {
 		final int hash = Objects.hash(method.getName(), Objects.hash(args));
 		
