@@ -1069,31 +1069,26 @@ public class AbstractParserTest {
 	}
 	
 	@Test
-	public void command_valid() {
+	public void sequence_valid_character() {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
 			public Rule<Integer> root() {
-				return command(ctx -> ctx.getStack().push(4711));
+				return sequence(
+						character('a'),
+						character('b'),
+						character('c'));
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-		assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
+		final ParseResult<Integer> result = runner.run("abcd");
+		assertTrue(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+		assertEquals("abc", result.getMatchedInput());
+		assertEquals("d", result.getRestOfInput());
 	}
 	
 	@Test
-	public void push_valid() {
-		final class Parser extends AbstractParser<Integer> {
-			@Override
-			public Rule<Integer> root() {
-				return push(4711);
-			}
-		}
-		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-		assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
-	}
-	
-	@Test
-	public void sequence_push_valid() {
+	public void sequence_valid_push() {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
 			public Rule<Integer> root() {
@@ -1110,12 +1105,34 @@ public class AbstractParserTest {
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
 		final ParseResult<Integer> result = runner.run("whatever");
+		assertTrue(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+		assertEquals("", result.getMatchedInput());
+		assertEquals("whatever", result.getRestOfInput());
 		assertEquals(Integer.valueOf(9426), result.getStackTop());
 		assertEquals(2, result.getStack().size());
 		assertEquals(Integer.valueOf(9426), result.getStack().peek());
 		assertEquals(Integer.valueOf(4715), result.getStack().peek(1));
 	}
 	
+	@Test
+	public void sequence_invalid() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return sequence(
+						character('a'),
+						character('b'),
+						character('c'));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<Integer> result = runner.run("acdc");
+		assertFalse(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+		assertNull(result.getMatchedInput());
+		assertEquals("acdc", result.getRestOfInput());
+	}
 	
 	@Test
 	public void firstOf_valid() {
@@ -1133,6 +1150,203 @@ public class AbstractParserTest {
 		final ParseResult<Integer> result = runner.run("foobazxxx");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
+		assertEquals("foobazxxx", result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
+	}
+	
+	@Test
+	public void firstOf_invalid() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return firstOf(
+						string("foo"),
+						string("bar"),
+						string("baz"));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<Integer> result = runner.run("babafoo");
+		assertFalse(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+		assertNull(result.getMatchedInput());
+		assertEquals("babafoo", result.getRestOfInput());
+	}
+	
+	@Test
+	public void optional_valid_match() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return optional(character('a'));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<Integer> result = runner.run("a");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+		assertEquals("a", result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
+	}
+	
+	@Test
+	public void optional_valid_noMatch() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return optional(character('a'));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<Integer> result = runner.run("b");
+		assertTrue(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+		assertEquals("", result.getMatchedInput());
+		assertEquals("b", result.getRestOfInput());
+	}
+	
+	@Test
+	public void zeroOrMore_valid_zero() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return zeroOrMore(character('a'));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<Integer> result = runner.run("b");
+		assertTrue(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+		assertEquals("", result.getMatchedInput());
+		assertEquals("b", result.getRestOfInput());
+	}
+	
+	@Test
+	public void zeroOrMore_valid_more() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return zeroOrMore(character('a'));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<Integer> result = runner.run("aaaaa");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+		assertEquals("aaaaa", result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
+	}
+	
+	@Test
+	public void oneOrMore_valid_one() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return oneOrMore(character('a'));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<Integer> result = runner.run("a");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+		assertEquals("a", result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
+	}
+	
+	@Test
+	public void oneOrMore_valid_more() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return oneOrMore(character('a'));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<Integer> result = runner.run("aaaaa");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+		assertEquals("aaaaa", result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
+	}
+	
+	@Test
+	public void oneOrMore_invalid() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return oneOrMore(character('a'));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<Integer> result = runner.run("b");
+		assertFalse(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+		assertNull(result.getMatchedInput());
+		assertEquals("b", result.getRestOfInput());
+	}
+	
+	@Test
+	public void repeat_valid_times() {
+		final class Parser extends AbstractParser<CharSequence> {
+			@Override
+			public Rule<CharSequence> root() {
+				return repeat(character('z')).times(4, 7);
+			}
+		}
+		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<CharSequence> result = runner.run("zzzzz");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+		assertEquals("zzzzz", result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
+	}
+	
+	@Test
+	public void repeat_invalid_times() {
+		final class Parser extends AbstractParser<CharSequence> {
+			@Override
+			public Rule<CharSequence> root() {
+				return repeat(character('z')).times(6, 7);
+			}
+		}
+		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<CharSequence> result = runner.run("zzzzz");
+		assertFalse(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+		assertNull(result.getMatchedInput());
+		assertEquals("zzzzz", result.getRestOfInput());
+	}
+	
+	@Test
+	public void repeat_valid_min() {
+		final class Parser extends AbstractParser<CharSequence> {
+			@Override
+			public Rule<CharSequence> root() {
+				return repeat(character('z')).min(3);
+			}
+		}
+		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<CharSequence> result = runner.run("zzzzz");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+		assertEquals("zzzzz", result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
+	}
+	
+	@Test
+	public void repeat_invalid_min() {
+		final class Parser extends AbstractParser<CharSequence> {
+			@Override
+			public Rule<CharSequence> root() {
+				return repeat(character('z')).min(8);
+			}
+		}
+		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<CharSequence> result = runner.run("zzzzz");
+		assertFalse(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+		assertNull(result.getMatchedInput());
+		assertEquals("zzzzz", result.getRestOfInput());
 	}
 	
 	@Test
@@ -1149,6 +1363,8 @@ public class AbstractParserTest {
 		final ParseResult<Integer> result = runner.run("whatever");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
+		assertEquals("whatever", result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
 	}
 	
 	@Test
@@ -1165,6 +1381,8 @@ public class AbstractParserTest {
 		final ParseResult<Integer> result = runner.run("whatever");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
+		assertNull(result.getMatchedInput());
+		assertEquals("whatever", result.getRestOfInput());
 	}
 	
 	@Test
@@ -1181,6 +1399,8 @@ public class AbstractParserTest {
 		final ParseResult<Integer> result = runner.run("whatever");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
+		assertEquals("whatever", result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
 	}
 	
 	@Test
@@ -1197,6 +1417,133 @@ public class AbstractParserTest {
 		final ParseResult<Integer> result = runner.run("whatever");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
+		assertNull(result.getMatchedInput());
+		assertEquals("whatever", result.getRestOfInput());
+	}
+	
+	@Test
+	public void action_valid() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return action(ctx -> {
+					ctx.getStack().push(4711);
+					return true;
+				});
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
+	}
+	
+	@Test
+	public void action_invalid() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return action(ctx -> {
+					ctx.getStack().push(4711);
+					return false;
+				});
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		assertNull(runner.run("whatever").getStackTop());
+	}
+	
+	@Test
+	public void command_valid() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return command(ctx -> ctx.getStack().push(4711));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
+	}
+	
+	@Test
+	public void skippableAction_valid_noSkip() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return skippableAction(ctx -> {
+					ctx.getStack().push(4711);
+					return true;
+				});
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
+	}
+	
+	@Test
+	public void skippableAction_valid_skip() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return test(
+						skippableAction(ctx -> {
+							ctx.getStack().push(4711);
+							return true;
+						}));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		assertNull(runner.run("whatever").getStackTop());
+	}
+	
+	@Test
+	public void skippableAction_invalid() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return skippableAction(ctx -> {
+					ctx.getStack().push(4711);
+					return false;
+				});
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		assertNull(runner.run("whatever").getStackTop());
+	}
+	
+	@Test
+	public void skippableCommand_valid_noSkip() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return skippableCommand(ctx -> ctx.getStack().push(4711));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
+	}
+	
+	@Test
+	public void skippableCommand_valid_skip() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return test(
+						skippableCommand(ctx -> ctx.getStack().push(4711)));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		assertNull(runner.run("whatever").getStackTop());
+	}
+	
+	@Test
+	public void push_valid() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return push(4711);
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
 	}
 	
 	@Test
@@ -1229,62 +1576,6 @@ public class AbstractParserTest {
 		assertEquals("foobar", result.getStack().pop());
 		assertEquals("foobar", result.getStack().pop());
 		assertEquals("world", result.getStackTop());
-	}
-	
-	@Test
-	public void repeat_valid_times() {
-		final class Parser extends AbstractParser<CharSequence> {
-			@Override
-			public Rule<CharSequence> root() {
-				return repeat(character('z')).times(4, 7);
-			}
-		}
-		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
-		final ParseResult<CharSequence> result = runner.run("zzzzz");
-		assertTrue(result.isMatched());
-		assertTrue(result.isMatchedWholeInput());
-	}
-	
-	@Test
-	public void repeat_invalid_times() {
-		final class Parser extends AbstractParser<CharSequence> {
-			@Override
-			public Rule<CharSequence> root() {
-				return repeat(character('z')).times(6, 7);
-			}
-		}
-		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
-		final ParseResult<CharSequence> result = runner.run("zzzzz");
-		assertFalse(result.isMatched());
-		assertFalse(result.isMatchedWholeInput());
-	}
-	
-	@Test
-	public void repeat_valid_min() {
-		final class Parser extends AbstractParser<CharSequence> {
-			@Override
-			public Rule<CharSequence> root() {
-				return repeat(character('z')).min(3);
-			}
-		}
-		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
-		final ParseResult<CharSequence> result = runner.run("zzzzz");
-		assertTrue(result.isMatched());
-		assertTrue(result.isMatchedWholeInput());
-	}
-	
-	@Test
-	public void repeat_invalid_min() {
-		final class Parser extends AbstractParser<CharSequence> {
-			@Override
-			public Rule<CharSequence> root() {
-				return repeat(character('z')).min(8);
-			}
-		}
-		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
-		final ParseResult<CharSequence> result = runner.run("zzzzz");
-		assertFalse(result.isMatched());
-		assertFalse(result.isMatchedWholeInput());
 	}
 	
 }
