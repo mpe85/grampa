@@ -15,11 +15,31 @@ import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.implementation.MethodDelegation;
 import one.util.streamex.StreamEx;
 
+/**
+ * Main class containing static methods for parser creation
+ * 
+ * @author mpe85
+ */
 public final class Grampa {
 	
+	/**
+	 * Private C'tor. This class shall never be instantiated.
+	 */
 	private Grampa() {
 	}
 	
+	/**
+	 *
+	 * which will be called by this method.
+	 * 
+	 * @param <U>
+	 *            the type of the parser
+	 * @param <T>
+	 *            the type of the stack elements
+	 * @param parserClass
+	 *            a parser class
+	 * @return a parser instance
+	 */
 	public static final <U extends Parser<T>, T> U createParser(final Class<U> parserClass) {
 		try {
 			return createParserSubClass(parserClass).newInstance();
@@ -29,6 +49,21 @@ public final class Grampa {
 		}
 	}
 	
+	/**
+	 * Creates a new parser instance using the given parser class and c'tor parameter types. The parser class must have
+	 * a c'tor which matches the passed parameter types. The creation of the parser instance must be finalized by
+	 * calling {@link ParserCtor#withArgs} on the returned {@link ParserCtor}.
+	 * 
+	 * @param <U>
+	 *            the type of the parser
+	 * @param <T>
+	 *            the type of the stack elements
+	 * @param parserClass
+	 *            a parser class
+	 * @param ctorParamTypes
+	 *            the parameter types of the c'tor
+	 * @return a parser c'tor
+	 */
 	public static final <U extends Parser<T>, T> ParserCtor<U> createParser(
 			final Class<U> parserClass,
 			final Class<?>... ctorParamTypes) {
@@ -80,12 +115,34 @@ public final class Grampa {
 		return invokable.isVarArgs() && invokable.isAnnotationPresent(SafeVarargs.class);
 	}
 	
+	/**
+	 * A parser c'tor (intermediate class for fluent API). This class wraps a {@link Constructor} and offers a var args
+	 * method for calling that c'tor.
+	 * 
+	 * @author mpe85
+	 *
+	 * @param <T>
+	 *            The type to which the c'tor belongs to
+	 */
 	public static final class ParserCtor<T> {
 		
-		public ParserCtor(final Constructor<? extends T> ctor) {
+		/**
+		 * Private C'tor. This class shall never be instantiated from outside
+		 * 
+		 * @param ctor
+		 *            the wrapped {@link Constructor}
+		 */
+		private ParserCtor(final Constructor<? extends T> ctor) {
 			this.ctor = ctor;
 		}
 		
+		/**
+		 * Call the wrapped c'tor using the given c'tor args. The arguments must match the c'tor parameter list.
+		 * 
+		 * @param args
+		 *            c'tor args
+		 * @return a new instance
+		 */
 		public T withArgs(final Object... args) {
 			try {
 				return ctor.newInstance(args);
