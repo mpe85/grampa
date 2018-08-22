@@ -553,11 +553,25 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		return CRLF;
 	}
 	
+	/**
+	 * A rule that matches a sequence of rules.
+	 * 
+	 * @param rules
+	 *            a variable number of rules
+	 * @return a rule
+	 */
 	@SafeVarargs
 	protected final Rule<T> sequence(final Rule<T>... rules) {
 		return sequence(Arrays.asList(checkNotNull(rules, "A 'rules' array must not be null.")));
 	}
 	
+	/**
+	 * A rule that matches a sequence of rules.
+	 * 
+	 * @param rules
+	 *            a list of rules
+	 * @return a rule
+	 */
 	protected Rule<T> sequence(final List<Rule<T>> rules) {
 		checkNotNull(rules, "A 'rules' list must not be null.");
 		if (rules.size() == 0) {
@@ -569,11 +583,25 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		return new SequenceRule<>(rules);
 	}
 	
+	/**
+	 * A rule that matches the first successful rule in a list of rules.
+	 * 
+	 * @param rules
+	 *            a variable number of rules
+	 * @return a rule
+	 */
 	@SafeVarargs
 	protected final Rule<T> firstOf(final Rule<T>... rules) {
 		return firstOf(Arrays.asList(checkNotNull(rules, "A 'rules' array must not be null.")));
 	}
 	
+	/**
+	 * A rule that matches the first successful rule in a list of rules.
+	 * 
+	 * @param rules
+	 *            a list of rules
+	 * @return a rule
+	 */
 	protected Rule<T> firstOf(final List<Rule<T>> rules) {
 		checkNotNull(rules, "A 'rules' list must not be null.");
 		if (rules.size() == 0) {
@@ -585,18 +613,46 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		return new FirstOfRule<>(rules);
 	}
 	
+	/**
+	 * A rule that matches its sub rule optionally. In other words, a rule that repeats its sub rule zero or one time.
+	 * 
+	 * @param rule
+	 *            the sub rule to match optionally
+	 * @return a rule
+	 */
 	protected Rule<T> optional(final Rule<T> rule) {
 		return repeat(rule).times(0, 1);
 	}
 	
+	/**
+	 * A rule that matches its sub rule zero or more times.
+	 * 
+	 * @param rule
+	 *            the sub rule to repeat
+	 * @return a rule
+	 */
 	protected Rule<T> zeroOrMore(final Rule<T> rule) {
 		return repeat(rule).min(0);
 	}
 	
+	/**
+	 * A rule that matches its sub rule one or more times.
+	 * 
+	 * @param rule
+	 *            the sub rule to repeat
+	 * @return a rule
+	 */
 	protected Rule<T> oneOrMore(final Rule<T> rule) {
 		return repeat(rule).min(1);
 	}
 	
+	/**
+	 * A rule builder for a repeat rule.
+	 * 
+	 * @param rule
+	 *            the sub rule to repeat
+	 * @return a repeat rule builder
+	 */
 	protected RepeatRuleBuilder<T> repeat(final Rule<T> rule) {
 		return new RepeatRuleBuilder<>(checkNotNull(rule, "A 'rule' must not be null."));
 	}
