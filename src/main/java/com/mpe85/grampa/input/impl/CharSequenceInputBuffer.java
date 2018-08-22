@@ -10,6 +10,12 @@ import com.mpe85.grampa.input.InputPosition;
 
 import one.util.streamex.IntStreamEx;
 
+/**
+ * An {@link InputBuffer} implementation using a {@link CharSequence}.
+ * 
+ * @author mpe85
+ *
+ */
 public class CharSequenceInputBuffer implements InputBuffer {
 	
 	public CharSequenceInputBuffer(final CharSequence charSequence) {

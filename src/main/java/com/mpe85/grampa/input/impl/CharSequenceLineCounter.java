@@ -5,9 +5,15 @@ import java.util.Optional;
 import java.util.TreeMap;
 
 import com.google.common.base.Preconditions;
-import com.mpe85.grampa.input.LineCounter;
 import com.mpe85.grampa.input.InputPosition;
+import com.mpe85.grampa.input.LineCounter;
 
+/**
+ * A {@link LineCounter} implementation for {@link CharSequence}s.
+ * 
+ * @author mpe85
+ *
+ */
 public class CharSequenceLineCounter implements LineCounter {
 	
 	public CharSequenceLineCounter(final CharSequence input) {

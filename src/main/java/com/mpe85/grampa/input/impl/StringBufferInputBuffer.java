@@ -1,5 +1,13 @@
 package com.mpe85.grampa.input.impl;
 
+import com.mpe85.grampa.input.InputBuffer;
+
+/**
+ * An {@link InputBuffer} implementation using a {@link StringBuffer}.
+ * 
+ * @author mpe85
+ *
+ */
 public class StringBufferInputBuffer extends CharSequenceInputBuffer {
 	
 	public StringBufferInputBuffer(final StringBuffer stringBuffer) {

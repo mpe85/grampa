@@ -48,49 +48,118 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	@Override
 	public abstract Rule<T> root();
 	
+	/**
+	 * A rule that matches an empty string. Or in other words, a rule that matches nothing and always succeeds.
+	 * 
+	 * @return a rule
+	 */
 	protected Rule<T> empty() {
 		return EMPTY;
 	}
 	
+	/**
+	 * A rule that always fails.
+	 * 
+	 * @return a rule
+	 */
 	protected Rule<T> never() {
 		return NEVER;
 	}
 	
+	/**
+	 * A rule that matches the end of the input.
+	 * 
+	 * @return a rule
+	 */
 	protected Rule<T> eoi() {
 		return EOI;
 	}
 	
+	/**
+	 * A rule that matches any character.
+	 * 
+	 * @return a rule
+	 */
 	protected Rule<T> anyChar() {
 		return ANY_CHAR;
 	}
 	
+	/**
+	 * a rule that matches any code point.
+	 * 
+	 * @return a rule
+	 */
 	protected Rule<T> anyCodePoint() {
 		return ANY_CODEPOINT;
 	}
 	
+	/**
+	 * A rule that matches a specific character.
+	 * 
+	 * @param character
+	 *            the character to match
+	 * @return a rule
+	 */
 	protected Rule<T> character(final char character) {
 		return new CharPredicateRule<>(CharMatcher.is(character));
 	}
 	
+	/**
+	 * A rule that matches a specific character, ignoring the case of the character (case-insensitive).
+	 * 
+	 * @param character
+	 *            the character to match
+	 * @return a rule
+	 */
 	protected Rule<T> ignoreCase(final char character) {
 		return new CharPredicateRule<>(
 				CharMatcher.is(Character.toLowerCase(character))
 						.or(CharMatcher.is(Character.toUpperCase(character))));
 	}
 	
+	/**
+	 * A rule that matches a character within a range of characters.
+	 * 
+	 * @param lowerBound
+	 *            the lower bound of the character range (inclusive)
+	 * @param upperBound
+	 *            the upper bound of the character range (inclusive)
+	 * @return a rule
+	 */
 	protected Rule<T> charRange(final char lowerBound, final char upperBound) {
 		return new CharPredicateRule<>(CharMatcher.inRange(lowerBound, upperBound));
 	}
 	
+	/**
+	 * A rule that matches a character within a set of characters.
+	 * 
+	 * @param characters
+	 *            a variable number of characters
+	 * @return a rule
+	 */
 	protected Rule<T> anyOfChars(final char... characters) {
 		return anyOfChars(String.valueOf(checkNotNull(characters, "A 'characters' array must not be null.")));
 	}
 	
+	/**
+	 * A rule that matches a character within a set of characters.
+	 * 
+	 * @param characters
+	 *            a set of characters
+	 * @return a rule
+	 */
 	protected Rule<T> anyOfChars(final Set<Character> characters) {
 		checkNotNull(characters, "A set of 'characters' must not be null.");
 		return anyOfChars(StreamEx.of(characters).joining());
 	}
 	
+	/**
+	 * A rule that matches a character within a set of characters.
+	 * 
+	 * @param characters
+	 *            a string containing the set of characters.
+	 * @return a rule
+	 */
 	protected Rule<T> anyOfChars(final String characters) {
 		checkNotNull(characters, "A 'characters' string must not be null.");
 		if (characters.length() == 0) {
@@ -102,15 +171,36 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		return new CharPredicateRule<>(CharMatcher.anyOf(characters));
 	}
 	
+	/**
+	 * A rule that matches a character not in a set of characters.
+	 * 
+	 * @param characters
+	 *            a variable number of characters
+	 * @return a rule
+	 */
 	protected Rule<T> noneOfChars(final char... characters) {
 		return noneOfChars(String.valueOf(checkNotNull(characters, "A 'characters' array must not be null.")));
 	}
 	
+	/**
+	 * A rule that matches a character not in a set of characters.
+	 * 
+	 * @param characters
+	 *            a set of characters
+	 * @return a rule
+	 */
 	protected Rule<T> noneOfChars(final Set<Character> characters) {
 		checkNotNull(characters, "A set of 'characters' must not be null.");
 		return noneOfChars(StreamEx.of(characters).joining());
 	}
 	
+	/**
+	 * A rule that matches a character not in a a set of characters.
+	 * 
+	 * @param characters
+	 *            a string containing the set of characters.
+	 * @return a rule
+	 */
 	protected Rule<T> noneOfChars(final String characters) {
 		checkNotNull(characters, "A 'characters' string must not be null.");
 		if (characters.length() == 0) {
@@ -119,20 +209,50 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		return new CharPredicateRule<>(CharMatcher.noneOf(characters));
 	}
 	
+	/**
+	 * A rule that matches a specific code point.
+	 * 
+	 * @param codePoint
+	 *            the code point to match
+	 * @return a rule
+	 */
 	protected Rule<T> codePoint(final int codePoint) {
 		return new CodePointPredicateRule<>(cp -> cp == codePoint);
 	}
 	
+	/**
+	 * A rule that matches a specific code point, ignoring the case of the code point (case-insensitive).
+	 * 
+	 * @param codePoint
+	 *            the code point to match
+	 * @return a rule
+	 */
 	protected Rule<T> ignoreCase(final int codePoint) {
 		return new CodePointPredicateRule<>(
 				cp -> cp == UCharacter.toLowerCase(codePoint) || cp == UCharacter.toUpperCase(codePoint));
 	}
 	
+	/**
+	 * A rule that matches a code point within a range of code points.
+	 * 
+	 * @param lowerBound
+	 *            the lower bound of the code point range (inclusive)
+	 * @param upperBound
+	 *            the upper bound of the code point range (inclusive)
+	 * @return a rule
+	 */
 	protected Rule<T> codePointRange(final int lowerBound, final int upperBound) {
 		checkArgument(lowerBound <= upperBound, "A 'lowerBound' must not be greater than an 'upperBound'.");
 		return new CodePointPredicateRule<>(cp -> cp >= lowerBound && cp <= upperBound);
 	}
 	
+	/**
+	 * A rule that matches a code point within a set of code points.
+	 * 
+	 * @param codePoints
+	 *            a variable number of code points
+	 * @return a rule
+	 */
 	protected Rule<T> anyOfCodePoints(final int... codePoints) {
 		checkNotNull(codePoints, "A 'codePoints' array must not be null.");
 		if (codePoints.length == 0) {
@@ -145,16 +265,37 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		return new CodePointPredicateRule<>(cp -> Arrays.binarySearch(codePoints, cp) >= 0);
 	}
 	
+	/**
+	 * A rule that matches a code point within a set of code points.
+	 * 
+	 * @param codePoints
+	 *            a string containing the set of code points.
+	 * @return a rule
+	 */
 	protected Rule<T> anyOfCodePoints(final String codePoints) {
 		checkNotNull(codePoints, "A 'codePoints' string must not be null.");
 		return anyOfCodePoints(codePoints.codePoints().toArray());
 	}
 	
+	/**
+	 * A rule that matches a code point within a set of code points.
+	 * 
+	 * @param codePoints
+	 *            a set of code points.
+	 * @return a rule
+	 */
 	protected Rule<T> anyOfCodePoints(final Set<Integer> codePoints) {
 		checkNotNull(codePoints, "A set of 'codePoints' must not be null.");
 		return anyOfCodePoints(IntStreamEx.of(codePoints).toArray());
 	}
 	
+	/**
+	 * A rule that matches a code point not in a set of code points.
+	 * 
+	 * @param codePoints
+	 *            a variable number of code points
+	 * @return a rule
+	 */
 	protected Rule<T> noneOfCodePoints(final int... codePoints) {
 		checkNotNull(codePoints, "A 'codePoints' array must not be null.");
 		if (codePoints.length == 0) {
@@ -164,16 +305,37 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		return new CodePointPredicateRule<>(cp -> Arrays.binarySearch(codePoints, cp) < 0);
 	}
 	
+	/**
+	 * A rule that matches a code point not in a set of code points.
+	 * 
+	 * @param codePoints
+	 *            a string containing the set of code points.
+	 * @return a rule
+	 */
 	protected Rule<T> noneOfCodePoints(final String codePoints) {
 		checkNotNull(codePoints, "A 'codePoints' string must not be null.");
 		return noneOfCodePoints(codePoints.codePoints().toArray());
 	}
 	
+	/**
+	 * A rule that matches a code point not in a set of code points.
+	 * 
+	 * @param codePoints
+	 *            a set of code points.
+	 * @return a rule
+	 */
 	protected Rule<T> noneOfCodePoints(final Set<Integer> codePoints) {
 		checkNotNull(codePoints, "A set of 'codePoints' must not be null.");
 		return noneOfCodePoints(IntStreamEx.of(codePoints).toArray());
 	}
 	
+	/**
+	 * A rule that matches a specific string.
+	 * 
+	 * @param string
+	 *            the string to match
+	 * @return a rule
+	 */
 	protected Rule<T> string(final String string) {
 		checkNotNull(string, "A 'string' must not be null.");
 		if (string.length() == 0) {
@@ -185,6 +347,13 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		return new StringRule<>(string);
 	}
 	
+	/**
+	 * A rule that matches a specific string, ignoring the case of its characters (case-insensitive).
+	 * 
+	 * @param string
+	 *            the string to match
+	 * @return a rule
+	 */
 	protected Rule<T> ignoreCase(final String string) {
 		checkNotNull(string, "A 'string' must not be null.");
 		if (string.length() == 0) {
@@ -197,14 +366,35 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		
 	}
 	
+	/**
+	 * A rule that matches a regular expression
+	 * 
+	 * @param regex
+	 *            a regular expression
+	 * @return a rule
+	 */
 	protected Rule<T> regex(final String regex) {
 		return new RegexRule<>(checkNotNull(regex, "A 'regex' must not be null."));
 	}
 	
+	/**
+	 * A rule that matches a string within a set of strings.
+	 * 
+	 * @param strings
+	 *            a variable number of strings
+	 * @return a rule
+	 */
 	protected Rule<T> strings(final String... strings) {
 		return strings(Sets.newHashSet(checkNotNull(strings, "A set of 'strings' must not be null.")));
 	}
 	
+	/**
+	 * A rule that matches a string within a set of strings.
+	 * 
+	 * @param strings
+	 *            a set of strings
+	 * @return a rule
+	 */
 	protected Rule<T> strings(final Set<String> strings) {
 		checkNotNull(strings, "A set of 'strings' must not be null.");
 		if (strings.size() == 0) {
@@ -216,10 +406,24 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		return new TrieRule<>(strings);
 	}
 	
+	/**
+	 * A rule that matches a string within a set of strings, ignoring the case of their characters (case-insensitive).
+	 * 
+	 * @param strings
+	 *            a variable number of strings
+	 * @return a rule
+	 */
 	protected Rule<T> ignoreCase(final String... strings) {
 		return ignoreCase(Sets.newHashSet(checkNotNull(strings, "A set of 'strings' must not be null.")));
 	}
 	
+	/**
+	 * A rule that matches a string within a set of strings, ignoring the case of their characters (case-insensitive).
+	 * 
+	 * @param strings
+	 *            a set of strings
+	 * @return a rule
+	 */
 	protected Rule<T> ignoreCase(final Set<String> strings) {
 		checkNotNull(strings, "A set of 'strings' must not be null.");
 		if (strings.size() == 0) {
@@ -231,54 +435,120 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		return new TrieRule<>(strings, true);
 	}
 	
+	/**
+	 * A rule that matches an ASCII character.
+	 * 
+	 * @return a rule
+	 */
 	protected Rule<T> ascii() {
 		return ASCII;
 	}
 	
+	/**
+	 * A rule that matches a characters of Unicode's Basic Multilingual Plane.
+	 * 
+	 * @return a rule
+	 */
 	protected Rule<T> bmp() {
 		return BMP;
 	}
 	
+	/**
+	 * A rule that matches a digit.
+	 * 
+	 * @return a rule
+	 */
 	protected Rule<T> digit() {
 		return DIGIT;
 	}
 	
+	/**
+	 * A rule that matches a character which is valid to be the first character of a java identifier.
+	 * 
+	 * @return a rule
+	 */
 	protected Rule<T> javaIdentifierStart() {
 		return JAVA_IDENTIFIER_START;
 	}
 	
+	/**
+	 * A rule that matches a character which is valid to be part character of a java identifier, other than the first
+	 * character.
+	 * 
+	 * @return a rule
+	 */
 	protected Rule<T> javaIdentifierPart() {
 		return JAVA_IDENTIFIER_PART;
 	}
 	
+	/**
+	 * Matches a letter.
+	 * 
+	 * @return a rule
+	 */
 	protected Rule<T> letter() {
 		return LETTER;
 	}
 	
+	/**
+	 * Matches a letter or a digit.
+	 * 
+	 * @return a rule
+	 */
 	protected Rule<T> letterOrDigit() {
 		return LETTER_OR_DIGIT;
 	}
 	
+	/**
+	 * Matches a printable character.
+	 * 
+	 * @return a rule
+	 */
 	protected Rule<T> printable() {
 		return PRINTABLE;
 	}
 	
+	/**
+	 * Matches a space character.
+	 * 
+	 * @return a rule
+	 */
 	protected Rule<T> spaceChar() {
 		return SPACE_CHAR;
 	}
 	
+	/**
+	 * Matches a whitespace character.
+	 * 
+	 * @return a rule
+	 */
 	protected Rule<T> whitespace() {
 		return WHITESPACE;
 	}
 	
+	/**
+	 * Matches the carriage return character.
+	 * 
+	 * @return a rule
+	 */
 	protected Rule<T> cr() {
 		return CR;
 	}
 	
+	/**
+	 * Matches the line feed character.
+	 * 
+	 * @return a rule
+	 */
 	protected Rule<T> lf() {
 		return LF;
 	}
 	
+	/**
+	 * Matches the carriage return and line feed characters.
+	 * 
+	 * @return a rule
+	 */
 	protected Rule<T> crlf() {
 		return CRLF;
 	}
