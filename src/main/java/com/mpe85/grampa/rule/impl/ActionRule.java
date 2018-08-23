@@ -9,12 +9,34 @@ import com.mpe85.grampa.exception.ActionRunException;
 import com.mpe85.grampa.rule.Action;
 import com.mpe85.grampa.rule.RuleContext;
 
+/**
+ * An action rule implementation.
+ * 
+ * @author mpe85
+ *
+ * @param <T>
+ *            the type of the stack elements
+ */
 public class ActionRule<T> extends AbstractRule<T> {
 	
+	/**
+	 * C'tor. Creates an action rule that is not skippable.
+	 * 
+	 * @param action
+	 *            an action
+	 */
 	public ActionRule(final Action<T> action) {
 		this(action, false);
 	}
 	
+	/**
+	 * C'tor. Creates an action rule that may be skippable.
+	 * 
+	 * @param action
+	 *            an action
+	 * @param skippable
+	 *            if the action is skippable inside predicate rules.
+	 */
 	public ActionRule(
 			final Action<T> action,
 			final boolean skippable) {

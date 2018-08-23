@@ -657,42 +657,104 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		return new RepeatRuleBuilder<>(checkNotNull(rule, "A 'rule' must not be null."));
 	}
 	
+	/**
+	 * A predicate rule that tests if its sub rule matches.
+	 * 
+	 * @param rule
+	 *            the sub rule to test
+	 * @return a rule
+	 */
 	protected Rule<T> test(final Rule<T> rule) {
 		return new TestRule<>(checkNotNull(rule, "A 'rule' must not be null."));
 	}
 	
+	/**
+	 * A predicate rule that tests if its sub rule does not match.
+	 * 
+	 * @param rule
+	 *            the sub rule to test
+	 * @return a rule
+	 */
 	protected Rule<T> testNot(final Rule<T> rule) {
 		return new TestNotRule<>(checkNotNull(rule, "A 'rule' must not be null."));
 	}
 	
+	/**
+	 * A rule that runs an action.
+	 * 
+	 * @param action
+	 *            the action to run
+	 * @return a rule
+	 */
 	protected Rule<T> action(final Action<T> action) {
 		return new ActionRule<>(checkNotNull(action, "An 'action' must not be null."));
 	}
 	
+	/**
+	 * A rule that executes a command.
+	 * 
+	 * @param command
+	 *            the command to execute
+	 * @return a rule
+	 */
 	protected Rule<T> command(final Command<T> command) {
 		checkNotNull(command, "A 'command' must not be null.");
 		return action(command.toAction());
 	}
 	
+	/**
+	 * A rule that runs an action. The action is skipped if the rule is run inside a predicate rule.
+	 * 
+	 * @param action
+	 *            the skippable action to run
+	 * @return a rule
+	 */
 	protected Rule<T> skippableAction(final Action<T> action) {
 		return new ActionRule<>(checkNotNull(action, "An 'action' must not be null."), true);
 	}
 	
+	/**
+	 * A rule that executes a command. The command is skipped if the rule is run inside a predicate rule.
+	 * 
+	 * @param command
+	 *            the command to execute
+	 * @return a rule
+	 */
 	protected Rule<T> skippableCommand(final Command<T> command) {
 		checkNotNull(command, "A 'command' must not be null.");
 		return skippableAction(command.toAction());
 	}
 	
+	/**
+	 * Posts a event to the parser's event bus. Note that the event object is constructed at parser create time.
+	 * 
+	 * @param event
+	 *            the event to post
+	 * @return a rule
+	 */
 	protected Rule<T> post(final Object event) {
 		checkNotNull(event, "An 'event' must not be null.");
 		return skippableCommand(ctx -> ctx.post(event));
 	}
 	
+	/**
+	 * Posts a event to the parser's event bus. Note that the event object is supplied by an event supplier at parser
+	 * run time which has access to the parser context.
+	 * 
+	 * @param supplier
+	 *            an event supplier that is called when the rule is run
+	 * @return a rule
+	 */
 	protected Rule<T> post(final EventSupplier<T> supplier) {
 		checkNotNull(supplier, "A 'supplier' must not be null.");
 		return skippableCommand(ctx -> ctx.post(supplier.supply(ctx)));
 	}
 	
+	/**
+	 * Pops the top level element from the stack.
+	 * 
+	 * @return a rule
+	 */
 	protected Rule<T> pop() {
 		return action(ctx -> {
 			ctx.getStack().pop();
@@ -700,6 +762,27 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		});
 	}
 	
+	/**
+	 * Pops an element from the stack at a given position.
+	 * 
+	 * @param down
+	 *            number of elements on the stack to skip
+	 * @return a rule
+	 */
+	protected Rule<T> pop(final int down) {
+		return action(ctx -> {
+			ctx.getStack().pop(down);
+			return true;
+		});
+	}
+	
+	/**
+	 * Replaces the element on top of the stack. Note that the value is constructed at parser create time.
+	 * 
+	 * @param value
+	 *            a replacement value
+	 * @return a rule
+	 */
 	protected Rule<T> poke(final T value) {
 		return action(ctx -> {
 			ctx.getStack().poke(value);
@@ -707,6 +790,15 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		});
 	}
 	
+	/**
+	 * Replaces an element in the stack at a given position. Note that the value is constructed at parser create time.
+	 * 
+	 * @param down
+	 *            number of elements on the stack to skip
+	 * @param value
+	 *            a replacement value
+	 * @return a rule
+	 */
 	protected Rule<T> poke(final int down, final T value) {
 		return action(ctx -> {
 			ctx.getStack().poke(down, value);
@@ -714,6 +806,14 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		});
 	}
 	
+	/**
+	 * Replaces an element in the stack. Note that the value is supplied by a value supplier at parser run time which
+	 * has access to the parser context.
+	 * 
+	 * @param supplier
+	 *            a replacement value supplier
+	 * @return a rule
+	 */
 	protected Rule<T> poke(final ValueSupplier<T> supplier) {
 		checkNotNull(supplier, "A 'supplier' must not be null.");
 		return action(ctx -> {
@@ -722,6 +822,16 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		});
 	}
 	
+	/**
+	 * Replaces an element in the stack at a given position. Note that the value is supplied by a value supplier at
+	 * parser run time which has access to the parser context.
+	 * 
+	 * @param down
+	 *            number of elements on the stack to skip
+	 * @param supplier
+	 *            a replacement value supplier
+	 * @return a rule
+	 */
 	protected Rule<T> poke(final int down, final ValueSupplier<T> supplier) {
 		checkNotNull(supplier, "A 'supplier' must not be null.");
 		return action(ctx -> {
@@ -730,65 +840,178 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		});
 	}
 	
+	/**
+	 * Pushes a new element onto stack. Note that the value is constructed at parser create time.
+	 * 
+	 * @param value
+	 *            a value
+	 * @return a rule
+	 */
 	protected Rule<T> push(final T value) {
 		return command(ctx -> ctx.getStack().push(value));
 	}
 	
+	/**
+	 * Pushes a new element onto stack. Note that the value is supplied by a value supplier at parser run time which has
+	 * access to the parser context.
+	 * 
+	 * @param supplier
+	 *            a value supplier
+	 * @return a rule
+	 */
 	protected Rule<T> push(final ValueSupplier<T> supplier) {
 		checkNotNull(supplier, "A 'supplier' must not be null.");
 		return command(ctx -> ctx.getStack().push(supplier.supply(ctx)));
 	}
 	
+	/**
+	 * Duplicates the top stack element.
+	 * 
+	 * @return a rule
+	 */
 	protected Rule<T> dup() {
 		return command(ctx -> ctx.getStack().dup());
 	}
 	
+	/**
+	 * Swaps the two top stack elements.
+	 * 
+	 * @return a rule
+	 */
 	protected Rule<T> swap() {
 		return command(ctx -> ctx.getStack().swap());
 	}
 	
+	/**
+	 * Pops the top level element from the stack. This method may be called by an action or command where the action.
+	 * context is available.
+	 * 
+	 * @param context
+	 *            an action context
+	 * @return the popped element
+	 */
 	protected final T pop(final ActionContext<T> context) {
 		checkNotNull(context, "A 'context' must not be null.");
 		return context.getStack().pop();
 	}
 	
+	/**
+	 * Pops an element from the stack at a given position. This method may be called by an action or command where the
+	 * action
+	 * 
+	 * @param down
+	 *            number of elements on the stack to skip
+	 * @param context
+	 *            an action context
+	 * @return the popped element
+	 */
 	protected final T pop(final int down, final ActionContext<T> context) {
 		checkNotNull(context, "A 'context' must not be null.");
 		return context.getStack().pop(down);
 	}
 	
+	/**
+	 * Pops and casts the top level element from the stack. This method may be called by an action or command where the
+	 * action. context is available.
+	 * 
+	 * @param <U>
+	 *            a sub type of T
+	 * @param clazz
+	 *            the the type to cast the element to
+	 * @param context
+	 *            an action context
+	 * @return the popped element
+	 */
 	protected final <U extends T> U popAs(final Class<U> clazz, final ActionContext<T> context) {
 		checkNotNull(clazz, "A 'clazz' must not be null.");
 		checkNotNull(context, "A 'context' must not be null.");
-		return clazz.cast(context.getStack().pop());
+		return context.getStack().popAs(clazz);
 	}
 	
+	/**
+	 * Pops and casts an element from the stack at a given position. This method may be called by an action or command
+	 * where the action. context is available.
+	 * 
+	 * @param <U>
+	 *            a sub type of T
+	 * @param clazz
+	 *            the the type to cast the element to
+	 * @param down
+	 *            number of elements on the stack to skip
+	 * @param context
+	 *            an action context
+	 * @return the popped element
+	 */
 	protected final <U extends T> U popAs(final Class<U> clazz, final int down, final ActionContext<T> context) {
 		checkNotNull(clazz, "A 'clazz' must not be null.");
 		checkNotNull(context, "A 'context' must not be null.");
-		return clazz.cast(context.getStack().pop(down));
+		return context.getStack().popAs(down, clazz);
 	}
 	
+	/**
+	 * Peeks the top level element from the stack. This method may be called by an action or command where the action.
+	 * context is available.
+	 * 
+	 * @param context
+	 *            an action context
+	 * @return the peeked element
+	 */
 	protected final T peek(final ActionContext<T> context) {
 		checkNotNull(context, "A 'context' must not be null.");
 		return context.getStack().peek();
 	}
 	
+	/**
+	 * Peeks an element from the stack at a given position. This method may be called by an action or command where the
+	 * action
+	 * 
+	 * @param down
+	 *            number of elements on the stack to skip
+	 * @param context
+	 *            an action context
+	 * @return the peeked element
+	 */
 	protected final T peek(final int down, final ActionContext<T> context) {
 		checkNotNull(context, "A 'context' must not be null.");
 		return context.getStack().peek(down);
 	}
 	
+	/**
+	 * Peeks and casts the top level element from the stack. This method may be called by an action or command where the
+	 * action. context is available.
+	 * 
+	 * @param <U>
+	 *            a sub type of T
+	 * @param clazz
+	 *            the the type to cast the element to
+	 * @param context
+	 *            an action context
+	 * @return the peeked element
+	 */
 	protected final <U extends T> U peekAs(final Class<U> clazz, final ActionContext<T> context) {
 		checkNotNull(clazz, "A 'clazz' must not be null.");
 		checkNotNull(context, "A 'context' must not be null.");
-		return clazz.cast(context.getStack().peek());
+		return context.getStack().peekAs(clazz);
 	}
 	
+	/**
+	 * Peeks and casts an element from the stack at a given position. This method may be called by an action or command
+	 * where the action. context is available.
+	 * 
+	 * @param <U>
+	 *            a sub type of T
+	 * @param clazz
+	 *            the the type to cast the element to
+	 * @param down
+	 *            number of elements on the stack to skip
+	 * @param context
+	 *            an action context
+	 * @return the peeked element
+	 */
 	protected final <U extends T> U peekAs(final Class<U> clazz, final int down, final ActionContext<T> context) {
 		checkNotNull(clazz, "A 'clazz' must not be null.");
 		checkNotNull(context, "A 'context' must not be null.");
-		return clazz.cast(context.getStack().peek(down));
+		return context.getStack().peekAs(down, clazz);
 	}
 	
 	
