@@ -8,12 +8,34 @@ import com.google.common.base.MoreObjects.ToStringHelper;
 import com.ibm.icu.lang.UCharacter;
 import com.mpe85.grampa.rule.RuleContext;
 
+/**
+ * A string rule implementation.
+ * 
+ * @author mpe85
+ *
+ * @param <T>
+ *            the type of the stack elements
+ */
 public class StringRule<T> extends AbstractRule<T> {
 	
+	/**
+	 * C'tor. Constructs a string rules that exactly matches a string (case-sensitive).
+	 * 
+	 * @param string
+	 *            a string
+	 */
 	public StringRule(final String string) {
 		this(string, false);
 	}
 	
+	/**
+	 * C'tor. Constructs a string rules that matches a string (case-sensitive or case-insensitive).
+	 * 
+	 * @param string
+	 *            a string
+	 * @param ignoreCase
+	 *            if true, the case is ignored
+	 */
 	public StringRule(
 			final String string,
 			final boolean ignoreCase) {

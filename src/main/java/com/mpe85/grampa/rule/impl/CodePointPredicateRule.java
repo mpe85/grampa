@@ -9,12 +9,32 @@ import com.google.common.base.MoreObjects.ToStringHelper;
 import com.ibm.icu.lang.UCharacter;
 import com.mpe85.grampa.rule.RuleContext;
 
+/**
+ * A code point predicate rule implementation.
+ * 
+ * @author mpe85
+ *
+ * @param <T>
+ *            the type of the stack elements
+ */
 public class CodePointPredicateRule<T> extends AbstractRule<T> {
 	
+	/**
+	 * C'tor. Create a code point predicate rules that exactly matches a specific code point.
+	 * 
+	 * @param codePoint
+	 *            a code point
+	 */
 	public CodePointPredicateRule(final int codePoint) {
 		this(cp -> cp == codePoint);
 	}
 	
+	/**
+	 * C'tor. Create a code point predicate rule.
+	 * 
+	 * @param predicate
+	 *            a predicate that is tested by the rule.
+	 */
 	public CodePointPredicateRule(final Predicate<Integer> predicate) {
 		this.predicate = checkNotNull(predicate, "A 'predicate' must not be null.");
 	}

@@ -9,8 +9,26 @@ import com.google.common.base.MoreObjects.ToStringHelper;
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.rule.RuleContext;
 
+/**
+ * A repeat rule implementation.
+ * 
+ * @author mpe85
+ *
+ * @param <T>
+ *            the type of the stack elements
+ */
 public class RepeatRule<T> extends AbstractRule<T> {
 	
+	/**
+	 * C'tor.
+	 * 
+	 * @param rule
+	 *            the rule to repeat
+	 * @param min
+	 *            the minimum number of cycles
+	 * @param max
+	 *            an optional maximum number of cycles
+	 */
 	public RepeatRule(
 			final Rule<T> rule,
 			final int min,

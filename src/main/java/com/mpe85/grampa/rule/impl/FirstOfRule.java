@@ -7,8 +7,22 @@ import java.util.List;
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.rule.RuleContext;
 
+/**
+ * A rule implementation that matches the first successful rule of its child rules.
+ * 
+ * @author mpe85
+ *
+ * @param <T>
+ *            the type of the stack elements
+ */
 public class FirstOfRule<T> extends AbstractRule<T> {
 	
+	/**
+	 * C'tor.
+	 * 
+	 * @param rules
+	 *            a list of child rules.
+	 */
 	public FirstOfRule(final List<Rule<T>> rules) {
 		super(checkNotNull(rules, "A list of 'rules' must not be null."));
 	}

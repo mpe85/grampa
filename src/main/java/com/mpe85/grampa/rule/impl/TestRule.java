@@ -5,8 +5,22 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.rule.RuleContext;
 
+/**
+ * A predicate rule implementation that tests if its child rule matches.
+ * 
+ * @author mpe85
+ *
+ * @param <T>
+ *            the type of the stack elements
+ */
 public class TestRule<T> extends AbstractRule<T> {
 	
+	/**
+	 * C'tor.
+	 * 
+	 * @param rule
+	 *            the child rule to test
+	 */
 	public TestRule(final Rule<T> rule) {
 		super(checkNotNull(rule, "A 'rule' must not be null."));
 	}

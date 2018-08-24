@@ -16,20 +16,56 @@ import com.mpe85.grampa.rule.RuleContext;
 
 import one.util.streamex.StreamEx;
 
+/**
+ * A trie (prefix tree) rule implementation that matches the input against a dictionary.
+ * 
+ * @author mpe85
+ *
+ * @param <T>
+ *            the type of the stack elements
+ */
 public class TrieRule<T> extends AbstractRule<T> {
 	
+	/**
+	 * C'tor. Constructs a case-sensitive trie.
+	 * 
+	 * @param strings
+	 *            a variable number of strings
+	 */
 	public TrieRule(final String... strings) {
 		this(false, strings);
 	}
 	
+	/**
+	 * C'tor. Constructs a case-sensitive trie (case-sensitive or case-insensitive).
+	 * 
+	 * @param ignoreCase
+	 *            if true, the case of the strings is ignored
+	 * @param strings
+	 *            a variable number of strings
+	 */
 	public TrieRule(final boolean ignoreCase, final String... strings) {
 		this(Sets.newHashSet(strings), ignoreCase);
 	}
 	
+	/**
+	 * C'tor. Constructs a case-sensitive trie.
+	 * 
+	 * @param strings
+	 *            a set of strings
+	 */
 	public TrieRule(final Set<String> strings) {
 		this(strings, false);
 	}
 	
+	/**
+	 * C'tor. Constructs a case-sensitive trie (case-sensitive or case-insensitive).
+	 * 
+	 * @param ignoreCase
+	 *            if true, the case of the strings is ignored
+	 * @param strings
+	 *            a set of strings
+	 */
 	public TrieRule(
 			final Set<String> strings,
 			final boolean ignoreCase) {
@@ -42,6 +78,11 @@ public class TrieRule<T> extends AbstractRule<T> {
 		this.ignoreCase = ignoreCase;
 	}
 	
+	/**
+	 * Returns all strings inside the trie.
+	 * 
+	 * @return a set of strings
+	 */
 	public Set<String> getStrings() {
 		return StreamEx.of(trie.iterator()).map(e -> e.chars).map(String.class::cast).toSet();
 	}

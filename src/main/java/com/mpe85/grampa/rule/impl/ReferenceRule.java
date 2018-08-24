@@ -3,8 +3,18 @@ package com.mpe85.grampa.rule.impl;
 import java.util.Objects;
 
 import com.google.common.base.MoreObjects.ToStringHelper;
+import com.mpe85.grampa.intercept.RuleMethodInterceptor;
 import com.mpe85.grampa.rule.RuleContext;
 
+/**
+ * A reference rule implementation that stores a reference to a another rule. Note that this is only used by
+ * {@link RuleMethodInterceptor}.
+ * 
+ * @author mpe85
+ *
+ * @param <T>
+ *            the type of the stack elements
+ */
 public class ReferenceRule<T> extends AbstractRule<T> {
 	
 	public ReferenceRule(final int hashCode) {

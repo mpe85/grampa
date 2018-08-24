@@ -32,7 +32,7 @@ public class CharPredicateRule<T> extends AbstractRule<T> {
 	 * C'tor. Create a character predicate rule.
 	 * 
 	 * @param predicate
-	 *            that is tested by the rule.
+	 *            a predicate that is tested by the rule.
 	 */
 	public CharPredicateRule(final Predicate<Character> predicate) {
 		this.predicate = checkNotNull(predicate, "A 'predicate' must not be null.");
