@@ -3,9 +3,9 @@ package com.mpe85.grampa.visitor.impl;
 import java.util.Map;
 
 import com.mpe85.grampa.intercept.RuleMethodInterceptor;
+import com.mpe85.grampa.intercept.RuleMethodInterceptor.ReferenceRule;
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.rule.impl.AbstractRule;
-import com.mpe85.grampa.rule.impl.ReferenceRule;
 import com.mpe85.grampa.visitor.RuleVisitor;
 
 /**

@@ -10,6 +10,7 @@ import java.util.Objects;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.Lists;
+import com.mpe85.grampa.intercept.RuleMethodInterceptor.ReferenceRule;
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.visitor.RuleVisitor;
 
