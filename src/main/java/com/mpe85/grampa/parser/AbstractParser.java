@@ -6,6 +6,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.collect.Sets;
@@ -20,6 +21,7 @@ import com.mpe85.grampa.rule.ValueSupplier;
 import com.mpe85.grampa.rule.impl.ActionRule;
 import com.mpe85.grampa.rule.impl.CharPredicateRule;
 import com.mpe85.grampa.rule.impl.CodePointPredicateRule;
+import com.mpe85.grampa.rule.impl.ConditionalRule;
 import com.mpe85.grampa.rule.impl.EmptyRule;
 import com.mpe85.grampa.rule.impl.EndOfInputRule;
 import com.mpe85.grampa.rule.impl.FirstOfRule;
@@ -677,6 +679,44 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	 */
 	protected Rule<T> testNot(final Rule<T> rule) {
 		return new TestNotRule<>(checkNotNull(rule, "A 'rule' must not be null."));
+	}
+	
+	/**
+	 * A conditional rule that runs one rule if a condition is true, otherwise it runs another rule.
+	 * 
+	 * @param condition
+	 *            a condition
+	 * @param thenRule
+	 *            the rule to run if the condition is true
+	 * @param elseRule
+	 *            the rule to run if the condition is false
+	 * @return
+	 */
+	protected Rule<T> conditional(
+			final Predicate<ActionContext<T>> condition,
+			final Rule<T> thenRule,
+			final Rule<T> elseRule) {
+		return new ConditionalRule<>(
+				checkNotNull(condition, "A 'condition' must not be null."),
+				checkNotNull(thenRule, "A 'thenRule' must not be null."),
+				checkNotNull(elseRule, "A 'elseRule' must not be null."));
+	}
+	
+	/**
+	 * A conditional rule that runs a rule if a condition is true, otherwise it runs no rule.
+	 * 
+	 * @param condition
+	 *            a condition
+	 * @param thenRule
+	 *            the rule to run if the condition is true
+	 * @return
+	 */
+	protected Rule<T> conditional(
+			final Predicate<ActionContext<T>> condition,
+			final Rule<T> thenRule) {
+		return new ConditionalRule<>(
+				checkNotNull(condition, "A 'condition' must not be null."),
+				checkNotNull(thenRule, "A 'thenRule' must not be null."));
 	}
 	
 	/**
