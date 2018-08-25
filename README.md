@@ -11,8 +11,38 @@ but the focus is laid on simple and clean code without a lot of crazy and compli
 
 ## How to add to your build
 
-TODO
+To add a dependency using Gradle:
+
+```groovy
+dependencies {
+	implementation 'com.mpe85:grampa:0.9.0'
+}
+```
 
 ## Examples
 
-TODO
+Create a parser class by extending the AbstractParser class:
+
+```java
+public class LetterParser extends AbstractParser<Void> {
+	@Override
+	public Rule<Void> root() {
+		return sequence(
+				oneOrMore(letter()),
+				eoi());
+	}
+}
+```
+
+Instantiate the parser by using the static createParser method:
+
+```java
+LetterParser parser = Grampa.createParser(LetterParser.class)
+```
+
+Run the parser using the DefaultParseRunner:
+
+```java
+DefaultParseRunner<Void> runner = new DefaultParseRunner<>(parser);
+ParseResult<Void> result = runner.run("abc");
+```
