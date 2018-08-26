@@ -45,7 +45,6 @@ dependencies {
 		'org.junit.jupiter:junit-jupiter-engine:5.2.0',
 		'org.junit.platform:junit-platform-launcher:1.2.0'
 	)
-	spotless
 }
 
 tasks.withType(JavaCompile) {
