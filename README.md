@@ -37,7 +37,7 @@ public class LetterParser extends AbstractParser<Void> {
 Instantiate the parser by using the static createParser method:
 
 ```java
-LetterParser parser = Grampa.createParser(LetterParser.class)
+LetterParser parser = Grampa.createParser(LetterParser.class);
 ```
 
 Run the parser using the DefaultParseRunner:
