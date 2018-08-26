@@ -1599,6 +1599,7 @@ public class AbstractParserTest {
 		}
 		final class Listener extends ParseEventListener<Integer> {
 			@Subscribe
+			@SuppressFBWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS")
 			public void stringEvent(final String event) {
 				string = event;
 			}
