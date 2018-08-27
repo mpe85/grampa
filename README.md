@@ -21,7 +21,7 @@ dependencies {
 
 Adding a dependency using Maven:
 
-```maven
+```xml
 <dependency>
 	<groupId>com.mpe85</groupId>
 	<artifactId>grampa</artifactId>
@@ -32,7 +32,7 @@ Adding a dependency using Maven:
 
 Adding a dependency using Ivy:
 
-```ivy
+```xml
 <dependency org='com.mpe85' name='grampa' rev='0.9.0'>
 	<artifact name='grampa' ext='pom' ></artifact>
 </dependency>
