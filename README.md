@@ -11,12 +11,31 @@ but the focus is laid on simple and clean code without a lot of crazy and compli
 
 ## How to add to your build
 
-To add a dependency using Gradle:
+Adding a dependency using Gradle:
 
 ```groovy
 dependencies {
 	implementation 'com.mpe85:grampa:0.9.0'
 }
+```
+
+Adding a dependency using Maven:
+
+```maven
+<dependency>
+	<groupId>com.mpe85</groupId>
+	<artifactId>grampa</artifactId>
+	<version>0.9.0</version>
+	<type>pom</type>
+</dependency>
+```
+
+Adding a dependency using Ivy:
+
+```ivy
+<dependency org='com.mpe85' name='grampa' rev='0.9.0'>
+	<artifact name='grampa' ext='pom' ></artifact>
+</dependency>
 ```
 
 ## Examples
