@@ -690,7 +690,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	 *            the rule to run if the condition is true
 	 * @param elseRule
 	 *            the rule to run if the condition is false
-	 * @return
+	 * @return a rule
 	 */
 	protected Rule<T> conditional(
 			final Predicate<ActionContext<T>> condition,
@@ -709,7 +709,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	 *            a condition
 	 * @param thenRule
 	 *            the rule to run if the condition is true
-	 * @return
+	 * @return a rule
 	 */
 	protected Rule<T> conditional(
 			final Predicate<ActionContext<T>> condition,
