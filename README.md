@@ -7,7 +7,7 @@ but the focus is laid on simple and clean code without a lot of crazy and compli
 
 ## Versions
 
-* first pre-release: **0.9.0**; requires **Java 8** (not released yet)
+* first pre-release: **0.9.0**; requires **Java 8**
 
 ## How to add to your build
 
