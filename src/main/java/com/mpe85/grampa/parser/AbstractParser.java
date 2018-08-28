@@ -699,7 +699,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		return new ConditionalRule<>(
 				checkNotNull(condition, "A 'condition' must not be null."),
 				checkNotNull(thenRule, "A 'thenRule' must not be null."),
-				checkNotNull(elseRule, "A 'elseRule' must not be null."));
+				checkNotNull(elseRule, "An 'elseRule' must not be null."));
 	}
 	
 	/**
