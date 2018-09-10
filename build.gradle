@@ -143,8 +143,8 @@ publishing {
 }
 
 bintray {
-	user = bintrayUser
-	key = bintrayKey
+	user = hasProperty('bintrayUser') ? bintrayUser : System.env.bintrayUser
+	key = hasProperty('bintrayKey') ? bintrayKey : System.env.bintrayKey
 	publications = ['mavenJava']
 
 	pkg {
