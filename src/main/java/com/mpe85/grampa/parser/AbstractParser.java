@@ -51,7 +51,8 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	public abstract Rule<T> root();
 	
 	/**
-	 * A rule that matches an empty string. Or in other words, a rule that matches nothing and always succeeds.
+	 * A rule that matches an empty string. Or in other words, a rule that matches no input character and always
+	 * succeeds.
 	 * 
 	 * @return a rule
 	 */
@@ -87,7 +88,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	/**
-	 * a rule that matches any code point.
+	 * A rule that matches any code point.
 	 * 
 	 * @return a rule
 	 */
@@ -484,7 +485,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	/**
-	 * Matches a letter.
+	 * A rule that matches a letter.
 	 * 
 	 * @return a rule
 	 */
@@ -493,7 +494,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	/**
-	 * Matches a letter or a digit.
+	 * A rule that matches a letter or a digit.
 	 * 
 	 * @return a rule
 	 */
@@ -502,7 +503,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	/**
-	 * Matches a printable character.
+	 * A rule that matches a printable character.
 	 * 
 	 * @return a rule
 	 */
@@ -511,7 +512,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	/**
-	 * Matches a space character.
+	 * A rule that matches a space character.
 	 * 
 	 * @return a rule
 	 */
@@ -520,7 +521,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	/**
-	 * Matches a whitespace character.
+	 * A rule that matches a whitespace character.
 	 * 
 	 * @return a rule
 	 */
@@ -529,7 +530,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	/**
-	 * Matches the carriage return character.
+	 * A rule that matches the carriage return character.
 	 * 
 	 * @return a rule
 	 */
@@ -538,7 +539,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	/**
-	 * Matches the line feed character.
+	 * A rule that matches the line feed character.
 	 * 
 	 * @return a rule
 	 */
@@ -547,7 +548,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	/**
-	 * Matches the carriage return and line feed characters.
+	 * A rule that matches the carriage return and line feed characters.
 	 * 
 	 * @return a rule
 	 */
@@ -970,7 +971,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	
 	/**
 	 * Pops and casts an element from the stack at a given position. This method may be called by an action or command
-	 * where the action. context is available.
+	 * where the action context is available.
 	 * 
 	 * @param <U>
 	 *            a sub type of T
@@ -989,7 +990,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	}
 	
 	/**
-	 * Peeks the top level element from the stack. This method may be called by an action or command where the action.
+	 * Peeks the top level element from the stack. This method may be called by an action or command where the action
 	 * context is available.
 	 * 
 	 * @param context
@@ -1003,7 +1004,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	
 	/**
 	 * Peeks an element from the stack at a given position. This method may be called by an action or command where the
-	 * action
+	 * action is available.
 	 * 
 	 * @param down
 	 *            number of elements on the stack to skip
@@ -1018,7 +1019,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	
 	/**
 	 * Peeks and casts the top level element from the stack. This method may be called by an action or command where the
-	 * action. context is available.
+	 * action context is available.
 	 * 
 	 * @param <U>
 	 *            a sub type of T
@@ -1036,7 +1037,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	
 	/**
 	 * Peeks and casts an element from the stack at a given position. This method may be called by an action or command
-	 * where the action. context is available.
+	 * where the action context is available.
 	 * 
 	 * @param <U>
 	 *            a sub type of T
