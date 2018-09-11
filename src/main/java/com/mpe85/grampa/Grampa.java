@@ -29,8 +29,8 @@ public final class Grampa {
 	}
 	
 	/**
-	 *
-	 * which will be called by this method.
+	 * Creates a new parser instance using the given parser class. The parser class must have a no-args c'tor which will
+	 * be called by this method.
 	 * 
 	 * @param <U>
 	 *            the type of the parser
