@@ -32,11 +32,11 @@ dependencies {
 	implementation(
 		'com.google.guava:guava:26.0-jre',
 		'one.util:streamex:0.6.7',
-		'net.bytebuddy:byte-buddy:1.8.17',
+		'net.bytebuddy:byte-buddy:1.8.22',
 		'com.ibm.icu:icu4j:62.1'
 	)
 	compileOnly(
-		'com.github.spotbugs:spotbugs-annotations:3.1.6'
+		'com.github.spotbugs:spotbugs-annotations:3.1.7'
 	)
 	testImplementation(
 		'org.junit.jupiter:junit-jupiter-api:5.3.0'
