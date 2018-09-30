@@ -13,7 +13,7 @@ plugins {
 	id 'maven-publish'
 	id 'com.diffplug.gradle.spotless' version '3.14.0'
 	id 'com.jfrog.bintray' version '1.8.4'
-	id 'com.github.spotbugs' version '1.6.3'
+	id 'com.github.spotbugs' version '1.6.4'
 }
 
 group 'com.mpe85'
@@ -68,7 +68,7 @@ artifacts {
 }
 
 spotbugs {
-	toolVersion = '3.1.6'
+	toolVersion = '3.1.7'
 	ignoreFailures = true
 	effort = 'max'
 	reportLevel = 'low'
