@@ -13,7 +13,7 @@ plugins {
 	id 'maven-publish'
 	id 'com.diffplug.gradle.spotless' version '3.15.0'
 	id 'com.jfrog.bintray' version '1.8.4'
-	id 'com.github.spotbugs' version '1.6.4'
+	id 'com.github.spotbugs' version '1.6.5'
 }
 
 group 'com.mpe85'
@@ -30,13 +30,13 @@ configurations {
 
 dependencies {
 	implementation(
-		'com.google.guava:guava:26.0-jre',
+		'com.google.guava:guava:27.0-jre',
 		'one.util:streamex:0.6.7',
-		'net.bytebuddy:byte-buddy:1.8.22',
-		'com.ibm.icu:icu4j:62.1'
+		'net.bytebuddy:byte-buddy:1.9.2',
+		'com.ibm.icu:icu4j:63.1'
 	)
 	compileOnly(
-		'com.github.spotbugs:spotbugs-annotations:3.1.7'
+		'com.github.spotbugs:spotbugs-annotations:3.1.8'
 	)
 	testImplementation(
 		'org.junit.jupiter:junit-jupiter-api:5.3.1'
@@ -68,7 +68,7 @@ artifacts {
 }
 
 spotbugs {
-	toolVersion = '3.1.7'
+	toolVersion = '3.1.8'
 	ignoreFailures = true
 	effort = 'max'
 	reportLevel = 'low'
