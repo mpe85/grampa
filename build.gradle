@@ -18,7 +18,7 @@ plugins {
 
 group 'com.mpe85'
 
-sourceCompatibility = 1.8
+sourceCompatibility = 11
 
 repositories {
 	jcenter()
@@ -51,7 +51,8 @@ tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
 
-javadoc.options.links('https://docs.oracle.com/javase/8/docs/api/')
+// not working
+javadoc.options.links('https://docs.oracle.com/en/java/javase/11/docs/api/')
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
 	classifier = 'javadoc'
