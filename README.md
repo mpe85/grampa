@@ -2,7 +2,7 @@
 
 [![Latest release](https://img.shields.io/github/release/mpe85/grampa/all.svg)](https://github.com/mpe85/grampa/releases/latest)
 [![License](https://img.shields.io/github/license/mpe85/grampa.svg)](https://github.com/mpe85/grampa/blob/master/LICENSE)
-![Java 1.8+](https://img.shields.io/badge/java-8+-blue.svg)
+![Java 11+](https://img.shields.io/badge/java-11+-blue.svg)
 [![Build Status](https://travis-ci.org/mpe85/grampa.svg?branch=master)](https://travis-ci.org/mpe85/grampa)
 
 Grampa — short for **Gra**mmar **pa**rser — is a library that allows you to define grammars completely in Java source code without any pre-processing phase (unlike other parser generators like ANTLR and JavaCC).
@@ -12,7 +12,7 @@ but the focus is laid on simple and clean code without a lot of crazy and compli
 
 ## Versions
 
-* first pre-release: **0.9.0**; requires **Java 8**
+* 1st pre-release: **0.9.0**; requires **Java 8**
 
 ## How to add to your build
 
