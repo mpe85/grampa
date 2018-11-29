@@ -42,9 +42,10 @@ public final class Grampa {
 	 */
 	public static final <U extends Parser<T>, T> U createParser(final Class<U> parserClass) {
 		try {
-			return createParserSubClass(parserClass).newInstance();
+			return createParserSubClass(parserClass).getDeclaredConstructor().newInstance();
 		}
-		catch (InstantiationException | IllegalAccessException ex) {
+		catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException | NoSuchMethodException | SecurityException ex) {
 			throw new ParserCreateException("Failed to create new parser instance.", ex);
 		}
 	}

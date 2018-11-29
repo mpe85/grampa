@@ -52,7 +52,7 @@ tasks.withType(JavaCompile) {
 }
 
 // not working
-javadoc.options.links('https://cr.openjdk.java.net/~iris/se/11/latestSpec/api/package-list')
+// javadoc.options.links('https://cr.openjdk.java.net/~iris/se/11/latestSpec/api/package-list')
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
 	classifier = 'javadoc'
