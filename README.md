@@ -13,6 +13,7 @@ but the focus is laid on simple and clean code without a lot of crazy and compli
 ## Versions
 
 * 1st pre-release: **0.9.0**; requires **Java 8**
+* 2nd pre-release: **0.9.1**; requires **Java 11**
 
 ## How to add to your build
 
@@ -20,7 +21,7 @@ Adding a dependency using Gradle:
 
 ```groovy
 dependencies {
-	implementation 'com.mpe85:grampa:0.9.0'
+	implementation 'com.mpe85:grampa:0.9.1'
 }
 ```
 
@@ -30,7 +31,7 @@ Adding a dependency using Maven:
 <dependency>
 	<groupId>com.mpe85</groupId>
 	<artifactId>grampa</artifactId>
-	<version>0.9.0</version>
+	<version>0.9.1</version>
 	<type>pom</type>
 </dependency>
 ```
@@ -38,7 +39,7 @@ Adding a dependency using Maven:
 Adding a dependency using Ivy:
 
 ```xml
-<dependency org='com.mpe85' name='grampa' rev='0.9.0'>
+<dependency org='com.mpe85' name='grampa' rev='0.9.1'>
 	<artifact name='grampa' ext='pom' ></artifact>
 </dependency>
 ```
