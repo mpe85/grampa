@@ -30,7 +30,7 @@ configurations {
 
 dependencies {
 	implementation(
-		'com.google.guava:guava:27.0-jre',
+		'com.google.guava:guava:27.0.1-jre',
 		'one.util:streamex:0.6.7',
 		'net.bytebuddy:byte-buddy:1.9.5',
 		'com.ibm.icu:icu4j:63.1'
