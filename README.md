@@ -20,6 +20,12 @@ but the focus is laid on simple and clean code without a lot of crazy and compli
 Adding a dependency using Gradle:
 
 ```groovy
+repositories {
+	maven {
+		url  'https://dl.bintray.com/mpe85/maven' 
+	}
+}
+
 dependencies {
 	implementation 'com.mpe85:grampa:0.9.1'
 }
