@@ -21,11 +21,8 @@ Adding a dependency using Gradle:
 
 ```groovy
 repositories {
-	maven {
-		url  'https://dl.bintray.com/mpe85/maven' 
-	}
+	jcenter()
 }
-
 dependencies {
 	implementation 'com.mpe85:grampa:0.9.1'
 }
