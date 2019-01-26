@@ -164,12 +164,20 @@ bintray {
 	}
 }
 
+eclipse {
+	project {
+		natures 'org.eclipse.buildship.core.gradleprojectnature'
+		buildCommand 'org.eclipse.buildship.core.gradleprojectbuilder'
+	}
+}
+
 task eclipseSettings(type: Copy) {
 	description 'Copies eclipse preference files.'
 	from rootProject.files(
 			'eclipse/org.eclipse.jdt.ui.prefs',
 			'eclipse/org.eclipse.jdt.core.prefs',
-			'eclipse/org.eclipse.core.resources.prefs')
+			'eclipse/org.eclipse.core.resources.prefs',
+			'eclipse/org.eclipse.buildship.core.prefs')
 	into project.file('.settings/')
 	outputs.upToDateWhen { false }
 }
@@ -179,7 +187,8 @@ task cleanEclipseSettings(type: Delete) {
 	delete project.files(
 			'.settings/org.eclipse.jdt.ui.prefs',
 			'.settings/org.eclipse.jdt.core.prefs',
-			'.settings/org.eclipse.core.resources.prefs')
+			'.settings/org.eclipse.core.resources.prefs',
+			'.settings/org.eclipse.buildship.core.prefs')
 }
 
 tasks['eclipseJdt'].dependsOn(eclipseSettings)
