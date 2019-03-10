@@ -13,13 +13,14 @@ plugins {
 	id 'maven-publish'
 	id 'com.diffplug.gradle.spotless' version '3.18.0'
 	id 'com.jfrog.bintray' version '1.8.4'
-	id 'com.github.spotbugs' version '1.6.10'
-	id 'com.github.ben-manes.versions' version '0.20.0'
+	id 'com.github.spotbugs' version '1.6.11'
+	id 'com.github.ben-manes.versions' version '0.21.0'
 }
 
 group 'com.mpe85'
 
 sourceCompatibility = 11
+targetCompatibility = 11
 
 repositories {
 	jcenter()
@@ -57,9 +58,13 @@ javadoc.options.links('https://docs.oracle.com/en/java/javase/11/docs/api/')
 
 jar {
 	manifest {
-		attributes(
-			'Automatic-Module-Name': 'com.mpe85.grampa'
-		)
+		mainAttributes(
+			'Implementation-Title': project.name,
+            'Implementation-Version': project.version,
+            'Implementation-Vendor': project.group,
+            'Created-By': "${System.properties['java.version']} (${System.properties['java.vendor']})",
+            'Automatic-Module-Name': "${project.group}.${project.name}"
+        )
 	}
 }
 
@@ -78,7 +83,7 @@ artifacts {
 }
 
 spotbugs {
-	toolVersion = '3.1.11'
+	toolVersion = '3.1.12'
 	ignoreFailures = true
 	effort = 'max'
 	reportLevel = 'low'
