@@ -50,7 +50,7 @@ public class StringRule<T> extends AbstractRule<T> {
 			final CharSequence nextChars = context.getInputBuffer().subSequence(
 					context.getCurrentIndex(),
 					context.getCurrentIndex() + string.length());
-			return string.equals(ignoreCase
+			return Objects.equals(string, ignoreCase
 					? UCharacter.toLowerCase(nextChars.toString())
 					: nextChars.toString())
 					&& context.advanceIndex(string.length());

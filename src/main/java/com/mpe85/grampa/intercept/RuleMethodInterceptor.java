@@ -71,7 +71,7 @@ public class RuleMethodInterceptor<T> {
 	 * @return true if it is the root rule method, false otherwise
 	 */
 	private boolean isRoot(final Method method) {
-		return ROOT.equals(method.getName()) && method.getParameterCount() == 0;
+		return Objects.equals(ROOT, method.getName()) && method.getParameterCount() == 0;
 	}
 	
 	
