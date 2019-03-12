@@ -94,7 +94,7 @@ public abstract class AbstractRule<T> implements Rule<T> {
 	public boolean equals(final Object obj) {
 		if (obj != null && getClass() == obj.getClass()) {
 			final AbstractRule<?> other = (AbstractRule<?>) obj;
-			return Objects.equals(this.children, other.children);
+			return Objects.equals(children, other.children);
 		}
 		return false;
 	}
