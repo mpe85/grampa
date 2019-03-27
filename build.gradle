@@ -11,13 +11,16 @@ plugins {
 	id 'eclipse'
 	id 'maven'
 	id 'maven-publish'
-	id 'com.diffplug.gradle.spotless' version '3.18.0'
+	id 'com.diffplug.gradle.spotless' version '3.20.0'
 	id 'com.jfrog.bintray' version '1.8.4'
-	id 'com.github.spotbugs' version '1.6.11'
+	id 'com.github.spotbugs' version '1.7.1'
 	id 'com.github.ben-manes.versions' version '0.21.0'
+	id 'org.javamodularity.moduleplugin' version '1.4.1'
 }
 
 group 'com.mpe85'
+
+def moduleName = 'com.mpe85_.grampa'
 
 sourceCompatibility = 11
 targetCompatibility = 11
@@ -34,18 +37,18 @@ dependencies {
 	implementation(
 		'com.google.guava:guava:27.1-jre',
 		'one.util:streamex:0.6.8',
-		'net.bytebuddy:byte-buddy:1.9.10',
+		'net.bytebuddy:byte-buddy:1.9.11',
 		'com.ibm.icu:icu4j:63.1'
 	)
 	compileOnly(
-		'com.github.spotbugs:spotbugs-annotations:3.1.11'
+		'com.github.spotbugs:spotbugs-annotations:3.1.12'
 	)
 	testImplementation(
-		'org.junit.jupiter:junit-jupiter-api:5.4.0'
+		'org.junit.jupiter:junit-jupiter-api:5.4.1'
 	)
 	testRuntimeOnly(
-		'org.junit.jupiter:junit-jupiter-engine:5.4.0',
-		'org.junit.platform:junit-platform-launcher:1.4.0'
+		'org.junit.jupiter:junit-jupiter-engine:5.4.1',
+		'org.junit.platform:junit-platform-launcher:1.4.1'
 	)
 }
 
@@ -55,6 +58,14 @@ tasks.withType(JavaCompile) {
 
 // not working
 javadoc.options.links('https://docs.oracle.com/en/java/javase/11/docs/api/')
+
+javadoc {
+	inputs.property("moduleName", moduleName)
+    doFirst {
+        options.addStringOption('-module-path', classpath.asPath)
+        classpath = files()
+    }
+}
 
 jar {
 	manifest {
@@ -183,6 +194,27 @@ eclipse {
 		natures 'org.eclipse.buildship.core.gradleprojectnature'
 		buildCommand 'org.eclipse.buildship.core.gradleprojectbuilder'
 	}
+	classpath {
+        file {
+            whenMerged {
+                entries.findAll { isModule(it) }.each { //(1)
+                    it.entryAttributes['module'] = 'true'
+                }
+
+                entries.findAll { isSource(it) && isTestScope(it) }.each {
+                    it.entryAttributes['test'] = 'true'
+                }
+
+                entries.findAll { isLibrary(it) && isTestScope(it) }.each {
+                    it.entryAttributes['test'] = 'true'
+                }
+            }
+        }
+
+        defaultOutputDir = file('build')
+        downloadSources = true
+        downloadJavadoc = true
+    }
 }
 
 task eclipseSettings(type: Copy) {
@@ -207,3 +239,8 @@ task cleanEclipseSettings(type: Delete) {
 
 tasks['eclipseJdt'].dependsOn(eclipseSettings)
 tasks['cleanEclipse'].dependsOn(cleanEclipseSettings)
+
+boolean isLibrary(entry) { return entry.properties.kind.equals('lib') }
+boolean isTestScope(entry) { return entry.entryAttributes.get('gradle_used_by_scope').equals('test'); }
+boolean isModule(entry) { isLibrary(entry) && !isTestScope(entry); }
+boolean isSource(entry) { return entry.properties.kind.equals('src'); }
