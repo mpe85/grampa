@@ -15,12 +15,9 @@ plugins {
 	id 'com.jfrog.bintray' version '1.8.4'
 	id 'com.github.spotbugs' version '1.7.1'
 	id 'com.github.ben-manes.versions' version '0.21.0'
-	id 'org.javamodularity.moduleplugin' version '1.4.1'
 }
 
 group 'com.mpe85'
-
-def moduleName = 'com.mpe85_.grampa'
 
 sourceCompatibility = 11
 targetCompatibility = 11
@@ -58,15 +55,6 @@ tasks.withType(JavaCompile) {
 
 // not working
 javadoc.options.links('https://docs.oracle.com/en/java/javase/11/docs/api/')
-
-javadoc {
-	enabled = false
-	inputs.property("moduleName", moduleName)
-	doFirst {
-		options.addStringOption('-module-path', classpath.asPath)
-		classpath = files()
-	}
-}
 
 jar {
 	manifest {
@@ -110,7 +98,7 @@ tasks.withType(com.github.spotbugs.SpotBugsTask) {
 
 spotless {
 	java {
-		eclipse().configFile 'eclipse/org.eclipse.jdt.core.prefs'
+		eclipse().configFile '.seettings/org.eclipse.jdt.core.prefs'
 	}
 }
 
