@@ -8,7 +8,6 @@ buildscript {
 
 plugins {
 	id 'java'
-	id 'eclipse'
 	id 'maven'
 	id 'maven-publish'
 	id 'com.diffplug.gradle.spotless' version '3.20.0'
@@ -98,7 +97,7 @@ tasks.withType(com.github.spotbugs.SpotBugsTask) {
 
 spotless {
 	java {
-		eclipse().configFile '.seettings/org.eclipse.jdt.core.prefs'
+		eclipse().configFile '.settings/org.eclipse.jdt.core.prefs'
 	}
 }
 
@@ -177,59 +176,3 @@ bintray {
 		}
 	}
 }
-
-eclipse {
-	project {
-		natures 'org.eclipse.buildship.core.gradleprojectnature'
-		buildCommand 'org.eclipse.buildship.core.gradleprojectbuilder'
-	}
-	classpath {
-        file {
-            whenMerged {
-                entries.findAll { isModule(it) }.each { //(1)
-                    it.entryAttributes['module'] = 'true'
-                }
-
-                entries.findAll { isSource(it) && isTestScope(it) }.each {
-                    it.entryAttributes['test'] = 'true'
-                }
-
-                entries.findAll { isLibrary(it) && isTestScope(it) }.each {
-                    it.entryAttributes['test'] = 'true'
-                }
-            }
-        }
-
-        defaultOutputDir = file('build')
-        downloadSources = true
-        downloadJavadoc = true
-    }
-}
-
-task eclipseSettings(type: Copy) {
-	description 'Copies eclipse preference files.'
-	from rootProject.files(
-			'eclipse/org.eclipse.jdt.ui.prefs',
-			'eclipse/org.eclipse.jdt.core.prefs',
-			'eclipse/org.eclipse.core.resources.prefs',
-			'eclipse/org.eclipse.buildship.core.prefs')
-	into project.file('.settings/')
-	outputs.upToDateWhen { false }
-}
-
-task cleanEclipseSettings(type: Delete) {
-	description 'Deletes eclipse preference files.'
-	delete project.files(
-			'.settings/org.eclipse.jdt.ui.prefs',
-			'.settings/org.eclipse.jdt.core.prefs',
-			'.settings/org.eclipse.core.resources.prefs',
-			'.settings/org.eclipse.buildship.core.prefs')
-}
-
-tasks['eclipseJdt'].dependsOn(eclipseSettings)
-tasks['cleanEclipse'].dependsOn(cleanEclipseSettings)
-
-boolean isLibrary(entry) { return entry.properties.kind.equals('lib') }
-boolean isTestScope(entry) { return entry.entryAttributes.get('gradle_used_by_scope').equals('test'); }
-boolean isModule(entry) { isLibrary(entry) && !isTestScope(entry); }
-boolean isSource(entry) { return entry.properties.kind.equals('src'); }
