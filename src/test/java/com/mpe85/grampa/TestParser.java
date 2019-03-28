@@ -5,6 +5,8 @@ import com.mpe85.grampa.rule.Rule;
 
 public class TestParser extends AbstractParser<String> {
 	
+	private String dummy;
+	
 	public TestParser() {
 	}
 	
@@ -41,5 +43,4 @@ public class TestParser extends AbstractParser<String> {
 		return empty();
 	}
 	
-	private String dummy;
 }

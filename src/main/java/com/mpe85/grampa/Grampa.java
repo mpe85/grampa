@@ -23,6 +23,48 @@ import one.util.streamex.StreamEx;
 public final class Grampa {
 	
 	/**
+	 * A parser c'tor (intermediate class for fluent API). This class wraps a {@link Constructor} and offers a var args
+	 * method for calling that c'tor.
+	 * 
+	 * @author mpe85
+	 *
+	 * @param <T>
+	 *            The type to which the c'tor belongs to
+	 */
+	public static final class ParserCtor<T> {
+		
+		private final Constructor<? extends T> ctor;
+		
+		/**
+		 * Private C'tor. This class shall never be instantiated from outside
+		 * 
+		 * @param ctor
+		 *            the wrapped {@link Constructor}
+		 */
+		private ParserCtor(final Constructor<? extends T> ctor) {
+			this.ctor = ctor;
+		}
+		
+		/**
+		 * Call the wrapped c'tor using the given c'tor args. The arguments must match the c'tor parameter list.
+		 * 
+		 * @param args
+		 *            c'tor args
+		 * @return a new instance
+		 */
+		public T withArgs(final Object... args) {
+			try {
+				return ctor.newInstance(args);
+			}
+			catch (InstantiationException | IllegalAccessException
+					| IllegalArgumentException | InvocationTargetException ex) {
+				throw new ParserCreateException("Failed to create new parser instance.", ex);
+			}
+		}
+		
+	}
+	
+	/**
 	 * Private C'tor. This class shall never be instantiated.
 	 */
 	private Grampa() {
@@ -114,47 +156,6 @@ public final class Grampa {
 	
 	private static final boolean isSafeVarArgsRuleMethod(final Invokable<?, Object> invokable) {
 		return invokable.isVarArgs() && invokable.isAnnotationPresent(SafeVarargs.class);
-	}
-	
-	/**
-	 * A parser c'tor (intermediate class for fluent API). This class wraps a {@link Constructor} and offers a var args
-	 * method for calling that c'tor.
-	 * 
-	 * @author mpe85
-	 *
-	 * @param <T>
-	 *            The type to which the c'tor belongs to
-	 */
-	public static final class ParserCtor<T> {
-		
-		/**
-		 * Private C'tor. This class shall never be instantiated from outside
-		 * 
-		 * @param ctor
-		 *            the wrapped {@link Constructor}
-		 */
-		private ParserCtor(final Constructor<? extends T> ctor) {
-			this.ctor = ctor;
-		}
-		
-		/**
-		 * Call the wrapped c'tor using the given c'tor args. The arguments must match the c'tor parameter list.
-		 * 
-		 * @param args
-		 *            c'tor args
-		 * @return a new instance
-		 */
-		public T withArgs(final Object... args) {
-			try {
-				return ctor.newInstance(args);
-			}
-			catch (InstantiationException | IllegalAccessException
-					| IllegalArgumentException | InvocationTargetException ex) {
-				throw new ParserCreateException("Failed to create new parser instance.", ex);
-			}
-		}
-		
-		private final Constructor<? extends T> ctor;
 	}
 	
 }

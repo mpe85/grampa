@@ -56,6 +56,27 @@ public class GrampaTest {
 	}
 	
 	@Test
+	public void createParser_invalid_noDefaultCtor() {
+		assertThrows(
+				ParserCreateException.class,
+				() -> Grampa.createParser(NoDefaultCtorTestParser.class));
+	}
+	
+	@Test
+	public void createParser_invalid_finalRuleMethod() {
+		assertThrows(
+				ParserCreateException.class,
+				() -> Grampa.createParser(FinalRuleMethodTestParser.class));
+	}
+	
+	@Test
+	public void createParser_invalid_staticRuleMethod() {
+		assertThrows(
+				ParserCreateException.class,
+				() -> Grampa.createParser(StaticRuleMethodTestParser.class));
+	}
+	
+	@Test
 	public void createParser_valid_inheritance() {
 		final SuperParser superParser = Grampa.createParser(SuperParser.class);
 		verifySuperParserRules(superParser.root());
