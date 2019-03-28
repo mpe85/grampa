@@ -119,6 +119,8 @@ test {
 	testLogging {
 		events 'passed', 'skipped', 'failed'
 	}
+	
+	finalizedBy jacocoTestReport
 }
 
 def gitUrl = "https://github.com/mpe85/${project.name}"
