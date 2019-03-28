@@ -71,6 +71,12 @@ jar {
 	}
 }
 
+jacocoTestReport {
+    reports {
+        xml.enabled true
+    }
+}
+
 task javadocJar(type: Jar, dependsOn: javadoc) {
 	classifier = 'javadoc'
 	from javadoc.destinationDir
