@@ -15,6 +15,8 @@ import com.mpe85.grampa.rule.impl.RepeatRule;
  */
 public class RepeatRuleBuilder<T> {
 	
+	private final Rule<T> rule;
+	
 	/**
 	 * C'tor.
 	 * 
@@ -70,7 +72,5 @@ public class RepeatRuleBuilder<T> {
 	public RepeatRule<T> max(final int max) {
 		return new RepeatRule<>(rule, 0, max);
 	}
-	
-	private final Rule<T> rule;
 	
 }

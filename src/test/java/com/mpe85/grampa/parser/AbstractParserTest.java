@@ -1294,14 +1294,14 @@ public class AbstractParserTest {
 		final class Parser extends AbstractParser<CharSequence> {
 			@Override
 			public Rule<CharSequence> root() {
-				return repeat(character('z')).times(4, 7);
+				return repeat(character('z')).times(4);
 			}
 		}
 		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
-		final ParseResult<CharSequence> result = runner.run("zzzzz");
+		final ParseResult<CharSequence> result = runner.run("zzzz");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
-		assertEquals("zzzzz", result.getMatchedInput());
+		assertEquals("zzzz", result.getMatchedInput());
 		assertEquals("", result.getRestOfInput());
 	}
 	
@@ -1319,6 +1319,70 @@ public class AbstractParserTest {
 		assertFalse(result.isMatchedWholeInput());
 		assertNull(result.getMatchedInput());
 		assertEquals("zzzzz", result.getRestOfInput());
+	}
+	
+	@Test
+	public void repeat_valid_range() {
+		final class Parser extends AbstractParser<CharSequence> {
+			@Override
+			public Rule<CharSequence> root() {
+				return repeat(character('z')).times(4, 7);
+			}
+		}
+		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<CharSequence> result = runner.run("zzzzz");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+		assertEquals("zzzzz", result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
+	}
+	
+	@Test
+	public void repeat_invalid_range() {
+		final class Parser extends AbstractParser<CharSequence> {
+			@Override
+			public Rule<CharSequence> root() {
+				return repeat(character('z')).times(2, 4);
+			}
+		}
+		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<CharSequence> result = runner.run("z");
+		assertFalse(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+		assertNull(result.getMatchedInput());
+		assertEquals("z", result.getRestOfInput());
+	}
+	
+	@Test
+	public void repeat_valid_max() {
+		final class Parser extends AbstractParser<CharSequence> {
+			@Override
+			public Rule<CharSequence> root() {
+				return repeat(character('z')).max(3);
+			}
+		}
+		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<CharSequence> result = runner.run("zz");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+		assertEquals("zz", result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
+	}
+	
+	@Test
+	public void repeat_invalid_max() {
+		final class Parser extends AbstractParser<CharSequence> {
+			@Override
+			public Rule<CharSequence> root() {
+				return sequence(repeat(character('z')).max(3), eoi());
+			}
+		}
+		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
+		final ParseResult<CharSequence> result = runner.run("zzzz");
+		assertFalse(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+		assertNull(result.getMatchedInput());
+		assertEquals("zzzz", result.getRestOfInput());
 	}
 	
 	@Test
