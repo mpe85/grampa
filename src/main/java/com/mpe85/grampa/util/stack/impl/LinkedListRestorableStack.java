@@ -21,6 +21,10 @@ import com.mpe85.grampa.util.stack.RestorableStack;
  */
 public class LinkedListRestorableStack<E> extends LinkedList<E> implements RestorableStack<E> {
 	
+	private static final long serialVersionUID = 3875323652049358971L;
+	
+	private final Deque<Deque<E>> snapshots = new ArrayDeque<>();
+	
 	/**
 	 * Default c'tor.
 	 */
@@ -148,10 +152,5 @@ public class LinkedListRestorableStack<E> extends LinkedList<E> implements Resto
 	private int checkIndex(final int down) {
 		return checkPositionIndex(down, size(), "A 'down' index must be in range.");
 	}
-	
-	
-	private static final long serialVersionUID = 3875323652049358971L;
-	
-	private final Deque<Deque<E>> snapshots = new ArrayDeque<>();
 	
 }
