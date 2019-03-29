@@ -3,7 +3,6 @@ package com.mpe85.grampa.rule.impl;
 import static com.google.common.base.Preconditions.checkElementIndex;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -14,8 +13,6 @@ import com.google.common.collect.Lists;
 import com.mpe85.grampa.intercept.RuleMethodInterceptor.ReferenceRule;
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.visitor.RuleVisitor;
-
-import one.util.streamex.StreamEx;
 
 /**
  * An abstract rule that is base for all rule implementations.
@@ -86,9 +83,7 @@ public abstract class AbstractRule<T> implements Rule<T> {
 	
 	@Override
 	public int hashCode() {
-		return Arrays.hashCode(StreamEx.of(children)
-				.mapToInt(System::identityHashCode)
-				.toArray());
+		return Objects.hash(children);
 	}
 	
 	@Override
