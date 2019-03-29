@@ -2,6 +2,7 @@ package com.mpe85.grampa.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -1642,6 +1643,8 @@ public class AbstractParserTest {
 			public Rule<Integer> root() {
 				return action(ctx -> {
 					ctx.getStack().push(4711);
+					assertEquals(0, ctx.getLevel());
+					assertNotNull(ctx.getPosition());
 					return true;
 				});
 			}
@@ -1658,6 +1661,8 @@ public class AbstractParserTest {
 			public Rule<Integer> root() {
 				return action(ctx -> {
 					ctx.getStack().push(4711);
+					assertEquals(0, ctx.getLevel());
+					assertNotNull(ctx.getPosition());
 					return false;
 				});
 			}
