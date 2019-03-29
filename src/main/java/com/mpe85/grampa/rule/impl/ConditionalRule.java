@@ -23,6 +23,10 @@ import one.util.streamex.StreamEx;
  */
 public class ConditionalRule<T> extends AbstractRule<T> {
 	
+	private final Predicate<ActionContext<T>> condition;
+	private final Rule<T> thenRule;
+	private final Rule<T> elseRule;
+	
 	/**
 	 * C'tor.
 	 * 
@@ -66,7 +70,7 @@ public class ConditionalRule<T> extends AbstractRule<T> {
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(super.hashCode(), condition);
+		return Objects.hash(super.hashCode(), condition, thenRule, elseRule);
 	}
 	
 	@Override
@@ -74,7 +78,9 @@ public class ConditionalRule<T> extends AbstractRule<T> {
 		if (obj != null && getClass() == obj.getClass()) {
 			final ConditionalRule<?> other = (ConditionalRule<?>) obj;
 			return super.equals(other)
-					&& Objects.equals(condition, other.condition);
+					&& Objects.equals(condition, other.condition)
+					&& Objects.equals(thenRule, other.thenRule)
+					&& Objects.equals(elseRule, other.elseRule);
 		}
 		return false;
 	}
@@ -82,14 +88,8 @@ public class ConditionalRule<T> extends AbstractRule<T> {
 	@Override
 	protected ToStringHelper toStringHelper() {
 		return super.toStringHelper()
-				.add("condition", condition)
 				.add("thenRule", thenRule)
 				.add("elseRule", elseRule);
 	}
-	
-	
-	private final Predicate<ActionContext<T>> condition;
-	private final Rule<T> thenRule;
-	private final Rule<T> elseRule;
 	
 }
