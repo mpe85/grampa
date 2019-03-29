@@ -19,6 +19,9 @@ import com.mpe85.grampa.rule.RuleContext;
  */
 public class ActionRule<T> extends AbstractRule<T> {
 	
+	private final Action<T> action;
+	private final boolean skippable;
+	
 	/**
 	 * C'tor. Creates an action rule that is not skippable.
 	 * 
@@ -76,12 +79,7 @@ public class ActionRule<T> extends AbstractRule<T> {
 	@Override
 	protected ToStringHelper toStringHelper() {
 		return super.toStringHelper()
-				.add("action", action)
 				.add("skippable", skippable);
 	}
-	
-	
-	private final Action<T> action;
-	private final boolean skippable;
 	
 }
