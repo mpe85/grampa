@@ -84,7 +84,7 @@ public class TrieRule<T> extends AbstractRule<T> {
 	 * @return a set of strings
 	 */
 	public Set<String> getStrings() {
-		return StreamEx.of(trie.iterator()).map(e -> e.chars).map(String.class::cast).toSet();
+		return StreamEx.of(trie.iterator()).map(e -> e.chars).map(CharSequence::toString).toSet();
 	}
 	
 	@Override
