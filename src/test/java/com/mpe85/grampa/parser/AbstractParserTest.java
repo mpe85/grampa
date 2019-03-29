@@ -22,6 +22,12 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = "SIC_INNER_SHOULD_BE_STATIC_ANON", justification = "Performance is not of great importance in unit tests.")
 public class AbstractParserTest {
 	
+	private static final class IntegerTestListener extends ParseEventListener<Integer> {
+	}
+	
+	private static final class CharSequenceTestListener extends ParseEventListener<CharSequence> {
+	}
+	
 	@Test
 	public void empty_valid() {
 		final class Parser extends AbstractParser<Integer> {
@@ -31,6 +37,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("foo");
 		assertTrue(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -47,6 +54,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("foo");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -63,6 +71,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("foo");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -79,6 +88,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("foo ");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -95,6 +105,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("f");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -111,6 +122,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -127,6 +139,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("\uD835\uDD38");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -143,6 +156,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -159,6 +173,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("f");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -175,6 +190,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("g");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -191,6 +207,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("F");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -207,6 +224,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("G");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -223,6 +241,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("c");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -239,6 +258,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("h");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -255,6 +275,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("a");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -271,6 +292,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("c");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -287,6 +309,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("c");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -303,6 +326,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("f");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -319,6 +343,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("\uD835\uDD38");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -335,6 +360,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("\uD835\uDD39");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -351,6 +377,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("F");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -367,6 +394,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("G");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -383,6 +411,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("a");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -399,6 +428,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("X");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -415,6 +445,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("\uD835\uDD38");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -431,6 +462,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("b");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -447,6 +479,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("b");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -463,6 +496,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("\uD835\uDD38");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -479,6 +513,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("foobart");
 		assertTrue(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -495,6 +530,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("foobär");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -511,6 +547,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("fOObAr");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -527,6 +564,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("fOObÄr");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -543,6 +581,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("abcccccd");
 		assertTrue(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -559,6 +598,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("ab");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -579,6 +619,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("foobaz");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -596,6 +637,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("fo");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -616,6 +658,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("fOObaz");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -633,6 +676,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("fO");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -649,6 +693,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("#");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -665,6 +710,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("ß");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -681,6 +727,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("ß");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -697,6 +744,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("\uD835\uDD38");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -713,6 +761,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("5");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -729,6 +778,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("O");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -745,6 +795,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("ä");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -761,6 +812,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("1");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -777,6 +829,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("1");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -793,6 +846,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("(");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -809,6 +863,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("Ü");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -825,6 +880,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("$");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -841,6 +897,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("x");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -857,6 +914,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("9");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -873,6 +931,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("%");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -889,6 +948,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("n");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -905,6 +965,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("\n");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -921,6 +982,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run(" ");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -937,6 +999,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("\n");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -953,6 +1016,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("\n");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -969,6 +1033,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("_");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -985,6 +1050,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("\r");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -1001,6 +1067,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("\n");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -1017,6 +1084,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("\n");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -1033,6 +1101,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("\r");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -1049,6 +1118,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("\r\n");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -1065,6 +1135,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("\n\r");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -1084,6 +1155,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("abcd");
 		assertTrue(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -1108,6 +1180,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("whatever");
 		assertTrue(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -1131,6 +1204,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("acdc");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -1151,6 +1225,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("foobazxxx");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -1170,6 +1245,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("babafoo");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -1186,6 +1262,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("a");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -1202,6 +1279,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("b");
 		assertTrue(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -1218,6 +1296,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("b");
 		assertTrue(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -1234,6 +1313,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("aaaaa");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -1250,6 +1330,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("a");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -1266,6 +1347,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("aaaaa");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -1282,6 +1364,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("b");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -1298,6 +1381,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new CharSequenceTestListener());
 		final ParseResult<CharSequence> result = runner.run("zzzz");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -1314,6 +1398,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new CharSequenceTestListener());
 		final ParseResult<CharSequence> result = runner.run("zzzzz");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -1330,6 +1415,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new CharSequenceTestListener());
 		final ParseResult<CharSequence> result = runner.run("zzzzz");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -1346,6 +1432,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new CharSequenceTestListener());
 		final ParseResult<CharSequence> result = runner.run("z");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -1362,6 +1449,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new CharSequenceTestListener());
 		final ParseResult<CharSequence> result = runner.run("zz");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -1378,6 +1466,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new CharSequenceTestListener());
 		final ParseResult<CharSequence> result = runner.run("zzzz");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -1394,6 +1483,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new CharSequenceTestListener());
 		final ParseResult<CharSequence> result = runner.run("zzzzz");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -1410,6 +1500,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new CharSequenceTestListener());
 		final ParseResult<CharSequence> result = runner.run("zzzzz");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -1428,6 +1519,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("whatever");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -1446,6 +1538,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("whatever");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -1464,6 +1557,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("whatever");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -1482,6 +1576,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("whatever");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -1498,6 +1593,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("z");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -1514,6 +1610,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("1");
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
@@ -1530,6 +1627,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		final ParseResult<Integer> result = runner.run("whatever");
 		assertFalse(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
@@ -1549,6 +1647,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
 	}
 	
@@ -1564,6 +1663,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		assertNull(runner.run("whatever").getStackTop());
 	}
 	
@@ -1576,6 +1676,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
 	}
 	
@@ -1591,6 +1692,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
 	}
 	
@@ -1607,6 +1709,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		assertNull(runner.run("whatever").getStackTop());
 	}
 	
@@ -1622,6 +1725,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		assertNull(runner.run("whatever").getStackTop());
 	}
 	
@@ -1634,6 +1738,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
 	}
 	
@@ -1647,6 +1752,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		assertNull(runner.run("whatever").getStackTop());
 	}
 	
@@ -1690,6 +1796,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		assertNull(runner.run("whatever").getStackTop());
 	}
 	
@@ -1702,6 +1809,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		assertEquals(Integer.valueOf(4712), runner.run("whatever").getStackTop());
 		assertEquals(1, runner.run("whatever").getStack().size());
 	}
@@ -1715,6 +1823,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		assertThrows(ActionRunException.class, () -> runner.run("whatever"));
 	}
 	
@@ -1727,6 +1836,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
 	}
 	
@@ -1739,6 +1849,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		assertEquals(2, runner.run("whatever").getStack().size());
 		assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
 		assertEquals(Integer.valueOf(4711), runner.run("whatever").getStack().peek(1));
@@ -1753,6 +1864,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		assertThrows(ActionRunException.class, () -> runner.run("whatever"));
 	}
 	
@@ -1765,6 +1877,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		assertEquals(2, runner.run("whatever").getStack().size());
 		assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
 		assertEquals(Integer.valueOf(4712), runner.run("whatever").getStack().peek(1));
@@ -1779,6 +1892,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
 		assertThrows(ActionRunException.class, () -> runner.run("whatever"));
 	}
 	
@@ -1805,6 +1919,7 @@ public class AbstractParserTest {
 			}
 		}
 		final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new CharSequenceTestListener());
 		final ParseResult<CharSequence> result = runner.run("helloworldfoobarbaz");
 		assertTrue(result.isMatched());
 		assertFalse(result.isMatchedWholeInput());
