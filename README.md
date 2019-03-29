@@ -4,6 +4,7 @@
 [![License](https://img.shields.io/github/license/mpe85/grampa.svg)](https://github.com/mpe85/grampa/blob/master/LICENSE)
 ![Java 11+](https://img.shields.io/badge/java-11+-blue.svg)
 [![Build Status](https://travis-ci.org/mpe85/grampa.svg?branch=master)](https://travis-ci.org/mpe85/grampa)
+[![codecov](https://codecov.io/gh/mpe85/grampa/branch/master/graph/badge.svg)](https://codecov.io/gh/mpe85/grampa)
 
 Grampa — short for **Gra**mmar **pa**rser — is a library that allows you to define grammars completely in Java source code without any pre-processing phase (unlike other parser generators like ANTLR and JavaCC).
 Hence there is no DSL to be learned, the whole grammar definition is in one place (a Java class) and can be changed and maintained very easily.
