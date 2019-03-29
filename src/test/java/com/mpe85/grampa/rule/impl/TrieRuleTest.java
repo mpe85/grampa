@@ -12,7 +12,7 @@ import com.google.common.collect.Sets;
 public class TrieRuleTest {
 	
 	@Test
-	public void equalsHashCode() {
+	public void equalsHashCodeToString() {
 		final TrieRule<String> rule1 = new TrieRule<>("foo", "bar");
 		final TrieRule<String> rule2 = new TrieRule<>(Sets.newHashSet("bar", "foo"));
 		final TrieRule<String> rule3 = new TrieRule<>("foobar");
@@ -20,11 +20,13 @@ public class TrieRuleTest {
 		assertTrue(rule1.equals(rule2));
 		assertFalse(rule1.equals(rule3));
 		assertFalse(rule1.equals(new Object()));
-		assertEquals("TrieRule{#children=0, strings=[bar, foo], ignoreCase=false}", rule1.toString());
-		assertEquals("TrieRule{#children=0, strings=[bar, foo], ignoreCase=false}", rule2.toString());
 		
 		assertEquals(rule1.hashCode(), rule2.hashCode());
 		assertNotEquals(rule1.hashCode(), rule3.hashCode());
+		
+		assertEquals("TrieRule{#children=0, strings=[bar, foo], ignoreCase=false}", rule1.toString());
+		assertEquals("TrieRule{#children=0, strings=[bar, foo], ignoreCase=false}", rule2.toString());
+		assertEquals("TrieRule{#children=0, strings=[foobar], ignoreCase=false}", rule3.toString());
 	}
 	
 }
