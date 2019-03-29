@@ -19,6 +19,9 @@ import com.mpe85.grampa.rule.RuleContext;
  */
 public class RepeatRule<T> extends AbstractRule<T> {
 	
+	private final int min;
+	private final Integer max;
+	
 	/**
 	 * C'tor.
 	 * 
@@ -76,9 +79,5 @@ public class RepeatRule<T> extends AbstractRule<T> {
 				.add("min", min)
 				.add("max", max);
 	}
-	
-	
-	private final int min;
-	private final Integer max;
 	
 }
