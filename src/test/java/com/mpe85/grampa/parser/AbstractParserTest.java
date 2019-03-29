@@ -1814,7 +1814,6 @@ public class AbstractParserTest {
 				string = event;
 			}
 			
-			
 			@Override
 			public void afterMatchSuccess(final MatchSuccessEvent<Integer> event) {
 				assertNotNull(event.getContext());
