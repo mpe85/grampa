@@ -18,6 +18,9 @@ import com.mpe85.grampa.rule.RuleContext;
  */
 public class StringRule<T> extends AbstractRule<T> {
 	
+	private final String string;
+	private final boolean ignoreCase;
+	
 	/**
 	 * C'tor. Constructs a string rules that exactly matches a string (case-sensitive).
 	 * 
@@ -80,9 +83,5 @@ public class StringRule<T> extends AbstractRule<T> {
 				.add("string", string)
 				.add("ignoreCase", ignoreCase);
 	}
-	
-	
-	private final String string;
-	private final boolean ignoreCase;
 	
 }
