@@ -12,7 +12,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.eventbus.Subscribe;
+import com.mpe85.grampa.event.MatchSuccessEvent;
 import com.mpe85.grampa.event.ParseEventListener;
+import com.mpe85.grampa.event.PostParseEvent;
 import com.mpe85.grampa.exception.ActionRunException;
 import com.mpe85.grampa.rule.Action;
 import com.mpe85.grampa.rule.Rule;
@@ -1800,17 +1802,28 @@ public class AbstractParserTest {
 			}
 		}
 		final class Listener extends ParseEventListener<Integer> {
+			private String string;
+			
+			public String getString() {
+				return string;
+			}
+			
 			@Subscribe
 			@SuppressFBWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS")
 			public void stringEvent(final String event) {
 				string = event;
 			}
 			
-			public String getString() {
-				return string;
+			
+			@Override
+			public void afterMatchSuccess(final MatchSuccessEvent<Integer> event) {
+				assertNotNull(event.getContext());
 			}
 			
-			private String string;
+			@Override
+			public void afterParse(final PostParseEvent<Integer> event) {
+				assertNotNull(event.getResult());
+			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
 		final Listener listener = new Listener();
