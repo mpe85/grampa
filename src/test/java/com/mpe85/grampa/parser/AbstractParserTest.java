@@ -14,7 +14,10 @@ import org.junit.jupiter.api.Test;
 import com.google.common.eventbus.Subscribe;
 import com.mpe85.grampa.event.ParseEventListener;
 import com.mpe85.grampa.exception.ActionRunException;
+import com.mpe85.grampa.rule.Action;
 import com.mpe85.grampa.rule.Rule;
+import com.mpe85.grampa.rule.RuleContext;
+import com.mpe85.grampa.rule.impl.ActionRule;
 import com.mpe85.grampa.runner.DefaultParseRunner;
 import com.mpe85.grampa.runner.ParseResult;
 
@@ -1655,7 +1658,7 @@ public class AbstractParserTest {
 	}
 	
 	@Test
-	public void action_invalid() {
+	public void action_invalid_failingAction() {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
 			public Rule<Integer> root() {
@@ -1670,6 +1673,30 @@ public class AbstractParserTest {
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
 		runner.registerListener(new IntegerTestListener());
 		assertNull(runner.run("whatever").getStackTop());
+	}
+	
+	@Test
+	public void action_invalid_illegalAdvanceIndex() {
+		final class EvilActionRule extends ActionRule<Integer> {
+			public EvilActionRule(final Action<Integer> action) {
+				super(action);
+			}
+			
+			@Override
+			public boolean match(final RuleContext<Integer> context) {
+				return super.match(context) && context.advanceIndex(1000);
+			}
+		}
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return new EvilActionRule(ctx -> true);
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		assertFalse(runner.run("whatever").isMatched());
+		
 	}
 	
 	@Test
