@@ -18,6 +18,8 @@ import com.mpe85.grampa.rule.RuleContext;
  */
 public class CharPredicateRule<T> extends AbstractRule<T> {
 	
+	private final Predicate<Character> predicate;
+	
 	/**
 	 * C'tor. Create a character predicate rules that exactly matches a specific character.
 	 * 
@@ -62,11 +64,7 @@ public class CharPredicateRule<T> extends AbstractRule<T> {
 	
 	@Override
 	protected ToStringHelper toStringHelper() {
-		return super.toStringHelper()
-				.add("predicate", predicate);
+		return super.toStringHelper();
 	}
-	
-	
-	private final Predicate<Character> predicate;
 	
 }

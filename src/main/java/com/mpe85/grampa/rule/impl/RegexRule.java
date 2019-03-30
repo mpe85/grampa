@@ -4,6 +4,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.mpe85.grampa.rule.RuleContext;
 
 /**
@@ -15,6 +16,8 @@ import com.mpe85.grampa.rule.RuleContext;
  *            the type of the stack elements
  */
 public class RegexRule<T> extends AbstractRule<T> {
+	
+	private final Pattern pattern;
 	
 	/**
 	 * C'tor. Constructs a regex rule using an already compiled {@link Pattern}.
@@ -38,8 +41,8 @@ public class RegexRule<T> extends AbstractRule<T> {
 	
 	@Override
 	public boolean match(final RuleContext<T> context) {
-		final Matcher matcher = pattern.matcher(context.getRestOfInput());
-		return matcher.lookingAt() && context.advanceIndex(matcher.end());
+		final Matcher regexMatcher = pattern.matcher(context.getRestOfInput());
+		return regexMatcher.lookingAt() && context.advanceIndex(regexMatcher.end());
 	}
 	
 	@Override
@@ -57,7 +60,10 @@ public class RegexRule<T> extends AbstractRule<T> {
 		return false;
 	}
 	
-	
-	private final Pattern pattern;
+	@Override
+	protected ToStringHelper toStringHelper() {
+		return super.toStringHelper()
+				.add("pattern", pattern);
+	}
 	
 }
