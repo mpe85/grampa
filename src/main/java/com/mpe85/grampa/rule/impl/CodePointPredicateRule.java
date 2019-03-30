@@ -19,6 +19,8 @@ import com.mpe85.grampa.rule.RuleContext;
  */
 public class CodePointPredicateRule<T> extends AbstractRule<T> {
 	
+	private final Predicate<Integer> predicate;
+	
 	/**
 	 * C'tor. Create a code point predicate rules that exactly matches a specific code point.
 	 * 
@@ -63,11 +65,7 @@ public class CodePointPredicateRule<T> extends AbstractRule<T> {
 	
 	@Override
 	protected ToStringHelper toStringHelper() {
-		return super.toStringHelper()
-				.add("predicate", predicate);
+		return super.toStringHelper();
 	}
-	
-	
-	private final Predicate<Integer> predicate;
 	
 }
