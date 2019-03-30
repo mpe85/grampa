@@ -8,13 +8,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.mpe85.grampa.rule.RuleContext;
+
+@ExtendWith(MockitoExtension.class)
 public class CodePointPredicateRuleTest {
 	
 	@Test
 	public void equalsHashCodeToString() {
-		
 		final Predicate<Integer> pred = cp -> cp == 'a';
+		
 		final CodePointPredicateRule<String> rule1 = new CodePointPredicateRule<>(pred);
 		final CodePointPredicateRule<String> rule2 = new CodePointPredicateRule<>(pred);
 		final CodePointPredicateRule<String> rule3 = new CodePointPredicateRule<>('a');
@@ -29,6 +36,19 @@ public class CodePointPredicateRuleTest {
 		assertEquals("CodePointPredicateRule{#children=0}", rule1.toString());
 		assertEquals("CodePointPredicateRule{#children=0}", rule2.toString());
 		assertEquals("CodePointPredicateRule{#children=0}", rule3.toString());
+	}
+	
+	@Test
+	public void match(@Mock final RuleContext<String> ctx) {
+		Mockito.when(ctx.isAtEndOfInput()).thenReturn(false);
+		Mockito.when(ctx.getCurrentCodePoint()).thenReturn((int) 'a');
+		Mockito.when(ctx.advanceIndex(1)).thenReturn(true);
+		
+		final CodePointPredicateRule<String> rule1 = new CodePointPredicateRule<>('a');
+		final CodePointPredicateRule<String> rule2 = new CodePointPredicateRule<>('b');
+		
+		assertTrue(rule1.match(ctx));
+		assertFalse(rule2.match(ctx));
 	}
 	
 }
