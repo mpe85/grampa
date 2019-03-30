@@ -529,7 +529,7 @@ public class AbstractParserTest {
 	}
 	
 	@Test
-	public void anyOfCodePoint_valid() {
+	public void anyOfCodePoint_valid_vararg() {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
 			public Rule<Integer> root() {
@@ -546,11 +546,62 @@ public class AbstractParserTest {
 	}
 	
 	@Test
-	public void anyOfCodePoints_invalid() {
+	public void anyOfCodePoint_valid_set() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return anyOfCodePoints(Sets.newHashSet((int) 'a', "\uD835\uDD38".codePointAt(0)));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		final ParseResult<Integer> result = runner.run("\uD835\uDD38");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+		assertEquals("\uD835\uDD38", result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
+	}
+	
+	@Test
+	public void anyOfCodePoint_valid_string() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return anyOfCodePoints("\uD835\uDD38");
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		final ParseResult<Integer> result = runner.run("\uD835\uDD38");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+		assertEquals("\uD835\uDD38", result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
+	}
+	
+	@Test
+	public void anyOfCodePoints_invalid_wrongCp() {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
 			public Rule<Integer> root() {
 				return anyOfCodePoints('a', "\uD835\uDD38".codePointAt(0));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		final ParseResult<Integer> result = runner.run("b");
+		assertFalse(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+		assertNull(result.getMatchedInput());
+		assertEquals("b", result.getRestOfInput());
+	}
+	
+	@Test
+	public void anyOfCodePoints_invalid_never() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return anyOfCodePoints("");
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
