@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.Test;
 
+import com.google.common.collect.Sets;
 import com.google.common.eventbus.Subscribe;
 import com.mpe85.grampa.event.MatchSuccessEvent;
 import com.mpe85.grampa.event.ParseEventListener;
@@ -273,7 +274,7 @@ public class AbstractParserTest {
 	}
 	
 	@Test
-	public void anyOfChars_valid() {
+	public void anyOfChars_valid_vararg() {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
 			public Rule<Integer> root() {
@@ -290,7 +291,41 @@ public class AbstractParserTest {
 	}
 	
 	@Test
-	public void anyOfChars_invalid() {
+	public void anyOfChars_valid_set() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return anyOfChars(Sets.newHashSet('a', 'f'));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		final ParseResult<Integer> result = runner.run("a");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+		assertEquals("a", result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
+	}
+	
+	@Test
+	public void anyOfChars_valid_string() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return anyOfChars("a");
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		final ParseResult<Integer> result = runner.run("a");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+		assertEquals("a", result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
+	}
+	
+	@Test
+	public void anyOfChars_invalid_wrongChar() {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
 			public Rule<Integer> root() {
@@ -307,11 +342,62 @@ public class AbstractParserTest {
 	}
 	
 	@Test
-	public void noneOfChars_valid() {
+	public void anyOfChars_invalid_never() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return anyOfChars("");
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		final ParseResult<Integer> result = runner.run("a");
+		assertFalse(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+		assertNull(result.getMatchedInput());
+		assertEquals("a", result.getRestOfInput());
+	}
+	
+	@Test
+	public void noneOfChars_valid_vararg() {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
 			public Rule<Integer> root() {
 				return noneOfChars('a', 'f');
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		final ParseResult<Integer> result = runner.run("c");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+		assertEquals("c", result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
+	}
+	
+	@Test
+	public void noneOfChars_valid_set() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return noneOfChars(Sets.newHashSet('a', 'f'));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		final ParseResult<Integer> result = runner.run("c");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+		assertEquals("c", result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
+	}
+	
+	@Test
+	public void noneOfChars_valid_any() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return noneOfChars("");
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());

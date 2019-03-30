@@ -47,6 +47,25 @@ import one.util.streamex.StreamEx;
  */
 public abstract class AbstractParser<T> implements Parser<T> {
 	
+	protected final Rule<T> EMPTY = new EmptyRule<>();
+	protected final Rule<T> NEVER = new NeverRule<>();
+	protected final Rule<T> EOI = new EndOfInputRule<>();
+	protected final Rule<T> ANY_CHAR = new CharPredicateRule<>(CharMatcher.any());
+	protected final Rule<T> ANY_CODEPOINT = new CodePointPredicateRule<>(UCharacter::isLegal);
+	protected final Rule<T> ASCII = new CharPredicateRule<>(CharMatcher.ascii());
+	protected final Rule<T> BMP = new CodePointPredicateRule<>(UCharacter::isBMP);
+	protected final Rule<T> DIGIT = new CodePointPredicateRule<>(UCharacter::isDigit);
+	protected final Rule<T> JAVA_IDENTIFIER_START = new CodePointPredicateRule<>(Character::isJavaIdentifierStart);
+	protected final Rule<T> JAVA_IDENTIFIER_PART = new CodePointPredicateRule<>(Character::isJavaIdentifierPart);
+	protected final Rule<T> LETTER = new CodePointPredicateRule<>(UCharacter::isLetter);
+	protected final Rule<T> LETTER_OR_DIGIT = new CodePointPredicateRule<>(UCharacter::isLetterOrDigit);
+	protected final Rule<T> PRINTABLE = new CodePointPredicateRule<>(UCharacter::isPrintable);
+	protected final Rule<T> SPACE_CHAR = new CodePointPredicateRule<>(UCharacter::isSpaceChar);
+	protected final Rule<T> WHITESPACE = new CodePointPredicateRule<>(UCharacter::isWhitespace);
+	protected final Rule<T> CR = new CharPredicateRule<>('\r');
+	protected final Rule<T> LF = new CharPredicateRule<>('\n');
+	protected final Rule<T> CRLF = new StringRule<>("\r\n");
+	
 	@Override
 	public abstract Rule<T> root();
 	
@@ -1054,25 +1073,5 @@ public abstract class AbstractParser<T> implements Parser<T> {
 		checkNotNull(context, "A 'context' must not be null.");
 		return context.getStack().peekAs(down, clazz);
 	}
-	
-	
-	protected final Rule<T> EMPTY = new EmptyRule<>();
-	protected final Rule<T> NEVER = new NeverRule<>();
-	protected final Rule<T> EOI = new EndOfInputRule<>();
-	protected final Rule<T> ANY_CHAR = new CharPredicateRule<>(CharMatcher.any());
-	protected final Rule<T> ANY_CODEPOINT = new CodePointPredicateRule<>(UCharacter::isLegal);
-	protected final Rule<T> ASCII = new CharPredicateRule<>(CharMatcher.ascii());
-	protected final Rule<T> BMP = new CodePointPredicateRule<>(UCharacter::isBMP);
-	protected final Rule<T> DIGIT = new CodePointPredicateRule<>(UCharacter::isDigit);
-	protected final Rule<T> JAVA_IDENTIFIER_START = new CodePointPredicateRule<>(Character::isJavaIdentifierStart);
-	protected final Rule<T> JAVA_IDENTIFIER_PART = new CodePointPredicateRule<>(Character::isJavaIdentifierPart);
-	protected final Rule<T> LETTER = new CodePointPredicateRule<>(UCharacter::isLetter);
-	protected final Rule<T> LETTER_OR_DIGIT = new CodePointPredicateRule<>(UCharacter::isLetterOrDigit);
-	protected final Rule<T> PRINTABLE = new CodePointPredicateRule<>(UCharacter::isPrintable);
-	protected final Rule<T> SPACE_CHAR = new CodePointPredicateRule<>(UCharacter::isSpaceChar);
-	protected final Rule<T> WHITESPACE = new CodePointPredicateRule<>(UCharacter::isWhitespace);
-	protected final Rule<T> CR = new CharPredicateRule<>('\r');
-	protected final Rule<T> LF = new CharPredicateRule<>('\n');
-	protected final Rule<T> CRLF = new StringRule<>("\r\n");
 	
 }
