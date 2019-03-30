@@ -24,6 +24,8 @@ import com.mpe85.grampa.visitor.RuleVisitor;
  */
 public abstract class AbstractRule<T> implements Rule<T> {
 	
+	private final List<Rule<T>> children;
+	
 	/**
 	 * C'tor. Constructs an abstract rule with no child rules.
 	 */
@@ -104,8 +106,5 @@ public abstract class AbstractRule<T> implements Rule<T> {
 	public String toString() {
 		return toStringHelper().toString();
 	}
-	
-	
-	private final List<Rule<T>> children;
 	
 }
