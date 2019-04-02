@@ -699,7 +699,7 @@ public class AbstractParserTest {
 	}
 	
 	@Test
-	public void string_valid() {
+	public void string_valid_nonEmpty() {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
 			public Rule<Integer> root() {
@@ -713,6 +713,23 @@ public class AbstractParserTest {
 		assertFalse(result.isMatchedWholeInput());
 		assertEquals("foobar", result.getMatchedInput());
 		assertEquals("t", result.getRestOfInput());
+	}
+	
+	@Test
+	public void string_valid_empty() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return string("");
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		final ParseResult<Integer> result = runner.run("abc");
+		assertTrue(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+		assertEquals("", result.getMatchedInput());
+		assertEquals("abc", result.getRestOfInput());
 	}
 	
 	@Test
@@ -733,7 +750,7 @@ public class AbstractParserTest {
 	}
 	
 	@Test
-	public void ignoreCase_string_valid() {
+	public void ignoreCase_string_valid_nonEmpty() {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
 			public Rule<Integer> root() {
@@ -746,6 +763,40 @@ public class AbstractParserTest {
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
 		assertEquals("fOObAr", result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
+	}
+	
+	@Test
+	public void ignoreCase_string_valid_empty() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return ignoreCase("");
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		final ParseResult<Integer> result = runner.run("aBc");
+		assertTrue(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+		assertEquals("", result.getMatchedInput());
+		assertEquals("aBc", result.getRestOfInput());
+	}
+	
+	@Test
+	public void ignoreCase_string_valid_oneChar() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return ignoreCase("c");
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		final ParseResult<Integer> result = runner.run("c");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+		assertEquals("c", result.getMatchedInput());
 		assertEquals("", result.getRestOfInput());
 	}
 	
