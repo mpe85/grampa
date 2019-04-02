@@ -11,7 +11,7 @@ plugins {
 	id 'jacoco'
 	id 'maven'
 	id 'maven-publish'
-	id 'com.diffplug.gradle.spotless' version '3.20.0'
+	id 'com.diffplug.gradle.spotless' version '3.21.1'
 	id 'com.jfrog.bintray' version '1.8.4'
 	id 'com.github.spotbugs' version '1.7.1'
 	id 'com.github.ben-manes.versions' version '0.21.0'
