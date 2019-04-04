@@ -2297,6 +2297,21 @@ public class AbstractParserTest {
 	}
 	
 	@Test
+	public void pop_valid_action() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return sequence(
+						push(4711),
+						action(ctx -> pop(ctx) == 4711));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		assertNull(runner.run("whatever").getStackTop());
+	}
+	
+	@Test
 	public void poke_valid_staticValue_down() {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
