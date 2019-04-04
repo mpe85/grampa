@@ -1,6 +1,7 @@
 package com.mpe85.grampa.intercept;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -103,7 +104,7 @@ public class RuleMethodInterceptor<T> {
 			@SuperCall final Callable<Rule<T>> zuper,
 			@AllArguments final Object... args)
 			throws Exception {
-		final int hash = Objects.hash(method.getName(), Objects.hash(args));
+		final int hash = Objects.hash(method.getName(), Arrays.hashCode(args));
 		
 		if (!rules.containsKey(hash)) {
 			rules.put(hash, null);
