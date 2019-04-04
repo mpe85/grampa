@@ -2177,7 +2177,7 @@ public class AbstractParserTest {
 	
 	
 	@Test
-	public void post_valid_supplier() {
+	public void post_valid_suppliedEvent() {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
 			public Rule<Integer> root() {
@@ -2257,7 +2257,7 @@ public class AbstractParserTest {
 	}
 	
 	@Test
-	public void pop_valid() {
+	public void pop_valid_top() {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
 			public Rule<Integer> root() {
@@ -2270,7 +2270,48 @@ public class AbstractParserTest {
 	}
 	
 	@Test
-	public void poke_valid() {
+	public void pop_valid_down() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return sequence(push(4711), push(4712), pop(1));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		assertEquals(4712, runner.run("whatever").getStackTop());
+	}
+	
+	@Test
+	public void poke_valid_staticValue_top() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return sequence(push(4711), poke(ctx -> 4712));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		assertEquals(Integer.valueOf(4712), runner.run("whatever").getStackTop());
+		assertEquals(1, runner.run("whatever").getStack().size());
+	}
+	
+	@Test
+	public void poke_valid_staticValue_down() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return sequence(push(4711), push(4712), poke(1, ctx -> 4713));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		assertEquals(Integer.valueOf(4712), runner.run("whatever").getStackTop());
+		assertEquals(2, runner.run("whatever").getStack().size());
+	}
+	
+	@Test
+	public void poke_valid_suppliedValue_top() {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
 			public Rule<Integer> root() {
@@ -2281,6 +2322,20 @@ public class AbstractParserTest {
 		runner.registerListener(new IntegerTestListener());
 		assertEquals(Integer.valueOf(4712), runner.run("whatever").getStackTop());
 		assertEquals(1, runner.run("whatever").getStack().size());
+	}
+	
+	@Test
+	public void poke_valid_suppliedValue_down() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return sequence(push(4711), push(4712), poke(1, 4713));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		assertEquals(Integer.valueOf(4712), runner.run("whatever").getStackTop());
+		assertEquals(2, runner.run("whatever").getStack().size());
 	}
 	
 	@Test
