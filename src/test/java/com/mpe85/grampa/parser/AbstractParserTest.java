@@ -529,6 +529,19 @@ public class AbstractParserTest {
 	}
 	
 	@Test
+	public void codePointRange_illegalArgument() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return codePointRange('b', 'a');
+			}
+		}
+		assertThrows(IllegalArgumentException.class, () -> {
+			new DefaultParseRunner<>(new Parser()).run("a");
+		});
+	}
+	
+	@Test
 	public void anyOfCodePoint_valid_vararg() {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
