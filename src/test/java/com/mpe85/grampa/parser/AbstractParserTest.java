@@ -2341,6 +2341,62 @@ public class AbstractParserTest {
 	}
 	
 	@Test
+	public void peek_valid_top() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return sequence(push(4711), action(ctx -> peek(ctx) == 4711));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		assertEquals(4711, runner.run("whatever").getStackTop());
+	}
+	
+	@Test
+	public void peek_valid_down() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return sequence(
+						push(4711),
+						push(4712),
+						action(ctx -> peek(1, ctx) == 4711));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		assertEquals(4712, runner.run("whatever").getStackTop());
+	}
+	
+	@Test
+	public void peekAs_valid_top() {
+		final class Parser extends AbstractParser<Number> {
+			@Override
+			public Rule<Number> root() {
+				return sequence(push(4711), action(ctx -> peekAs(Integer.class, ctx) == 4711));
+			}
+		}
+		final DefaultParseRunner<Number> runner = new DefaultParseRunner<>(new Parser());
+		assertEquals(4711, runner.run("whatever").getStackTop());
+	}
+	
+	@Test
+	public void peekAs_valid_down() {
+		final class Parser extends AbstractParser<Number> {
+			@Override
+			public Rule<Number> root() {
+				return sequence(
+						push(4711),
+						push(4712),
+						action(ctx -> peekAs(Integer.class, 1, ctx) == 4711));
+			}
+		}
+		final DefaultParseRunner<Number> runner = new DefaultParseRunner<>(new Parser());
+		assertEquals(4712, runner.run("whatever").getStackTop());
+	}
+	
+	@Test
 	public void poke_valid_staticValue_down() {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
