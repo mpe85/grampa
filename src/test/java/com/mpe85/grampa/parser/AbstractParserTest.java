@@ -852,7 +852,7 @@ public class AbstractParserTest {
 	}
 	
 	@Test
-	public void strings_valid() {
+	public void strings_valid_vararg() {
 		final AtomicReference<CharSequence> stringsRuleMatch = new AtomicReference<>();
 		final class Parser extends AbstractParser<Integer> {
 			@Override
@@ -874,7 +874,29 @@ public class AbstractParserTest {
 	}
 	
 	@Test
-	public void strings_invalid() {
+	public void strings_valid_set_oneString() {
+		final AtomicReference<CharSequence> stringsRuleMatch = new AtomicReference<>();
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return sequence(
+						strings("foo"),
+						command(ctx -> stringsRuleMatch.set(ctx.getPreviousMatch())),
+						string("baz"));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		final ParseResult<Integer> result = runner.run("foobaz");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+		assertEquals("foobaz", result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
+		assertEquals("foo", stringsRuleMatch.get());
+	}
+	
+	@Test
+	public void strings_invalid_vararg() {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
 			public Rule<Integer> root() {
@@ -891,7 +913,24 @@ public class AbstractParserTest {
 	}
 	
 	@Test
-	public void ignoreCase_strings_valid() {
+	public void strings_invalid_set_empty() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return strings(Sets.newHashSet());
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		final ParseResult<Integer> result = runner.run("fo");
+		assertFalse(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+		assertNull(result.getMatchedInput());
+		assertEquals("fo", result.getRestOfInput());
+	}
+	
+	@Test
+	public void ignoreCase_strings_valid_vararg() {
 		final AtomicReference<CharSequence> stringsRuleMatch = new AtomicReference<>();
 		final class Parser extends AbstractParser<Integer> {
 			@Override
@@ -913,11 +952,50 @@ public class AbstractParserTest {
 	}
 	
 	@Test
-	public void ignoreCase_strings_invalid() {
+	public void ignoreCase_strings_valid_set_oneString() {
+		final AtomicReference<CharSequence> stringsRuleMatch = new AtomicReference<>();
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return sequence(
+						ignoreCase(Sets.newHashSet("foo")),
+						command(ctx -> stringsRuleMatch.set(ctx.getPreviousMatch())),
+						string("baz"));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		final ParseResult<Integer> result = runner.run("fOObaz");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+		assertEquals("fOObaz", result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
+		assertEquals("fOO", stringsRuleMatch.get());
+	}
+	
+	@Test
+	public void ignoreCase_strings_invalid_vararg() {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
 			public Rule<Integer> root() {
 				return ignoreCase("football", "foo", "foobar");
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		final ParseResult<Integer> result = runner.run("fO");
+		assertFalse(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+		assertNull(result.getMatchedInput());
+		assertEquals("fO", result.getRestOfInput());
+	}
+	
+	@Test
+	public void ignoreCase_strings_invalid_set_empty() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return ignoreCase(Sets.newHashSet());
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
