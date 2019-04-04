@@ -1487,6 +1487,23 @@ public class AbstractParserTest {
 	}
 	
 	@Test
+	public void sequence_valid_empty() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return sequence();
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		final ParseResult<Integer> result = runner.run("abcd");
+		assertTrue(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+		assertEquals("", result.getMatchedInput());
+		assertEquals("abcd", result.getRestOfInput());
+	}
+	
+	@Test
 	public void sequence_valid_push() {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
@@ -1536,7 +1553,7 @@ public class AbstractParserTest {
 	}
 	
 	@Test
-	public void firstOf_valid() {
+	public void firstOf_valid_sequence() {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
 			public Rule<Integer> root() {
@@ -1553,6 +1570,40 @@ public class AbstractParserTest {
 		assertTrue(result.isMatched());
 		assertTrue(result.isMatchedWholeInput());
 		assertEquals("foobazxxx", result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
+	}
+	
+	@Test
+	public void firstOf_valid_empty() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return firstOf();
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		final ParseResult<Integer> result = runner.run("foo");
+		assertTrue(result.isMatched());
+		assertFalse(result.isMatchedWholeInput());
+		assertEquals("", result.getMatchedInput());
+		assertEquals("foo", result.getRestOfInput());
+	}
+	
+	@Test
+	public void firstOf_valid_oneRule() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return firstOf(string("foo"));
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		final ParseResult<Integer> result = runner.run("foo");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+		assertEquals("foo", result.getMatchedInput());
 		assertEquals("", result.getRestOfInput());
 	}
 	
