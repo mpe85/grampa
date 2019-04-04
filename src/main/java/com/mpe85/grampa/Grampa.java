@@ -135,7 +135,6 @@ public final class Grampa {
 		StreamEx.of(parserClass.getDeclaredMethods())
 				.filter(m -> m.getReturnType() == Rule.class)
 				.map(Invokable::from)
-				.filter(i -> !i.isVarArgs() || !i.isAnnotationPresent(SafeVarargs.class))
 				.forEach(Grampa::validateRuleMethod);
 		if (parserClass.getSuperclass() != Object.class) {
 			validateParserClass(parserClass.getSuperclass());
@@ -155,7 +154,8 @@ public final class Grampa {
 	}
 	
 	private static final boolean isSafeVarArgsRuleMethod(final Invokable<?, Object> invokable) {
-		return invokable.isVarArgs() && invokable.isAnnotationPresent(SafeVarargs.class);
+		return invokable.isVarArgs()
+				&& invokable.isAnnotationPresent(SafeVarargs.class);
 	}
 	
 }

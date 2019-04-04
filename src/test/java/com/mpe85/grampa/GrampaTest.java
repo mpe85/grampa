@@ -103,6 +103,11 @@ public class GrampaTest {
 		assertEquals(root, sequenceRule.getChildren().get(4));
 	}
 	
+	@Test
+	public void createParser_invalid_vararg() {
+		assertThrows(ParserCreateException.class, () -> Grampa.createParser(VarArgsTestParser.class));
+	}
+	
 	private void verifySuperParserRules(final Rule<String> root) {
 		assertTrue(root instanceof SequenceRule);
 		assertEquals(2, root.getChildren().size());
