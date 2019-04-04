@@ -972,7 +972,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	
 	/**
 	 * Pops and casts the top level element from the stack. This method may be called by an action or command where the
-	 * action. context is available.
+	 * action context is available.
 	 * 
 	 * @param <U>
 	 *            a sub type of T
