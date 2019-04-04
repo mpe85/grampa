@@ -3,6 +3,7 @@ package com.mpe85.grampa.rule.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,16 @@ public class RepeatRuleTest {
 		assertEquals("RepeatRule{#children=1, min=0, max=5}", rule1.toString());
 		assertEquals("RepeatRule{#children=1, min=0, max=5}", rule2.toString());
 		assertEquals("RepeatRule{#children=1, min=2, max=null}", rule3.toString());
+	}
+	
+	@Test
+	public void create_invalid_min() {
+		assertThrows(IllegalArgumentException.class, () -> new RepeatRule<>(new EmptyRule<>(), -1, null));
+	}
+	
+	@Test
+	public void create_invalid_max() {
+		assertThrows(IllegalArgumentException.class, () -> new RepeatRule<>(new EmptyRule<>(), 3, 2));
 	}
 	
 }

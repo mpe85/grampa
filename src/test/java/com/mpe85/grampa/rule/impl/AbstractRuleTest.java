@@ -3,6 +3,7 @@ package com.mpe85.grampa.rule.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -58,6 +59,15 @@ public class AbstractRuleTest {
 		final SomeRule rule = new SomeRule(new EmptyRule<>());
 		
 		assertThrows(IllegalArgumentException.class, () -> rule.replaceReferenceRule(0, new NeverRule<>()));
+	}
+	
+	@Test
+	public void getChild() {
+		final SomeRule rule1 = new SomeRule(new EmptyRule<>());
+		final SomeRule rule2 = new SomeRule();
+		
+		assertNotNull(rule1.getChild());
+		assertNull(rule2.getChild());
 	}
 	
 }
