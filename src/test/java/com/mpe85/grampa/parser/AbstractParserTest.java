@@ -1959,11 +1959,28 @@ public class AbstractParserTest {
 	}
 	
 	@Test
-	public void conditional_valid_then() {
+	public void conditional_valid_then_withElse() {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
 			public Rule<Integer> root() {
 				return conditional(ctx -> ctx.getStartIndex() == 0, letter(), digit());
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		runner.registerListener(new IntegerTestListener());
+		final ParseResult<Integer> result = runner.run("z");
+		assertTrue(result.isMatched());
+		assertTrue(result.isMatchedWholeInput());
+		assertEquals("z", result.getMatchedInput());
+		assertEquals("", result.getRestOfInput());
+	}
+	
+	@Test
+	public void conditional_valid_then_noElse() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return conditional(ctx -> ctx.getStartIndex() == 0, letter());
 			}
 		}
 		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
