@@ -2312,6 +2312,35 @@ public class AbstractParserTest {
 	}
 	
 	@Test
+	public void popAs_valid_action_top() {
+		final class Parser extends AbstractParser<Number> {
+			@Override
+			public Rule<Number> root() {
+				return sequence(
+						push(4711),
+						action(ctx -> popAs(Integer.class, ctx) == 4711));
+			}
+		}
+		final DefaultParseRunner<Number> runner = new DefaultParseRunner<>(new Parser());
+		assertNull(runner.run("whatever").getStackTop());
+	}
+	
+	@Test
+	public void popAs_valid_action_down() {
+		final class Parser extends AbstractParser<Number> {
+			@Override
+			public Rule<Number> root() {
+				return sequence(
+						push(4711),
+						push(4712),
+						action(ctx -> popAs(Integer.class, 1, ctx) == 4711));
+			}
+		}
+		final DefaultParseRunner<Number> runner = new DefaultParseRunner<>(new Parser());
+		assertEquals(4712, runner.run("whatever").getStackTop());
+	}
+	
+	@Test
 	public void poke_valid_staticValue_down() {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
