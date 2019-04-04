@@ -22,7 +22,7 @@ import com.mpe85.grampa.rule.impl.EmptyRule;
 @ExtendWith(MockitoExtension.class)
 public class ReferenceRuleTest {
 	
-	static final class Foo implements Callable<Rule<Integer>> {
+	static final class RuleMethods implements Callable<Rule<Integer>> {
 		public Rule<Integer> rule1() {
 			return new EmptyRule<>();
 		}
@@ -66,7 +66,7 @@ public class ReferenceRuleTest {
 		final RuleMethodInterceptor<Integer> interceptor = new RuleMethodInterceptor<>();
 		
 		final ThrowingSupplier<Rule<Integer>> supplier =
-				() -> interceptor.intercept(Foo.class.getDeclaredMethod(ruleMethod), new Foo());
+				() -> interceptor.intercept(RuleMethods.class.getDeclaredMethod(ruleMethod), new RuleMethods());
 		
 		assertDoesNotThrow(supplier);
 		final Rule<Integer> rule = assertDoesNotThrow(supplier);
