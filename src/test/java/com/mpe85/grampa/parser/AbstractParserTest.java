@@ -2177,7 +2177,7 @@ public class AbstractParserTest {
 	
 	
 	@Test
-	public void post_valid() {
+	public void post_valid_supplier() {
 		final class Parser extends AbstractParser<Integer> {
 			@Override
 			public Rule<Integer> root() {
@@ -2214,6 +2214,46 @@ public class AbstractParserTest {
 		runner.registerListener(listener);
 		runner.run("whatever");
 		assertEquals("whatever", listener.getString());
+	}
+	
+	@Test
+	public void post_valid_staticEvent() {
+		final class Parser extends AbstractParser<Integer> {
+			@Override
+			public Rule<Integer> root() {
+				return sequence(
+						string("whatever"),
+						post("someEvent"));
+			}
+		}
+		final class Listener extends ParseEventListener<Integer> {
+			private String string;
+			
+			public String getString() {
+				return string;
+			}
+			
+			@Subscribe
+			@SuppressFBWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS")
+			public void stringEvent(final String event) {
+				string = event;
+			}
+			
+			@Override
+			public void afterMatchSuccess(final MatchSuccessEvent<Integer> event) {
+				assertNotNull(event.getContext());
+			}
+			
+			@Override
+			public void afterParse(final PostParseEvent<Integer> event) {
+				assertNotNull(event.getResult());
+			}
+		}
+		final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
+		final Listener listener = new Listener();
+		runner.registerListener(listener);
+		runner.run("whatever");
+		assertEquals("someEvent", listener.getString());
 	}
 	
 	@Test
