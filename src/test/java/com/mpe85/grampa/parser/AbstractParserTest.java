@@ -536,9 +536,7 @@ public class AbstractParserTest {
 				return codePointRange('b', 'a');
 			}
 		}
-		assertThrows(IllegalArgumentException.class, () -> {
-			new DefaultParseRunner<>(new Parser()).run("a");
-		});
+		assertThrows(IllegalArgumentException.class, () -> new DefaultParseRunner<>(new Parser()).run("a"));
 	}
 	
 	@Test
