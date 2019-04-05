@@ -26,5 +26,4 @@ public class DefaultContextTest {
 		assertThrows(IllegalArgumentException.class, () -> ctx.advanceIndex(-1));
 	}
 	
-	
 }
