@@ -31,10 +31,6 @@ import net.bytebuddy.implementation.bind.annotation.SuperCall;
  */
 public class RuleMethodInterceptor<T> {
 	
-	private static final String ROOT = "root";
-	
-	private final Map<Integer, Rule<T>> rules = new HashMap<>();
-	
 	/**
 	 * A reference rule implementation that stores a reference to a another rule. Note that this is only used by
 	 * {@link RuleMethodInterceptor}.
@@ -84,6 +80,10 @@ public class RuleMethodInterceptor<T> {
 		}
 		
 	}
+	
+	private static final String ROOT = "root";
+	
+	private final Map<Integer, Rule<T>> rules = new HashMap<>();
 	
 	/**
 	 * Intercepts rule methods.
