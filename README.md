@@ -13,8 +13,15 @@ but the focus is laid on simple and clean code without a lot of crazy and compli
 
 ## Versions
 
-* 1st pre-release: **0.9.0**; requires **Java 8**
-* 2nd pre-release: **0.9.1**; requires **Java 11**
+* 1st pre-release: **0.9.0**
+    * Java 8
+    * Already nearly feature complete
+* 2nd pre-release: **0.9.1**
+    * Upgrade to Java 11
+* 3rd pre-release: **0.9.2**
+    * Minor bugfixes
+    * Added code coverage analysis
+    * Added more unit tests
 
 ## How to add to your build
 
@@ -25,7 +32,7 @@ repositories {
 	jcenter()
 }
 dependencies {
-	implementation 'com.mpe85:grampa:0.9.1'
+	implementation 'com.mpe85:grampa:0.9.2'
 }
 ```
 
@@ -35,7 +42,7 @@ Adding a dependency using Maven:
 <dependency>
 	<groupId>com.mpe85</groupId>
 	<artifactId>grampa</artifactId>
-	<version>0.9.1</version>
+	<version>0.9.2</version>
 	<type>pom</type>
 </dependency>
 ```
@@ -43,7 +50,7 @@ Adding a dependency using Maven:
 Adding a dependency using Ivy:
 
 ```xml
-<dependency org='com.mpe85' name='grampa' rev='0.9.1'>
+<dependency org='com.mpe85' name='grampa' rev='0.9.2'>
 	<artifact name='grampa' ext='pom' ></artifact>
 </dependency>
 ```
