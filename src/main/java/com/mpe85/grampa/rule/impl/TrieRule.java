@@ -26,6 +26,9 @@ import one.util.streamex.StreamEx;
  */
 public class TrieRule<T> extends AbstractRule<T> {
 	
+	private final CharsTrie trie;
+	private final boolean ignoreCase;
+	
 	/**
 	 * C'tor. Constructs a case-sensitive trie.
 	 * 
@@ -127,7 +130,4 @@ public class TrieRule<T> extends AbstractRule<T> {
 				.add("ignoreCase", ignoreCase);
 	}
 	
-	
-	private final CharsTrie trie;
-	private final boolean ignoreCase;
 }

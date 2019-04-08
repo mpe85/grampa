@@ -10,6 +10,8 @@ import com.mpe85.grampa.input.InputBuffer;
  */
 public class StringInputBuffer extends CharSequenceInputBuffer {
 	
+	private final String string;
+	
 	public StringInputBuffer(final String string) {
 		super(string);
 		this.string = string;
@@ -19,8 +21,5 @@ public class StringInputBuffer extends CharSequenceInputBuffer {
 	public int getCodePoint(final int index) {
 		return string.codePointAt(index);
 	}
-	
-	
-	private final String string;
 	
 }

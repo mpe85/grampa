@@ -18,6 +18,8 @@ import com.mpe85.grampa.visitor.RuleVisitor;
  */
 public class ReferenceRuleReplaceVisitor<T> implements RuleVisitor<T> {
 	
+	private final Map<Integer, Rule<T>> replacementRules;
+	
 	/**
 	 * C'tor.
 	 * 
@@ -42,8 +44,5 @@ public class ReferenceRuleReplaceVisitor<T> implements RuleVisitor<T> {
 			}
 		}
 	}
-	
-	
-	private final Map<Integer, Rule<T>> replacementRules;
 	
 }

@@ -26,6 +26,10 @@ import com.mpe85.grampa.util.stack.impl.LinkedListRestorableStack;
  */
 public class DefaultParseRunner<T> {
 	
+	private final Rule<T> rootRule;
+	private final EventBus bus;
+	private RestorableStack<T> valueStack;
+	
 	/**
 	 * C'tor.
 	 * 
@@ -129,10 +133,5 @@ public class DefaultParseRunner<T> {
 	private void resetStack() {
 		valueStack = new LinkedListRestorableStack<>();
 	}
-	
-	
-	private final Rule<T> rootRule;
-	private final EventBus bus;
-	private RestorableStack<T> valueStack;
 	
 }

@@ -16,6 +16,11 @@ import com.mpe85.grampa.input.LineCounter;
  */
 public class CharSequenceLineCounter implements LineCounter {
 	
+	private static final char LF = '\n';
+	
+	private final NavigableMap<Integer, Integer> lines = new TreeMap<>();
+	private final int length;
+	
 	public CharSequenceLineCounter(final CharSequence input) {
 		Preconditions.checkNotNull(input, "An 'input' must not be null.");
 		length = input.length();
@@ -47,11 +52,5 @@ public class CharSequenceLineCounter implements LineCounter {
 				.map(e -> new InputPosition(e.getValue(), index - e.getKey() + 1))
 				.get();
 	}
-	
-	
-	private static final char LF = '\n';
-	
-	private final NavigableMap<Integer, Integer> lines = new TreeMap<>();
-	private final int length;
 	
 }

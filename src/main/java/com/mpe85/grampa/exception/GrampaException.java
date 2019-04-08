@@ -7,6 +7,8 @@ package com.mpe85.grampa.exception;
  */
 public class GrampaException extends RuntimeException {
 	
+	private static final long serialVersionUID = 5796921255320228162L;
+	
 	public GrampaException(final String message) {
 		super(message);
 	}
@@ -19,6 +21,4 @@ public class GrampaException extends RuntimeException {
 		super(message, cause);
 	}
 	
-	
-	private static final long serialVersionUID = 5796921255320228162L;
 }

@@ -13,6 +13,12 @@ import com.mpe85.grampa.util.stack.RestorableStack;
  */
 public class ParseResult<T> {
 	
+	private final boolean matched;
+	private final boolean matchedWholeInput;
+	private final CharSequence matchedInput;
+	private final CharSequence restOfInput;
+	private final RestorableStack<T> stack;
+	
 	/**
 	 * C'tor.
 	 * 
@@ -82,12 +88,5 @@ public class ParseResult<T> {
 	public T getStackTop() {
 		return stack.size() > 0 ? stack.peek() : null;
 	}
-	
-	
-	private final boolean matched;
-	private final boolean matchedWholeInput;
-	private final CharSequence matchedInput;
-	private final CharSequence restOfInput;
-	private final RestorableStack<T> stack;
 	
 }

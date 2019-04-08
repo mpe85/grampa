@@ -8,6 +8,9 @@ package com.mpe85.grampa.input;
  */
 public class InputPosition {
 	
+	private final int line;
+	private final int column;
+	
 	public InputPosition(
 			final int line,
 			final int column) {
@@ -22,9 +25,5 @@ public class InputPosition {
 	public int getColumn() {
 		return column;
 	}
-	
-	
-	private final int line;
-	private final int column;
 	
 }

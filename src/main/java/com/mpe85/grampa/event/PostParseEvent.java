@@ -12,6 +12,8 @@ import com.mpe85.grampa.runner.ParseResult;
  */
 public class PostParseEvent<T> {
 	
+	private final ParseResult<T> result;
+	
 	public PostParseEvent(final ParseResult<T> result) {
 		this.result = result;
 	}
@@ -19,7 +21,5 @@ public class PostParseEvent<T> {
 	public ParseResult<T> getResult() {
 		return result;
 	}
-	
-	private final ParseResult<T> result;
 	
 }

@@ -19,6 +19,19 @@ import com.mpe85.grampa.util.stack.RestorableStack;
 
 public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 	
+	private final InputBuffer inputBuffer;
+	private final int level;
+	private final Rule<T> rule;
+	private final int startIndex;
+	private final RestorableStack<T> stack;
+	private final EventBus bus;
+	
+	private int currentIndex;
+	private Character cachedCurrentChar;
+	private Integer cachedCurrentCodePoint;
+	private CharSequence previousMatch;
+	private RuleContext<T> parentContext;
+	
 	public DefaultContext(
 			final InputBuffer inputBuffer,
 			final int level,
@@ -188,19 +201,5 @@ public class DefaultContext<T> implements RuleContext<T>, ActionContext<T> {
 		cachedCurrentChar = null;
 		cachedCurrentCodePoint = null;
 	}
-	
-	
-	private final InputBuffer inputBuffer;
-	private final int level;
-	private final Rule<T> rule;
-	private final int startIndex;
-	private final RestorableStack<T> stack;
-	private final EventBus bus;
-	
-	private int currentIndex;
-	private Character cachedCurrentChar;
-	private Integer cachedCurrentCodePoint;
-	private CharSequence previousMatch;
-	private RuleContext<T> parentContext;
 	
 }

@@ -18,6 +18,9 @@ import one.util.streamex.IntStreamEx;
  */
 public class CharSequenceInputBuffer implements InputBuffer {
 	
+	private final CharSequence charSequence;
+	private final CharSequenceLineCounter lineCounter;
+	
 	public CharSequenceInputBuffer(final CharSequence charSequence) {
 		this.charSequence = checkNotNull(charSequence, "A 'charSequence' must not be null.");
 		lineCounter = new CharSequenceLineCounter(charSequence);
@@ -52,9 +55,5 @@ public class CharSequenceInputBuffer implements InputBuffer {
 		return lineCounter.getPosition(
 				checkElementIndex(index, getLength(), "A 'startIndex' must not be out of range."));
 	}
-	
-	
-	private final CharSequence charSequence;
-	private final CharSequenceLineCounter lineCounter;
 	
 }
