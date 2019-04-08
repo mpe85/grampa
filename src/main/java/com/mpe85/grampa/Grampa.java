@@ -1,5 +1,6 @@
 package com.mpe85.grampa;
 
+import static net.bytebuddy.implementation.MethodDelegation.withDefaultConfiguration;
 import static net.bytebuddy.matcher.ElementMatchers.returns;
 
 import java.lang.reflect.Constructor;
@@ -12,7 +13,6 @@ import com.mpe85.grampa.parser.Parser;
 import com.mpe85.grampa.rule.Rule;
 
 import net.bytebuddy.ByteBuddy;
-import net.bytebuddy.implementation.MethodDelegation;
 import one.util.streamex.StreamEx;
 
 /**
@@ -123,9 +123,7 @@ public final class Grampa {
 		return new ByteBuddy()
 				.subclass(parserClass)
 				.method(returns(Rule.class))
-				.intercept(MethodDelegation
-						.withDefaultConfiguration()
-						.to(new RuleMethodInterceptor<>()))
+				.intercept(withDefaultConfiguration().to(new RuleMethodInterceptor<>()))
 				.make()
 				.load(parserClass.getClassLoader())
 				.getLoaded();
@@ -154,8 +152,7 @@ public final class Grampa {
 	}
 	
 	private static final boolean isSafeVarArgsRuleMethod(final Invokable<?, Object> invokable) {
-		return invokable.isVarArgs()
-				&& invokable.isAnnotationPresent(SafeVarargs.class);
+		return invokable.isVarArgs() && invokable.isAnnotationPresent(SafeVarargs.class);
 	}
 	
 }
