@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import com.ibm.icu.impl.StringSegment;
 import com.mpe85.grampa.input.InputBuffer;
 
 public class InputBufferTest {
@@ -89,6 +90,7 @@ public class InputBufferTest {
 		return Stream.of(
 				new StringBufferInputBuffer(new StringBuffer("foobar")),
 				new StringBuilderInputBuffer(new StringBuilder("foobar")),
+				new StringSegmentInputBuffer(new StringSegment("foobar", false)),
 				new StringInputBuffer("foobar"));
 	}
 	
@@ -96,6 +98,7 @@ public class InputBufferTest {
 		return Stream.of(
 				() -> new StringBufferInputBuffer(null),
 				() -> new StringBuilderInputBuffer(null),
+				() -> new StringSegmentInputBuffer(null),
 				() -> new StringInputBuffer(null));
 	}
 	
