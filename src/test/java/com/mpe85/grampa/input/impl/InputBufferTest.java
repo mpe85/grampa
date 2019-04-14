@@ -88,12 +88,14 @@ public class InputBufferTest {
 	private static Stream<InputBuffer> provideInputBuffers() {
 		return Stream.of(
 				new StringBufferInputBuffer(new StringBuffer("foobar")),
+				new StringBuilderInputBuffer(new StringBuilder("foobar")),
 				new StringInputBuffer("foobar"));
 	}
 	
 	private static Stream<Supplier<InputBuffer>> provideNullInputBuffers() {
 		return Stream.of(
 				() -> new StringBufferInputBuffer(null),
+				() -> new StringBuilderInputBuffer(null),
 				() -> new StringInputBuffer(null));
 	}
 	
