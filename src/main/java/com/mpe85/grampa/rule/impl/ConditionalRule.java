@@ -5,13 +5,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.google.common.base.MoreObjects.ToStringHelper;
 import com.mpe85.grampa.rule.ActionContext;
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.rule.RuleContext;
-
-import one.util.streamex.StreamEx;
 
 /**
  * A rule implementation that runs one of two sub rules, depending on a condition.
@@ -55,7 +55,9 @@ public class ConditionalRule<T> extends AbstractRule<T> {
 			final Predicate<ActionContext<T>> condition,
 			final Rule<T> thenRule,
 			final Rule<T> elseRule) {
-		super(StreamEx.of(thenRule, elseRule).nonNull().toList());
+		super(Stream.of(thenRule, elseRule)
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList()));
 		this.condition = checkNotNull(condition, "A 'condition' must not be null.");
 		this.thenRule = checkNotNull(thenRule, "A 'thenRule' must not be null.");
 		this.elseRule = elseRule;

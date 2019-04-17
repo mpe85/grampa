@@ -7,8 +7,6 @@ import java.util.List;
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.rule.RuleContext;
 
-import one.util.streamex.StreamEx;
-
 /**
  * A sequence rule implementation.
  * 
@@ -31,7 +29,7 @@ public class SequenceRule<T> extends AbstractRule<T> {
 	
 	@Override
 	public boolean match(final RuleContext<T> context) {
-		return StreamEx.of(getChildren()).allMatch(c -> context.createChildContext(c).run());
+		return getChildren().stream().allMatch(c -> context.createChildContext(c).run());
 	}
 	
 }

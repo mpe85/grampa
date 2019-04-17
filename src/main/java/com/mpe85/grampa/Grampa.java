@@ -5,6 +5,7 @@ import static net.bytebuddy.matcher.ElementMatchers.returns;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.stream.Stream;
 
 import com.google.common.reflect.Invokable;
 import com.mpe85.grampa.exception.ParserCreateException;
@@ -13,7 +14,6 @@ import com.mpe85.grampa.parser.Parser;
 import com.mpe85.grampa.rule.Rule;
 
 import net.bytebuddy.ByteBuddy;
-import one.util.streamex.StreamEx;
 
 /**
  * Main class containing static methods for parser creation
@@ -130,7 +130,7 @@ public final class Grampa {
 	}
 	
 	private static final void validateParserClass(final Class<?> parserClass) {
-		StreamEx.of(parserClass.getDeclaredMethods())
+		Stream.of(parserClass.getDeclaredMethods())
 				.filter(m -> m.getReturnType() == Rule.class)
 				.map(Invokable::from)
 				.forEach(Grampa::validateRuleMethod);

@@ -8,8 +8,6 @@ import static com.google.common.base.Preconditions.checkPositionIndexes;
 import com.mpe85.grampa.input.InputBuffer;
 import com.mpe85.grampa.input.InputPosition;
 
-import one.util.streamex.IntStreamEx;
-
 /**
  * An {@link InputBuffer} implementation using a {@link CharSequence}.
  * 
@@ -34,7 +32,8 @@ public class CharSequenceInputBuffer implements InputBuffer {
 	
 	@Override
 	public int getCodePoint(final int index) {
-		return IntStreamEx.of(charSequence.codePoints()).toArray()[index];
+		return charSequence.toString()
+				.codePointAt(checkElementIndex(index, getLength(), "An 'index' must not be out of range."));
 	}
 	
 	@Override

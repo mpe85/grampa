@@ -9,7 +9,9 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import com.google.common.base.CharMatcher;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
+import com.google.common.primitives.Ints;
 import com.ibm.icu.lang.UCharacter;
 import com.mpe85.grampa.builder.RepeatRuleBuilder;
 import com.mpe85.grampa.rule.Action;
@@ -32,9 +34,6 @@ import com.mpe85.grampa.rule.impl.StringRule;
 import com.mpe85.grampa.rule.impl.TestNotRule;
 import com.mpe85.grampa.rule.impl.TestRule;
 import com.mpe85.grampa.rule.impl.TrieRule;
-
-import one.util.streamex.IntStreamEx;
-import one.util.streamex.StreamEx;
 
 /**
  * An abstract parser that defines a bunch of useful parser rules and actions. A concrete parser class should usually
@@ -65,6 +64,8 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	protected final Rule<T> CR = new CharPredicateRule<>('\r');
 	protected final Rule<T> LF = new CharPredicateRule<>('\n');
 	protected final Rule<T> CRLF = new StringRule<>("\r\n");
+	
+	private static final Joiner JOINER = Joiner.on("");
 	
 	@Override
 	public abstract Rule<T> root();
@@ -172,7 +173,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	 */
 	protected Rule<T> anyOfChars(final Set<Character> characters) {
 		checkNotNull(characters, "A set of 'characters' must not be null.");
-		return anyOfChars(StreamEx.of(characters).joining());
+		return anyOfChars(JOINER.join(characters));
 	}
 	
 	/**
@@ -213,7 +214,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	 */
 	protected Rule<T> noneOfChars(final Set<Character> characters) {
 		checkNotNull(characters, "A set of 'characters' must not be null.");
-		return noneOfChars(StreamEx.of(characters).joining());
+		return noneOfChars(JOINER.join(characters));
 	}
 	
 	/**
@@ -308,7 +309,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	 */
 	protected Rule<T> anyOfCodePoints(final Set<Integer> codePoints) {
 		checkNotNull(codePoints, "A set of 'codePoints' must not be null.");
-		return anyOfCodePoints(IntStreamEx.of(codePoints).toArray());
+		return anyOfCodePoints(Ints.toArray(codePoints));
 	}
 	
 	/**
@@ -348,7 +349,7 @@ public abstract class AbstractParser<T> implements Parser<T> {
 	 */
 	protected Rule<T> noneOfCodePoints(final Set<Integer> codePoints) {
 		checkNotNull(codePoints, "A set of 'codePoints' must not be null.");
-		return noneOfCodePoints(IntStreamEx.of(codePoints).toArray());
+		return noneOfCodePoints(Ints.toArray(codePoints));
 	}
 	
 	/**

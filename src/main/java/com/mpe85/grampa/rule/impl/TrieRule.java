@@ -4,17 +4,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.Sets;
+import com.google.common.collect.Streams;
 import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.util.BytesTrie.Result;
 import com.ibm.icu.util.CharsTrie;
 import com.ibm.icu.util.CharsTrieBuilder;
 import com.ibm.icu.util.StringTrieBuilder.Option;
 import com.mpe85.grampa.rule.RuleContext;
-
-import one.util.streamex.StreamEx;
 
 /**
  * A trie (prefix tree) rule implementation that matches the input against a dictionary.
@@ -87,7 +87,9 @@ public class TrieRule<T> extends AbstractRule<T> {
 	 * @return a set of strings
 	 */
 	public Set<String> getStrings() {
-		return StreamEx.of(trie.iterator()).map(e -> e.chars).map(CharSequence::toString).toSet();
+		return Streams.stream(trie.iterator())
+				.map(e -> e.chars.toString())
+				.collect(Collectors.toSet());
 	}
 	
 	@Override
