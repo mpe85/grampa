@@ -1,5 +1,6 @@
 package com.mpe85.grampa.runner;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -11,6 +12,9 @@ import com.mpe85.grampa.parser.AbstractParser;
 import com.mpe85.grampa.rule.Rule;
 import com.mpe85.grampa.rule.impl.EmptyRule;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+@SuppressFBWarnings(value = "SIC_INNER_SHOULD_BE_STATIC_ANON", justification = "Performance is not of great importance in unit tests.")
 public class DefaultParseRunnerTest {
 	
 	private static final class IntegerTestListener extends ParseEventListener<Integer> {
@@ -45,8 +49,7 @@ public class DefaultParseRunnerTest {
 		});
 		final ParseEventListener<Integer> listener = new IntegerTestListener();
 		runner.registerListener(listener);
-		runner.run("a");
-		//assertDoesNotThrow(() -> runner.run("a"));
+		assertDoesNotThrow(() -> runner.run("a"));
 	}
 	
 	@Test

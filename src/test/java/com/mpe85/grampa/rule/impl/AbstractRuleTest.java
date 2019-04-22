@@ -19,7 +19,7 @@ import com.mpe85.grampa.rule.RuleContext;
 @ExtendWith(MockitoExtension.class)
 public class AbstractRuleTest {
 	
-	private class SomeRule extends AbstractRule<String> {
+	private static class SomeRule extends AbstractRule<String> {
 		public SomeRule() {
 		}
 		

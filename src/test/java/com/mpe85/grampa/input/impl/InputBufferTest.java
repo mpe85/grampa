@@ -13,6 +13,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import com.ibm.icu.impl.StringSegment;
 import com.mpe85.grampa.input.InputBuffer;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 public class InputBufferTest {
 	
 	@ParameterizedTest
@@ -86,6 +88,7 @@ public class InputBufferTest {
 		assertThrows(IndexOutOfBoundsException.class, () -> ib.subSequence(5, 3));
 	}
 	
+	@SuppressFBWarnings(value = "UPM_UNCALLED_PRIVATE_METHOD", justification = "It's actually used as a factory method for parameterized tests.")
 	private static Stream<InputBuffer> provideInputBuffers() {
 		return Stream.of(
 				new StringBufferInputBuffer(new StringBuffer("foobar")),
@@ -94,6 +97,7 @@ public class InputBufferTest {
 				new StringInputBuffer("foobar"));
 	}
 	
+	@SuppressFBWarnings(value = "UPM_UNCALLED_PRIVATE_METHOD", justification = "It's actually used as a factory method for parameterized tests.")
 	private static Stream<Supplier<InputBuffer>> provideNullInputBuffers() {
 		return Stream.of(
 				() -> new StringBufferInputBuffer(null),
