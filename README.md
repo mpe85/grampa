@@ -29,10 +29,10 @@ Adding a dependency using Gradle:
 
 ```groovy
 repositories {
-	jcenter()
+  jcenter()
 }
 dependencies {
-	implementation 'com.mpe85:grampa:0.9.2'
+  implementation 'com.mpe85:grampa:0.9.2'
 }
 ```
 
@@ -40,10 +40,10 @@ Adding a dependency using Maven:
 
 ```xml
 <dependency>
-	<groupId>com.mpe85</groupId>
-	<artifactId>grampa</artifactId>
-	<version>0.9.2</version>
-	<type>pom</type>
+  <groupId>com.mpe85</groupId>
+  <artifactId>grampa</artifactId>
+  <version>0.9.2</version>
+  <type>pom</type>
 </dependency>
 ```
 
@@ -51,7 +51,7 @@ Adding a dependency using Ivy:
 
 ```xml
 <dependency org='com.mpe85' name='grampa' rev='0.9.2'>
-	<artifact name='grampa' ext='pom' ></artifact>
+  <artifact name='grampa' ext='pom' ></artifact>
 </dependency>
 ```
 
@@ -61,12 +61,12 @@ Create a parser class by extending the AbstractParser class:
 
 ```java
 public class LetterParser extends AbstractParser<Void> {
-	@Override
-	public Rule<Void> root() {
-		return sequence(
-				oneOrMore(letter()),
-				eoi());
-	}
+  @Override
+  public Rule<Void> root() {
+    return sequence(
+        oneOrMore(letter()),
+        eoi());
+  }
 }
 ```
 
