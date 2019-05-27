@@ -33,7 +33,7 @@ configurations {
 dependencies {
 	implementation(
 		'com.google.guava:guava:27.1-jre',
-		'net.bytebuddy:byte-buddy:1.9.12',
+		'net.bytebuddy:byte-buddy:1.9.13',
 		'com.ibm.icu:icu4j:64.2'
 	)
 	compileOnly(
