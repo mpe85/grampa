@@ -11,7 +11,7 @@ plugins {
 	id 'jacoco'
 	id 'maven'
 	id 'maven-publish'
-	id 'com.diffplug.gradle.spotless' version '3.23.0'
+	id 'com.diffplug.gradle.spotless' version '3.23.1'
 	id 'com.jfrog.bintray' version '1.8.4'
 	id 'com.github.spotbugs' version '2.0.0'
 	id 'com.github.ben-manes.versions' version '0.21.0'
@@ -33,20 +33,20 @@ configurations {
 dependencies {
 	implementation(
 		'com.google.guava:guava:28.0-jre',
-		'net.bytebuddy:byte-buddy:1.9.13',
+		'net.bytebuddy:byte-buddy:1.9.14',
 		'com.ibm.icu:icu4j:64.2'
 	)
 	compileOnly(
 		'com.github.spotbugs:spotbugs-annotations:3.1.12'
 	)
 	testImplementation(
-		'org.junit.jupiter:junit-jupiter-api:5.4.2',
-		'org.junit.jupiter:junit-jupiter-params:5.4.2',
-		'org.mockito:mockito-junit-jupiter:2.27.0'
+		'org.junit.jupiter:junit-jupiter-api:5.5.0',
+		'org.junit.jupiter:junit-jupiter-params:5.5.0',
+		'org.mockito:mockito-junit-jupiter:3.0.0'
 	)
 	testRuntimeOnly(
-		'org.junit.jupiter:junit-jupiter-engine:5.4.2',
-		'org.junit.platform:junit-platform-launcher:1.4.2'
+		'org.junit.jupiter:junit-jupiter-engine:5.5.0',
+		'org.junit.platform:junit-platform-launcher:1.5.0'
 	)
 }
 
