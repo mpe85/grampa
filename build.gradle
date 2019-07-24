@@ -33,20 +33,20 @@ configurations {
 dependencies {
 	implementation(
 		'com.google.guava:guava:28.0-jre',
-		'net.bytebuddy:byte-buddy:1.9.14',
+		'net.bytebuddy:byte-buddy:1.9.15',
 		'com.ibm.icu:icu4j:64.2'
 	)
 	compileOnly(
 		'com.github.spotbugs:spotbugs-annotations:3.1.12'
 	)
 	testImplementation(
-		'org.junit.jupiter:junit-jupiter-api:5.5.0',
-		'org.junit.jupiter:junit-jupiter-params:5.5.0',
+		'org.junit.jupiter:junit-jupiter-api:5.5.1',
+		'org.junit.jupiter:junit-jupiter-params:5.5.1',
 		'org.mockito:mockito-junit-jupiter:3.0.0'
 	)
 	testRuntimeOnly(
-		'org.junit.jupiter:junit-jupiter-engine:5.5.0',
-		'org.junit.platform:junit-platform-launcher:1.5.0'
+		'org.junit.jupiter:junit-jupiter-engine:5.5.1',
+		'org.junit.platform:junit-platform-launcher:1.5.1'
 	)
 }
 
