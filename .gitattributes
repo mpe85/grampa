@@ -1,6 +1,7 @@
 * text=auto
 
 *.java			text
+*.kt            text
 *.gradle		text
 *.properties	text
 *.xml			text
