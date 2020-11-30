@@ -1,3 +1,6 @@
+import com.github.spotbugs.snom.SpotBugsExtension
+import com.github.spotbugs.snom.SpotBugsTask
+
 buildscript {
     repositories {
         jcenter()
@@ -13,7 +16,7 @@ plugins {
     `maven-publish`
     id("com.diffplug.gradle.spotless") version "3.27.0"
     id("com.jfrog.bintray") version "1.8.4"
-    //id("com.github.spotbugs") version "3.0.0"
+    id("com.github.spotbugs") version "4.6.0"
     id("com.github.ben-manes.versions") version "0.27.0"
 }
 
@@ -87,24 +90,26 @@ tasks {
         archives(javadocJar)
         archives(sourcesJar)
     }
-    /*
+
     withType<SpotBugsTask> {
         reports {
-            html.isEnabled = true
-            xml.isEnabled = false
+            create("html") {
+                isEnabled = true
+            }
+            create("xml") {
+                isEnabled = false
+            }
         }
-    }*/
+    }
 }
-/*
-configure<SpotBugsExtension> {
-    toolVersion = "3.1.12"
-    effort = "max"
-    reportLevel = "low"
-    isIgnoreFailures = true
-}
-*/
-/*
 
+configure<SpotBugsExtension> {
+    setEffort("max")
+    setReportLevel("low")
+    ignoreFailures.set(true)
+}
+
+/*
 spotless {
     java {
         eclipse().configFile '.settings/org.eclipse.jdt.core.prefs'
