@@ -14,7 +14,6 @@ plugins {
     jacoco
     maven
     `maven-publish`
-    id("com.diffplug.gradle.spotless") version "3.27.0"
     id("com.jfrog.bintray") version "1.8.4"
     id("com.github.spotbugs") version "4.6.0"
     id("com.github.ben-manes.versions") version "0.27.0"
@@ -90,7 +89,6 @@ tasks {
         archives(javadocJar)
         archives(sourcesJar)
     }
-
     withType<SpotBugsTask> {
         reports {
             create("html") {
@@ -110,12 +108,6 @@ configure<SpotBugsExtension> {
 }
 
 /*
-spotless {
-    java {
-        eclipse().configFile '.settings/org.eclipse.jdt.core.prefs'
-    }
-}
-
 def gitUrl = "https://github.com/mpe85/${project.name}"
 
 def pomConfig = {
