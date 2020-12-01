@@ -1,5 +1,6 @@
 import com.github.spotbugs.snom.SpotBugsExtension
 import com.github.spotbugs.snom.SpotBugsTask
+import java.util.*
 
 buildscript {
     repositories {
@@ -46,6 +47,17 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
+val javadocJar = tasks.create<Jar>("javadocJar") {
+    dependsOn("javadoc")
+    archiveClassifier.set("javadoc")
+    from(tasks.getByName<Javadoc>("javadoc").destinationDir)
+}
+val sourcesJar = tasks.create<Jar>("sourcesJar") {
+    dependsOn("classes")
+    archiveClassifier.set("sources")
+    from(sourceSets.main.get().allSource)
+}
+
 tasks {
     withType<JavaCompile> {
         options.encoding = "UTF-8"
@@ -75,16 +87,6 @@ tasks {
         }
         finalizedBy("jacocoTestReport")
     }
-    val javadocJar = create<Jar>("javadocJar") {
-        dependsOn("javadoc")
-        archiveClassifier.set("javadoc")
-        from(this@tasks.getByName<Javadoc>("javadoc").destinationDir)
-    }
-    val sourcesJar = create<Jar>("sourcesJar") {
-        dependsOn("classes")
-        archiveClassifier.set("sources")
-        from(sourceSets.main.get().allSource)
-    }
     artifacts {
         archives(javadocJar)
         archives(sourcesJar)
@@ -107,70 +109,67 @@ configure<SpotBugsExtension> {
     ignoreFailures.set(true)
 }
 
-/*
-def gitUrl = "https://github.com/mpe85/${project.name}"
-
-def pomConfig = {
-    licenses {
-        license {
-            name 'MIT'
-            url "${gitUrl}/blob/master/LICENSE"
-        }
-    }
-    developers {
-        developer {
-            id 'mpe85'
-            name 'Marco Perazzo'
-            email 'marco.perazzo85@gmail.com'
-        }
-    }
-    scm {
-        url "${gitUrl}"
-    }
-}
+val gitUrl = "https://github.com/mpe85/${project.name}"
+val gitScmUrl = "https://github.com/mpe85/${project.name}.git"
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
-            from components . java
-                    artifact sourcesJar {
-                classifier "sources"
+        register<MavenPublication>("mavenJava") {
+            from(components["java"])
+            artifact(sourcesJar) {
+                classifier = "sources"
             }
-            artifact javadocJar {
-                classifier "javadoc"
+            artifact(javadocJar) {
+                classifier = "javadoc"
             }
-            groupId "${group}"
-            artifactId "${project.name}"
-            version "$project.version"
+            groupId = "$group"
+            artifactId = project.name
+            version = "${project.version}"
             pom.withXml {
-                def root = asNode ()
-                root.appendNode('description', 'A sample project')
-                root.appendNode('name', "${group}:${project.name}")
-                root.appendNode('url', "${gitUrl}")
-                root.children().last() + pomConfig
+                asNode().apply {
+                    appendNode("description", "Grampa")
+                    appendNode("name", "$group:${project.name}")
+                    appendNode("url", gitUrl)
+                    appendNode("licenses").appendNode("license").apply {
+                        appendNode("name", "MIT")
+                        appendNode("url", "$gitUrl/blob/master/LICENSE")
+                    }
+                    appendNode("developers").appendNode("developer").apply {
+                        appendNode("id", "mpe85")
+                        appendNode("name", "Marco Perazzo")
+                        appendNode("email", "marco.perazzo85@gmail.com")
+                    }
+                    appendNode("scm").apply {
+                        appendNode("url", gitScmUrl)
+                        appendNode("connection", "scm:git:$gitScmUrl")
+                    }
+                }
             }
         }
     }
 }
+
+val bintrayUser: String? by project
+val bintrayKey: String? by project
 
 bintray {
-    user = project.hasProperty('bintrayUser') ? bintrayUser : System.env.bintrayUser
-    key = project.hasProperty('bintrayKey') ? bintrayKey : System.env.bintrayKey
-    publications = ['mavenJava']
+    user = bintrayUser ?: System.getenv("bintrayUser")
+    key = bintrayKey ?: System.getenv("bintrayKey")
+    setPublications("mavenJava")
 
-    pkg {
-        repo = 'maven'
-        name = "${project.name}"
-        licenses = ['MIT']
-        websiteUrl = "${gitUrl}"
-        issueTrackerUrl = "${gitUrl}/issues"
-        vcsUrl = "${gitUrl}.git"
-        version {
-            name = "$project.version"
-            desc = "$project.version"
-            released = new Date ()
-            vcsTag = project.version
+    pkg.apply {
+        repo = "maven"
+        name = project.name
+        setLicenses("MIT")
+        websiteUrl = gitUrl
+        vcsUrl = gitScmUrl
+        issueTrackerUrl = "$gitUrl/issues"
+
+        version.apply {
+            name = "${project.version}"
+            desc = "${project.version}"
+            released = Date().toString()
+            vcsTag = "${project.version}"
         }
     }
 }
-*/
