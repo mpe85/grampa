@@ -15,9 +15,9 @@ plugins {
     jacoco
     maven
     `maven-publish`
-    id("com.jfrog.bintray") version "1.8.4"
+    id("com.jfrog.bintray") version "1.8.5"
     id("com.github.spotbugs") version "4.6.0"
-    id("com.github.ben-manes.versions") version "0.27.0"
+    id("com.github.ben-manes.versions") version "0.36.0"
 }
 
 group = "com.mpe85"
@@ -31,15 +31,15 @@ configurations {
 }
 
 dependencies {
-    implementation("com.google.guava:guava:28.2-jre")
-    implementation("net.bytebuddy:byte-buddy:1.10.6")
-    implementation("com.ibm.icu:icu4j:65.1")
-    compileOnly("com.github.spotbugs:spotbugs-annotations:3.1.12")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.5.2")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.5.2")
-    testImplementation("org.mockito:mockito-junit-jupiter:3.2.4")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.2")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.5.2")
+    implementation("com.google.guava:guava:30.0-jre")
+    implementation("net.bytebuddy:byte-buddy:1.10.18")
+    implementation("com.ibm.icu:icu4j:68.1")
+    compileOnly("com.github.spotbugs:spotbugs-annotations:4.2.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.0")
+    testImplementation("org.mockito:mockito-junit-jupiter:3.6.28")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.7.0")
 }
 
 java {
