@@ -1,5 +1,6 @@
 import com.github.spotbugs.snom.SpotBugsExtension
 import com.github.spotbugs.snom.SpotBugsTask
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.*
 
 buildscript {
@@ -12,6 +13,7 @@ buildscript {
 
 plugins {
     java
+    kotlin("jvm") version "1.4.20"
     jacoco
     maven
     `maven-publish`
@@ -31,6 +33,7 @@ configurations {
 }
 
 dependencies {
+    implementation(kotlin("stdlib-jdk8", "1.4.20"))
     implementation("com.google.guava:guava:30.0-jre")
     implementation("net.bytebuddy:byte-buddy:1.10.18")
     implementation("com.ibm.icu:icu4j:68.1")
@@ -61,6 +64,9 @@ val sourcesJar = tasks.create<Jar>("sourcesJar") {
 tasks {
     withType<JavaCompile> {
         options.encoding = "UTF-8"
+    }
+    withType<KotlinCompile> {
+        kotlinOptions.jvmTarget = "11"
     }
     withType<Javadoc> {
         (options as? StandardJavadocDocletOptions)?.links("https://docs.oracle.com/en/java/javase/11/docs/api/")
