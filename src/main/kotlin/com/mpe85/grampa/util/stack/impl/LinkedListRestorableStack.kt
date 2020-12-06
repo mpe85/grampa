@@ -20,7 +20,7 @@ class LinkedListRestorableStack<E> : LinkedList<E>, RestorableStack<E> {
     private const val serialVersionUID = 3875323652049358971L
   }
 
-  private val snapshots: Deque<Deque<E>> = ArrayDeque()
+  private val snapshots = ArrayDeque<Deque<E>>()
 
   /**
    * Default c'tor.
