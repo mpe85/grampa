@@ -5,6 +5,8 @@ import com.google.common.eventbus.SubscriberExceptionContext
 import com.mpe85.grampa.rule.RuleContext
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import io.mockk.mockk
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -13,7 +15,9 @@ import kotlin.test.assertTrue
   value = ["SIC_INNER_SHOULD_BE_STATIC_ANON"],
   justification = "Performance is not of great importance in unit tests."
 )
+@TestInstance(PER_CLASS)
 class ParseEventListenerTest {
+
   @Test
   fun postEvent_valid() {
     class TestListener : ParseEventListener<String>() {
@@ -27,7 +31,7 @@ class ParseEventListenerTest {
     val listener = TestListener()
     val bus = EventBus()
     bus.register(listener)
-    bus.post(PreParseEvent(mockk<RuleContext<String>>()))
+    bus.post(PreParseEvent(mockk<RuleContext<String>>(relaxed = true)))
     assertTrue(listener.called)
   }
 
@@ -43,7 +47,7 @@ class ParseEventListenerTest {
     val sb = StringBuilder()
     val bus = EventBus { ex: Throwable, _: SubscriberExceptionContext? -> sb.append(ex.message) }
     bus.register(listener)
-    bus.post(PreParseEvent(mockk<RuleContext<String>>()))
+    bus.post(PreParseEvent(mockk<RuleContext<String>>(relaxed = true)))
     assertEquals("failure", sb.toString())
   }
 }
