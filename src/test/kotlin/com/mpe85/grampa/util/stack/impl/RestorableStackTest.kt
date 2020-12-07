@@ -1,6 +1,6 @@
 package com.mpe85.grampa.util.stack.impl
 
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class RestorableStackTest {
@@ -18,9 +18,9 @@ class RestorableStackTest {
     stack2.push(1, 2)
     stack2.push(2, 1)
 
-    Assertions.assertEquals(3, stack1.size)
-    Assertions.assertEquals(3, stack2.size)
-    Assertions.assertEquals(stack1, stack2)
+    assertEquals(3, stack1.size)
+    assertEquals(3, stack2.size)
+    assertEquals(stack1, stack2)
   }
 
   @Test
@@ -31,12 +31,12 @@ class RestorableStackTest {
     stack.push(2)
     stack.push(3)
 
-    Assertions.assertEquals(3, stack.size)
-    Assertions.assertEquals(3, stack.peek())
-    Assertions.assertEquals(3, stack.peek(0))
-    Assertions.assertEquals(2, stack.peek(1))
-    Assertions.assertEquals(1, stack.peek(2))
-    Assertions.assertEquals(3, stack.size)
+    assertEquals(3, stack.size)
+    assertEquals(3, stack.peek())
+    assertEquals(3, stack.peek(0))
+    assertEquals(2, stack.peek(1))
+    assertEquals(1, stack.peek(2))
+    assertEquals(3, stack.size)
   }
 
   @Test
@@ -47,10 +47,10 @@ class RestorableStackTest {
     stack.push(2)
     stack.push(3.3f)
 
-    Assertions.assertEquals(3, stack.size)
-    Assertions.assertEquals(3.3f, stack.peekAs(Float::class.javaObjectType).toFloat())
-    Assertions.assertEquals(1, stack.peekAs(2, Int::class.javaObjectType).toInt())
-    Assertions.assertEquals(3, stack.size)
+    assertEquals(3, stack.size)
+    assertEquals(3.3f, stack.peekAs(Float::class.javaObjectType).toFloat())
+    assertEquals(1, stack.peekAs(2, Int::class.javaObjectType).toInt())
+    assertEquals(3, stack.size)
   }
 
   @Test
@@ -61,13 +61,13 @@ class RestorableStackTest {
     stack.push(2)
     stack.push(3)
 
-    Assertions.assertEquals(3, stack.size)
-    Assertions.assertEquals(3, stack.pop())
-    Assertions.assertEquals(2, stack.size)
-    Assertions.assertEquals(1, stack.pop(1))
-    Assertions.assertEquals(1, stack.size)
-    Assertions.assertEquals(2, stack.pop(0))
-    Assertions.assertEquals(0, stack.size)
+    assertEquals(3, stack.size)
+    assertEquals(3, stack.pop())
+    assertEquals(2, stack.size)
+    assertEquals(1, stack.pop(1))
+    assertEquals(1, stack.size)
+    assertEquals(2, stack.pop(0))
+    assertEquals(0, stack.size)
   }
 
   @Test
@@ -78,10 +78,10 @@ class RestorableStackTest {
     stack.push(2.2)
     stack.push(3)
 
-    Assertions.assertEquals(3, stack.size)
-    Assertions.assertEquals(2.2, stack.popAs(1, Double::class.javaObjectType).toDouble())
-    Assertions.assertEquals(2, stack.size)
-    Assertions.assertEquals(3, stack.popAs(Int::class.javaObjectType).toInt())
+    assertEquals(3, stack.size)
+    assertEquals(2.2, stack.popAs(1, Double::class.javaObjectType).toDouble())
+    assertEquals(2, stack.size)
+    assertEquals(3, stack.popAs(Int::class.javaObjectType).toInt())
   }
 
   @Test
@@ -92,13 +92,13 @@ class RestorableStackTest {
     stack.push(2)
     stack.push(3)
 
-    Assertions.assertEquals(3, stack.size)
-    Assertions.assertEquals(3, stack.poke(4))
-    Assertions.assertEquals(4, stack.peek())
-    Assertions.assertEquals(3, stack.size)
-    Assertions.assertEquals(2, stack.poke(1, 5))
-    Assertions.assertEquals(5, stack.peek(1))
-    Assertions.assertEquals(3, stack.size)
+    assertEquals(3, stack.size)
+    assertEquals(3, stack.poke(4))
+    assertEquals(4, stack.peek())
+    assertEquals(3, stack.size)
+    assertEquals(2, stack.poke(1, 5))
+    assertEquals(5, stack.peek(1))
+    assertEquals(3, stack.size)
   }
 
   @Test
@@ -109,10 +109,10 @@ class RestorableStackTest {
     stack.dup()
     stack.dup()
 
-    Assertions.assertEquals(3, stack.size)
-    Assertions.assertEquals(1, stack.peek())
-    Assertions.assertEquals(1, stack.peek(1))
-    Assertions.assertEquals(1, stack.peek(2))
+    assertEquals(3, stack.size)
+    assertEquals(1, stack.peek())
+    assertEquals(1, stack.peek(1))
+    assertEquals(1, stack.peek(2))
   }
 
   @Test
@@ -124,10 +124,10 @@ class RestorableStackTest {
     stack.push(3)
     stack.swap()
 
-    Assertions.assertEquals(3, stack.size)
-    Assertions.assertEquals(2, stack.peek())
-    Assertions.assertEquals(3, stack.peek(1))
-    Assertions.assertEquals(1, stack.peek(2))
+    assertEquals(3, stack.size)
+    assertEquals(2, stack.peek())
+    assertEquals(3, stack.peek(1))
+    assertEquals(1, stack.peek(2))
   }
 
   @Test
@@ -141,22 +141,22 @@ class RestorableStackTest {
     stack.takeSnapshot()
     stack.pop(1)
 
-    Assertions.assertEquals(2, stack.size)
-    Assertions.assertEquals(2, stack.snapshotCount)
+    assertEquals(2, stack.size)
+    assertEquals(2, stack.snapshotCount)
 
     stack.restoreSnapshot()
 
-    Assertions.assertEquals(3, stack.size)
-    Assertions.assertEquals(3, stack.peek())
-    Assertions.assertEquals(2, stack.peek(1))
-    Assertions.assertEquals(1, stack.peek(2))
-    Assertions.assertEquals(1, stack.snapshotCount)
+    assertEquals(3, stack.size)
+    assertEquals(3, stack.peek())
+    assertEquals(2, stack.peek(1))
+    assertEquals(1, stack.peek(2))
+    assertEquals(1, stack.snapshotCount)
 
     stack.restoreSnapshot()
 
-    Assertions.assertEquals(1, stack.size)
-    Assertions.assertEquals(1, stack.peek())
-    Assertions.assertEquals(0, stack.snapshotCount)
+    assertEquals(1, stack.size)
+    assertEquals(1, stack.peek())
+    assertEquals(0, stack.snapshotCount)
   }
 
   @Test
@@ -168,15 +168,15 @@ class RestorableStackTest {
     stack.push(2)
     stack.takeSnapshot()
 
-    Assertions.assertEquals(2, stack.snapshotCount)
+    assertEquals(2, stack.snapshotCount)
 
     stack.discardSnapshot()
 
-    Assertions.assertEquals(1, stack.snapshotCount)
+    assertEquals(1, stack.snapshotCount)
 
     stack.discardSnapshot()
 
-    Assertions.assertEquals(0, stack.snapshotCount)
+    assertEquals(0, stack.snapshotCount)
   }
 
   @Test
@@ -188,10 +188,10 @@ class RestorableStackTest {
     stack.push(2)
     stack.takeSnapshot()
 
-    Assertions.assertEquals(2, stack.snapshotCount)
+    assertEquals(2, stack.snapshotCount)
 
     stack.clearAllSnapshots()
 
-    Assertions.assertEquals(0, stack.snapshotCount)
+    assertEquals(0, stack.snapshotCount)
   }
 }
