@@ -1,7 +1,7 @@
 package com.mpe85.grampa.util.stack.impl
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class RestorableStackTest {
 
