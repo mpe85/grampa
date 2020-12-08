@@ -45,6 +45,6 @@ interface InputBuffer {
    * @param index a valid index
    * @return a position
    */
-  fun getPosition(index: Int): InputPosition?
-  
+  fun getPosition(index: Int): InputPosition
+
 }

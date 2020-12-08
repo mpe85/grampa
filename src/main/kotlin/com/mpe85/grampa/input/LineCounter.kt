@@ -20,6 +20,6 @@ interface LineCounter {
    * @param index a valid index
    * @return the input position
    */
-  fun getPosition(index: Int): InputPosition?
+  fun getPosition(index: Int): InputPosition
 
 }
