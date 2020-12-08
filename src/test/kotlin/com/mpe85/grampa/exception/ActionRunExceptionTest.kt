@@ -1,28 +1,27 @@
-package com.mpe85.grampa.exception;
+package com.mpe85.grampa.exception
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
-import org.junit.jupiter.api.Test;
+@TestInstance(PER_CLASS)
+class ActionRunExceptionTest {
 
-public class ActionRunExceptionTest {
-	
-	@Test
-	public void create() {
-		final RuntimeException cause = new RuntimeException();
-		
-		final ActionRunException ex1 = new ActionRunException("someMessage");
-		final ActionRunException ex2 = new ActionRunException(cause);
-		final ActionRunException ex3 = new ActionRunException("someMessage", cause);
-		
-		assertEquals("someMessage", ex1.getMessage());
-		assertNull(ex1.getCause());
-		
-		assertEquals(cause.toString(), ex2.getMessage());
-		assertEquals(cause, ex2.getCause());
-		
-		assertEquals("someMessage", ex3.getMessage());
-		assertEquals(cause, ex3.getCause());
-	}
-	
+  @Test
+  fun create() {
+    val cause = RuntimeException()
+    val ex1 = ActionRunException("someMessage")
+    val ex2 = ActionRunException(cause)
+    val ex3 = ActionRunException("someMessage", cause)
+
+    assertEquals("someMessage", ex1.message)
+    assertNull(ex1.cause)
+    assertEquals(cause.toString(), ex2.message)
+    assertEquals(cause, ex2.cause)
+    assertEquals("someMessage", ex3.message)
+    assertEquals(cause, ex3.cause)
+  }
+
 }
