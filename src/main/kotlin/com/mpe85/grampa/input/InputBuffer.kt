@@ -37,7 +37,7 @@ interface InputBuffer {
    * @param endIndex a valid end index
    * @return the sub sequence
    */
-  fun subSequence(startIndex: Int, endIndex: Int): CharSequence?
+  fun subSequence(startIndex: Int, endIndex: Int): CharSequence
 
   /**
    * Get the position (line and column) of a character at a given index inside the input.

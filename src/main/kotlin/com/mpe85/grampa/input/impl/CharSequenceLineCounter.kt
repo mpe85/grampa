@@ -4,51 +4,46 @@ import com.google.common.base.Preconditions
 import com.mpe85.grampa.input.InputPosition
 import com.mpe85.grampa.input.LineCounter
 import java.util.NavigableMap
-import java.util.Optional
 import java.util.TreeMap
+import kotlin.streams.asSequence
 
 /**
  * A [LineCounter] implementation for [CharSequence]s.
  *
  * @author mpe85
+ * @param input the input in which the lines are counted
  */
 class CharSequenceLineCounter(input: CharSequence) : LineCounter {
 
-  private val lines: NavigableMap<Int, Int> = TreeMap()
-  private val length: Int = input.length
+  private val length = input.length
+  private val lines = getLines(input)
 
   companion object {
-    private const val LF = '\n'
+    private const val LF: Int = '\n'.toInt()
   }
 
-  init {
-    initLines(input)
-  }
-
-  private fun initLines(input: CharSequence) {
-    var currentIdx = 0
+  private fun getLines(input: CharSequence): NavigableMap<Int, Int> {
+    val map = TreeMap<Int, Int>()
     var lineStartIdx = 0
     var lineNumber = 0
-    while (currentIdx < length) {
-      if (input[currentIdx] == LF) {
-        lines[lineStartIdx] = ++lineNumber
-        lineStartIdx = currentIdx + 1
-      } else if (currentIdx == length - 1) {
-        lines[lineStartIdx] = ++lineNumber
+    input.chars().asSequence().forEachIndexed { index, ch ->
+      if (ch == LF) {
+        map[lineStartIdx] = ++lineNumber
+        lineStartIdx = index + 1
+      } else if (index == input.length - 1) {
+        map[lineStartIdx] = ++lineNumber
       }
-      currentIdx++
     }
+    return map
   }
 
-  override val lineCount
-    get() = lines.size
+  override val lineCount get() = lines.size
 
   override fun getPosition(index: Int): InputPosition {
     Preconditions.checkElementIndex(index, length, "An 'index' must not be out of range.")
-    return Optional.of(index)
-      .map { k: Int -> lines.floorEntry(k) }
-      .map { e: Map.Entry<Int, Int> -> InputPosition(e.value, index - e.key + 1) }
-      .get()
+    return lines.floorEntry(index).let {
+      InputPosition(it.value, index - it.key + 1)
+    }
   }
 
 }

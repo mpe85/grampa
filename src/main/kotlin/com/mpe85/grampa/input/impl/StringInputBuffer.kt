@@ -6,6 +6,7 @@ import com.mpe85.grampa.input.InputBuffer
  * An [InputBuffer] implementation using a [String].
  *
  * @author mpe85
+ * @param string a string backing the input buffer
  */
 class StringInputBuffer(private val string: String) : CharSequenceInputBuffer(string) {
 
