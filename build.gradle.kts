@@ -13,7 +13,7 @@ buildscript {
 
 plugins {
   java
-  kotlin("jvm") version "1.4.20"
+  kotlin("jvm") version "1.4.21"
   jacoco
   maven
   `maven-publish`
@@ -33,7 +33,7 @@ configurations {
 }
 
 dependencies {
-  implementation(kotlin("stdlib-jdk8", "1.4.20"))
+  implementation(kotlin("stdlib-jdk8", "1.4.21"))
   implementation("com.google.guava:guava:30.0-jre")
   implementation("net.bytebuddy:byte-buddy:1.10.18")
   implementation("com.ibm.icu:icu4j:68.1")
