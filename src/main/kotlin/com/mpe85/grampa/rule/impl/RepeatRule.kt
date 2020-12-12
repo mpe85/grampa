@@ -1,83 +1,54 @@
-package com.mpe85.grampa.rule.impl;
+package com.mpe85.grampa.rule.impl
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.Objects;
-
-import com.google.common.base.MoreObjects.ToStringHelper;
-import com.mpe85.grampa.rule.Rule;
-import com.mpe85.grampa.rule.RuleContext;
+import com.google.common.base.MoreObjects.ToStringHelper
+import com.google.common.base.Preconditions.checkArgument
+import com.mpe85.grampa.rule.Rule
+import com.mpe85.grampa.rule.RuleContext
+import java.util.Objects.hash
 
 /**
  * A repeat rule implementation.
- * 
- * @author mpe85
  *
- * @param <T>
- *            the type of the stack elements
+ * @author mpe85
+ * @param T the type of the stack elements
+ * @param rule the rule to repeat
+ * @param min the minimum number of cycles
+ * @param max an optional maximum number of cycles
  */
-public class RepeatRule<T> extends AbstractRule<T> {
-	
-	private final int min;
-	private final Integer max;
-	
-	/**
-	 * C'tor.
-	 * 
-	 * @param rule
-	 *            the rule to repeat
-	 * @param min
-	 *            the minimum number of cycles
-	 * @param max
-	 *            an optional maximum number of cycles
-	 */
-	public RepeatRule(
-			final Rule<T> rule,
-			final int min,
-			final Integer max) {
-		super(checkNotNull(rule, "A 'rule' must not be null."));
-		checkArgument(min >= 0, "A 'min' number must not be negative");
-		if (max != null) {
-			checkArgument(max >= min, "A 'max' number must not be lower than the 'min' number.");
-		}
-		this.min = min;
-		this.max = max;
-	}
-	
-	@Override
-	public boolean match(final RuleContext<T> context) {
-		int iterations = 0;
-		while (max == null || iterations < max) {
-			if (!context.createChildContext(getChild()).run()) {
-				break;
-			}
-			iterations++;
-		}
-		return iterations >= min;
-	}
-	
-	@Override
-	public int hashCode() {
-		return Objects.hash(super.hashCode(), min, max);
-	}
-	
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj != null && getClass() == obj.getClass()) {
-			final RepeatRule<?> other = (RepeatRule<?>) obj;
-			return super.equals(other)
-					&& Objects.equals(min, other.min)
-					&& Objects.equals(max, other.max);
-		}
-		return false;
-	}
-	
-	@Override
-	protected ToStringHelper toStringHelper() {
-		return super.toStringHelper()
-				.add("min", min)
-				.add("max", max);
-	}
-	
+class RepeatRule<T>(rule: Rule<T>, private val min: Int, private val max: Int?) : AbstractRule<T>(rule) {
+
+  init {
+    checkArgument(min >= 0, "A 'min' number must not be negative")
+    if (max != null) {
+      checkArgument(max >= min, "A 'max' number must not be lower than the 'min' number.")
+    }
+  }
+
+  override fun match(context: RuleContext<T>): Boolean {
+    var iterations = 0
+    while (max == null || iterations < max) {
+      if (!context.createChildContext(child).run()) {
+        break
+      }
+      iterations++
+    }
+    return iterations >= min
+  }
+
+  override fun hashCode() = hash(super.hashCode(), min, max)
+
+  override fun equals(obj: Any?): Boolean {
+    if (obj != null && javaClass == obj.javaClass) {
+      val other = obj as RepeatRule<*>
+      return super.equals(other)
+          && min == other.min
+          && max == other.max
+    }
+    return false
+  }
+
+  override fun toStringHelper(): ToStringHelper = super.toStringHelper()
+    .add("min", min)
+    .add("max", max)
+
 }
