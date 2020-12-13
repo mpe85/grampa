@@ -1,85 +1,45 @@
-package com.mpe85.grampa.rule.impl;
+package com.mpe85.grampa.rule.impl
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.Objects;
-
-import com.google.common.base.MoreObjects.ToStringHelper;
-import com.mpe85.grampa.exception.ActionRunException;
-import com.mpe85.grampa.rule.Action;
-import com.mpe85.grampa.rule.RuleContext;
+import com.google.common.base.MoreObjects.ToStringHelper
+import com.mpe85.grampa.exception.ActionRunException
+import com.mpe85.grampa.rule.Action
+import com.mpe85.grampa.rule.RuleContext
+import java.util.Objects.hash
 
 /**
  * An action rule implementation.
- * 
- * @author mpe85
  *
- * @param <T>
- *            the type of the stack elements
+ * @author mpe85
+ * @param T the type of the stack elements
+ * @param action an action
+ * @param skippable if the action is skippable inside predicate rules
  */
-public class ActionRule<T> extends AbstractRule<T> {
-	
-	private final Action<T> action;
-	private final boolean skippable;
-	
-	/**
-	 * C'tor. Creates an action rule that is not skippable.
-	 * 
-	 * @param action
-	 *            an action
-	 */
-	public ActionRule(final Action<T> action) {
-		this(action, false);
-	}
-	
-	/**
-	 * C'tor. Creates an action rule that may be skippable.
-	 * 
-	 * @param action
-	 *            an action
-	 * @param skippable
-	 *            if the action is skippable inside predicate rules.
-	 */
-	public ActionRule(
-			final Action<T> action,
-			final boolean skippable) {
-		this.action = checkNotNull(action, "An 'action' must not be null.");
-		this.skippable = skippable;
-	}
-	
-	@Override
-	public boolean match(final RuleContext<T> context) {
-		if (context.inPredicate() && skippable) {
-			return true;
-		}
-		try {
-			return action.run(context);
-		}
-		catch (final RuntimeException ex) {
-			throw new ActionRunException("Failed to run action.", ex);
-		}
-	}
-	
-	@Override
-	public int hashCode() {
-		return Objects.hash(super.hashCode(), action, skippable);
-	}
-	
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj != null && getClass() == obj.getClass()) {
-			final ActionRule<?> other = (ActionRule<?>) obj;
-			return super.equals(other)
-					&& Objects.equals(action, other.action)
-					&& Objects.equals(skippable, other.skippable);
-		}
-		return false;
-	}
-	
-	@Override
-	protected ToStringHelper toStringHelper() {
-		return super.toStringHelper()
-				.add("skippable", skippable);
-	}
-	
+open class ActionRule<T> @JvmOverloads constructor(
+  private val action: Action<T>,
+  private val skippable: Boolean = false
+) : AbstractRule<T>() {
+
+  override fun match(context: RuleContext<T>) = if (context.inPredicate() && skippable) {
+    true
+  } else try {
+    action.run(context)
+  } catch (ex: RuntimeException) {
+    throw ActionRunException("Failed to run action.", ex)
+  }
+
+  override fun hashCode() = hash(super.hashCode(), action, skippable)
+
+  override fun equals(obj: Any?): Boolean {
+    if (obj != null && javaClass == obj.javaClass) {
+      val other = obj as ActionRule<*>
+      return super.equals(other)
+          && action == other.action
+          && skippable == other.skippable
+    }
+    return false
+  }
+
+  override fun toStringHelper(): ToStringHelper = super.toStringHelper()
+    .add("skippable", skippable)
+
 }
