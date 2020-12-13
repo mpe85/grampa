@@ -1,47 +1,30 @@
-package com.mpe85.grampa.rule.impl;
+package com.mpe85.grampa.rule.impl
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import com.mpe85.grampa.rule.Rule;
-import com.mpe85.grampa.rule.RuleContext;
+import com.mpe85.grampa.rule.Rule
+import com.mpe85.grampa.rule.RuleContext
 
 /**
  * A predicate rule implementation that tests if its child rule matches.
- * 
- * @author mpe85
  *
- * @param <T>
- *            the type of the stack elements
+ * @author mpe85
+ * @param T the type of the stack elements
+ * @param rule the child rule to test
  */
-public class TestRule<T> extends AbstractRule<T> {
-	
-	/**
-	 * C'tor.
-	 * 
-	 * @param rule
-	 *            the child rule to test
-	 */
-	public TestRule(final Rule<T> rule) {
-		super(checkNotNull(rule, "A 'rule' must not be null."));
-	}
-	
-	@Override
-	public boolean match(final RuleContext<T> context) {
-		final int currentIndex = context.getCurrentIndex();
-		context.getStack().takeSnapshot();
-		
-		if (context.createChildContext(getChild()).run()) {
-			// reset current index and stack
-			context.setCurrentIndex(currentIndex);
-			context.getStack().restoreSnapshot();
-			return true;
-		}
-		return false;
-	}
-	
-	@Override
-	public boolean isPredicate() {
-		return true;
-	}
-	
+class TestRule<T>(rule: Rule<T>) : AbstractRule<T>(rule) {
+
+  override fun match(context: RuleContext<T>): Boolean {
+    val currentIndex = context.currentIndex
+    context.stack.takeSnapshot()
+    if (context.createChildContext(child).run()) {
+      // reset current index and stack
+      context.currentIndex = currentIndex
+      context.stack.restoreSnapshot()
+      return true
+    }
+    // TODO Remove snapshot?
+    return false
+  }
+
+  override fun isPredicate() = true
+
 }
