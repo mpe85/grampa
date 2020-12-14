@@ -14,6 +14,7 @@ class TestNotRule<T>(private val rule: Rule<T>) : AbstractRule<T>(rule) {
 
   override fun match(context: RuleContext<T>) = !context.createChildContext(rule).run()
 
-  override fun isPredicate() = true
+  override val isPredicate
+    get() = true
 
 }

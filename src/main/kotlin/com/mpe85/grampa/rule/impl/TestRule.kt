@@ -25,6 +25,7 @@ class TestRule<T>(private var rule: Rule<T>) : AbstractRule<T>(rule) {
     return false
   }
 
-  override fun isPredicate() = true
+  override val isPredicate
+    get() = true
 
 }

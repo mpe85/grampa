@@ -78,8 +78,7 @@ class RuleMethodInterceptor<T> {
  * @param T the type of the stack elements
  * @param hashCode the hash code of the referenced rule
  */
-private class ReferenceRule<T>(private val hashCode: Int) : IReferenceRule<T>,
-  AbstractRule<T>() {
+private class ReferenceRule<T>(private val hashCode: Int) : IReferenceRule<T>, AbstractRule<T>() {
   override fun match(context: RuleContext<T>) = false
   override fun hashCode() = hashCode
 

@@ -53,7 +53,7 @@ class ReferenceRuleTest {
   }
 
   @Test
-  fun match(@Mock ctx: RuleContext<Int>?) {
+  fun match(@Mock ctx: RuleContext<Int>) {
     val rule = createReferenceRule("rule1")
     assertFalse(rule.match(ctx))
   }

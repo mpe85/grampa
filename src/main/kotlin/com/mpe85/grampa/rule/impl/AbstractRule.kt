@@ -17,7 +17,7 @@ import java.util.Objects.hash
  */
 abstract class AbstractRule<T>(children: List<Rule<T>> = emptyList()) : Rule<T> {
 
-  private val children = children.toMutableList()
+  private val internalChildren = children.toMutableList()
 
   /**
    * C'tor. Constructs an abstract rule with one child rule.
@@ -26,17 +26,20 @@ abstract class AbstractRule<T>(children: List<Rule<T>> = emptyList()) : Rule<T> 
    */
   protected constructor(child: Rule<T>) : this(listOf(child))
 
-  override fun getChildren() = children
+  override val children: List<Rule<T>>
+    get() = internalChildren
 
-  override fun getChild(): Rule<T>? = children.getOrNull(0)
+  override val child: Rule<T>?
+    get() = children.getOrNull(0)
 
   override fun replaceReferenceRule(index: Int, replacementRule: Rule<T>): Rule<T> {
     Preconditions.checkElementIndex(index, children.size, "An 'index' must not be out of range.")
     require(children[index] is ReferenceRule<*>) { "Only reference rules can be replaced." }
-    return children.set(index, replacementRule)
+    return internalChildren.set(index, replacementRule)
   }
 
-  override fun isPredicate() = false
+  override val isPredicate: Boolean
+    get() = false
 
   override fun accept(visitor: RuleVisitor<T>) = visitor.visit(this)
 
