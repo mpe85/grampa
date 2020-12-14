@@ -10,9 +10,9 @@ import com.mpe85.grampa.rule.RuleContext
  * @param T the type of the stack elements
  * @param rule the child rule to test
  */
-class TestNotRule<T>(rule: Rule<T>) : AbstractRule<T>(rule) {
+class TestNotRule<T>(private val rule: Rule<T>) : AbstractRule<T>(rule) {
 
-  override fun match(context: RuleContext<T>) = !context.createChildContext(child).run()
+  override fun match(context: RuleContext<T>) = !context.createChildContext(rule).run()
 
   override fun isPredicate() = true
 

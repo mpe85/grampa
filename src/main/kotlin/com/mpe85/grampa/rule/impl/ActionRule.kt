@@ -19,7 +19,7 @@ open class ActionRule<T> @JvmOverloads constructor(
   private val skippable: Boolean = false
 ) : AbstractRule<T>() {
 
-  override fun match(context: RuleContext<T>) = if (context.inPredicate() && skippable) {
+  override fun match(context: RuleContext<T>) = if (context.inPredicate && skippable) {
     true
   } else try {
     action.run(context)

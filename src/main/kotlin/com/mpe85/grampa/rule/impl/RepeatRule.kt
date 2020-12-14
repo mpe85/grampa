@@ -15,7 +15,7 @@ import java.util.Objects.hash
  * @param min the minimum number of cycles
  * @param max an optional maximum number of cycles
  */
-class RepeatRule<T>(rule: Rule<T>, private val min: Int, private val max: Int?) : AbstractRule<T>(rule) {
+class RepeatRule<T>(private val rule: Rule<T>, private val min: Int, private val max: Int?) : AbstractRule<T>(rule) {
 
   init {
     checkArgument(min >= 0, "A 'min' number must not be negative")
@@ -27,7 +27,7 @@ class RepeatRule<T>(rule: Rule<T>, private val min: Int, private val max: Int?) 
   override fun match(context: RuleContext<T>): Boolean {
     var iterations = 0
     while (max == null || iterations < max) {
-      if (!context.createChildContext(child).run()) {
+      if (!context.createChildContext(rule).run()) {
         break
       }
       iterations++
