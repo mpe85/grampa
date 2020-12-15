@@ -1,7 +1,7 @@
 import com.github.spotbugs.snom.SpotBugsExtension
 import com.github.spotbugs.snom.SpotBugsTask
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.Date
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
   repositories {
@@ -34,7 +34,7 @@ configurations {
 
 dependencies {
   implementation(kotlin("stdlib-jdk8", "1.4.21"))
-  implementation("com.google.guava:guava:30.0-jre")
+  implementation("com.google.guava:guava:30.1-jre")
   implementation("net.bytebuddy:byte-buddy:1.10.18")
   implementation("com.ibm.icu:icu4j:68.1")
   compileOnly("com.github.spotbugs:spotbugs-annotations:4.2.0")
