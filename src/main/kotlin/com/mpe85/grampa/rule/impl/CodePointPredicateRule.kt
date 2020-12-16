@@ -3,7 +3,6 @@ package com.mpe85.grampa.rule.impl
 import com.ibm.icu.lang.UCharacter.charCount
 import com.mpe85.grampa.rule.RuleContext
 import java.util.Objects.hash
-import java.util.function.Predicate
 
 /**
  * A code point predicate rule implementation.
@@ -13,13 +12,6 @@ import java.util.function.Predicate
  * @property predicate a predicate that is tested by the rule
  */
 class CodePointPredicateRule<T>(private val predicate: (Int) -> Boolean) : AbstractRule<T>() {
-
-  /**
-   * C'tor. Create a code point predicate rules that exactly matches a specific code point.
-   *
-   * @param predicate a predicate that is tested by the rule
-   */
-  constructor(predicate: Predicate<Int>) : this(predicate::test)
 
   /**
    * C'tor. Create a code point predicate rules that exactly matches a specific code point.

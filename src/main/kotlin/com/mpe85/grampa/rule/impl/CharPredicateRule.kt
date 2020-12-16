@@ -2,7 +2,6 @@ package com.mpe85.grampa.rule.impl
 
 import com.mpe85.grampa.rule.RuleContext
 import java.util.Objects.hash
-import java.util.function.Predicate
 
 /**
  * A character predicate rule implementation.
@@ -12,13 +11,6 @@ import java.util.function.Predicate
  * @property predicate a predicate that is tested by the rule
  */
 class CharPredicateRule<T>(private val predicate: (Char) -> Boolean) : AbstractRule<T>() {
-
-  /**
-   * C'tor. Create a character predicate rules that exactly matches a specific character.
-   *
-   * @param predicate a predicate that is tested by the rule
-   */
-  constructor(predicate: Predicate<Char>) : this(predicate::test)
 
   /**
    * C'tor. Create a character predicate rules that exactly matches a specific character.

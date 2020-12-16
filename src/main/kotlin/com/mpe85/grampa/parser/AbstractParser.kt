@@ -44,9 +44,9 @@ abstract class AbstractParser<T> : Parser<T> {
   private val emptyRule = EmptyRule<T>()
   private val neverRule = NeverRule<T>()
   private val eoiRule = EndOfInputRule<T>()
-  private val anyCharRule = CharPredicateRule<T>(any())
+  private val anyCharRule = CharPredicateRule<T>(any()::test)
   private val anyCodePointRule = CodePointPredicateRule<T>(UCharacter::isLegal)
-  private val asciiRule = CharPredicateRule<T>(CharMatcher.ascii())
+  private val asciiRule = CharPredicateRule<T>(CharMatcher.ascii()::test)
   private val bmpRule = CodePointPredicateRule<T>(UCharacter::isBMP)
   private val digitRule = CodePointPredicateRule<T>(UCharacter::isDigit)
   private val javaIdentStartRule = CodePointPredicateRule<T>(Character::isJavaIdentifierStart)
@@ -102,7 +102,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param character the character to match
    * @return a rule
    */
-  protected open fun character(character: Char) = CharPredicateRule<T>(`is`(character))
+  protected open fun character(character: Char) = CharPredicateRule<T>(`is`(character)::test)
 
   /**
    * A rule that matches a specific character, ignoring the case of the character (case-insensitive).
@@ -111,7 +111,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @return a rule
    */
   protected open fun ignoreCase(character: Char) =
-    CharPredicateRule<T>(`is`(Character.toLowerCase(character)).or(`is`(Character.toUpperCase(character))))
+    CharPredicateRule<T>(`is`(Character.toLowerCase(character)).or(`is`(Character.toUpperCase(character)))::test)
 
   /**
    * A rule that matches a character within a range of characters.
@@ -121,7 +121,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @return a rule
    */
   protected open fun charRange(lowerBound: Char, upperBound: Char) =
-    CharPredicateRule<T>(inRange(lowerBound, upperBound))
+    CharPredicateRule<T>(inRange(lowerBound, upperBound)::test)
 
   /**
    * A rule that matches a character within a set of characters.
@@ -148,7 +148,7 @@ abstract class AbstractParser<T> : Parser<T> {
   protected open fun anyOfChars(characters: String) = when {
     characters.isEmpty() -> neverRule
     characters.length == 1 -> character(characters.first())
-    else -> CharPredicateRule(anyOf(characters))
+    else -> CharPredicateRule(anyOf(characters)::test)
   }
 
   /**
@@ -174,7 +174,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @return a rule
    */
   protected open fun noneOfChars(characters: String) =
-    if (characters.isEmpty()) anyCharRule else CharPredicateRule(noneOf(characters))
+    if (characters.isEmpty()) anyCharRule else CharPredicateRule(noneOf(characters)::test)
 
   /**
    * A rule that matches a specific code point.

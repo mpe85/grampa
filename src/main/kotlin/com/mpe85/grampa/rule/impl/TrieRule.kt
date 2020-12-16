@@ -33,7 +33,7 @@ class TrieRule<T> @JvmOverloads constructor(strings: Set<String>, private val ig
    *
    * @param strings a variable number of strings
    */
-  constructor(vararg strings: String) : this(false, *strings)
+  constructor(vararg strings: String) : this(strings.toSet())
 
   /**
    * C'tor. Construct a trie (case-sensitive or case-insensitive).

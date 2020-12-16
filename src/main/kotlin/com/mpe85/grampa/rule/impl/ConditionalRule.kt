@@ -5,7 +5,6 @@ import com.mpe85.grampa.rule.ActionContext
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.RuleContext
 import java.util.Objects.hash
-import java.util.function.Predicate
 
 /**
  * A rule implementation that runs one of two sub rules, depending on a condition.
@@ -21,20 +20,6 @@ class ConditionalRule<T> @JvmOverloads constructor(
   private val thenRule: Rule<T>,
   private val elseRule: Rule<T>? = null
 ) : AbstractRule<T>(sequenceOf(thenRule, elseRule).filterNotNull().toList()) {
-
-  /**
-   * C'tor. Construct a conditional rule.
-   *
-   * @param condition a condition that is evaluated when the rule is run
-   * @param thenRule a rule to run if the condition evaluates to true
-   * @param elseRule an optional rule to run if the condition evaluates to false
-   */
-  @JvmOverloads
-  constructor(
-    condition: Predicate<ActionContext<T>>,
-    thenRule: Rule<T>,
-    elseRule: Rule<T>? = null
-  ) : this(condition::test, thenRule, elseRule)
 
   override fun match(context: RuleContext<T>) =
     if (condition(context)) thenRule.match(context) else elseRule?.match(context) ?: true

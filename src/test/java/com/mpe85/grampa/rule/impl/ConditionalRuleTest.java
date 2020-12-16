@@ -16,9 +16,9 @@ public class ConditionalRuleTest {
         final EmptyRule<String> empty = new EmptyRule<>();
         final NeverRule<String> never = new NeverRule<>();
 
-        final ConditionalRule<String> rule1 = new ConditionalRule<>(pred, empty, never);
-        final ConditionalRule<String> rule2 = new ConditionalRule<>(pred, new EmptyRule<>(), new NeverRule<>());
-        final ConditionalRule<String> rule3 = new ConditionalRule<>(pred, empty);
+        final ConditionalRule<String> rule1 = new ConditionalRule<>(pred::test, empty, never);
+        final ConditionalRule<String> rule2 = new ConditionalRule<>(pred::test, new EmptyRule<>(), new NeverRule<>());
+        final ConditionalRule<String> rule3 = new ConditionalRule<>(pred::test, empty);
 
         assertEquals(rule2, rule1);
         assertNotEquals(rule3, rule1);
