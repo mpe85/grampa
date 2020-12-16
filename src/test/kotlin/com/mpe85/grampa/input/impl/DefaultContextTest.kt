@@ -1,29 +1,26 @@
-package com.mpe85.grampa.rule.impl;
+package com.mpe85.grampa.input.impl
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import com.google.common.eventbus.EventBus
+import com.mpe85.grampa.input.InputBuffer
+import com.mpe85.grampa.rule.Rule
+import com.mpe85.grampa.rule.impl.DefaultContext
+import com.mpe85.grampa.util.stack.RestorableStack
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import com.google.common.eventbus.EventBus;
-import com.mpe85.grampa.input.InputBuffer;
-import com.mpe85.grampa.rule.Rule;
-import com.mpe85.grampa.util.stack.RestorableStack;
-
-@ExtendWith(MockitoExtension.class)
-public class DefaultContextTest {
-	
-	@Test
-	public void advanceIndex_invalid(
-			@Mock final InputBuffer ib,
-			@Mock final Rule<String> rule,
-			@Mock final RestorableStack<String> stack,
-			@Mock final EventBus bus) {
-		final DefaultContext<String> ctx = new DefaultContext<>(ib, 0, rule, 0, stack, bus);
-		
-		assertThrows(IllegalArgumentException.class, () -> ctx.advanceIndex(-1));
-	}
-	
+@ExtendWith(MockitoExtension::class)
+class DefaultContextTest {
+  @Test
+  fun advanceIndex_invalid(
+    @Mock ib: InputBuffer,
+    @Mock rule: Rule<String>,
+    @Mock stack: RestorableStack<String>,
+    @Mock bus: EventBus
+  ) {
+    val ctx = DefaultContext(ib, 0, rule, 0, stack, bus)
+    assertThrows(IllegalArgumentException::class.java) { ctx.advanceIndex(-1) }
+  }
 }

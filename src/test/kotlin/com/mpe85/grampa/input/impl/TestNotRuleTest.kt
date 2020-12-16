@@ -1,14 +1,13 @@
-package com.mpe85.grampa.rule.impl;
+package com.mpe85.grampa.input.impl
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.mpe85.grampa.rule.impl.EmptyRule
+import com.mpe85.grampa.rule.impl.TestNotRule
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
 
-import org.junit.jupiter.api.Test;
-
-public class TestNotRuleTest {
-	
-	@Test
-	public void isPredicate() {
-		assertTrue(new TestNotRule<>(new EmptyRule<>()).isPredicate());
-	}
-	
+class TestNotRuleTest {
+  @Test
+  fun isPredicate() {
+    assertTrue(TestNotRule(EmptyRule<Unit>()).isPredicate)
+  }
 }

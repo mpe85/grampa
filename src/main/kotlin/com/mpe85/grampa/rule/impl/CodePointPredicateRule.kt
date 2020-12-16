@@ -20,6 +20,13 @@ class CodePointPredicateRule<T>(private val predicate: (Int) -> Boolean) : Abstr
    */
   constructor(codePoint: Int) : this({ cp -> cp == codePoint })
 
+  /**
+   * C'tor. Create a code point predicate rules that exactly matches a specific character.
+   *
+   * @param char a character
+   */
+  constructor(char: Char) : this({ cp -> cp == char.toInt() })
+
   override fun match(context: RuleContext<T>) = !context.isAtEndOfInput
       && predicate(context.currentCodePoint)
       && context.advanceIndex(charCount(context.currentCodePoint))

@@ -1,67 +1,60 @@
-package com.mpe85.grampa.rule.impl;
+package com.mpe85.grampa.input.impl
 
-import com.mpe85.grampa.rule.ReferenceRule;
-import com.mpe85.grampa.rule.Rule;
-import com.mpe85.grampa.rule.RuleContext;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import com.mpe85.grampa.rule.ReferenceRule
+import com.mpe85.grampa.rule.Rule
+import com.mpe85.grampa.rule.RuleContext
+import com.mpe85.grampa.rule.impl.AbstractRule
+import com.mpe85.grampa.rule.impl.EmptyRule
+import com.mpe85.grampa.rule.impl.NeverRule
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 
-import static org.junit.jupiter.api.Assertions.*;
+@ExtendWith(MockitoExtension::class)
+class AbstractRuleTest {
+  private class SomeRule : AbstractRule<String> {
+    constructor()
+    constructor(child: Rule<String>) : super(child)
 
-@ExtendWith(MockitoExtension.class)
-public class AbstractRuleTest {
-
-    private static class SomeRule extends AbstractRule<String> {
-        public SomeRule() {
-        }
-
-        public SomeRule(final Rule<String> child) {
-            super(child);
-        }
-
-        @Override
-        public boolean match(final RuleContext<String> context) {
-            return false;
-        }
+    override fun match(context: RuleContext<String>): Boolean {
+      return false
     }
+  }
 
-    @Test
-    public void equalsHashCodeToString() {
-        final SomeRule rule1 = new SomeRule();
-        final SomeRule rule2 = new SomeRule();
+  @Test
+  fun equalsHashCodeToString() {
+    val rule1 = SomeRule()
+    val rule2 = SomeRule()
+    assertEquals(rule1, rule2)
+    assertNotEquals(rule1, Any())
+    assertEquals(rule1.hashCode(), rule2.hashCode())
+    assertEquals("SomeRule{#children=0}", rule1.toString())
+    assertEquals("SomeRule{#children=0}", rule2.toString())
+  }
 
-        assertTrue(rule1.equals(rule2));
-        assertFalse(rule1.equals(new Object()));
+  @Test
+  fun replaceReferenceRule_valid(@Mock referenceRule: ReferenceRule<String>) {
+    val rule = SomeRule(referenceRule)
+    assertNotNull(rule.replaceReferenceRule(0, NeverRule()))
+  }
 
-        assertEquals(rule1.hashCode(), rule2.hashCode());
+  @Test
+  fun replaceReferenceRule_invalid() {
+    val rule = SomeRule(EmptyRule())
+    Assertions.assertThrows(IllegalArgumentException::class.java) { rule.replaceReferenceRule(0, NeverRule()) }
+  }
 
-        assertEquals("SomeRule{#children=0}", rule1.toString());
-        assertEquals("SomeRule{#children=0}", rule2.toString());
-    }
-
-    @Test
-    public void replaceReferenceRule_valid(@Mock final ReferenceRule<String> referenceRule) {
-        final SomeRule rule = new SomeRule(referenceRule);
-
-        assertNotNull(rule.replaceReferenceRule(0, new NeverRule<>()));
-    }
-
-    @Test
-    public void replaceReferenceRule_invalid() {
-        final SomeRule rule = new SomeRule(new EmptyRule<>());
-
-        assertThrows(IllegalArgumentException.class, () -> rule.replaceReferenceRule(0, new NeverRule<>()));
-    }
-
-    @Test
-    public void getChild() {
-        final SomeRule rule1 = new SomeRule(new EmptyRule<>());
-        final SomeRule rule2 = new SomeRule();
-
-        assertNotNull(rule1.getChild());
-        assertNull(rule2.getChild());
-    }
-
+  @Test
+  fun getChild() {
+    val rule1 = SomeRule(EmptyRule())
+    val rule2 = SomeRule()
+    assertNotNull(rule1.child)
+    assertNull(rule2.child)
+  }
 }

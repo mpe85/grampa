@@ -1,41 +1,38 @@
-package com.mpe85.grampa.rule.impl;
+package com.mpe85.grampa.input.impl
 
-import com.mpe85.grampa.rule.ActionContext;
-import org.junit.jupiter.api.Test;
+import com.mpe85.grampa.rule.ActionContext
+import com.mpe85.grampa.rule.impl.ConditionalRule
+import com.mpe85.grampa.rule.impl.EmptyRule
+import com.mpe85.grampa.rule.impl.NeverRule
+import java.util.function.Predicate
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
 
-import java.util.function.Predicate;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-
-public class ConditionalRuleTest {
-
-    @Test
-    public void equalsHashCodeToString() {
-        final Predicate<ActionContext<String>> pred = ctx -> true;
-        final EmptyRule<String> empty = new EmptyRule<>();
-        final NeverRule<String> never = new NeverRule<>();
-
-        final ConditionalRule<String> rule1 = new ConditionalRule<>(pred::test, empty, never);
-        final ConditionalRule<String> rule2 = new ConditionalRule<>(pred::test, new EmptyRule<>(), new NeverRule<>());
-        final ConditionalRule<String> rule3 = new ConditionalRule<>(pred::test, empty);
-
-        assertEquals(rule2, rule1);
-        assertNotEquals(rule3, rule1);
-        assertNotEquals(new Object(), rule1);
-
-        assertEquals(rule1.hashCode(), rule2.hashCode());
-        assertNotEquals(rule1.hashCode(), rule3.hashCode());
-
-        assertEquals(
-                "ConditionalRule{#children=2, thenRule=EmptyRule{#children=0}, elseRule=NeverRule{#children=0}}",
-                rule1.toString());
-        assertEquals(
-                "ConditionalRule{#children=2, thenRule=EmptyRule{#children=0}, elseRule=NeverRule{#children=0}}",
-                rule2.toString());
-        assertEquals(
-                "ConditionalRule{#children=1, thenRule=EmptyRule{#children=0}, elseRule=null}",
-                rule3.toString());
-    }
-
+class ConditionalRuleTest {
+  @Test
+  fun equalsHashCodeToString() {
+    val pred = Predicate { _: ActionContext<String> -> true }
+    val empty = EmptyRule<String>()
+    val never = NeverRule<String>()
+    val rule1 = ConditionalRule(pred::test, empty, never)
+    val rule2 = ConditionalRule(pred::test, EmptyRule(), NeverRule())
+    val rule3 = ConditionalRule(pred::test, empty)
+    Assertions.assertEquals(rule2, rule1)
+    Assertions.assertNotEquals(rule3, rule1)
+    Assertions.assertNotEquals(Any(), rule1)
+    Assertions.assertEquals(rule1.hashCode(), rule2.hashCode())
+    Assertions.assertNotEquals(rule1.hashCode(), rule3.hashCode())
+    Assertions.assertEquals(
+      "ConditionalRule{#children=2, thenRule=EmptyRule{#children=0}, elseRule=NeverRule{#children=0}}",
+      rule1.toString()
+    )
+    Assertions.assertEquals(
+      "ConditionalRule{#children=2, thenRule=EmptyRule{#children=0}, elseRule=NeverRule{#children=0}}",
+      rule2.toString()
+    )
+    Assertions.assertEquals(
+      "ConditionalRule{#children=1, thenRule=EmptyRule{#children=0}, elseRule=null}",
+      rule3.toString()
+    )
+  }
 }
