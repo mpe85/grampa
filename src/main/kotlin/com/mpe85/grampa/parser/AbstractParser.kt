@@ -1,8 +1,12 @@
 package com.mpe85.grampa.parser
 
 import com.google.common.base.CharMatcher
-import com.google.common.base.Joiner
-import com.google.common.base.Preconditions
+import com.google.common.base.CharMatcher.`is`
+import com.google.common.base.CharMatcher.any
+import com.google.common.base.CharMatcher.anyOf
+import com.google.common.base.CharMatcher.inRange
+import com.google.common.base.CharMatcher.noneOf
+import com.google.common.base.Preconditions.checkArgument
 import com.google.common.primitives.Ints
 import com.ibm.icu.lang.UCharacter
 import com.mpe85.grampa.builder.RepeatRuleBuilder
@@ -27,7 +31,8 @@ import com.mpe85.grampa.rule.impl.TestNotRule
 import com.mpe85.grampa.rule.impl.TestRule
 import com.mpe85.grampa.rule.impl.TrieRule
 import com.mpe85.grampa.rule.toAction
-import java.util.Arrays
+import java.util.Arrays.binarySearch
+import java.util.Arrays.sort
 import java.util.function.Predicate
 
 /**
@@ -39,32 +44,24 @@ import java.util.function.Predicate
  */
 abstract class AbstractParser<T> : Parser<T> {
 
-  companion object {
-    private val JOINER = Joiner.on("")
-  }
-
-  private val EMPTY = EmptyRule<T>()
-  private val NEVER = NeverRule<T>()
-  private val EOI = EndOfInputRule<T>()
-  private val ANY_CHAR = CharPredicateRule<T>(CharMatcher.any())
-  private val ANY_CODEPOINT = CodePointPredicateRule<T> { ch -> UCharacter.isLegal(ch) }
-  private val ASCII = CharPredicateRule<T>(CharMatcher.ascii())
-  private val BMP = CodePointPredicateRule<T> { ch -> UCharacter.isBMP(ch) }
-  private val DIGIT = CodePointPredicateRule<T> { ch -> UCharacter.isDigit(ch) }
-  private val JAVA_IDENTIFIER_START =
-    CodePointPredicateRule<T> { codePoint -> Character.isJavaIdentifierStart(codePoint) }
-  private val JAVA_IDENTIFIER_PART =
-    CodePointPredicateRule<T> { codePoint -> Character.isJavaIdentifierPart(codePoint) }
-  private val LETTER = CodePointPredicateRule<T> { ch -> UCharacter.isLetter(ch) }
-  private val LETTER_OR_DIGIT = CodePointPredicateRule<T> { ch -> UCharacter.isLetterOrDigit(ch) }
-  private val PRINTABLE = CodePointPredicateRule<T> { ch -> UCharacter.isPrintable(ch) }
-  private val SPACE_CHAR = CodePointPredicateRule<T> { ch -> UCharacter.isSpaceChar(ch) }
-  private val WHITESPACE = CodePointPredicateRule<T> { ch -> UCharacter.isWhitespace(ch) }
-  private val CR = CharPredicateRule<T>('\r')
-  private val LF = CharPredicateRule<T>('\n')
-  private val CRLF = StringRule<T>("\r\n")
-
-  abstract override fun root(): Rule<T>
+  private val emptyRule = EmptyRule<T>()
+  private val neverRule = NeverRule<T>()
+  private val eoiRule = EndOfInputRule<T>()
+  private val anyCharRule = CharPredicateRule<T>(any())
+  private val anyCodePointRule = CodePointPredicateRule<T>(UCharacter::isLegal)
+  private val asciiRule = CharPredicateRule<T>(CharMatcher.ascii())
+  private val bmpRule = CodePointPredicateRule<T>(UCharacter::isBMP)
+  private val digitRule = CodePointPredicateRule<T>(UCharacter::isDigit)
+  private val javaIdentStartRule = CodePointPredicateRule<T>(Character::isJavaIdentifierStart)
+  private val javaIdentPartRule = CodePointPredicateRule<T>(Character::isJavaIdentifierPart)
+  private val letterRule = CodePointPredicateRule<T>(UCharacter::isLetter)
+  private val letterOrDigitRule = CodePointPredicateRule<T>(UCharacter::isLetterOrDigit)
+  private val printableRule = CodePointPredicateRule<T>(UCharacter::isPrintable)
+  private val spaceCharRule = CodePointPredicateRule<T>(UCharacter::isSpaceChar)
+  private val whitespaceRule = CodePointPredicateRule<T>(UCharacter::isWhitespace)
+  private val crRule = CharPredicateRule<T>('\r')
+  private val lfRule = CharPredicateRule<T>('\n')
+  private val crlfRule = StringRule<T>("\r\n")
 
   /**
    * A rule that matches an empty string. Or in other words, a rule that matches no input character and always
@@ -72,45 +69,35 @@ abstract class AbstractParser<T> : Parser<T> {
    *
    * @return a rule
    */
-  protected open fun empty(): Rule<T> {
-    return EMPTY
-  }
+  protected open fun empty() = emptyRule
 
   /**
    * A rule that always fails.
    *
    * @return a rule
    */
-  protected open fun never(): Rule<T> {
-    return NEVER
-  }
+  protected open fun never() = neverRule
 
   /**
    * A rule that matches the end of the input.
    *
    * @return a rule
    */
-  protected open fun eoi(): Rule<T> {
-    return EOI
-  }
+  protected open fun eoi() = eoiRule
 
   /**
    * A rule that matches any character.
    *
    * @return a rule
    */
-  protected open fun anyChar(): Rule<T> {
-    return ANY_CHAR
-  }
+  protected open fun anyChar() = anyCharRule
 
   /**
    * A rule that matches any code point.
    *
    * @return a rule
    */
-  protected open fun anyCodePoint(): Rule<T> {
-    return ANY_CODEPOINT
-  }
+  protected open fun anyCodePoint() = anyCodePointRule
 
   /**
    * A rule that matches a specific character.
@@ -118,9 +105,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param character the character to match
    * @return a rule
    */
-  protected open fun character(character: Char): Rule<T> {
-    return CharPredicateRule(CharMatcher.`is`(character))
-  }
+  protected open fun character(character: Char) = CharPredicateRule<T>(`is`(character))
 
   /**
    * A rule that matches a specific character, ignoring the case of the character (case-insensitive).
@@ -128,12 +113,8 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param character the character to match
    * @return a rule
    */
-  protected open fun ignoreCase(character: Char): Rule<T> {
-    return CharPredicateRule(
-      CharMatcher.`is`(Character.toLowerCase(character))
-        .or(CharMatcher.`is`(Character.toUpperCase(character)))
-    )
-  }
+  protected open fun ignoreCase(character: Char) =
+    CharPredicateRule<T>(`is`(Character.toLowerCase(character)).or(`is`(Character.toUpperCase(character))))
 
   /**
    * A rule that matches a character within a range of characters.
@@ -142,9 +123,8 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param upperBound the upper bound of the character range (inclusive)
    * @return a rule
    */
-  protected open fun charRange(lowerBound: Char, upperBound: Char): Rule<T> {
-    return CharPredicateRule(CharMatcher.inRange(lowerBound, upperBound))
-  }
+  protected open fun charRange(lowerBound: Char, upperBound: Char) =
+    CharPredicateRule<T>(inRange(lowerBound, upperBound))
 
   /**
    * A rule that matches a character within a set of characters.
@@ -152,9 +132,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param characters a variable number of characters
    * @return a rule
    */
-  protected open fun anyOfChars(vararg characters: Char): Rule<T> {
-    return anyOfChars(String(characters))
-  }
+  protected open fun anyOfChars(vararg characters: Char) = anyOfChars(String(characters))
 
   /**
    * A rule that matches a character within a set of characters.
@@ -162,9 +140,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param characters a set of characters
    * @return a rule
    */
-  protected open fun anyOfChars(characters: Set<Char>): Rule<T> {
-    return anyOfChars(JOINER.join(characters))
-  }
+  protected open fun anyOfChars(characters: Set<Char>) = anyOfChars(characters.joinToString(""))
 
   /**
    * A rule that matches a character within a set of characters.
@@ -172,13 +148,10 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param characters a string containing the set of characters.
    * @return a rule
    */
-  protected open fun anyOfChars(characters: String): Rule<T> {
-    if (characters.isEmpty()) {
-      return NEVER
-    } else if (characters.length == 1) {
-      return character(characters[0])
-    }
-    return CharPredicateRule(CharMatcher.anyOf(characters))
+  protected open fun anyOfChars(characters: String) = when {
+    characters.isEmpty() -> neverRule
+    characters.length == 1 -> character(characters[0])
+    else -> CharPredicateRule(anyOf(characters))
   }
 
   /**
@@ -187,9 +160,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param characters a variable number of characters
    * @return a rule
    */
-  protected open fun noneOfChars(vararg characters: Char): Rule<T> {
-    return noneOfChars(String(characters))
-  }
+  protected open fun noneOfChars(vararg characters: Char) = noneOfChars(String(characters))
 
   /**
    * A rule that matches a character not in a set of characters.
@@ -197,9 +168,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param characters a set of characters
    * @return a rule
    */
-  protected open fun noneOfChars(characters: Set<Char>): Rule<T> {
-    return noneOfChars(JOINER.join(characters))
-  }
+  protected open fun noneOfChars(characters: Set<Char>) = noneOfChars(characters.joinToString(""))
 
   /**
    * A rule that matches a character not in a a set of characters.
@@ -207,11 +176,8 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param characters a string containing the set of characters.
    * @return a rule
    */
-  protected open fun noneOfChars(characters: String): Rule<T> {
-    return if (characters.isEmpty()) {
-      ANY_CHAR
-    } else CharPredicateRule(CharMatcher.noneOf(characters))
-  }
+  protected open fun noneOfChars(characters: String) =
+    if (characters.isEmpty()) anyCharRule else CharPredicateRule(noneOf(characters))
 
   /**
    * A rule that matches a specific code point.
@@ -219,9 +185,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param codePoint the code point to match
    * @return a rule
    */
-  protected open fun codePoint(codePoint: Int): Rule<T> {
-    return CodePointPredicateRule { cp -> cp == codePoint }
-  }
+  protected open fun codePoint(codePoint: Int) = CodePointPredicateRule<T> { cp -> cp == codePoint }
 
   /**
    * A rule that matches a specific code point, ignoring the case of the code point (case-insensitive).
@@ -229,10 +193,8 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param codePoint the code point to match
    * @return a rule
    */
-  protected open fun ignoreCase(codePoint: Int): Rule<T> {
-    return CodePointPredicateRule { cp ->
-      cp == UCharacter.toLowerCase(codePoint) || cp == UCharacter.toUpperCase(codePoint)
-    }
+  protected open fun ignoreCase(codePoint: Int) = CodePointPredicateRule<T> { cp ->
+    cp in setOf(UCharacter.toLowerCase(codePoint), UCharacter.toUpperCase(codePoint))
   }
 
   /**
@@ -243,7 +205,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @return a rule
    */
   protected open fun codePointRange(lowerBound: Int, upperBound: Int): Rule<T> {
-    Preconditions.checkArgument(lowerBound <= upperBound, "A 'lowerBound' must not be greater than an 'upperBound'.")
+    checkArgument(lowerBound <= upperBound, "A 'lowerBound' must not be greater than an 'upperBound'.")
     return CodePointPredicateRule { cp -> cp in lowerBound..upperBound }
   }
 
@@ -253,14 +215,13 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param codePoints a variable number of code points
    * @return a rule
    */
-  protected open fun anyOfCodePoints(vararg codePoints: Int): Rule<T> {
-    if (codePoints.isEmpty()) {
-      return NEVER
-    } else if (codePoints.size == 1) {
-      return codePoint(codePoints[0])
+  protected open fun anyOfCodePoints(vararg codePoints: Int) = when {
+    codePoints.isEmpty() -> neverRule
+    codePoints.size == 1 -> codePoint(codePoints[0])
+    else -> {
+      sort(codePoints)
+      CodePointPredicateRule { cp -> binarySearch(codePoints, cp) >= 0 }
     }
-    Arrays.sort(codePoints)
-    return CodePointPredicateRule { cp -> Arrays.binarySearch(codePoints, cp) >= 0 }
   }
 
   /**
@@ -269,9 +230,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param codePoints a string containing the set of code points.
    * @return a rule
    */
-  protected open fun anyOfCodePoints(codePoints: String): Rule<T> {
-    return anyOfCodePoints(*codePoints.codePoints().toArray())
-  }
+  protected open fun anyOfCodePoints(codePoints: String) = anyOfCodePoints(*codePoints.codePoints().toArray())
 
   /**
    * A rule that matches a code point within a set of code points.
@@ -279,9 +238,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param codePoints a set of code points.
    * @return a rule
    */
-  protected open fun anyOfCodePoints(codePoints: Set<Int>): Rule<T> {
-    return anyOfCodePoints(*Ints.toArray(codePoints))
-  }
+  protected open fun anyOfCodePoints(codePoints: Set<Int>) = anyOfCodePoints(*Ints.toArray(codePoints))
 
   /**
    * A rule that matches a code point not in a set of code points.
@@ -289,13 +246,11 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param codePoints a variable number of code points
    * @return a rule
    */
-  protected open fun noneOfCodePoints(vararg codePoints: Int): Rule<T> {
-    if (codePoints.isEmpty()) {
-      return ANY_CODEPOINT
+  protected open fun noneOfCodePoints(vararg codePoints: Int) =
+    if (codePoints.isEmpty()) anyCodePointRule else {
+      sort(codePoints)
+      CodePointPredicateRule { cp -> binarySearch(codePoints, cp) < 0 }
     }
-    Arrays.sort(codePoints)
-    return CodePointPredicateRule { cp -> Arrays.binarySearch(codePoints, cp) < 0 }
-  }
 
   /**
    * A rule that matches a code point not in a set of code points.
@@ -303,9 +258,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param codePoints a string containing the set of code points.
    * @return a rule
    */
-  protected open fun noneOfCodePoints(codePoints: String): Rule<T> {
-    return noneOfCodePoints(*codePoints.codePoints().toArray())
-  }
+  protected open fun noneOfCodePoints(codePoints: String) = noneOfCodePoints(*codePoints.codePoints().toArray())
 
   /**
    * A rule that matches a code point not in a set of code points.
@@ -313,9 +266,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param codePoints a set of code points.
    * @return a rule
    */
-  protected open fun noneOfCodePoints(codePoints: Set<Int>): Rule<T> {
-    return noneOfCodePoints(*Ints.toArray(codePoints))
-  }
+  protected open fun noneOfCodePoints(codePoints: Set<Int>) = noneOfCodePoints(*Ints.toArray(codePoints))
 
   /**
    * A rule that matches a specific string.
@@ -325,7 +276,7 @@ abstract class AbstractParser<T> : Parser<T> {
    */
   protected open fun string(string: String): Rule<T> {
     if (string.isEmpty()) {
-      return EMPTY
+      return emptyRule
     } else if (string.length == 1) {
       return character(string[0])
     }
@@ -340,7 +291,7 @@ abstract class AbstractParser<T> : Parser<T> {
    */
   protected open fun ignoreCase(string: String): Rule<T> {
     if (string.isEmpty()) {
-      return EMPTY
+      return emptyRule
     } else if (string.length == 1) {
       return ignoreCase(string[0])
     }
@@ -375,7 +326,7 @@ abstract class AbstractParser<T> : Parser<T> {
    */
   protected open fun strings(strings: Set<String>): Rule<T> {
     if (strings.isEmpty()) {
-      return NEVER
+      return neverRule
     } else if (strings.size == 1) {
       return string(strings.iterator().next())
     }
@@ -400,7 +351,7 @@ abstract class AbstractParser<T> : Parser<T> {
    */
   protected open fun ignoreCase(strings: Set<String>): Rule<T> {
     if (strings.isEmpty()) {
-      return NEVER
+      return neverRule
     } else if (strings.size == 1) {
       return ignoreCase(strings.iterator().next())
     }
@@ -413,7 +364,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @return a rule
    */
   protected open fun ascii(): Rule<T> {
-    return ASCII
+    return asciiRule
   }
 
   /**
@@ -422,7 +373,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @return a rule
    */
   protected open fun bmp(): Rule<T> {
-    return BMP
+    return bmpRule
   }
 
   /**
@@ -431,7 +382,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @return a rule
    */
   protected open fun digit(): Rule<T> {
-    return DIGIT
+    return digitRule
   }
 
   /**
@@ -440,7 +391,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @return a rule
    */
   protected open fun javaIdentifierStart(): Rule<T> {
-    return JAVA_IDENTIFIER_START
+    return javaIdentStartRule
   }
 
   /**
@@ -450,7 +401,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @return a rule
    */
   protected open fun javaIdentifierPart(): Rule<T> {
-    return JAVA_IDENTIFIER_PART
+    return javaIdentPartRule
   }
 
   /**
@@ -459,7 +410,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @return a rule
    */
   protected open fun letter(): Rule<T> {
-    return LETTER
+    return letterRule
   }
 
   /**
@@ -468,7 +419,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @return a rule
    */
   protected open fun letterOrDigit(): Rule<T> {
-    return LETTER_OR_DIGIT
+    return letterOrDigitRule
   }
 
   /**
@@ -477,7 +428,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @return a rule
    */
   protected open fun printable(): Rule<T> {
-    return PRINTABLE
+    return printableRule
   }
 
   /**
@@ -486,7 +437,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @return a rule
    */
   protected open fun spaceChar(): Rule<T> {
-    return SPACE_CHAR
+    return spaceCharRule
   }
 
   /**
@@ -495,7 +446,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @return a rule
    */
   protected open fun whitespace(): Rule<T> {
-    return WHITESPACE
+    return whitespaceRule
   }
 
   /**
@@ -504,7 +455,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @return a rule
    */
   protected open fun cr(): Rule<T> {
-    return CR
+    return crRule
   }
 
   /**
@@ -513,7 +464,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @return a rule
    */
   protected open fun lf(): Rule<T> {
-    return LF
+    return lfRule
   }
 
   /**
@@ -522,7 +473,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @return a rule
    */
   protected open fun crlf(): Rule<T> {
-    return CRLF
+    return crlfRule
   }
 
   /**
@@ -544,7 +495,7 @@ abstract class AbstractParser<T> : Parser<T> {
    */
   protected open fun sequence(rules: List<Rule<T>>): Rule<T> {
     if (rules.isEmpty()) {
-      return EMPTY
+      return emptyRule
     } else if (rules.size == 1) {
       return rules[0]
     }
@@ -570,7 +521,7 @@ abstract class AbstractParser<T> : Parser<T> {
    */
   protected open fun firstOf(rules: List<Rule<T>>): Rule<T> {
     if (rules.isEmpty()) {
-      return EMPTY
+      return emptyRule
     } else if (rules.size == 1) {
       return rules[0]
     }

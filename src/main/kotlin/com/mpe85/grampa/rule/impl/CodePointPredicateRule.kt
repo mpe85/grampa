@@ -10,19 +10,26 @@ import java.util.function.Predicate
  *
  * @author mpe85
  * @param T the type of the stack elements
- * @param predicate a predicate that is tested by the rule.
+ * @property predicate a predicate that is tested by the rule
  */
-class CodePointPredicateRule<T>(private val predicate: Predicate<Int>) : AbstractRule<T>() {
+class CodePointPredicateRule<T>(private val predicate: (Int) -> Boolean) : AbstractRule<T>() {
+
+  /**
+   * C'tor. Create a code point predicate rules that exactly matches a specific code point.
+   *
+   * @param predicate a predicate that is tested by the rule
+   */
+  constructor(predicate: Predicate<Int>) : this(predicate::test)
 
   /**
    * C'tor. Create a code point predicate rules that exactly matches a specific code point.
    *
    * @param codePoint a code point
    */
-  constructor(codePoint: Int) : this({ cp: Int -> cp == codePoint })
+  constructor(codePoint: Int) : this({ cp -> cp == codePoint })
 
   override fun match(context: RuleContext<T>) = !context.isAtEndOfInput
-      && predicate.test(context.currentCodePoint)
+      && predicate(context.currentCodePoint)
       && context.advanceIndex(charCount(context.currentCodePoint))
 
   override fun hashCode() = hash(super.hashCode(), predicate)

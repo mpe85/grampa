@@ -9,19 +9,26 @@ import java.util.function.Predicate
  *
  * @author mpe85
  * @param T the type of the stack elements
- * @param predicate a predicate that is tested by the rule.
+ * @property predicate a predicate that is tested by the rule
  */
-class CharPredicateRule<T>(private val predicate: Predicate<Char>) : AbstractRule<T>() {
+class CharPredicateRule<T>(private val predicate: (Char) -> Boolean) : AbstractRule<T>() {
+
+  /**
+   * C'tor. Create a character predicate rules that exactly matches a specific character.
+   *
+   * @param predicate a predicate that is tested by the rule
+   */
+  constructor(predicate: Predicate<Char>) : this(predicate::test)
 
   /**
    * C'tor. Create a character predicate rules that exactly matches a specific character.
    *
    * @param character a character
    */
-  constructor(character: Char) : this({ c: Char -> c == character })
+  constructor(character: Char) : this({ c -> c == character })
 
   override fun match(context: RuleContext<T>) = !context.isAtEndOfInput
-      && predicate.test(context.currentChar)
+      && predicate(context.currentChar)
       && context.advanceIndex(1)
 
   override fun hashCode() = hash(super.hashCode(), predicate)
