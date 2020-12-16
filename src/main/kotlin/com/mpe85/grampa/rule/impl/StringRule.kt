@@ -11,7 +11,7 @@ import java.util.Objects.hash
  * @author mpe85
  * @param T the type of the stack elements
  * @param string a string
- * @param ignoreCase if true, the case is ignored
+ * @property ignoreCase if true, the case is ignored
  */
 class StringRule<T> @JvmOverloads constructor(string: String, private val ignoreCase: Boolean = false) :
   AbstractRule<T>() {

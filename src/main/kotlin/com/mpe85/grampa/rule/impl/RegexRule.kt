@@ -11,7 +11,7 @@ import java.util.regex.Pattern.compile
  *
  * @author mpe85
  * @param T the type of the stack elements
- * @param pattern a compiled regular expression
+ * @property pattern a compiled regular expression
  */
 class RegexRule<T>(private val pattern: Pattern) : AbstractRule<T>() {
 

@@ -17,7 +17,7 @@ import java.util.Objects.hash
  * @author mpe85
  * @param T the type of the stack elements
  * @param strings a set of strings
- * @param ignoreCase if true, the case of the strings is ignored
+ * @property ignoreCase if true, the case of the strings is ignored
  */
 class TrieRule<T> @JvmOverloads constructor(strings: Set<String>, private val ignoreCase: Boolean = false) :
   AbstractRule<T>() {
@@ -28,25 +28,15 @@ class TrieRule<T> @JvmOverloads constructor(strings: Set<String>, private val ig
     }
   }.build(FAST)
 
-  /*
-  init {
-    val builder = CharsTrieBuilder()
-    strings.forEach(Consumer { s: String? ->
-      Preconditions.checkNotNull(s, "A 'string' must not be null.")
-      builder.add(if (ignoreCase) UCharacter.toLowerCase(s) else s, 0)
-    })
-    trie = builder.build(StringTrieBuilder.Option.FAST)
-  }*/
-
   /**
-   * C'tor. Constructs a case-sensitive trie.
+   * C'tor. Construct a case-sensitive trie.
    *
    * @param strings a variable number of strings
    */
   constructor(vararg strings: String) : this(false, *strings)
 
   /**
-   * C'tor. Constructs a case-sensitive trie (case-sensitive or case-insensitive).
+   * C'tor. Construct a trie (case-sensitive or case-insensitive).
    *
    * @param ignoreCase if true, the case of the strings is ignored
    * @param strings a variable number of strings

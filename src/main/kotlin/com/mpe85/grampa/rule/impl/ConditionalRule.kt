@@ -12,18 +12,32 @@ import java.util.function.Predicate
  *
  * @author mpe85
  * @param T the type of the stack elements
- * @param condition a condition that is evaluated when the rule is run
- * @param thenRule a rule to run if the condition evaluates to true
- * @param elseRule an optional rule to run if the condition evaluates to false
+ * @property condition a condition that is evaluated when the rule is run
+ * @property thenRule a rule to run if the condition evaluates to true
+ * @property elseRule an optional rule to run if the condition evaluates to false
  */
 class ConditionalRule<T> @JvmOverloads constructor(
-  private val condition: Predicate<ActionContext<T>>,
+  private val condition: (ActionContext<T>) -> Boolean,
   private val thenRule: Rule<T>,
   private val elseRule: Rule<T>? = null
 ) : AbstractRule<T>(sequenceOf(thenRule, elseRule).filterNotNull().toList()) {
 
+  /**
+   * C'tor. Construct a conditional rule.
+   *
+   * @param condition a condition that is evaluated when the rule is run
+   * @param thenRule a rule to run if the condition evaluates to true
+   * @param elseRule an optional rule to run if the condition evaluates to false
+   */
+  @JvmOverloads
+  constructor(
+    condition: Predicate<ActionContext<T>>,
+    thenRule: Rule<T>,
+    elseRule: Rule<T>? = null
+  ) : this(condition::test, thenRule, elseRule)
+
   override fun match(context: RuleContext<T>) =
-    if (condition.test(context)) thenRule.match(context) else elseRule?.match(context) ?: true
+    if (condition(context)) thenRule.match(context) else elseRule?.match(context) ?: true
 
   override fun hashCode() = hash(super.hashCode(), condition, thenRule, elseRule)
 

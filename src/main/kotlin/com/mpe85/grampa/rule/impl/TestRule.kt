@@ -8,7 +8,7 @@ import com.mpe85.grampa.rule.RuleContext
  *
  * @author mpe85
  * @param T the type of the stack elements
- * @param rule the child rule to test
+ * @property rule the child rule to test
  */
 class TestRule<T>(private var rule: Rule<T>) : AbstractRule<T>(rule) {
 
@@ -25,7 +25,6 @@ class TestRule<T>(private var rule: Rule<T>) : AbstractRule<T>(rule) {
     return false
   }
 
-  override val isPredicate
-    get() = true
+  override val isPredicate = true
 
 }
