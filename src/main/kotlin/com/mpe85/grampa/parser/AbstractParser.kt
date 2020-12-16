@@ -13,9 +13,7 @@ import com.mpe85.grampa.builder.RepeatRuleBuilder
 import com.mpe85.grampa.rule.Action
 import com.mpe85.grampa.rule.ActionContext
 import com.mpe85.grampa.rule.Command
-import com.mpe85.grampa.rule.EventSupplier
 import com.mpe85.grampa.rule.Rule
-import com.mpe85.grampa.rule.ValueSupplier
 import com.mpe85.grampa.rule.impl.ActionRule
 import com.mpe85.grampa.rule.impl.CharPredicateRule
 import com.mpe85.grampa.rule.impl.CodePointPredicateRule
@@ -33,7 +31,6 @@ import com.mpe85.grampa.rule.impl.TrieRule
 import com.mpe85.grampa.rule.toAction
 import java.util.Arrays.binarySearch
 import java.util.Arrays.sort
-import java.util.function.Predicate
 
 /**
  * An abstract parser that defines a bunch of useful parser rules and actions. A concrete parser class should usually
@@ -150,7 +147,7 @@ abstract class AbstractParser<T> : Parser<T> {
    */
   protected open fun anyOfChars(characters: String) = when {
     characters.isEmpty() -> neverRule
-    characters.length == 1 -> character(characters[0])
+    characters.length == 1 -> character(characters.first())
     else -> CharPredicateRule(anyOf(characters))
   }
 
@@ -217,7 +214,7 @@ abstract class AbstractParser<T> : Parser<T> {
    */
   protected open fun anyOfCodePoints(vararg codePoints: Int) = when {
     codePoints.isEmpty() -> neverRule
-    codePoints.size == 1 -> codePoint(codePoints[0])
+    codePoints.size == 1 -> codePoint(codePoints.first())
     else -> {
       sort(codePoints)
       CodePointPredicateRule { cp -> binarySearch(codePoints, cp) >= 0 }
@@ -274,13 +271,10 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param string the string to match
    * @return a rule
    */
-  protected open fun string(string: String): Rule<T> {
-    if (string.isEmpty()) {
-      return emptyRule
-    } else if (string.length == 1) {
-      return character(string[0])
-    }
-    return StringRule(string)
+  protected open fun string(string: String) = when {
+    string.isEmpty() -> emptyRule
+    string.length == 1 -> character(string.first())
+    else -> StringRule(string)
   }
 
   /**
@@ -289,13 +283,10 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param string the string to match
    * @return a rule
    */
-  protected open fun ignoreCase(string: String): Rule<T> {
-    if (string.isEmpty()) {
-      return emptyRule
-    } else if (string.length == 1) {
-      return ignoreCase(string[0])
-    }
-    return StringRule(string, true)
+  protected open fun ignoreCase(string: String) = when {
+    string.isEmpty() -> emptyRule
+    string.length == 1 -> ignoreCase(string.first())
+    else -> StringRule(string, true)
   }
 
   /**
@@ -304,9 +295,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param regex a regular expression
    * @return a rule
    */
-  protected open fun regex(regex: String): Rule<T> {
-    return RegexRule(regex)
-  }
+  protected open fun regex(regex: String) = RegexRule<T>(regex)
 
   /**
    * A rule that matches a string within a set of strings.
@@ -314,9 +303,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param strings a variable number of strings
    * @return a rule
    */
-  protected open fun strings(vararg strings: String): Rule<T> {
-    return strings(strings.toSet())
-  }
+  protected open fun strings(vararg strings: String) = strings(strings.toSet())
 
   /**
    * A rule that matches a string within a set of strings.
@@ -324,13 +311,10 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param strings a set of strings
    * @return a rule
    */
-  protected open fun strings(strings: Set<String>): Rule<T> {
-    if (strings.isEmpty()) {
-      return neverRule
-    } else if (strings.size == 1) {
-      return string(strings.iterator().next())
-    }
-    return TrieRule(strings)
+  protected open fun strings(strings: Set<String>) = when {
+    strings.isEmpty() -> neverRule
+    strings.size == 1 -> string(strings.first())
+    else -> TrieRule(strings)
   }
 
   /**
@@ -339,9 +323,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param strings a variable number of strings
    * @return a rule
    */
-  protected open fun ignoreCase(vararg strings: String): Rule<T> {
-    return ignoreCase(strings.toSet())
-  }
+  protected open fun ignoreCase(vararg strings: String) = ignoreCase(strings.toSet())
 
   /**
    * A rule that matches a string within a set of strings, ignoring the case of their characters (case-insensitive).
@@ -349,13 +331,10 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param strings a set of strings
    * @return a rule
    */
-  protected open fun ignoreCase(strings: Set<String>): Rule<T> {
-    if (strings.isEmpty()) {
-      return neverRule
-    } else if (strings.size == 1) {
-      return ignoreCase(strings.iterator().next())
-    }
-    return TrieRule(strings, true)
+  protected open fun ignoreCase(strings: Set<String>) = when {
+    strings.isEmpty() -> neverRule
+    strings.size == 1 -> ignoreCase(strings.first())
+    else -> TrieRule(strings, true)
   }
 
   /**
@@ -363,36 +342,28 @@ abstract class AbstractParser<T> : Parser<T> {
    *
    * @return a rule
    */
-  protected open fun ascii(): Rule<T> {
-    return asciiRule
-  }
+  protected open fun ascii() = asciiRule
 
   /**
    * A rule that matches a characters of Unicode's Basic Multilingual Plane.
    *
    * @return a rule
    */
-  protected open fun bmp(): Rule<T> {
-    return bmpRule
-  }
+  protected open fun bmp() = bmpRule
 
   /**
    * A rule that matches a digit.
    *
    * @return a rule
    */
-  protected open fun digit(): Rule<T> {
-    return digitRule
-  }
+  protected open fun digit() = digitRule
 
   /**
    * A rule that matches a character which is valid to be the first character of a java identifier.
    *
    * @return a rule
    */
-  protected open fun javaIdentifierStart(): Rule<T> {
-    return javaIdentStartRule
-  }
+  protected open fun javaIdentifierStart() = javaIdentStartRule
 
   /**
    * A rule that matches a character which is valid to be part character of a java identifier, other than the first
@@ -400,81 +371,63 @@ abstract class AbstractParser<T> : Parser<T> {
    *
    * @return a rule
    */
-  protected open fun javaIdentifierPart(): Rule<T> {
-    return javaIdentPartRule
-  }
+  protected open fun javaIdentifierPart() = javaIdentPartRule
 
   /**
    * A rule that matches a letter.
    *
    * @return a rule
    */
-  protected open fun letter(): Rule<T> {
-    return letterRule
-  }
+  protected open fun letter() = letterRule
 
   /**
    * A rule that matches a letter or a digit.
    *
    * @return a rule
    */
-  protected open fun letterOrDigit(): Rule<T> {
-    return letterOrDigitRule
-  }
+  protected open fun letterOrDigit() = letterOrDigitRule
 
   /**
    * A rule that matches a printable character.
    *
    * @return a rule
    */
-  protected open fun printable(): Rule<T> {
-    return printableRule
-  }
+  protected open fun printable() = printableRule
 
   /**
    * A rule that matches a space character.
    *
    * @return a rule
    */
-  protected open fun spaceChar(): Rule<T> {
-    return spaceCharRule
-  }
+  protected open fun spaceChar() = spaceCharRule
 
   /**
    * A rule that matches a whitespace character.
    *
    * @return a rule
    */
-  protected open fun whitespace(): Rule<T> {
-    return whitespaceRule
-  }
+  protected open fun whitespace() = whitespaceRule
 
   /**
    * A rule that matches the carriage return character.
    *
    * @return a rule
    */
-  protected open fun cr(): Rule<T> {
-    return crRule
-  }
+  protected open fun cr() = crRule
 
   /**
    * A rule that matches the line feed character.
    *
    * @return a rule
    */
-  protected open fun lf(): Rule<T> {
-    return lfRule
-  }
+  protected open fun lf() = lfRule
 
   /**
    * A rule that matches the carriage return and line feed characters.
    *
    * @return a rule
    */
-  protected open fun crlf(): Rule<T> {
-    return crlfRule
-  }
+  protected open fun crlf() = crlfRule
 
   /**
    * A rule that matches a sequence of rules.
@@ -483,9 +436,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @return a rule
    */
   @SafeVarargs
-  protected open fun sequence(vararg rules: Rule<T>): Rule<T> {
-    return sequence(rules.toList())
-  }
+  protected open fun sequence(vararg rules: Rule<T>) = sequence(rules.toList())
 
   /**
    * A rule that matches a sequence of rules.
@@ -493,13 +444,10 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param rules a list of rules
    * @return a rule
    */
-  protected open fun sequence(rules: List<Rule<T>>): Rule<T> {
-    if (rules.isEmpty()) {
-      return emptyRule
-    } else if (rules.size == 1) {
-      return rules[0]
-    }
-    return SequenceRule(rules)
+  protected open fun sequence(rules: List<Rule<T>>) = when {
+    rules.isEmpty() -> emptyRule
+    rules.size == 1 -> rules.first()
+    else -> SequenceRule(rules)
   }
 
   /**
@@ -509,9 +457,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @return a rule
    */
   @SafeVarargs
-  protected open fun firstOf(vararg rules: Rule<T>): Rule<T> {
-    return firstOf(rules.toList())
-  }
+  protected open fun firstOf(vararg rules: Rule<T>) = firstOf(rules.toList())
 
   /**
    * A rule that matches the first successful rule in a list of rules.
@@ -519,13 +465,10 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param rules a list of rules
    * @return a rule
    */
-  protected open fun firstOf(rules: List<Rule<T>>): Rule<T> {
-    if (rules.isEmpty()) {
-      return emptyRule
-    } else if (rules.size == 1) {
-      return rules[0]
-    }
-    return FirstOfRule(rules)
+  protected open fun firstOf(rules: List<Rule<T>>) = when {
+    rules.isEmpty() -> emptyRule
+    rules.size == 1 -> rules.first()
+    else -> FirstOfRule(rules)
   }
 
   /**
@@ -534,9 +477,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param rule the sub rule to match optionally
    * @return a rule
    */
-  protected open fun optional(rule: Rule<T>): Rule<T> {
-    return repeat(rule).times(0, 1)
-  }
+  protected open fun optional(rule: Rule<T>) = repeat(rule).times(0, 1)
 
   /**
    * A rule that matches its sub rule zero or more times.
@@ -544,9 +485,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param rule the sub rule to repeat
    * @return a rule
    */
-  protected open fun zeroOrMore(rule: Rule<T>): Rule<T> {
-    return repeat(rule).min(0)
-  }
+  protected open fun zeroOrMore(rule: Rule<T>) = repeat(rule).min(0)
 
   /**
    * A rule that matches its sub rule one or more times.
@@ -554,9 +493,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param rule the sub rule to repeat
    * @return a rule
    */
-  protected open fun oneOrMore(rule: Rule<T>): Rule<T> {
-    return repeat(rule).min(1)
-  }
+  protected open fun oneOrMore(rule: Rule<T>) = repeat(rule).min(1)
 
   /**
    * A rule builder for a repeat rule.
@@ -564,9 +501,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param rule the sub rule to repeat
    * @return a repeat rule builder
    */
-  protected open fun repeat(rule: Rule<T>): RepeatRuleBuilder<T> {
-    return RepeatRuleBuilder(rule)
-  }
+  protected open fun repeat(rule: Rule<T>) = RepeatRuleBuilder(rule)
 
   /**
    * A predicate rule that tests if its sub rule matches.
@@ -574,9 +509,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param rule the sub rule to test
    * @return a rule
    */
-  protected open fun test(rule: Rule<T>): Rule<T> {
-    return TestRule(rule)
-  }
+  protected open fun test(rule: Rule<T>) = TestRule(rule)
 
   /**
    * A predicate rule that tests if its sub rule does not match.
@@ -584,9 +517,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param rule the sub rule to test
    * @return a rule
    */
-  protected open fun testNot(rule: Rule<T>): Rule<T> {
-    return TestNotRule(rule)
-  }
+  protected open fun testNot(rule: Rule<T>) = TestNotRule(rule)
 
   /**
    * A conditional rule that runs one rule if a condition is true, otherwise it runs another rule.
@@ -596,13 +527,8 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param elseRule the rule to run if the condition is false
    * @return a rule
    */
-  protected open fun conditional(
-    condition: Predicate<ActionContext<T>>,
-    thenRule: Rule<T>,
-    elseRule: Rule<T>
-  ): Rule<T> {
-    return ConditionalRule(condition, thenRule, elseRule)
-  }
+  protected open fun conditional(condition: (ActionContext<T>) -> Boolean, thenRule: Rule<T>, elseRule: Rule<T>) =
+    ConditionalRule(condition, thenRule, elseRule)
 
   /**
    * A conditional rule that runs a rule if a condition is true, otherwise it runs no rule.
@@ -611,9 +537,8 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param thenRule the rule to run if the condition is true
    * @return a rule
    */
-  protected open fun conditional(condition: Predicate<ActionContext<T>>, thenRule: Rule<T>): Rule<T> {
-    return ConditionalRule(condition, thenRule)
-  }
+  protected open fun conditional(condition: (ActionContext<T>) -> Boolean, thenRule: Rule<T>) =
+    ConditionalRule(condition, thenRule)
 
   /**
    * A rule that runs an action.
@@ -621,9 +546,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param action the action to run
    * @return a rule
    */
-  protected open fun action(action: Action<T>): Rule<T> {
-    return ActionRule(action)
-  }
+  protected open fun action(action: Action<T>) = ActionRule(action)
 
   /**
    * A rule that executes a command.
@@ -631,9 +554,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param command the command to execute
    * @return a rule
    */
-  protected open fun command(command: Command<T>): Rule<T> {
-    return action(command.toAction())
-  }
+  protected open fun command(command: Command<T>) = action(command.toAction())
 
   /**
    * A rule that runs an action. The action is skipped if the rule is run inside a predicate rule.
@@ -641,9 +562,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param action the skippable action to run
    * @return a rule
    */
-  protected open fun skippableAction(action: Action<T>): Rule<T> {
-    return ActionRule(action, true)
-  }
+  protected open fun skippableAction(action: Action<T>) = ActionRule(action, true)
 
   /**
    * A rule that executes a command. The command is skipped if the rule is run inside a predicate rule.
@@ -651,9 +570,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param command the command to execute
    * @return a rule
    */
-  protected open fun skippableCommand(command: Command<T>): Rule<T> {
-    return skippableAction(command.toAction())
-  }
+  protected open fun skippableCommand(command: Command<T>) = skippableAction(command.toAction())
 
   /**
    * Posts a event to the parser's event bus. Note that the event object is constructed at parser create time.
@@ -661,9 +578,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param event the event to post
    * @return a rule
    */
-  protected open fun post(event: Any): Rule<T> {
-    return skippableCommand { ctx -> ctx.post(event) }
-  }
+  protected open fun post(event: Any) = skippableCommand { ctx -> ctx.post(event) }
 
   /**
    * Posts a event to the parser's event bus. Note that the event object is supplied by an event supplier at parser
@@ -672,20 +587,16 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param supplier an event supplier that is called when the rule is run
    * @return a rule
    */
-  protected open fun post(supplier: EventSupplier<T>): Rule<T> {
-    return skippableCommand { ctx -> ctx.post(supplier.supply(ctx)) }
-  }
+  protected open fun post(supplier: (ActionContext<T>) -> Any) = skippableCommand { ctx -> ctx.post(supplier(ctx)) }
 
   /**
    * Pops the top level element from the stack.
    *
    * @return a rule
    */
-  protected open fun pop(): Rule<T> {
-    return action { ctx ->
-      ctx.stack.pop()
-      true
-    }
+  protected open fun pop() = action { ctx ->
+    ctx.stack.pop()
+    true
   }
 
   /**
@@ -694,11 +605,9 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param down number of elements on the stack to skip
    * @return a rule
    */
-  protected open fun pop(down: Int): Rule<T> {
-    return action { ctx ->
-      ctx.stack.pop(down)
-      true
-    }
+  protected open fun pop(down: Int) = action { ctx ->
+    ctx.stack.pop(down)
+    true
   }
 
   /**
@@ -707,11 +616,9 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param value a replacement value
    * @return a rule
    */
-  protected open fun poke(value: T): Rule<T> {
-    return action { ctx ->
-      ctx.stack.poke(value)
-      true
-    }
+  protected open fun poke(value: T) = action { ctx ->
+    ctx.stack.poke(value)
+    true
   }
 
   /**
@@ -721,11 +628,9 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param value a replacement value
    * @return a rule
    */
-  protected open fun poke(down: Int, value: T): Rule<T> {
-    return action { ctx ->
-      ctx.stack.poke(down, value)
-      true
-    }
+  protected open fun poke(down: Int, value: T) = action { ctx ->
+    ctx.stack.poke(down, value)
+    true
   }
 
   /**
@@ -735,11 +640,9 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param supplier a replacement value supplier
    * @return a rule
    */
-  protected open fun poke(supplier: ValueSupplier<T>): Rule<T> {
-    return action { ctx ->
-      ctx.stack.poke(supplier.supply(ctx))
-      true
-    }
+  protected open fun poke(supplier: (ActionContext<T>) -> T) = action { ctx ->
+    ctx.stack.poke(supplier(ctx))
+    true
   }
 
   /**
@@ -750,11 +653,9 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param supplier a replacement value supplier
    * @return a rule
    */
-  protected open fun poke(down: Int, supplier: ValueSupplier<T>): Rule<T> {
-    return action { ctx ->
-      ctx.stack.poke(down, supplier.supply(ctx))
-      true
-    }
+  protected open fun poke(down: Int, supplier: (ActionContext<T>) -> T) = action { ctx ->
+    ctx.stack.poke(down, supplier(ctx))
+    true
   }
 
   /**
@@ -763,9 +664,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param value a value
    * @return a rule
    */
-  protected open fun push(value: T): Rule<T> {
-    return command { ctx -> ctx.stack.push(value) }
-  }
+  protected open fun push(value: T) = command { ctx -> ctx.stack.push(value) }
 
   /**
    * Pushes a new element onto stack. Note that the value is supplied by a value supplier at parser run time which has
@@ -774,27 +673,21 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param supplier a value supplier
    * @return a rule
    */
-  protected open fun push(supplier: ValueSupplier<T>): Rule<T> {
-    return command { ctx -> ctx.stack.push(supplier.supply(ctx)) }
-  }
+  protected open fun push(supplier: (ActionContext<T>) -> T) = command { ctx -> ctx.stack.push(supplier(ctx)) }
 
   /**
    * Duplicates the top stack element.
    *
    * @return a rule
    */
-  protected open fun dup(): Rule<T> {
-    return command { ctx -> ctx.stack.dup() }
-  }
+  protected open fun dup() = command { ctx -> ctx.stack.dup() }
 
   /**
    * Swaps the two top stack elements.
    *
    * @return a rule
    */
-  protected open fun swap(): Rule<T> {
-    return command { ctx -> ctx.stack.swap() }
-  }
+  protected open fun swap() = command { ctx -> ctx.stack.swap() }
 
   /**
    * Pops the top level element from the stack. This method may be called by an action or command where the action
@@ -803,9 +696,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param context an action context
    * @return the popped element
    */
-  protected open fun pop(context: ActionContext<T>): T {
-    return context.stack.pop()
-  }
+  protected fun pop(context: ActionContext<T>): T = context.stack.pop()
 
   /**
    * Pops an element from the stack at a given position. This method may be called by an action or command where the
@@ -815,9 +706,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param context an action context
    * @return the popped element
    */
-  protected open fun pop(down: Int, context: ActionContext<T>): T {
-    return context.stack.pop(down)
-  }
+  protected fun pop(down: Int, context: ActionContext<T>) = context.stack.pop(down)
 
   /**
    * Pops and casts the top level element from the stack. This method may be called by an action or command where the
@@ -828,9 +717,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param context an action context
    * @return the popped element
    */
-  protected open fun <U : T> popAs(clazz: Class<U>, context: ActionContext<T>): U {
-    return context.stack.popAs(clazz)
-  }
+  protected fun <U : T> popAs(clazz: Class<U>, context: ActionContext<T>) = context.stack.popAs(clazz)
 
   /**
    * Pops and casts an element from the stack at a given position. This method may be called by an action or command
@@ -841,10 +728,8 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param down number of elements on the stack to skip
    * @param context an action context
    * @return the popped element
-  </U> */
-  protected open fun <U : T> popAs(clazz: Class<U>, down: Int, context: ActionContext<T>): U {
-    return context.stack.popAs(down, clazz)
-  }
+   */
+  protected fun <U : T> popAs(clazz: Class<U>, down: Int, context: ActionContext<T>) = context.stack.popAs(down, clazz)
 
   /**
    * Peeks the top level element from the stack. This method may be called by an action or command where the action
@@ -853,9 +738,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param context an action context
    * @return the peeked element
    */
-  protected open fun peek(context: ActionContext<T>): T {
-    return context.stack.peek()
-  }
+  protected fun peek(context: ActionContext<T>): T = context.stack.peek()
 
   /**
    * Peeks an element from the stack at a given position. This method may be called by an action or command where the
@@ -865,9 +748,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param context an action context
    * @return the peeked element
    */
-  protected open fun peek(down: Int, context: ActionContext<T>): T {
-    return context.stack.peek(down)
-  }
+  protected fun peek(down: Int, context: ActionContext<T>) = context.stack.peek(down)
 
   /**
    * Peeks and casts the top level element from the stack. This method may be called by an action or command where the
@@ -878,9 +759,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param context an action context
    * @return the peeked element
    */
-  protected open fun <U : T> peekAs(clazz: Class<U>, context: ActionContext<T>): U {
-    return context.stack.peekAs(clazz)
-  }
+  protected fun <U : T> peekAs(clazz: Class<U>, context: ActionContext<T>) = context.stack.peekAs(clazz)
 
   /**
    * Peeks and casts an element from the stack at a given position. This method may be called by an action or command
@@ -892,8 +771,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param context an action context
    * @return the peeked element
    */
-  protected open fun <U : T> peekAs(clazz: Class<U>, down: Int, context: ActionContext<T>): U {
-    return context.stack.peekAs(down, clazz)
-  }
+  protected open fun <U : T> peekAs(clazz: Class<U>, down: Int, context: ActionContext<T>) =
+    context.stack.peekAs(down, clazz)
 
 }
