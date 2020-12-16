@@ -5,7 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.function.Predicate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class ConditionalRuleTest {
 
@@ -17,11 +18,11 @@ public class ConditionalRuleTest {
 
         final ConditionalRule<String> rule1 = new ConditionalRule<>(pred, empty, never);
         final ConditionalRule<String> rule2 = new ConditionalRule<>(pred, new EmptyRule<>(), new NeverRule<>());
-        final ConditionalRule<String> rule3 = new ConditionalRule(pred, empty);
+        final ConditionalRule<String> rule3 = new ConditionalRule<>(pred, empty);
 
-        assertTrue(rule1.equals(rule2));
-        assertFalse(rule1.equals(rule3));
-        assertFalse(rule1.equals(new Object()));
+        assertEquals(rule2, rule1);
+        assertNotEquals(rule3, rule1);
+        assertNotEquals(new Object(), rule1);
 
         assertEquals(rule1.hashCode(), rule2.hashCode());
         assertNotEquals(rule1.hashCode(), rule3.hashCode());
