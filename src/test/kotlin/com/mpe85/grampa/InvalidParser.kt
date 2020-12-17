@@ -1,28 +1,20 @@
-package com.mpe85.grampa;
+package com.mpe85.grampa
 
-import com.mpe85.grampa.parser.AbstractParser;
-import com.mpe85.grampa.rule.Rule;
+import com.mpe85.grampa.parser.AbstractParser
+import com.mpe85.grampa.rule.Rule
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+class InvalidParser : AbstractParser<String>() {
+  override fun root() = expr('a')
 
-public class InvalidParser extends AbstractParser<String> {
-	
-	public InvalidParser() {
-	}
-	
-	@Override
-	public Rule<String> root() {
-		return expr('a');
-	}
-	
-	@SuppressFBWarnings("IL_INFINITE_RECURSIVE_LOOP")
-	private Rule<String> expr(final char c) {
-		return firstOf(
-				character(c),
-				sequence(
-						character('('),
-						expr(c),
-						character(')')));
-	}
-	
+  @SuppressFBWarnings("IL_INFINITE_RECURSIVE_LOOP")
+  private fun expr(c: Char): Rule<String> = firstOf(
+    character(c),
+    sequence(
+      character('('),
+      expr(c),
+      character(')')
+    )
+  )
+
 }

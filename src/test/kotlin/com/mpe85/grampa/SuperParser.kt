@@ -1,15 +1,11 @@
-package com.mpe85.grampa;
+package com.mpe85.grampa
 
-import com.mpe85.grampa.rule.Rule;
+import com.mpe85.grampa.rule.Rule
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+open class SuperParser : TestParser() {
 
-public class SuperParser extends TestParser {
-	
-	@Override
-	@SuppressFBWarnings("IL_INFINITE_RECURSIVE_LOOP")
-	public Rule<String> root() {
-		return sequence(character('a'), this.root());
-	}
-	
+  @SuppressFBWarnings("IL_INFINITE_RECURSIVE_LOOP")
+  override fun root(): Rule<String> = sequence(character('a'), this.root())
+  
 }

@@ -1,9 +1,3 @@
-package com.mpe85.grampa;
+package com.mpe85.grampa
 
-public class NoDefaultCtorTestParser extends TestParser {
-	
-	public NoDefaultCtorTestParser(final String dummy) {
-		super(dummy);
-	}
-	
-}
+class NoDefaultCtorTestParser(dummy: String) : TestParser(dummy)

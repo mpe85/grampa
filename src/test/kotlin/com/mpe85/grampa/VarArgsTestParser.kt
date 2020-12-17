@@ -1,19 +1,9 @@
-package com.mpe85.grampa;
+package com.mpe85.grampa
 
-import java.util.List;
+class VarArgsTestParser : TestParser() {
+  @SafeVarargs
+  fun var1(vararg args: List<Any>) = empty()
 
-import com.mpe85.grampa.rule.Rule;
+  fun var2(vararg args: List<Any>) = empty()
 
-@SuppressWarnings("unchecked")
-public class VarArgsTestParser extends TestParser {
-	
-	@SafeVarargs
-	public final Rule<String> var1(final List<Object>... args) {
-		return empty();
-	}
-	
-	public final Rule<String> var2(final List<Object>... args) {
-		return empty();
-	}
-	
 }

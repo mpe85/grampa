@@ -1,12 +1,7 @@
-package com.mpe85.grampa;
+package com.mpe85.grampa
 
-import com.mpe85.grampa.rule.Rule;
+open class SubParser : SuperParser() {
 
-public class SubParser extends SuperParser {
-	
-	@Override
-	public Rule<String> root() {
-		return super.root();
-	}
-	
+  override fun root() = super.root()
+
 }
