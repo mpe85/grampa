@@ -1,2560 +1,2576 @@
-package com.mpe85.grampa.parser;
-
-import com.google.common.collect.Sets;
-import com.google.common.eventbus.Subscribe;
-import com.mpe85.grampa.event.MatchSuccessEvent;
-import com.mpe85.grampa.event.ParseEventListener;
-import com.mpe85.grampa.event.PostParseEvent;
-import com.mpe85.grampa.exception.ActionRunException;
-import com.mpe85.grampa.rule.Action;
-import com.mpe85.grampa.rule.Rule;
-import com.mpe85.grampa.rule.RuleContext;
-import com.mpe85.grampa.rule.impl.ActionRule;
-import com.mpe85.grampa.runner.DefaultParseRunner;
-import com.mpe85.grampa.runner.ParseResult;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.junit.jupiter.api.Test;
-
-import java.util.concurrent.atomic.AtomicReference;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-@SuppressFBWarnings(value = "SIC_INNER_SHOULD_BE_STATIC_ANON", justification = "Performance is not of great importance in unit tests.")
-public class AbstractParserTest {
-
-    private static final class IntegerTestListener extends ParseEventListener<Integer> {
-    }
-
-    private static final class CharSequenceTestListener extends ParseEventListener<CharSequence> {
-    }
-
-    @Test
-    public void empty_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return empty();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("foo");
-        assertTrue(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertEquals("", result.getMatchedInput());
-        assertEquals("foo", result.getRestOfInput());
-    }
-
-    @Test
-    public void never_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return never();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("foo");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("foo", result.getRestOfInput());
-    }
-
-    @Test
-    public void eoi_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(string("foo"), eoi());
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("foo");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("foo", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void eoi_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(string("foo"), eoi());
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("foo ");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("foo ", result.getRestOfInput());
-    }
-
-    @Test
-    public void anyChar_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return anyChar();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("f");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("f", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void anyChar_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return anyChar();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void anyCodePoint_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return anyCodePoint();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("\uD835\uDD38");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("\uD835\uDD38", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void anyCodePoint_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return anyCodePoint();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void character_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return character('f');
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("f");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("f", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void character_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return character('f');
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("g");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("g", result.getRestOfInput());
-    }
-
-    @Test
-    public void ignoreCase_character_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return ignoreCase('f');
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("F");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("F", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void ignoreCase_character_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return ignoreCase('f');
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("G");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("G", result.getRestOfInput());
-    }
-
-    @Test
-    public void charRange_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return charRange('a', 'f');
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("c");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("c", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void charRange_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return charRange('a', 'f');
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("h");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("h", result.getRestOfInput());
-    }
-
-    @Test
-    public void anyOfChars_valid_vararg() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return anyOfChars('a', 'f');
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("a");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("a", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void anyOfChars_valid_set() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return anyOfChars(Sets.newHashSet('a', 'f'));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("a");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("a", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void anyOfChars_valid_string() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return anyOfChars("a");
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("a");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("a", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void anyOfChars_invalid_wrongChar() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return anyOfChars('a', 'f');
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("c");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("c", result.getRestOfInput());
-    }
-
-    @Test
-    public void anyOfChars_invalid_never() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return anyOfChars("");
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("a");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("a", result.getRestOfInput());
-    }
-
-    @Test
-    public void noneOfChars_valid_vararg() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return noneOfChars('a', 'f');
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("c");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("c", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void noneOfChars_valid_set() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return noneOfChars(Sets.newHashSet('a', 'f'));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("c");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("c", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void noneOfChars_valid_any() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return noneOfChars("");
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("c");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("c", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void noneOfChars_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return noneOfChars('a', 'f');
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("f");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("f", result.getRestOfInput());
-    }
-
-    @Test
-    public void codePoint_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return codePoint("\uD835\uDD38".codePointAt(0));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("\uD835\uDD38");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("\uD835\uDD38", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void codePoint_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return codePoint("\uD835\uDD38".codePointAt(0));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("\uD835\uDD39");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("\uD835\uDD39", result.getRestOfInput());
-    }
-
-    @Test
-    public void ignoreCase_codePoint_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return ignoreCase((int) 'f');
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("F");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("F", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void ignoreCase_codePoint_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return ignoreCase((int) 'f');
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("G");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("G", result.getRestOfInput());
-    }
-
-    @Test
-    public void codePointRange_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return codePointRange('Z', 'b');
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("a");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("a", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void codePointRange_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return codePointRange('Z', 'b');
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("X");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("X", result.getRestOfInput());
-    }
-
-    @Test
-    public void codePointRange_illegalArgument() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return codePointRange('b', 'a');
-            }
-        }
-        assertThrows(IllegalArgumentException.class, () -> new DefaultParseRunner<>(new Parser()).run("a"));
-    }
-
-    @Test
-    public void anyOfCodePoint_valid_vararg() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return anyOfCodePoints('a', "\uD835\uDD38".codePointAt(0));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("\uD835\uDD38");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("\uD835\uDD38", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void anyOfCodePoint_valid_set() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return anyOfCodePoints(Sets.newHashSet((int) 'a', "\uD835\uDD38".codePointAt(0)));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("\uD835\uDD38");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("\uD835\uDD38", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void anyOfCodePoint_valid_string() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return anyOfCodePoints("\uD835\uDD38");
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("\uD835\uDD38");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("\uD835\uDD38", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void anyOfCodePoints_invalid_wrongCp() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return anyOfCodePoints('a', "\uD835\uDD38".codePointAt(0));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("b");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("b", result.getRestOfInput());
-    }
-
-    @Test
-    public void anyOfCodePoints_invalid_never() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return anyOfCodePoints("");
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("b");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("b", result.getRestOfInput());
-    }
-
-    @Test
-    public void noneOfCodePoints_valid_vararg() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return noneOfCodePoints('a', "\uD835\uDD38".codePointAt(0));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("b");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("b", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void noneOfCodePoints_valid_string() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return noneOfCodePoints("a\uD835\uDD38");
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("b");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("b", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void noneOfCodePoints_valid_set() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return noneOfCodePoints(Sets.newHashSet((int) 'a', "\uD835\uDD38".codePointAt(0)));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("b");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("b", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void noneOfCodePoints_valid_any() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return noneOfCodePoints();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("b");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("b", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void noneOfCodePoints_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return noneOfCodePoints('a', "\uD835\uDD38".codePointAt(0));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("\uD835\uDD38");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("\uD835\uDD38", result.getRestOfInput());
-    }
-
-    @Test
-    public void string_valid_nonEmpty() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return string("foobar");
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("foobart");
-        assertTrue(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertEquals("foobar", result.getMatchedInput());
-        assertEquals("t", result.getRestOfInput());
-    }
-
-    @Test
-    public void string_valid_empty() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return string("");
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("abc");
-        assertTrue(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertEquals("", result.getMatchedInput());
-        assertEquals("abc", result.getRestOfInput());
-    }
-
-    @Test
-    public void string_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return string("foobar");
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("foobär");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("foobär", result.getRestOfInput());
-    }
-
-    @Test
-    public void ignoreCase_string_valid_nonEmpty() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return ignoreCase("foobar");
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("fOObAr");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("fOObAr", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void ignoreCase_string_valid_empty() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return ignoreCase("");
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("aBc");
-        assertTrue(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertEquals("", result.getMatchedInput());
-        assertEquals("aBc", result.getRestOfInput());
-    }
-
-    @Test
-    public void ignoreCase_string_valid_oneChar() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return ignoreCase("c");
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("c");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("c", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void ignoreCase_string_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return string("fOObAr");
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("fOObÄr");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("fOObÄr", result.getRestOfInput());
-    }
-
-    @Test
-    public void regex_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return regex("abc+");
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("abcccccd");
-        assertTrue(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertEquals("abccccc", result.getMatchedInput());
-        assertEquals("d", result.getRestOfInput());
-    }
-
-    @Test
-    public void regex_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return string("abc+");
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("ab");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("ab", result.getRestOfInput());
-    }
-
-    @Test
-    public void strings_valid_vararg() {
-        final AtomicReference<CharSequence> stringsRuleMatch = new AtomicReference<>();
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(
-                        strings("football", "foo", "foobar"),
-                        command(ctx -> stringsRuleMatch.set(ctx.getPreviousMatch())),
-                        string("baz"));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("foobaz");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("foobaz", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-        assertEquals("foo", stringsRuleMatch.get());
-    }
-
-    @Test
-    public void strings_valid_set_oneString() {
-        final AtomicReference<CharSequence> stringsRuleMatch = new AtomicReference<>();
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(
-                        strings("foo"),
-                        command(ctx -> stringsRuleMatch.set(ctx.getPreviousMatch())),
-                        string("baz"));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("foobaz");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("foobaz", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-        assertEquals("foo", stringsRuleMatch.get());
-    }
-
-    @Test
-    public void strings_invalid_vararg() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return strings("football", "foo", "foobar");
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("fo");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("fo", result.getRestOfInput());
-    }
-
-    @Test
-    public void strings_invalid_set_empty() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return strings(Sets.newHashSet());
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("fo");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("fo", result.getRestOfInput());
-    }
-
-    @Test
-    public void ignoreCase_strings_valid_vararg() {
-        final AtomicReference<CharSequence> stringsRuleMatch = new AtomicReference<>();
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(
-                        ignoreCase("football", "foo", "foobar"),
-                        command(ctx -> stringsRuleMatch.set(ctx.getPreviousMatch())),
-                        string("baz"));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("fOObaz");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("fOObaz", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-        assertEquals("fOO", stringsRuleMatch.get());
-    }
-
-    @Test
-    public void ignoreCase_strings_valid_set_oneString() {
-        final AtomicReference<CharSequence> stringsRuleMatch = new AtomicReference<>();
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(
-                        ignoreCase(Sets.newHashSet("foo")),
-                        command(ctx -> stringsRuleMatch.set(ctx.getPreviousMatch())),
-                        string("baz"));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("fOObaz");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("fOObaz", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-        assertEquals("fOO", stringsRuleMatch.get());
-    }
-
-    @Test
-    public void ignoreCase_strings_invalid_vararg() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return ignoreCase("football", "foo", "foobar");
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("fO");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("fO", result.getRestOfInput());
-    }
-
-    @Test
-    public void ignoreCase_strings_invalid_set_empty() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return ignoreCase(Sets.newHashSet());
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("fO");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("fO", result.getRestOfInput());
-    }
-
-    @Test
-    public void ascii_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return ascii();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("#");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("#", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void ascii_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return ascii();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("ß");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("ß", result.getRestOfInput());
-    }
-
-    @Test
-    public void bmp_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return bmp();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("ß");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("ß", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void bmp_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return bmp();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("\uD835\uDD38");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("\uD835\uDD38", result.getRestOfInput());
-    }
-
-    @Test
-    public void digit_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return digit();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("5");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("5", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void digit_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return digit();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("O");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("O", result.getRestOfInput());
-    }
-
-    @Test
-    public void javaIdentifierStart_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return javaIdentifierStart();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("ä");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("ä", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void javaIdentifierStart_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return javaIdentifierStart();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("1");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("1", result.getRestOfInput());
-    }
-
-    @Test
-    public void javaIdentifierPart_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return javaIdentifierPart();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("1");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("1", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void javaIdentifierPart_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return javaIdentifierPart();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("(");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("(", result.getRestOfInput());
-    }
-
-    @Test
-    public void letter_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return letter();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("Ü");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("Ü", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void letter_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return letter();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("$");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("$", result.getRestOfInput());
-    }
-
-    @Test
-    public void letterOrDigit_valid_letter() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return letterOrDigit();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("x");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("x", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void letterOrDigit_valid_digit() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return letterOrDigit();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("9");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("9", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void letterOrDigit_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return letter();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("%");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("%", result.getRestOfInput());
-    }
-
-    @Test
-    public void printable_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return printable();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("n");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("n", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void printable_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return printable();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("\n");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("\n", result.getRestOfInput());
-    }
-
-    @Test
-    public void spaceChar_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return spaceChar();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run(" ");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals(" ", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void spaceChar_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return spaceChar();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("\n");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("\n", result.getRestOfInput());
-    }
-
-    @Test
-    public void whitespace_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return whitespace();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("\n");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("\n", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void whitespace_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return whitespace();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("_");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("_", result.getRestOfInput());
-    }
-
-    @Test
-    public void cr_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return cr();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("\r");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("\r", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void cr_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return cr();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("\n");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("\n", result.getRestOfInput());
-    }
-
-    @Test
-    public void lf_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return lf();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("\n");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("\n", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void lf_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return lf();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("\r");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("\r", result.getRestOfInput());
-    }
-
-    @Test
-    public void crlf_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return crlf();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("\r\n");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("\r\n", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void crlf_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return crlf();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("\n\r");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("\n\r", result.getRestOfInput());
-    }
-
-    @Test
-    public void sequence_valid_character() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(
-                        character('a'),
-                        character('b'),
-                        character('c'));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("abcd");
-        assertTrue(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertEquals("abc", result.getMatchedInput());
-        assertEquals("d", result.getRestOfInput());
-    }
-
-    @Test
-    public void sequence_valid_empty() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("abcd");
-        assertTrue(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertEquals("", result.getMatchedInput());
-        assertEquals("abcd", result.getRestOfInput());
-    }
-
-    @Test
-    public void sequence_valid_push() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(
-                        push(4711),
-                        push(ctx -> peek(ctx) + 4),
-                        sequence(
-                                push(ctx -> pop(1, ctx) + peek(ctx))),
-                        optional(action(ctx -> {
-                            ctx.getStack().push(0);
-                            return false;
-                        })));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("whatever");
-        assertTrue(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertEquals("", result.getMatchedInput());
-        assertEquals("whatever", result.getRestOfInput());
-        assertEquals(Integer.valueOf(9426), result.getStackTop());
-        assertEquals(2, result.getStack().size());
-        assertEquals(Integer.valueOf(9426), result.getStack().peek());
-        assertEquals(Integer.valueOf(4715), result.getStack().peek(1));
-    }
-
-    @Test
-    public void sequence_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(
-                        character('a'),
-                        character('b'),
-                        character('c'));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("acdc");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("acdc", result.getRestOfInput());
-    }
-
-    @Test
-    public void firstOf_valid_sequence() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(
-                        firstOf(
-                                sequence(string("foo"), string("bar")),
-                                sequence(string("foo"), string("baz"))),
-                        string("xxx"));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("foobazxxx");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("foobazxxx", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void firstOf_valid_empty() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return firstOf();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("foo");
-        assertTrue(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertEquals("", result.getMatchedInput());
-        assertEquals("foo", result.getRestOfInput());
-    }
-
-    @Test
-    public void firstOf_valid_oneRule() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return firstOf(string("foo"));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("foo");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("foo", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void firstOf_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return firstOf(
-                        string("foo"),
-                        string("bar"),
-                        string("baz"));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("babafoo");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("babafoo", result.getRestOfInput());
-    }
-
-    @Test
-    public void optional_valid_match() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return optional(character('a'));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("a");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("a", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void optional_valid_noMatch() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return optional(character('a'));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("b");
-        assertTrue(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertEquals("", result.getMatchedInput());
-        assertEquals("b", result.getRestOfInput());
-    }
-
-    @Test
-    public void zeroOrMore_valid_zero() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return zeroOrMore(character('a'));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("b");
-        assertTrue(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertEquals("", result.getMatchedInput());
-        assertEquals("b", result.getRestOfInput());
-    }
-
-    @Test
-    public void zeroOrMore_valid_more() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return zeroOrMore(character('a'));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("aaaaa");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("aaaaa", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void oneOrMore_valid_one() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return oneOrMore(character('a'));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("a");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("a", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void oneOrMore_valid_more() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return oneOrMore(character('a'));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("aaaaa");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("aaaaa", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void oneOrMore_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return oneOrMore(character('a'));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("b");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("b", result.getRestOfInput());
-    }
-
-    @Test
-    public void repeat_valid_times() {
-        final class Parser extends AbstractParser<CharSequence> {
-            @Override
-            public Rule<CharSequence> root() {
-                return repeat(character('z')).times(4);
-            }
-        }
-        final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new CharSequenceTestListener());
-        final ParseResult<CharSequence> result = runner.run("zzzz");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("zzzz", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void repeat_invalid_times() {
-        final class Parser extends AbstractParser<CharSequence> {
-            @Override
-            public Rule<CharSequence> root() {
-                return repeat(character('z')).times(6, 7);
-            }
-        }
-        final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new CharSequenceTestListener());
-        final ParseResult<CharSequence> result = runner.run("zzzzz");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("zzzzz", result.getRestOfInput());
-    }
-
-    @Test
-    public void repeat_valid_range() {
-        final class Parser extends AbstractParser<CharSequence> {
-            @Override
-            public Rule<CharSequence> root() {
-                return repeat(character('z')).times(4, 7);
-            }
-        }
-        final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new CharSequenceTestListener());
-        final ParseResult<CharSequence> result = runner.run("zzzzz");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("zzzzz", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void repeat_invalid_range() {
-        final class Parser extends AbstractParser<CharSequence> {
-            @Override
-            public Rule<CharSequence> root() {
-                return repeat(character('z')).times(2, 4);
-            }
-        }
-        final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new CharSequenceTestListener());
-        final ParseResult<CharSequence> result = runner.run("z");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("z", result.getRestOfInput());
-    }
-
-    @Test
-    public void repeat_valid_max() {
-        final class Parser extends AbstractParser<CharSequence> {
-            @Override
-            public Rule<CharSequence> root() {
-                return repeat(character('z')).max(3);
-            }
-        }
-        final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new CharSequenceTestListener());
-        final ParseResult<CharSequence> result = runner.run("zz");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("zz", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void repeat_invalid_max() {
-        final class Parser extends AbstractParser<CharSequence> {
-            @Override
-            public Rule<CharSequence> root() {
-                return sequence(repeat(character('z')).max(3), eoi());
-            }
-        }
-        final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new CharSequenceTestListener());
-        final ParseResult<CharSequence> result = runner.run("zzzz");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("zzzz", result.getRestOfInput());
-    }
-
-    @Test
-    public void repeat_valid_min() {
-        final class Parser extends AbstractParser<CharSequence> {
-            @Override
-            public Rule<CharSequence> root() {
-                return repeat(character('z')).min(3);
-            }
-        }
-        final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new CharSequenceTestListener());
-        final ParseResult<CharSequence> result = runner.run("zzzzz");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("zzzzz", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void repeat_invalid_min() {
-        final class Parser extends AbstractParser<CharSequence> {
-            @Override
-            public Rule<CharSequence> root() {
-                return repeat(character('z')).min(8);
-            }
-        }
-        final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new CharSequenceTestListener());
-        final ParseResult<CharSequence> result = runner.run("zzzzz");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("zzzzz", result.getRestOfInput());
-    }
-
-    @Test
-    public void test_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(
-                        test(string("what")),
-                        string("whatever"));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("whatever");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("whatever", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void test_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(
-                        test(string("ever")),
-                        string("whatever"));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("whatever");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("whatever", result.getRestOfInput());
-    }
-
-    @Test
-    public void testNot_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(
-                        testNot(string("foo")),
-                        string("whatever"));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("whatever");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("whatever", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void testNot_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(
-                        testNot(string("what")),
-                        string("whatever"));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("whatever");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("whatever", result.getRestOfInput());
-    }
-
-    @Test
-    public void conditional_valid_then_withElse() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return conditional(ctx -> ctx.getStartIndex() == 0, letter(), digit());
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("z");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("z", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void conditional_valid_then_noElse() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return conditional(ctx -> ctx.getStartIndex() == 0, letter());
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("z");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("z", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void conditional_valid_else() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return conditional(ctx -> ctx.getStartIndex() != 0, letter(), digit());
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("1");
-        assertTrue(result.getMatched());
-        assertTrue(result.getMatchedEntireInput());
-        assertEquals("1", result.getMatchedInput());
-        assertEquals("", result.getRestOfInput());
-    }
-
-    @Test
-    public void conditional_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return conditional(ctx -> ctx.getStartIndex() == 0, never(), empty());
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        final ParseResult<Integer> result = runner.run("whatever");
-        assertFalse(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertNull(result.getMatchedInput());
-        assertEquals("whatever", result.getRestOfInput());
-    }
-
-    @Test
-    public void action_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return action(ctx -> {
-                    ctx.getStack().push(4711);
-                    assertEquals(0, ctx.getLevel());
-                    assertNotNull(ctx.getPosition());
-                    return true;
-                });
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
-    }
-
-    @Test
-    public void action_invalid_failingAction() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return action(ctx -> {
-                    ctx.getStack().push(4711);
-                    assertEquals(0, ctx.getLevel());
-                    assertNotNull(ctx.getPosition());
-                    return false;
-                });
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        assertNull(runner.run("whatever").getStackTop());
-    }
-
-    @Test
-    public void action_invalid_illegalAdvanceIndex() {
-        final class EvilActionRule extends ActionRule<Integer> {
-            public EvilActionRule(final Action<Integer> action) {
-                super(action);
-            }
-
-            @Override
-            public boolean match(final RuleContext<Integer> context) {
-                return super.match(context) && context.advanceIndex(1000);
-            }
-        }
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return new EvilActionRule(ctx -> true);
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        assertFalse(runner.run("whatever").getMatched());
-
-    }
-
-    @Test
-    public void command_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return command(ctx -> ctx.getStack().push(4711));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
-    }
-
-    @Test
-    public void skippableAction_valid_noSkip() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return skippableAction(ctx -> {
-                    ctx.getStack().push(4711);
-                    return true;
-                });
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
-    }
-
-    @Test
-    public void skippableAction_valid_skip() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return test(
-                        skippableAction(ctx -> {
-                            ctx.getStack().push(4711);
-                            return true;
-                        }));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        assertNull(runner.run("whatever").getStackTop());
-    }
-
-    @Test
-    public void skippableAction_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return skippableAction(ctx -> {
-                    ctx.getStack().push(4711);
-                    return false;
-                });
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        assertNull(runner.run("whatever").getStackTop());
-    }
-
-    @Test
-    public void skippableCommand_valid_noSkip() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return skippableCommand(ctx -> ctx.getStack().push(4711));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
-    }
-
-    @Test
-    public void skippableCommand_valid_skip() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return test(
-                        skippableCommand(ctx -> ctx.getStack().push(4711)));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        assertNull(runner.run("whatever").getStackTop());
-    }
-
-
-    @Test
-    public void post_valid_suppliedEvent() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(
-                        string("whatever"),
-                        post(ctx -> ctx.getPreviousMatch()));
-            }
-        }
-        final class Listener extends ParseEventListener<Integer> {
-            private String string;
-
-            public String getString() {
-                return string;
-            }
-
-            @Subscribe
-            @SuppressFBWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS")
-            public void stringEvent(final String event) {
-                string = event;
-            }
-
-            @Override
-            public void afterMatchSuccess(final MatchSuccessEvent<Integer> event) {
-                assertNotNull(event.getContext());
-            }
-
-            @Override
-            public void afterParse(final PostParseEvent<Integer> event) {
-                assertNotNull(event.getResult());
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        final Listener listener = new Listener();
-        runner.registerListener(listener);
-        runner.run("whatever");
-        assertEquals("whatever", listener.getString());
-    }
-
-    @Test
-    public void post_valid_staticEvent() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(
-                        string("whatever"),
-                        post("someEvent"));
-            }
-        }
-        final class Listener extends ParseEventListener<Integer> {
-            private String string;
-
-            public String getString() {
-                return string;
-            }
-
-            @Subscribe
-            @SuppressFBWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS")
-            public void stringEvent(final String event) {
-                string = event;
-            }
-
-            @Override
-            public void afterMatchSuccess(final MatchSuccessEvent<Integer> event) {
-                assertNotNull(event.getContext());
-            }
-
-            @Override
-            public void afterParse(final PostParseEvent<Integer> event) {
-                assertNotNull(event.getResult());
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        final Listener listener = new Listener();
-        runner.registerListener(listener);
-        runner.run("whatever");
-        assertEquals("someEvent", listener.getString());
-    }
-
-    @Test
-    public void pop_valid_top() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(push(4711), pop());
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        assertNull(runner.run("whatever").getStackTop());
-    }
-
-    @Test
-    public void pop_valid_down() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(push(4711), push(4712), pop(1));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        assertEquals(4712, runner.run("whatever").getStackTop());
-    }
-
-    @Test
-    public void poke_valid_staticValue_top() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(push(4711), poke(ctx -> 4712));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        assertEquals(Integer.valueOf(4712), runner.run("whatever").getStackTop());
-        assertEquals(1, runner.run("whatever").getStack().size());
-    }
-
-    @Test
-    public void pop_valid_action() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(
-                        push(4711),
-                        action(ctx -> pop(ctx) == 4711));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        assertNull(runner.run("whatever").getStackTop());
-    }
-
-    @Test
-    public void popAs_valid_action_top() {
-        final class Parser extends AbstractParser<Number> {
-            @Override
-            public Rule<Number> root() {
-                return sequence(
-                        push(4711),
-                        action(ctx -> popAs(Integer.class, ctx) == 4711));
-            }
-        }
-        final DefaultParseRunner<Number> runner = new DefaultParseRunner<>(new Parser());
-        assertNull(runner.run("whatever").getStackTop());
-    }
-
-    @Test
-    public void popAs_valid_action_down() {
-        final class Parser extends AbstractParser<Number> {
-            @Override
-            public Rule<Number> root() {
-                return sequence(
-                        push(4711),
-                        push(4712),
-                        action(ctx -> popAs(Integer.class, 1, ctx) == 4711));
-            }
-        }
-        final DefaultParseRunner<Number> runner = new DefaultParseRunner<>(new Parser());
-        assertEquals(4712, runner.run("whatever").getStackTop());
-    }
-
-    @Test
-    public void peek_valid_top() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(push(4711), action(ctx -> peek(ctx) == 4711));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        assertEquals(4711, runner.run("whatever").getStackTop());
-    }
-
-    @Test
-    public void peek_valid_down() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(
-                        push(4711),
-                        push(4712),
-                        action(ctx -> peek(1, ctx) == 4711));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        assertEquals(4712, runner.run("whatever").getStackTop());
-    }
-
-    @Test
-    public void peekAs_valid_top() {
-        final class Parser extends AbstractParser<Number> {
-            @Override
-            public Rule<Number> root() {
-                return sequence(push(4711), action(ctx -> peekAs(Integer.class, ctx) == 4711));
-            }
-        }
-        final DefaultParseRunner<Number> runner = new DefaultParseRunner<>(new Parser());
-        assertEquals(4711, runner.run("whatever").getStackTop());
-    }
-
-    @Test
-    public void peekAs_valid_down() {
-        final class Parser extends AbstractParser<Number> {
-            @Override
-            public Rule<Number> root() {
-                return sequence(
-                        push(4711),
-                        push(4712),
-                        action(ctx -> peekAs(Integer.class, 1, ctx) == 4711));
-            }
-        }
-        final DefaultParseRunner<Number> runner = new DefaultParseRunner<>(new Parser());
-        assertEquals(4712, runner.run("whatever").getStackTop());
-    }
-
-    @Test
-    public void poke_valid_staticValue_down() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(push(4711), push(4712), poke(1, ctx -> 4713));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        assertEquals(Integer.valueOf(4712), runner.run("whatever").getStackTop());
-        assertEquals(2, runner.run("whatever").getStack().size());
-    }
-
-    @Test
-    public void poke_valid_suppliedValue_top() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(push(4711), poke(4712));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        assertEquals(Integer.valueOf(4712), runner.run("whatever").getStackTop());
-        assertEquals(1, runner.run("whatever").getStack().size());
-    }
-
-    @Test
-    public void poke_valid_suppliedValue_down() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(push(4711), push(4712), poke(1, 4713));
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        assertEquals(Integer.valueOf(4712), runner.run("whatever").getStackTop());
-        assertEquals(2, runner.run("whatever").getStack().size());
-    }
-
-    @Test
-    public void poke_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return poke(4712);
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        assertThrows(ActionRunException.class, () -> runner.run("whatever"));
-    }
-
-    @Test
-    public void push_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return push(4711);
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
-    }
-
-    @Test
-    public void dup_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(push(4711), dup());
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        assertEquals(2, runner.run("whatever").getStack().size());
-        assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
-        assertEquals(Integer.valueOf(4711), runner.run("whatever").getStack().peek(1));
-    }
-
-    @Test
-    public void dup_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return dup();
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        assertThrows(ActionRunException.class, () -> runner.run("whatever"));
-    }
-
-    @Test
-    public void swap_valid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(push(4711), push(4712), swap());
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        assertEquals(2, runner.run("whatever").getStack().size());
-        assertEquals(Integer.valueOf(4711), runner.run("whatever").getStackTop());
-        assertEquals(Integer.valueOf(4712), runner.run("whatever").getStack().peek(1));
-    }
-
-    @Test
-    public void swap_invalid() {
-        final class Parser extends AbstractParser<Integer> {
-            @Override
-            public Rule<Integer> root() {
-                return sequence(push(4711), swap());
-            }
-        }
-        final DefaultParseRunner<Integer> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new IntegerTestListener());
-        assertThrows(ActionRunException.class, () -> runner.run("whatever"));
-    }
-
-    @Test
-    public void previousMatch_valid() {
-        final class Parser extends AbstractParser<CharSequence> {
-            @Override
-            public Rule<CharSequence> root() {
-                return sequence(
-                        string("hello"),
-                        string("world"),
-                        push(ctx -> ctx.getParent().getPreviousMatch()),
-                        sequence(
-                                string("foo"),
-                                string("bar")),
-                        push(ctx -> ctx.getParent().getPreviousMatch()),
-                        test(string("baz")),
-                        push(ctx -> ctx.getParent().getPreviousMatch()),
-                        sequence(
-                                test(string("ba")),
-                                string("b"),
-                                test(string("az"))),
-                        push(ctx -> ctx.getParent().getPreviousMatch()));
-            }
-        }
-        final DefaultParseRunner<CharSequence> runner = new DefaultParseRunner<>(new Parser());
-        runner.registerListener(new CharSequenceTestListener());
-        final ParseResult<CharSequence> result = runner.run("helloworldfoobarbaz");
-        assertTrue(result.getMatched());
-        assertFalse(result.getMatchedEntireInput());
-        assertEquals("b", result.getStack().pop());
-        assertEquals("foobar", result.getStack().pop());
-        assertEquals("foobar", result.getStack().pop());
-        assertEquals("world", result.getStackTop());
-    }
-
+package com.mpe85.grampa.parser
+
+import com.google.common.collect.Sets
+import com.google.common.eventbus.Subscribe
+import com.mpe85.grampa.event.MatchSuccessEvent
+import com.mpe85.grampa.event.ParseEventListener
+import com.mpe85.grampa.event.PostParseEvent
+import com.mpe85.grampa.exception.ActionRunException
+import com.mpe85.grampa.rule.Action
+import com.mpe85.grampa.rule.ActionContext
+import com.mpe85.grampa.rule.Rule
+import com.mpe85.grampa.rule.RuleContext
+import com.mpe85.grampa.rule.impl.ActionRule
+import com.mpe85.grampa.runner.DefaultParseRunner
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
+import java.util.concurrent.atomic.AtomicReference
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
+
+@SuppressFBWarnings(
+  value = ["SIC_INNER_SHOULD_BE_STATIC_ANON"],
+  justification = "Performance is not of great importance in unit tests."
+)
+class AbstractParserTest {
+  private class IntegerTestListener : ParseEventListener<Int>()
+  private class CharSequenceTestListener : ParseEventListener<CharSequence>()
+
+  @Test
+  fun empty_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return empty()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("foo")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertEquals("", result.matchedInput)
+    Assertions.assertEquals("foo", result.restOfInput)
+  }
+
+  @Test
+  fun never_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return never()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("foo")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("foo", result.restOfInput)
+  }
+
+  @Test
+  fun eoi_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(string("foo"), eoi())
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("foo")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("foo", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun eoi_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(string("foo"), eoi())
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("foo ")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("foo ", result.restOfInput)
+  }
+
+  @Test
+  fun anyChar_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return anyChar()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("f")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("f", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun anyChar_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return anyChar()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun anyCodePoint_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return anyCodePoint()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("\uD835\uDD38")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("\uD835\uDD38", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun anyCodePoint_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return anyCodePoint()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun character_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return character('f')
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("f")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("f", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun character_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return character('f')
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("g")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("g", result.restOfInput)
+  }
+
+  @Test
+  fun ignoreCase_character_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return ignoreCase('f')
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("F")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("F", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun ignoreCase_character_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return ignoreCase('f')
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("G")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("G", result.restOfInput)
+  }
+
+  @Test
+  fun charRange_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return charRange('a', 'f')
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("c")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("c", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun charRange_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return charRange('a', 'f')
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("h")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("h", result.restOfInput)
+  }
+
+  @Test
+  fun anyOfChars_valid_vararg() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return anyOfChars('a', 'f')
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("a")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("a", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun anyOfChars_valid_set() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return anyOfChars(Sets.newHashSet('a', 'f'))
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("a")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("a", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun anyOfChars_valid_string() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return anyOfChars("a")
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("a")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("a", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun anyOfChars_invalid_wrongChar() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return anyOfChars('a', 'f')
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("c")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("c", result.restOfInput)
+  }
+
+  @Test
+  fun anyOfChars_invalid_never() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return anyOfChars("")
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("a")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("a", result.restOfInput)
+  }
+
+  @Test
+  fun noneOfChars_valid_vararg() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return noneOfChars('a', 'f')
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("c")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("c", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun noneOfChars_valid_set() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return noneOfChars(Sets.newHashSet('a', 'f'))
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("c")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("c", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun noneOfChars_valid_any() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return noneOfChars("")
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("c")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("c", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun noneOfChars_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return noneOfChars('a', 'f')
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("f")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("f", result.restOfInput)
+  }
+
+  @Test
+  fun codePoint_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return codePoint("\uD835\uDD38".codePointAt(0))
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("\uD835\uDD38")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("\uD835\uDD38", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun codePoint_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return codePoint("\uD835\uDD38".codePointAt(0))
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("\uD835\uDD39")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("\uD835\uDD39", result.restOfInput)
+  }
+
+  @Test
+  fun ignoreCase_codePoint_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return ignoreCase('f'.toInt())
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("F")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("F", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun ignoreCase_codePoint_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return ignoreCase('f'.toInt())
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("G")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("G", result.restOfInput)
+  }
+
+  @Test
+  fun codePointRange_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return codePointRange('Z'.toInt(), 'b'.toInt())
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("a")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("a", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun codePointRange_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return codePointRange('Z'.toInt(), 'b'.toInt())
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("X")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("X", result.restOfInput)
+  }
+
+  @Test
+  fun codePointRange_illegalArgument() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return codePointRange('b'.toInt(), 'a'.toInt())
+      }
+    }
+    Assertions.assertThrows(IllegalArgumentException::class.java) {
+      DefaultParseRunner<Int>(
+        Parser()
+      ).run("a")
+    }
+  }
+
+  @Test
+  fun anyOfCodePoint_valid_vararg() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return anyOfCodePoints('a'.toInt(), "\uD835\uDD38".codePointAt(0))
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("\uD835\uDD38")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("\uD835\uDD38", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun anyOfCodePoint_valid_set() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return anyOfCodePoints(Sets.newHashSet('a'.toInt(), "\uD835\uDD38".codePointAt(0)))
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("\uD835\uDD38")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("\uD835\uDD38", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun anyOfCodePoint_valid_string() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return anyOfCodePoints("\uD835\uDD38")
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("\uD835\uDD38")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("\uD835\uDD38", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun anyOfCodePoints_invalid_wrongCp() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return anyOfCodePoints('a'.toInt(), "\uD835\uDD38".codePointAt(0))
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("b")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("b", result.restOfInput)
+  }
+
+  @Test
+  fun anyOfCodePoints_invalid_never() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return anyOfCodePoints("")
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("b")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("b", result.restOfInput)
+  }
+
+  @Test
+  fun noneOfCodePoints_valid_vararg() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return noneOfCodePoints('a'.toInt(), "\uD835\uDD38".codePointAt(0))
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("b")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("b", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun noneOfCodePoints_valid_string() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return noneOfCodePoints("a\uD835\uDD38")
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("b")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("b", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun noneOfCodePoints_valid_set() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return noneOfCodePoints(Sets.newHashSet('a'.toInt(), "\uD835\uDD38".codePointAt(0)))
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("b")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("b", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun noneOfCodePoints_valid_any() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return noneOfCodePoints()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("b")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("b", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun noneOfCodePoints_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return noneOfCodePoints('a'.toInt(), "\uD835\uDD38".codePointAt(0))
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("\uD835\uDD38")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("\uD835\uDD38", result.restOfInput)
+  }
+
+  @Test
+  fun string_valid_nonEmpty() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return string("foobar")
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("foobart")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertEquals("foobar", result.matchedInput)
+    Assertions.assertEquals("t", result.restOfInput)
+  }
+
+  @Test
+  fun string_valid_empty() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return string("")
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("abc")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertEquals("", result.matchedInput)
+    Assertions.assertEquals("abc", result.restOfInput)
+  }
+
+  @Test
+  fun string_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return string("foobar")
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("foobär")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("foobär", result.restOfInput)
+  }
+
+  @Test
+  fun ignoreCase_string_valid_nonEmpty() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return ignoreCase("foobar")
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("fOObAr")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("fOObAr", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun ignoreCase_string_valid_empty() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return ignoreCase("")
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("aBc")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertEquals("", result.matchedInput)
+    Assertions.assertEquals("aBc", result.restOfInput)
+  }
+
+  @Test
+  fun ignoreCase_string_valid_oneChar() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return ignoreCase("c")
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("c")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("c", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun ignoreCase_string_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return string("fOObAr")
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("fOObÄr")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("fOObÄr", result.restOfInput)
+  }
+
+  @Test
+  fun regex_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return regex("abc+")
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("abcccccd")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertEquals("abccccc", result.matchedInput)
+    Assertions.assertEquals("d", result.restOfInput)
+  }
+
+  @Test
+  fun regex_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return string("abc+")
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("ab")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("ab", result.restOfInput)
+  }
+
+  @Test
+  fun strings_valid_vararg() {
+    val stringsRuleMatch = AtomicReference<CharSequence?>()
+
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(
+          strings("football", "foo", "foobar"),
+          command { ctx: ActionContext<Int> -> stringsRuleMatch.set(ctx.previousMatch) },
+          string("baz")
+        )
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("foobaz")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("foobaz", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+    Assertions.assertEquals("foo", stringsRuleMatch.get())
+  }
+
+  @Test
+  fun strings_valid_set_oneString() {
+    val stringsRuleMatch = AtomicReference<CharSequence?>()
+
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(
+          strings("foo"),
+          command { ctx: ActionContext<Int> -> stringsRuleMatch.set(ctx.previousMatch) },
+          string("baz")
+        )
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("foobaz")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("foobaz", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+    Assertions.assertEquals("foo", stringsRuleMatch.get())
+  }
+
+  @Test
+  fun strings_invalid_vararg() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return strings("football", "foo", "foobar")
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("fo")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("fo", result.restOfInput)
+  }
+
+  @Test
+  fun strings_invalid_set_empty() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return strings(Sets.newHashSet())
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("fo")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("fo", result.restOfInput)
+  }
+
+  @Test
+  fun ignoreCase_strings_valid_vararg() {
+    val stringsRuleMatch = AtomicReference<CharSequence?>()
+
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(
+          ignoreCase("football", "foo", "foobar"),
+          command { ctx: ActionContext<Int> -> stringsRuleMatch.set(ctx.previousMatch) },
+          string("baz")
+        )
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("fOObaz")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("fOObaz", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+    Assertions.assertEquals("fOO", stringsRuleMatch.get())
+  }
+
+  @Test
+  fun ignoreCase_strings_valid_set_oneString() {
+    val stringsRuleMatch = AtomicReference<CharSequence?>()
+
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(
+          ignoreCase(Sets.newHashSet("foo")),
+          command { ctx: ActionContext<Int> -> stringsRuleMatch.set(ctx.previousMatch) },
+          string("baz")
+        )
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("fOObaz")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("fOObaz", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+    Assertions.assertEquals("fOO", stringsRuleMatch.get())
+  }
+
+  @Test
+  fun ignoreCase_strings_invalid_vararg() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return ignoreCase("football", "foo", "foobar")
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("fO")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("fO", result.restOfInput)
+  }
+
+  @Test
+  fun ignoreCase_strings_invalid_set_empty() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return ignoreCase(Sets.newHashSet())
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("fO")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("fO", result.restOfInput)
+  }
+
+  @Test
+  fun ascii_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return ascii()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("#")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("#", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun ascii_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return ascii()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("ß")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("ß", result.restOfInput)
+  }
+
+  @Test
+  fun bmp_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return bmp()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("ß")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("ß", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun bmp_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return bmp()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("\uD835\uDD38")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("\uD835\uDD38", result.restOfInput)
+  }
+
+  @Test
+  fun digit_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return digit()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("5")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("5", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun digit_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return digit()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("O")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("O", result.restOfInput)
+  }
+
+  @Test
+  fun javaIdentifierStart_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return javaIdentifierStart()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("ä")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("ä", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun javaIdentifierStart_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return javaIdentifierStart()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("1")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("1", result.restOfInput)
+  }
+
+  @Test
+  fun javaIdentifierPart_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return javaIdentifierPart()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("1")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("1", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun javaIdentifierPart_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return javaIdentifierPart()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("(")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("(", result.restOfInput)
+  }
+
+  @Test
+  fun letter_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return letter()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("Ü")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("Ü", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun letter_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return letter()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("$")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("$", result.restOfInput)
+  }
+
+  @Test
+  fun letterOrDigit_valid_letter() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return letterOrDigit()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("x")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("x", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun letterOrDigit_valid_digit() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return letterOrDigit()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("9")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("9", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun letterOrDigit_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return letter()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("%")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("%", result.restOfInput)
+  }
+
+  @Test
+  fun printable_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return printable()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("n")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("n", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun printable_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return printable()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("\n")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("\n", result.restOfInput)
+  }
+
+  @Test
+  fun spaceChar_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return spaceChar()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run(" ")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals(" ", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun spaceChar_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return spaceChar()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("\n")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("\n", result.restOfInput)
+  }
+
+  @Test
+  fun whitespace_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return whitespace()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("\n")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("\n", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun whitespace_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return whitespace()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("_")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("_", result.restOfInput)
+  }
+
+  @Test
+  fun cr_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return cr()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("\r")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("\r", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun cr_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return cr()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("\n")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("\n", result.restOfInput)
+  }
+
+  @Test
+  fun lf_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return lf()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("\n")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("\n", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun lf_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return lf()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("\r")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("\r", result.restOfInput)
+  }
+
+  @Test
+  fun crlf_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return crlf()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("\r\n")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("\r\n", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun crlf_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return crlf()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("\n\r")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("\n\r", result.restOfInput)
+  }
+
+  @Test
+  fun sequence_valid_character() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(
+          character('a'),
+          character('b'),
+          character('c')
+        )
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("abcd")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertEquals("abc", result.matchedInput)
+    Assertions.assertEquals("d", result.restOfInput)
+  }
+
+  @Test
+  fun sequence_valid_empty() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("abcd")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertEquals("", result.matchedInput)
+    Assertions.assertEquals("abcd", result.restOfInput)
+  }
+
+  @Test
+  fun sequence_valid_push() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(
+          push(4711),
+          push { ctx: ActionContext<Int>? -> peek(ctx!!)!! + 4 },
+          sequence(
+            push { ctx: ActionContext<Int>? -> pop(1, ctx!!)!! + peek(ctx)!! }),
+          optional(action { ctx: ActionContext<Int> ->
+            ctx.stack.push(0)
+            false
+          })
+        )
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("whatever")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertEquals("", result.matchedInput)
+    Assertions.assertEquals("whatever", result.restOfInput)
+    Assertions.assertEquals(Integer.valueOf(9426), result.stackTop)
+    Assertions.assertEquals(2, result.stack.size)
+    Assertions.assertEquals(Integer.valueOf(9426), result.stack.peek())
+    Assertions.assertEquals(Integer.valueOf(4715), result.stack.peek(1))
+  }
+
+  @Test
+  fun sequence_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(
+          character('a'),
+          character('b'),
+          character('c')
+        )
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("acdc")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("acdc", result.restOfInput)
+  }
+
+  @Test
+  fun firstOf_valid_sequence() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(
+          firstOf(
+            sequence(string("foo"), string("bar")),
+            sequence(string("foo"), string("baz"))
+          ),
+          string("xxx")
+        )
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("foobazxxx")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("foobazxxx", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun firstOf_valid_empty() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return firstOf()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("foo")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertEquals("", result.matchedInput)
+    Assertions.assertEquals("foo", result.restOfInput)
+  }
+
+  @Test
+  fun firstOf_valid_oneRule() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return firstOf(string("foo"))
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("foo")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("foo", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun firstOf_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return firstOf(
+          string("foo"),
+          string("bar"),
+          string("baz")
+        )
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("babafoo")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("babafoo", result.restOfInput)
+  }
+
+  @Test
+  fun optional_valid_match() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return optional(character('a'))
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("a")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("a", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun optional_valid_noMatch() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return optional(character('a'))
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("b")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertEquals("", result.matchedInput)
+    Assertions.assertEquals("b", result.restOfInput)
+  }
+
+  @Test
+  fun zeroOrMore_valid_zero() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return zeroOrMore(character('a'))
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("b")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertEquals("", result.matchedInput)
+    Assertions.assertEquals("b", result.restOfInput)
+  }
+
+  @Test
+  fun zeroOrMore_valid_more() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return zeroOrMore(character('a'))
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("aaaaa")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("aaaaa", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun oneOrMore_valid_one() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return oneOrMore(character('a'))
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("a")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("a", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun oneOrMore_valid_more() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return oneOrMore(character('a'))
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("aaaaa")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("aaaaa", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun oneOrMore_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return oneOrMore(character('a'))
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("b")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("b", result.restOfInput)
+  }
+
+  @Test
+  fun repeat_valid_times() {
+    class Parser : AbstractParser<CharSequence>() {
+      override fun root(): Rule<CharSequence> {
+        return repeat(character('z')).times(4)
+      }
+    }
+
+    val runner = DefaultParseRunner<CharSequence>(Parser())
+    runner.registerListener(CharSequenceTestListener())
+    val result = runner.run("zzzz")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("zzzz", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun repeat_invalid_times() {
+    class Parser : AbstractParser<CharSequence>() {
+      override fun root(): Rule<CharSequence> {
+        return repeat(character('z')).times(6, 7)
+      }
+    }
+
+    val runner = DefaultParseRunner<CharSequence>(Parser())
+    runner.registerListener(CharSequenceTestListener())
+    val result = runner.run("zzzzz")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("zzzzz", result.restOfInput)
+  }
+
+  @Test
+  fun repeat_valid_range() {
+    class Parser : AbstractParser<CharSequence>() {
+      override fun root(): Rule<CharSequence> {
+        return repeat(character('z')).times(4, 7)
+      }
+    }
+
+    val runner = DefaultParseRunner<CharSequence>(Parser())
+    runner.registerListener(CharSequenceTestListener())
+    val result = runner.run("zzzzz")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("zzzzz", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun repeat_invalid_range() {
+    class Parser : AbstractParser<CharSequence>() {
+      override fun root(): Rule<CharSequence> {
+        return repeat(character('z')).times(2, 4)
+      }
+    }
+
+    val runner = DefaultParseRunner<CharSequence>(Parser())
+    runner.registerListener(CharSequenceTestListener())
+    val result = runner.run("z")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("z", result.restOfInput)
+  }
+
+  @Test
+  fun repeat_valid_max() {
+    class Parser : AbstractParser<CharSequence>() {
+      override fun root(): Rule<CharSequence> {
+        return repeat(character('z')).max(3)
+      }
+    }
+
+    val runner = DefaultParseRunner<CharSequence>(Parser())
+    runner.registerListener(CharSequenceTestListener())
+    val result = runner.run("zz")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("zz", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun repeat_invalid_max() {
+    class Parser : AbstractParser<CharSequence>() {
+      override fun root(): Rule<CharSequence> {
+        return sequence(repeat(character('z')).max(3), eoi())
+      }
+    }
+
+    val runner = DefaultParseRunner<CharSequence>(Parser())
+    runner.registerListener(CharSequenceTestListener())
+    val result = runner.run("zzzz")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("zzzz", result.restOfInput)
+  }
+
+  @Test
+  fun repeat_valid_min() {
+    class Parser : AbstractParser<CharSequence>() {
+      override fun root(): Rule<CharSequence> {
+        return repeat(character('z')).min(3)
+      }
+    }
+
+    val runner = DefaultParseRunner<CharSequence>(Parser())
+    runner.registerListener(CharSequenceTestListener())
+    val result = runner.run("zzzzz")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("zzzzz", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun repeat_invalid_min() {
+    class Parser : AbstractParser<CharSequence>() {
+      override fun root(): Rule<CharSequence> {
+        return repeat(character('z')).min(8)
+      }
+    }
+
+    val runner = DefaultParseRunner<CharSequence>(Parser())
+    runner.registerListener(CharSequenceTestListener())
+    val result = runner.run("zzzzz")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("zzzzz", result.restOfInput)
+  }
+
+  @Test
+  fun test_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(
+          test(string("what")),
+          string("whatever")
+        )
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("whatever")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("whatever", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun test_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(
+          test(string("ever")),
+          string("whatever")
+        )
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("whatever")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("whatever", result.restOfInput)
+  }
+
+  @Test
+  fun testNot_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(
+          testNot(string("foo")),
+          string("whatever")
+        )
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("whatever")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("whatever", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun testNot_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(
+          testNot(string("what")),
+          string("whatever")
+        )
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("whatever")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("whatever", result.restOfInput)
+  }
+
+  @Test
+  fun conditional_valid_then_withElse() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return conditional({ ctx: ActionContext<Int> -> ctx.startIndex == 0 }, letter(), digit())
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("z")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("z", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun conditional_valid_then_noElse() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return conditional({ ctx: ActionContext<Int> -> ctx.startIndex == 0 }, letter())
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("z")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("z", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun conditional_valid_else() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return conditional({ ctx: ActionContext<Int> -> ctx.startIndex != 0 }, letter(), digit())
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("1")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertTrue(result.matchedEntireInput)
+    Assertions.assertEquals("1", result.matchedInput)
+    Assertions.assertEquals("", result.restOfInput)
+  }
+
+  @Test
+  fun conditional_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return conditional({ ctx: ActionContext<Int> -> ctx.startIndex == 0 }, never(), empty())
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    val result = runner.run("whatever")
+    Assertions.assertFalse(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertNull(result.matchedInput)
+    Assertions.assertEquals("whatever", result.restOfInput)
+  }
+
+  @Test
+  fun action_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return action { ctx: ActionContext<Int> ->
+          ctx.stack.push(4711)
+          Assertions.assertEquals(0, ctx.level)
+          Assertions.assertNotNull(ctx.position)
+          true
+        }
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    Assertions.assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
+  }
+
+  @Test
+  fun action_invalid_failingAction() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return action { ctx: ActionContext<Int> ->
+          ctx.stack.push(4711)
+          Assertions.assertEquals(0, ctx.level)
+          Assertions.assertNotNull(ctx.position)
+          false
+        }
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    Assertions.assertNull(runner.run("whatever").stackTop)
+  }
+
+  @Test
+  fun action_invalid_illegalAdvanceIndex() {
+    class EvilActionRule(action: Action<Int>) : ActionRule<Int>(action) {
+      override fun match(context: RuleContext<Int>): Boolean {
+        return super.match(context) && context.advanceIndex(1000)
+      }
+    }
+
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return EvilActionRule { true }
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    Assertions.assertFalse(runner.run("whatever").matched)
+  }
+
+  @Test
+  fun command_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return command { ctx: ActionContext<Int> -> ctx.stack.push(4711) }
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    Assertions.assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
+  }
+
+  @Test
+  fun skippableAction_valid_noSkip() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return skippableAction { ctx: ActionContext<Int> ->
+          ctx.stack.push(4711)
+          true
+        }
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    Assertions.assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
+  }
+
+  @Test
+  fun skippableAction_valid_skip() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return test(
+          skippableAction { ctx: ActionContext<Int> ->
+            ctx.stack.push(4711)
+            true
+          })
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    Assertions.assertNull(runner.run("whatever").stackTop)
+  }
+
+  @Test
+  fun skippableAction_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return skippableAction { ctx: ActionContext<Int> ->
+          ctx.stack.push(4711)
+          false
+        }
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    Assertions.assertNull(runner.run("whatever").stackTop)
+  }
+
+  @Test
+  fun skippableCommand_valid_noSkip() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return skippableCommand { ctx: ActionContext<Int> -> ctx.stack.push(4711) }
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    Assertions.assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
+  }
+
+  @Test
+  fun skippableCommand_valid_skip() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return test(
+          skippableCommand { ctx: ActionContext<Int> -> ctx.stack.push(4711) })
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    Assertions.assertNull(runner.run("whatever").stackTop)
+  }
+
+  @Test
+  fun post_valid_suppliedEvent() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(
+          string("whatever"),
+          post { ctx: ActionContext<Int> -> ctx.previousMatch!! })
+      }
+    }
+
+    class Listener : ParseEventListener<Int>() {
+      var string: String? = null
+        private set
+
+      @Subscribe
+      @SuppressFBWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS")
+      fun stringEvent(event: String?) {
+        string = event
+      }
+
+      override fun afterMatchSuccess(event: MatchSuccessEvent<Int>) {
+        Assertions.assertNotNull(event.context)
+      }
+
+      override fun afterParse(event: PostParseEvent<Int>) {
+        Assertions.assertNotNull(event.result)
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    val listener = Listener()
+    runner.registerListener(listener)
+    runner.run("whatever")
+    Assertions.assertEquals("whatever", listener.string)
+  }
+
+  @Test
+  fun post_valid_staticEvent() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(
+          string("whatever"),
+          post("someEvent")
+        )
+      }
+    }
+
+    class Listener : ParseEventListener<Int>() {
+      var string: String? = null
+        private set
+
+      @Subscribe
+      @SuppressFBWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS")
+      fun stringEvent(event: String?) {
+        string = event
+      }
+
+      override fun afterMatchSuccess(event: MatchSuccessEvent<Int>) {
+        Assertions.assertNotNull(event.context)
+      }
+
+      override fun afterParse(event: PostParseEvent<Int>) {
+        Assertions.assertNotNull(event.result)
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    val listener = Listener()
+    runner.registerListener(listener)
+    runner.run("whatever")
+    Assertions.assertEquals("someEvent", listener.string)
+  }
+
+  @Test
+  fun pop_valid_top() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(push(4711), pop())
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    Assertions.assertNull(runner.run("whatever").stackTop)
+  }
+
+  @Test
+  fun pop_valid_down() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(push(4711), push(4712), pop(1))
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    Assertions.assertEquals(4712, runner.run("whatever").stackTop)
+  }
+
+  @Test
+  fun poke_valid_staticValue_top() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(push(4711), poke { 4712 })
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    Assertions.assertEquals(Integer.valueOf(4712), runner.run("whatever").stackTop)
+    Assertions.assertEquals(1, runner.run("whatever").stack.size)
+  }
+
+  @Test
+  fun pop_valid_action() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(
+          push(4711),
+          action { ctx: ActionContext<Int> -> pop(ctx) == 4711 })
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    Assertions.assertNull(runner.run("whatever").stackTop)
+  }
+
+  @Test
+  fun popAs_valid_action_top() {
+    class Parser : AbstractParser<Number>() {
+      override fun root(): Rule<Number> {
+        return sequence(
+          push(4711),
+          action { ctx: ActionContext<Number> ->
+            popAs(Int::class.javaObjectType, ctx) == 4711
+          })
+      }
+    }
+
+    val runner = DefaultParseRunner<Number>(Parser())
+    Assertions.assertNull(runner.run("whatever").stackTop)
+  }
+
+  @Test
+  fun popAs_valid_action_down() {
+    class Parser : AbstractParser<Number>() {
+      override fun root(): Rule<Number> {
+        return sequence(
+          push(4711),
+          push(4712),
+          action { ctx: ActionContext<Number> ->
+            popAs(Int::class.javaObjectType, 1, ctx) == 4711
+          })
+      }
+    }
+
+    val runner = DefaultParseRunner<Number>(Parser())
+    Assertions.assertEquals(4712, runner.run("whatever").stackTop)
+  }
+
+  @Test
+  fun peek_valid_top() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(push(4711), action { ctx: ActionContext<Int> ->
+          peek(ctx) == 4711
+        })
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    Assertions.assertEquals(4711, runner.run("whatever").stackTop)
+  }
+
+  @Test
+  fun peek_valid_down() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(
+          push(4711),
+          push(4712),
+          action { ctx: ActionContext<Int> -> peek(1, ctx) == 4711 })
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    Assertions.assertEquals(4712, runner.run("whatever").stackTop)
+  }
+
+  @Test
+  fun peekAs_valid_top() {
+    class Parser : AbstractParser<Number>() {
+      override fun root(): Rule<Number> {
+        return sequence(push(4711), action { ctx: ActionContext<Number> ->
+          peekAs(Int::class.javaObjectType, ctx) == 4711
+        })
+      }
+    }
+
+    val runner = DefaultParseRunner<Number>(Parser())
+    Assertions.assertEquals(4711, runner.run("whatever").stackTop)
+  }
+
+  @Test
+  fun peekAs_valid_down() {
+    class Parser : AbstractParser<Number>() {
+      override fun root(): Rule<Number> {
+        return sequence(
+          push(4711),
+          push(4712),
+          action { ctx: ActionContext<Number> ->
+            peekAs(Int::class.javaObjectType, 1, ctx) == 4711
+          })
+      }
+    }
+
+    val runner = DefaultParseRunner<Number>(Parser())
+    Assertions.assertEquals(4712, runner.run("whatever").stackTop)
+  }
+
+  @Test
+  fun poke_valid_staticValue_down() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(push(4711), push(4712), poke(1) { 4713 })
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    Assertions.assertEquals(Integer.valueOf(4712), runner.run("whatever").stackTop)
+    Assertions.assertEquals(2, runner.run("whatever").stack.size)
+  }
+
+  @Test
+  fun poke_valid_suppliedValue_top() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(push(4711), poke(4712))
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    Assertions.assertEquals(Integer.valueOf(4712), runner.run("whatever").stackTop)
+    Assertions.assertEquals(1, runner.run("whatever").stack.size)
+  }
+
+  @Test
+  fun poke_valid_suppliedValue_down() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(push(4711), push(4712), poke(1, 4713))
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    Assertions.assertEquals(Integer.valueOf(4712), runner.run("whatever").stackTop)
+    Assertions.assertEquals(2, runner.run("whatever").stack.size)
+  }
+
+  @Test
+  fun poke_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return poke(4712)
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    Assertions.assertThrows(ActionRunException::class.java) { runner.run("whatever") }
+  }
+
+  @Test
+  fun push_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return push(4711)
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    Assertions.assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
+  }
+
+  @Test
+  fun dup_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(push(4711), dup())
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    Assertions.assertEquals(2, runner.run("whatever").stack.size)
+    Assertions.assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
+    Assertions.assertEquals(Integer.valueOf(4711), runner.run("whatever").stack.peek(1))
+  }
+
+  @Test
+  fun dup_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return dup()
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    Assertions.assertThrows(ActionRunException::class.java) { runner.run("whatever") }
+  }
+
+  @Test
+  fun swap_valid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(push(4711), push(4712), swap())
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    Assertions.assertEquals(2, runner.run("whatever").stack.size)
+    Assertions.assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
+    Assertions.assertEquals(Integer.valueOf(4712), runner.run("whatever").stack.peek(1))
+  }
+
+  @Test
+  fun swap_invalid() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return sequence(push(4711), swap())
+      }
+    }
+
+    val runner = DefaultParseRunner<Int>(Parser())
+    runner.registerListener(IntegerTestListener())
+    Assertions.assertThrows(ActionRunException::class.java) { runner.run("whatever") }
+  }
+
+  @Test
+  fun previousMatch_valid() {
+    class Parser : AbstractParser<CharSequence>() {
+      override fun root(): Rule<CharSequence> {
+        return sequence(
+          string("hello"),
+          string("world"),
+          push { ctx: ActionContext<CharSequence> -> ctx.parent?.previousMatch!! },
+          sequence(
+            string("foo"),
+            string("bar")
+          ),
+          push { ctx: ActionContext<CharSequence> -> ctx.parent?.previousMatch!! },
+          test(string("baz")),
+          push { ctx: ActionContext<CharSequence> -> ctx.parent?.previousMatch!! },
+          sequence(
+            test(string("ba")),
+            string("b"),
+            test(string("az"))
+          ),
+          push { ctx: ActionContext<CharSequence> -> ctx.parent?.previousMatch!! })
+      }
+    }
+
+    val runner = DefaultParseRunner<CharSequence>(Parser())
+    runner.registerListener(CharSequenceTestListener())
+    val result = runner.run("helloworldfoobarbaz")
+    Assertions.assertTrue(result.matched)
+    Assertions.assertFalse(result.matchedEntireInput)
+    Assertions.assertEquals("b", result.stack.pop())
+    Assertions.assertEquals("foobar", result.stack.pop())
+    Assertions.assertEquals("foobar", result.stack.pop())
+    Assertions.assertEquals("world", result.stackTop)
+  }
 }
