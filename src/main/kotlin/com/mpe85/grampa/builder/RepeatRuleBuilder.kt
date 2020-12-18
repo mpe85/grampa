@@ -7,7 +7,6 @@ import com.mpe85.grampa.rule.impl.RepeatRule
  * A builder for repeat rules. See [RepeatRule].
  *
  * @author mpe85
- *
  * @param T the type of the stack elements
  * @param rule the repeated rule
  */

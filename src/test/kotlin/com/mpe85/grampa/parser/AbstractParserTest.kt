@@ -1770,11 +1770,11 @@ class AbstractParserTest {
   fun repeat_valid_times() {
     class Parser : AbstractParser<CharSequence>() {
       override fun root(): Rule<CharSequence> {
-        return repeat(character('z')).times(4)
+        return repeat(character('z')) * 4
       }
     }
 
-    val runner = DefaultParseRunner<CharSequence>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(CharSequenceTestListener())
     val result = runner.run("zzzz")
     assertTrue(result.matched)
@@ -1791,7 +1791,7 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<CharSequence>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(CharSequenceTestListener())
     val result = runner.run("zzzzz")
     assertFalse(result.matched)
