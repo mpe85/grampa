@@ -36,7 +36,7 @@ dependencies {
   implementation(kotlin("stdlib-jdk8", "1.4.21"))
   implementation("com.google.guava:guava:30.1-jre")
   implementation("net.bytebuddy:byte-buddy:1.10.18")
-  implementation("com.ibm.icu:icu4j:68.1")
+  implementation("com.ibm.icu:icu4j:68.2")
   compileOnly("com.github.spotbugs:spotbugs-annotations:4.2.0")
   testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
   testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.0")
