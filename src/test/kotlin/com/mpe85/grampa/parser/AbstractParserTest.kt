@@ -15,6 +15,11 @@ import com.mpe85.grampa.runner.DefaultParseRunner
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import java.util.concurrent.atomic.AtomicReference
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 @SuppressFBWarnings(
@@ -33,13 +38,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("foo")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertEquals("", result.matchedInput)
-    Assertions.assertEquals("foo", result.restOfInput)
+    assertTrue(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertEquals("", result.matchedInput)
+    assertEquals("foo", result.restOfInput)
   }
 
   @Test
@@ -50,13 +55,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("foo")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("foo", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("foo", result.restOfInput)
   }
 
   @Test
@@ -67,13 +72,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("foo")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("foo", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("foo", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -84,13 +89,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("foo ")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("foo ", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("foo ", result.restOfInput)
   }
 
   @Test
@@ -101,13 +106,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("f")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("f", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("f", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -118,13 +123,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -135,13 +140,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\uD835\uDD38")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("\uD835\uDD38", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("\uD835\uDD38", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -152,13 +157,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -169,13 +174,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("f")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("f", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("f", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -186,13 +191,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("g")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("g", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("g", result.restOfInput)
   }
 
   @Test
@@ -203,13 +208,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("F")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("F", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("F", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -220,13 +225,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("G")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("G", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("G", result.restOfInput)
   }
 
   @Test
@@ -237,13 +242,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("c")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("c", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("c", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -254,13 +259,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("h")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("h", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("h", result.restOfInput)
   }
 
   @Test
@@ -271,13 +276,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("a")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("a", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("a", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -288,13 +293,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("a")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("a", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("a", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -305,13 +310,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("a")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("a", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("a", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -322,13 +327,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("c")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("c", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("c", result.restOfInput)
   }
 
   @Test
@@ -339,13 +344,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("a")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("a", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("a", result.restOfInput)
   }
 
   @Test
@@ -356,13 +361,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("c")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("c", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("c", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -373,13 +378,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("c")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("c", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("c", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -390,13 +395,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("c")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("c", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("c", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -407,13 +412,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("f")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("f", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("f", result.restOfInput)
   }
 
   @Test
@@ -424,13 +429,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\uD835\uDD38")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("\uD835\uDD38", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("\uD835\uDD38", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -441,13 +446,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\uD835\uDD39")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("\uD835\uDD39", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("\uD835\uDD39", result.restOfInput)
   }
 
   @Test
@@ -458,13 +463,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("F")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("F", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("F", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -475,13 +480,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("G")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("G", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("G", result.restOfInput)
   }
 
   @Test
@@ -492,13 +497,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("a")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("a", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("a", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -509,13 +514,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("X")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("X", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("X", result.restOfInput)
   }
 
   @Test
@@ -526,9 +531,7 @@ class AbstractParserTest {
       }
     }
     Assertions.assertThrows(IllegalArgumentException::class.java) {
-      DefaultParseRunner<Int>(
-        Parser()
-      ).run("a")
+      DefaultParseRunner(Parser()).run("a")
     }
   }
 
@@ -540,13 +543,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\uD835\uDD38")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("\uD835\uDD38", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("\uD835\uDD38", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -557,13 +560,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\uD835\uDD38")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("\uD835\uDD38", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("\uD835\uDD38", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -574,13 +577,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\uD835\uDD38")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("\uD835\uDD38", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("\uD835\uDD38", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -591,13 +594,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("b")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("b", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("b", result.restOfInput)
   }
 
   @Test
@@ -608,13 +611,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("b")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("b", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("b", result.restOfInput)
   }
 
   @Test
@@ -625,13 +628,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("b")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("b", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("b", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -642,13 +645,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("b")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("b", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("b", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -659,13 +662,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("b")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("b", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("b", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -676,13 +679,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("b")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("b", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("b", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -693,13 +696,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\uD835\uDD38")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("\uD835\uDD38", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("\uD835\uDD38", result.restOfInput)
   }
 
   @Test
@@ -710,13 +713,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("foobart")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertEquals("foobar", result.matchedInput)
-    Assertions.assertEquals("t", result.restOfInput)
+    assertTrue(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertEquals("foobar", result.matchedInput)
+    assertEquals("t", result.restOfInput)
   }
 
   @Test
@@ -727,13 +730,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("abc")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertEquals("", result.matchedInput)
-    Assertions.assertEquals("abc", result.restOfInput)
+    assertTrue(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertEquals("", result.matchedInput)
+    assertEquals("abc", result.restOfInput)
   }
 
   @Test
@@ -744,13 +747,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("foobär")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("foobär", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("foobär", result.restOfInput)
   }
 
   @Test
@@ -761,13 +764,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("fOObAr")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("fOObAr", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("fOObAr", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -778,13 +781,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("aBc")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertEquals("", result.matchedInput)
-    Assertions.assertEquals("aBc", result.restOfInput)
+    assertTrue(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertEquals("", result.matchedInput)
+    assertEquals("aBc", result.restOfInput)
   }
 
   @Test
@@ -795,13 +798,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("c")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("c", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("c", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -812,13 +815,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("fOObÄr")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("fOObÄr", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("fOObÄr", result.restOfInput)
   }
 
   @Test
@@ -829,13 +832,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("abcccccd")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertEquals("abccccc", result.matchedInput)
-    Assertions.assertEquals("d", result.restOfInput)
+    assertTrue(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertEquals("abccccc", result.matchedInput)
+    assertEquals("d", result.restOfInput)
   }
 
   @Test
@@ -846,13 +849,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("ab")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("ab", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("ab", result.restOfInput)
   }
 
   @Test
@@ -869,14 +872,14 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("foobaz")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("foobaz", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
-    Assertions.assertEquals("foo", stringsRuleMatch.get())
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("foobaz", result.matchedInput)
+    assertEquals("", result.restOfInput)
+    assertEquals("foo", stringsRuleMatch.get())
   }
 
   @Test
@@ -893,14 +896,14 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("foobaz")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("foobaz", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
-    Assertions.assertEquals("foo", stringsRuleMatch.get())
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("foobaz", result.matchedInput)
+    assertEquals("", result.restOfInput)
+    assertEquals("foo", stringsRuleMatch.get())
   }
 
   @Test
@@ -911,13 +914,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("fo")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("fo", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("fo", result.restOfInput)
   }
 
   @Test
@@ -928,13 +931,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("fo")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("fo", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("fo", result.restOfInput)
   }
 
   @Test
@@ -951,14 +954,14 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("fOObaz")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("fOObaz", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
-    Assertions.assertEquals("fOO", stringsRuleMatch.get())
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("fOObaz", result.matchedInput)
+    assertEquals("", result.restOfInput)
+    assertEquals("fOO", stringsRuleMatch.get())
   }
 
   @Test
@@ -975,14 +978,14 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("fOObaz")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("fOObaz", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
-    Assertions.assertEquals("fOO", stringsRuleMatch.get())
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("fOObaz", result.matchedInput)
+    assertEquals("", result.restOfInput)
+    assertEquals("fOO", stringsRuleMatch.get())
   }
 
   @Test
@@ -993,13 +996,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("fO")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("fO", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("fO", result.restOfInput)
   }
 
   @Test
@@ -1010,13 +1013,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("fO")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("fO", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("fO", result.restOfInput)
   }
 
   @Test
@@ -1027,13 +1030,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("#")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("#", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("#", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1044,13 +1047,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("ß")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("ß", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("ß", result.restOfInput)
   }
 
   @Test
@@ -1061,13 +1064,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("ß")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("ß", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("ß", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1078,13 +1081,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\uD835\uDD38")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("\uD835\uDD38", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("\uD835\uDD38", result.restOfInput)
   }
 
   @Test
@@ -1095,13 +1098,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("5")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("5", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("5", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1112,13 +1115,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("O")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("O", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("O", result.restOfInput)
   }
 
   @Test
@@ -1129,13 +1132,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("ä")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("ä", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("ä", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1146,13 +1149,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("1")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("1", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("1", result.restOfInput)
   }
 
   @Test
@@ -1163,13 +1166,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("1")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("1", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("1", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1180,13 +1183,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("(")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("(", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("(", result.restOfInput)
   }
 
   @Test
@@ -1197,13 +1200,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("Ü")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("Ü", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("Ü", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1214,13 +1217,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("$")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("$", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("$", result.restOfInput)
   }
 
   @Test
@@ -1231,13 +1234,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("x")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("x", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("x", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1248,13 +1251,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("9")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("9", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("9", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1265,13 +1268,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("%")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("%", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("%", result.restOfInput)
   }
 
   @Test
@@ -1282,13 +1285,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("n")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("n", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("n", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1299,13 +1302,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\n")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("\n", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("\n", result.restOfInput)
   }
 
   @Test
@@ -1316,13 +1319,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run(" ")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals(" ", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals(" ", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1333,13 +1336,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\n")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("\n", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("\n", result.restOfInput)
   }
 
   @Test
@@ -1350,13 +1353,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\n")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("\n", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("\n", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1367,13 +1370,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("_")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("_", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("_", result.restOfInput)
   }
 
   @Test
@@ -1384,13 +1387,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\r")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("\r", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("\r", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1401,13 +1404,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\n")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("\n", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("\n", result.restOfInput)
   }
 
   @Test
@@ -1418,13 +1421,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\n")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("\n", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("\n", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1435,13 +1438,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\r")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("\r", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("\r", result.restOfInput)
   }
 
   @Test
@@ -1452,13 +1455,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\r\n")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("\r\n", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("\r\n", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1469,13 +1472,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\n\r")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("\n\r", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("\n\r", result.restOfInput)
   }
 
   @Test
@@ -1490,13 +1493,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("abcd")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertEquals("abc", result.matchedInput)
-    Assertions.assertEquals("d", result.restOfInput)
+    assertTrue(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertEquals("abc", result.matchedInput)
+    assertEquals("d", result.restOfInput)
   }
 
   @Test
@@ -1507,13 +1510,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("abcd")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertEquals("", result.matchedInput)
-    Assertions.assertEquals("abcd", result.restOfInput)
+    assertTrue(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertEquals("", result.matchedInput)
+    assertEquals("abcd", result.restOfInput)
   }
 
   @Test
@@ -1522,9 +1525,8 @@ class AbstractParserTest {
       override fun root(): Rule<Int> {
         return sequence(
           push(4711),
-          push { ctx: ActionContext<Int>? -> peek(ctx!!)!! + 4 },
-          sequence(
-            push { ctx: ActionContext<Int>? -> pop(1, ctx!!)!! + peek(ctx)!! }),
+          push { ctx: ActionContext<Int> -> peek(ctx) + 4 },
+          sequence(push { ctx: ActionContext<Int> -> pop(1, ctx) + peek(ctx) }),
           optional(action { ctx: ActionContext<Int> ->
             ctx.stack.push(0)
             false
@@ -1533,17 +1535,17 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("whatever")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertEquals("", result.matchedInput)
-    Assertions.assertEquals("whatever", result.restOfInput)
-    Assertions.assertEquals(Integer.valueOf(9426), result.stackTop)
-    Assertions.assertEquals(2, result.stack.size)
-    Assertions.assertEquals(Integer.valueOf(9426), result.stack.peek())
-    Assertions.assertEquals(Integer.valueOf(4715), result.stack.peek(1))
+    assertTrue(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertEquals("", result.matchedInput)
+    assertEquals("whatever", result.restOfInput)
+    assertEquals(Integer.valueOf(9426), result.stackTop)
+    assertEquals(2, result.stack.size)
+    assertEquals(Integer.valueOf(9426), result.stack.peek())
+    assertEquals(Integer.valueOf(4715), result.stack.peek(1))
   }
 
   @Test
@@ -1558,13 +1560,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("acdc")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("acdc", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("acdc", result.restOfInput)
   }
 
   @Test
@@ -1581,13 +1583,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("foobazxxx")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("foobazxxx", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("foobazxxx", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1598,13 +1600,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("foo")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertEquals("", result.matchedInput)
-    Assertions.assertEquals("foo", result.restOfInput)
+    assertTrue(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertEquals("", result.matchedInput)
+    assertEquals("foo", result.restOfInput)
   }
 
   @Test
@@ -1615,13 +1617,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("foo")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("foo", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("foo", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1636,13 +1638,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("babafoo")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("babafoo", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("babafoo", result.restOfInput)
   }
 
   @Test
@@ -1653,13 +1655,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("a")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("a", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("a", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1670,13 +1672,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("b")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertEquals("", result.matchedInput)
-    Assertions.assertEquals("b", result.restOfInput)
+    assertTrue(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertEquals("", result.matchedInput)
+    assertEquals("b", result.restOfInput)
   }
 
   @Test
@@ -1687,13 +1689,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("b")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertEquals("", result.matchedInput)
-    Assertions.assertEquals("b", result.restOfInput)
+    assertTrue(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertEquals("", result.matchedInput)
+    assertEquals("b", result.restOfInput)
   }
 
   @Test
@@ -1704,13 +1706,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("aaaaa")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("aaaaa", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("aaaaa", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1721,13 +1723,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("a")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("a", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("a", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1738,13 +1740,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("aaaaa")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("aaaaa", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("aaaaa", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1755,13 +1757,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("b")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("b", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("b", result.restOfInput)
   }
 
   @Test
@@ -1775,10 +1777,10 @@ class AbstractParserTest {
     val runner = DefaultParseRunner<CharSequence>(Parser())
     runner.registerListener(CharSequenceTestListener())
     val result = runner.run("zzzz")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("zzzz", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("zzzz", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1792,10 +1794,10 @@ class AbstractParserTest {
     val runner = DefaultParseRunner<CharSequence>(Parser())
     runner.registerListener(CharSequenceTestListener())
     val result = runner.run("zzzzz")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("zzzzz", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("zzzzz", result.restOfInput)
   }
 
   @Test
@@ -1806,13 +1808,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<CharSequence>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(CharSequenceTestListener())
     val result = runner.run("zzzzz")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("zzzzz", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("zzzzz", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1823,13 +1825,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<CharSequence>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(CharSequenceTestListener())
     val result = runner.run("z")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("z", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("z", result.restOfInput)
   }
 
   @Test
@@ -1840,13 +1842,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<CharSequence>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(CharSequenceTestListener())
     val result = runner.run("zz")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("zz", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("zz", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1857,13 +1859,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<CharSequence>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(CharSequenceTestListener())
     val result = runner.run("zzzz")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("zzzz", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("zzzz", result.restOfInput)
   }
 
   @Test
@@ -1874,13 +1876,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<CharSequence>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(CharSequenceTestListener())
     val result = runner.run("zzzzz")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("zzzzz", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("zzzzz", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1891,13 +1893,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<CharSequence>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(CharSequenceTestListener())
     val result = runner.run("zzzzz")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("zzzzz", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("zzzzz", result.restOfInput)
   }
 
   @Test
@@ -1911,13 +1913,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("whatever")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("whatever", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("whatever", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1931,13 +1933,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("whatever")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("whatever", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("whatever", result.restOfInput)
   }
 
   @Test
@@ -1951,13 +1953,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("whatever")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("whatever", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("whatever", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -1971,13 +1973,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("whatever")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("whatever", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("whatever", result.restOfInput)
   }
 
   @Test
@@ -1988,13 +1990,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("z")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("z", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("z", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -2005,13 +2007,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("z")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("z", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("z", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -2022,13 +2024,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("1")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertTrue(result.matchedEntireInput)
-    Assertions.assertEquals("1", result.matchedInput)
-    Assertions.assertEquals("", result.restOfInput)
+    assertTrue(result.matched)
+    assertTrue(result.matchedEntireInput)
+    assertEquals("1", result.matchedInput)
+    assertEquals("", result.restOfInput)
   }
 
   @Test
@@ -2039,13 +2041,13 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("whatever")
-    Assertions.assertFalse(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertNull(result.matchedInput)
-    Assertions.assertEquals("whatever", result.restOfInput)
+    assertFalse(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertNull(result.matchedInput)
+    assertEquals("whatever", result.restOfInput)
   }
 
   @Test
@@ -2054,16 +2056,16 @@ class AbstractParserTest {
       override fun root(): Rule<Int> {
         return action { ctx: ActionContext<Int> ->
           ctx.stack.push(4711)
-          Assertions.assertEquals(0, ctx.level)
-          Assertions.assertNotNull(ctx.position)
+          assertEquals(0, ctx.level)
+          assertNotNull(ctx.position)
           true
         }
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    Assertions.assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
+    assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
   }
 
   @Test
@@ -2072,16 +2074,16 @@ class AbstractParserTest {
       override fun root(): Rule<Int> {
         return action { ctx: ActionContext<Int> ->
           ctx.stack.push(4711)
-          Assertions.assertEquals(0, ctx.level)
-          Assertions.assertNotNull(ctx.position)
+          assertEquals(0, ctx.level)
+          assertNotNull(ctx.position)
           false
         }
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    Assertions.assertNull(runner.run("whatever").stackTop)
+    assertNull(runner.run("whatever").stackTop)
   }
 
   @Test
@@ -2098,9 +2100,9 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    Assertions.assertFalse(runner.run("whatever").matched)
+    assertFalse(runner.run("whatever").matched)
   }
 
   @Test
@@ -2111,9 +2113,9 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    Assertions.assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
+    assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
   }
 
   @Test
@@ -2127,9 +2129,9 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    Assertions.assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
+    assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
   }
 
   @Test
@@ -2144,9 +2146,9 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    Assertions.assertNull(runner.run("whatever").stackTop)
+    assertNull(runner.run("whatever").stackTop)
   }
 
   @Test
@@ -2160,9 +2162,9 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    Assertions.assertNull(runner.run("whatever").stackTop)
+    assertNull(runner.run("whatever").stackTop)
   }
 
   @Test
@@ -2173,9 +2175,9 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    Assertions.assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
+    assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
   }
 
   @Test
@@ -2187,9 +2189,9 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    Assertions.assertNull(runner.run("whatever").stackTop)
+    assertNull(runner.run("whatever").stackTop)
   }
 
   @Test
@@ -2208,24 +2210,24 @@ class AbstractParserTest {
 
       @Subscribe
       @SuppressFBWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS")
-      fun stringEvent(event: String?) {
+      fun stringEvent(event: String) {
         string = event
       }
 
       override fun afterMatchSuccess(event: MatchSuccessEvent<Int>) {
-        Assertions.assertNotNull(event.context)
+        assertNotNull(event.context)
       }
 
       override fun afterParse(event: PostParseEvent<Int>) {
-        Assertions.assertNotNull(event.result)
+        assertNotNull(event.result)
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     val listener = Listener()
     runner.registerListener(listener)
     runner.run("whatever")
-    Assertions.assertEquals("whatever", listener.string)
+    assertEquals("whatever", listener.string)
   }
 
   @Test
@@ -2245,24 +2247,24 @@ class AbstractParserTest {
 
       @Subscribe
       @SuppressFBWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS")
-      fun stringEvent(event: String?) {
+      fun stringEvent(event: String) {
         string = event
       }
 
       override fun afterMatchSuccess(event: MatchSuccessEvent<Int>) {
-        Assertions.assertNotNull(event.context)
+        assertNotNull(event.context)
       }
 
       override fun afterParse(event: PostParseEvent<Int>) {
-        Assertions.assertNotNull(event.result)
+        assertNotNull(event.result)
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     val listener = Listener()
     runner.registerListener(listener)
     runner.run("whatever")
-    Assertions.assertEquals("someEvent", listener.string)
+    assertEquals("someEvent", listener.string)
   }
 
   @Test
@@ -2273,9 +2275,9 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    Assertions.assertNull(runner.run("whatever").stackTop)
+    assertNull(runner.run("whatever").stackTop)
   }
 
   @Test
@@ -2286,9 +2288,9 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    Assertions.assertEquals(4712, runner.run("whatever").stackTop)
+    assertEquals(4712, runner.run("whatever").stackTop)
   }
 
   @Test
@@ -2299,10 +2301,10 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    Assertions.assertEquals(Integer.valueOf(4712), runner.run("whatever").stackTop)
-    Assertions.assertEquals(1, runner.run("whatever").stack.size)
+    assertEquals(Integer.valueOf(4712), runner.run("whatever").stackTop)
+    assertEquals(1, runner.run("whatever").stack.size)
   }
 
   @Test
@@ -2315,9 +2317,9 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    Assertions.assertNull(runner.run("whatever").stackTop)
+    assertNull(runner.run("whatever").stackTop)
   }
 
   @Test
@@ -2332,8 +2334,8 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Number>(Parser())
-    Assertions.assertNull(runner.run("whatever").stackTop)
+    val runner = DefaultParseRunner(Parser())
+    assertNull(runner.run("whatever").stackTop)
   }
 
   @Test
@@ -2349,8 +2351,8 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Number>(Parser())
-    Assertions.assertEquals(4712, runner.run("whatever").stackTop)
+    val runner = DefaultParseRunner(Parser())
+    assertEquals(4712, runner.run("whatever").stackTop)
   }
 
   @Test
@@ -2363,9 +2365,9 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    Assertions.assertEquals(4711, runner.run("whatever").stackTop)
+    assertEquals(4711, runner.run("whatever").stackTop)
   }
 
   @Test
@@ -2379,9 +2381,9 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    Assertions.assertEquals(4712, runner.run("whatever").stackTop)
+    assertEquals(4712, runner.run("whatever").stackTop)
   }
 
   @Test
@@ -2394,8 +2396,8 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Number>(Parser())
-    Assertions.assertEquals(4711, runner.run("whatever").stackTop)
+    val runner = DefaultParseRunner(Parser())
+    assertEquals(4711, runner.run("whatever").stackTop)
   }
 
   @Test
@@ -2411,8 +2413,8 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Number>(Parser())
-    Assertions.assertEquals(4712, runner.run("whatever").stackTop)
+    val runner = DefaultParseRunner(Parser())
+    assertEquals(4712, runner.run("whatever").stackTop)
   }
 
   @Test
@@ -2423,10 +2425,10 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    Assertions.assertEquals(Integer.valueOf(4712), runner.run("whatever").stackTop)
-    Assertions.assertEquals(2, runner.run("whatever").stack.size)
+    assertEquals(Integer.valueOf(4712), runner.run("whatever").stackTop)
+    assertEquals(2, runner.run("whatever").stack.size)
   }
 
   @Test
@@ -2437,10 +2439,10 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    Assertions.assertEquals(Integer.valueOf(4712), runner.run("whatever").stackTop)
-    Assertions.assertEquals(1, runner.run("whatever").stack.size)
+    assertEquals(Integer.valueOf(4712), runner.run("whatever").stackTop)
+    assertEquals(1, runner.run("whatever").stack.size)
   }
 
   @Test
@@ -2451,10 +2453,10 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    Assertions.assertEquals(Integer.valueOf(4712), runner.run("whatever").stackTop)
-    Assertions.assertEquals(2, runner.run("whatever").stack.size)
+    assertEquals(Integer.valueOf(4712), runner.run("whatever").stackTop)
+    assertEquals(2, runner.run("whatever").stack.size)
   }
 
   @Test
@@ -2465,7 +2467,7 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     Assertions.assertThrows(ActionRunException::class.java) { runner.run("whatever") }
   }
@@ -2478,9 +2480,9 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    Assertions.assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
+    assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
   }
 
   @Test
@@ -2491,11 +2493,11 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    Assertions.assertEquals(2, runner.run("whatever").stack.size)
-    Assertions.assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
-    Assertions.assertEquals(Integer.valueOf(4711), runner.run("whatever").stack.peek(1))
+    assertEquals(2, runner.run("whatever").stack.size)
+    assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
+    assertEquals(Integer.valueOf(4711), runner.run("whatever").stack.peek(1))
   }
 
   @Test
@@ -2506,7 +2508,7 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     Assertions.assertThrows(ActionRunException::class.java) { runner.run("whatever") }
   }
@@ -2519,11 +2521,11 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    Assertions.assertEquals(2, runner.run("whatever").stack.size)
-    Assertions.assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
-    Assertions.assertEquals(Integer.valueOf(4712), runner.run("whatever").stack.peek(1))
+    assertEquals(2, runner.run("whatever").stack.size)
+    assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
+    assertEquals(Integer.valueOf(4712), runner.run("whatever").stack.peek(1))
   }
 
   @Test
@@ -2534,7 +2536,7 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
     Assertions.assertThrows(ActionRunException::class.java) { runner.run("whatever") }
   }
@@ -2563,14 +2565,14 @@ class AbstractParserTest {
       }
     }
 
-    val runner = DefaultParseRunner<CharSequence>(Parser())
+    val runner = DefaultParseRunner(Parser())
     runner.registerListener(CharSequenceTestListener())
     val result = runner.run("helloworldfoobarbaz")
-    Assertions.assertTrue(result.matched)
-    Assertions.assertFalse(result.matchedEntireInput)
-    Assertions.assertEquals("b", result.stack.pop())
-    Assertions.assertEquals("foobar", result.stack.pop())
-    Assertions.assertEquals("foobar", result.stack.pop())
-    Assertions.assertEquals("world", result.stackTop)
+    assertTrue(result.matched)
+    assertFalse(result.matchedEntireInput)
+    assertEquals("b", result.stack.pop())
+    assertEquals("foobar", result.stack.pop())
+    assertEquals("foobar", result.stack.pop())
+    assertEquals("world", result.stackTop)
   }
 }
