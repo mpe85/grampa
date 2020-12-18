@@ -11,7 +11,6 @@ import java.util.LinkedList
  * A linked list implementation of a restorable stack.
  *
  * @author mpe85
- *
  * @param E the type of the stack elements
  */
 class LinkedListRestorableStack<E> : LinkedList<E>, RestorableStack<E> {
@@ -36,21 +35,21 @@ class LinkedListRestorableStack<E> : LinkedList<E>, RestorableStack<E> {
 
   override fun push(down: Int, element: E) = add(checkIndex(down), element)
 
-  override fun pop(down: Int): E = removeAt(checkIndex(down))
+  override fun pop(down: Int) = removeAt(checkIndex(down))
 
   override fun <T : E> popAs(type: Class<T>): T = type.cast(pop())
 
   override fun <T : E> popAs(down: Int, type: Class<T>): T = type.cast(pop(checkIndex(down)))
 
-  override fun peek(down: Int): E = get(checkIndex(down))
+  override fun peek(down: Int) = get(checkIndex(down))
 
   override fun <T : E> peekAs(type: Class<T>): T = type.cast(get(0))
 
   override fun <T : E> peekAs(down: Int, type: Class<T>): T = type.cast(get(checkIndex(down)))
 
-  override fun poke(element: E): E = set(0, element)
+  override fun poke(element: E) = set(0, element)
 
-  override fun poke(down: Int, element: E): E = set(down, element)
+  override fun poke(down: Int, element: E) = set(down, element)
 
   override fun dup() {
     check(size != 0) { "Duplicating the top stack value is not possible when the stack is empty." }
@@ -74,20 +73,14 @@ class LinkedListRestorableStack<E> : LinkedList<E>, RestorableStack<E> {
     snapshots.pop()
   }
 
-  override fun removeSnapshot(restore: Boolean) {
-    if (restore) {
-      restoreSnapshot()
-    } else {
-      discardSnapshot()
-    }
-  }
+  override fun removeSnapshot(restore: Boolean) = if (restore) restoreSnapshot() else discardSnapshot()
 
   override fun clearAllSnapshots() = snapshots.clear()
 
   override val snapshotCount: Int
     get() = snapshots.size
 
-  override fun copy(): RestorableStack<E> = LinkedListRestorableStack(this)
+  override fun copy() = LinkedListRestorableStack(this)
 
   private fun checkIndex(down: Int) = Preconditions.checkPositionIndex(down, size, "A 'down' index must be in range.")
 
