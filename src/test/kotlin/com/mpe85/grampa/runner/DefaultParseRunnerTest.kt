@@ -8,7 +8,6 @@ import com.mpe85.grampa.rule.impl.EmptyRule
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.Test
 
 @SuppressFBWarnings(
@@ -23,18 +22,17 @@ class DefaultParseRunnerTest {
     }
   }
 
-  @get:Test
-  val rootRule: Unit
-    get() {
-      class Parser : AbstractParser<Int>() {
-        override fun root(): Rule<Int> {
-          return empty()
-        }
+  @Test
+  fun getRootRule() {
+    class Parser : AbstractParser<Int>() {
+      override fun root(): Rule<Int> {
+        return empty()
       }
-
-      val runner = DefaultParseRunner<Int>(Parser())
-      assertTrue(runner.rootRule is EmptyRule<*>)
     }
+
+    val runner = DefaultParseRunner(Parser())
+    assertTrue(runner.rootRule is EmptyRule<*>)
+  }
 
   @Test
   fun registerListener() {
@@ -44,9 +42,7 @@ class DefaultParseRunnerTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(
-      Parser(),
-      { ex, _ -> assertTrue(ex is RuntimeException) })
+    val runner = DefaultParseRunner(Parser())
     val listener = IntegerTestListener()
     runner.registerListener(listener)
     assertDoesNotThrow<ParseResult<Int>> { runner.run("a") }
@@ -60,9 +56,7 @@ class DefaultParseRunnerTest {
       }
     }
 
-    val runner = DefaultParseRunner<Int>(
-      Parser(),
-      { ex, _ -> fail("Listener should not have been called.", ex) })
+    val runner = DefaultParseRunner(Parser())
     val listener = IntegerTestListener()
     runner.registerListener(listener)
     runner.unregisterListener(listener)

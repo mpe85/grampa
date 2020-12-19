@@ -1,10 +1,10 @@
 package com.mpe85.grampa.input.impl
 
-import com.google.common.eventbus.EventBus
 import com.mpe85.grampa.input.InputBuffer
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.impl.DefaultContext
 import com.mpe85.grampa.util.stack.RestorableStack
+import org.greenrobot.eventbus.EventBus
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith

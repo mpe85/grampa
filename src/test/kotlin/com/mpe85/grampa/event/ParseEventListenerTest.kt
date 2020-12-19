@@ -1,15 +1,17 @@
 package com.mpe85.grampa.event
 
-import com.google.common.eventbus.EventBus
-import com.google.common.eventbus.SubscriberExceptionContext
 import com.mpe85.grampa.rule.RuleContext
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import io.mockk.mockk
-import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.SubscriberExceptionEvent
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 
 @SuppressFBWarnings(
   value = ["SIC_INNER_SHOULD_BE_STATIC_ANON"],
@@ -29,7 +31,7 @@ class ParseEventListenerTest {
     }
 
     val listener = TestListener()
-    val bus = EventBus()
+    val bus = EventBus.builder().logNoSubscriberMessages(false).build()
     bus.register(listener)
     bus.post(PreParseEvent(mockk<RuleContext<String>>(relaxed = true)))
     assertTrue(listener.called)
@@ -37,17 +39,27 @@ class ParseEventListenerTest {
 
   @Test
   fun postEvent_exception() {
+    val ex = RuntimeException("failure")
+    var exEvent: SubscriberExceptionEvent? = null
+
     class TestListener : ParseEventListener<String>() {
-      override fun beforeParse(event: PreParseEvent<String>) {
-        throw RuntimeException("failure")
+      override fun beforeParse(event: PreParseEvent<String>) = throw ex
+
+      @Subscribe
+      fun exHandler(event: SubscriberExceptionEvent) {
+        exEvent = event
       }
     }
 
     val listener = TestListener()
-    val sb = StringBuilder()
-    val bus = EventBus { ex: Throwable, _: SubscriberExceptionContext? -> sb.append(ex.message) }
+    val bus = EventBus.builder().logNoSubscriberMessages(false).build()
+    val event = PreParseEvent(mockk<RuleContext<String>>(relaxed = true))
     bus.register(listener)
-    bus.post(PreParseEvent(mockk<RuleContext<String>>(relaxed = true)))
-    assertEquals("failure", sb.toString())
+    bus.post(event)
+
+    assertNotNull(exEvent)
+    assertEquals(listener, exEvent?.causingSubscriber)
+    assertEquals(event, exEvent?.causingEvent)
+    assertEquals(ex, exEvent?.throwable)
   }
 }

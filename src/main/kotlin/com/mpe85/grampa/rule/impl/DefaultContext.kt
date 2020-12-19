@@ -1,7 +1,6 @@
 package com.mpe85.grampa.rule.impl
 
 import com.google.common.base.Preconditions
-import com.google.common.eventbus.EventBus
 import com.mpe85.grampa.event.MatchFailureEvent
 import com.mpe85.grampa.event.MatchSuccessEvent
 import com.mpe85.grampa.event.PreMatchEvent
@@ -11,6 +10,7 @@ import com.mpe85.grampa.rule.ActionContext
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.util.stack.RestorableStack
+import org.greenrobot.eventbus.EventBus
 
 class DefaultContext<T> @JvmOverloads constructor(
   override val inputBuffer: InputBuffer,
@@ -19,7 +19,7 @@ class DefaultContext<T> @JvmOverloads constructor(
   override val startIndex: Int,
   override val stack: RestorableStack<T>,
   private val bus: EventBus,
-  private val parentContext: RuleContext<T>? = null
+  val parentContext: RuleContext<T>? = null
 ) : RuleContext<T>, ActionContext<T> {
 
   override var currentIndex = startIndex

@@ -1,7 +1,6 @@
 package com.mpe85.grampa.parser
 
 import com.google.common.collect.Sets
-import com.google.common.eventbus.Subscribe
 import com.mpe85.grampa.event.MatchSuccessEvent
 import com.mpe85.grampa.event.ParseEventListener
 import com.mpe85.grampa.event.PostParseEvent
@@ -14,6 +13,7 @@ import com.mpe85.grampa.rule.impl.ActionRule
 import com.mpe85.grampa.runner.DefaultParseRunner
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import java.util.concurrent.atomic.AtomicReference
+import org.greenrobot.eventbus.Subscribe
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse

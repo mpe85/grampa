@@ -1,7 +1,5 @@
 package com.mpe85.grampa.runner
 
-import com.google.common.eventbus.EventBus
-import com.google.common.eventbus.SubscriberExceptionHandler
 import com.mpe85.grampa.event.ParseEventListener
 import com.mpe85.grampa.event.PostParseEvent
 import com.mpe85.grampa.event.PreParseEvent
@@ -12,6 +10,7 @@ import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.impl.DefaultContext
 import com.mpe85.grampa.util.stack.RestorableStack
 import com.mpe85.grampa.util.stack.impl.LinkedListRestorableStack
+import org.greenrobot.eventbus.EventBus
 
 /**
  * The default parse runner. May be overridden by a custom implementation.
@@ -19,12 +18,8 @@ import com.mpe85.grampa.util.stack.impl.LinkedListRestorableStack
  * @author mpe85
  * @param T the type of the stack elements
  * @param parser a parser instance
- * @param handler a handler for parser events
  */
-open class DefaultParseRunner<T> @JvmOverloads constructor(
-  parser: Parser<T>,
-  handler: SubscriberExceptionHandler? = null
-) {
+open class DefaultParseRunner<T>(parser: Parser<T>) {
 
   /**
    * Get the root rule of the parser.
@@ -32,7 +27,7 @@ open class DefaultParseRunner<T> @JvmOverloads constructor(
    * @return the root rule
    */
   val rootRule: Rule<T> = parser.root()
-  private val bus = handler?.let { EventBus(it) } ?: EventBus()
+  private val bus = EventBus.builder().logNoSubscriberMessages(false).build()
   private var valueStack: RestorableStack<T>? = null
 
   /**
