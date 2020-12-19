@@ -1,7 +1,6 @@
 package com.mpe85.grampa.rule.impl
 
 import com.google.common.base.MoreObjects.ToStringHelper
-import com.google.common.base.Preconditions.checkArgument
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.RuleContext
 import java.util.Objects.hash
@@ -18,9 +17,9 @@ import java.util.Objects.hash
 class RepeatRule<T>(private val rule: Rule<T>, private val min: Int, private val max: Int?) : AbstractRule<T>(rule) {
 
   init {
-    checkArgument(min >= 0, "A 'min' number must not be negative")
+    require(min >= 0) { "A 'min' number must not be negative" }
     if (max != null) {
-      checkArgument(max >= min, "A 'max' number must not be lower than the 'min' number.")
+      require(max >= min) { "A 'max' number must not be lower than the 'min' number." }
     }
   }
 

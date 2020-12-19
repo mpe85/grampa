@@ -1,6 +1,5 @@
 package com.mpe85.grampa.rule.impl
 
-import com.google.common.base.Preconditions
 import com.mpe85.grampa.event.MatchFailureEvent
 import com.mpe85.grampa.event.MatchSuccessEvent
 import com.mpe85.grampa.event.PreMatchEvent
@@ -24,7 +23,7 @@ class DefaultContext<T> @JvmOverloads constructor(
 
   override var currentIndex = startIndex
     set(currentIndex) {
-      Preconditions.checkPositionIndex(currentIndex, inputBuffer.length, "A 'currentIndex' must be in range.")
+      require(currentIndex in 0..inputBuffer.length) { "A 'currentIndex' must not be out of bounds." }
       if (currentIndex > this.currentIndex) {
         previousMatch = inputBuffer.subSequence(this.currentIndex, currentIndex)
       }
@@ -80,7 +79,7 @@ class DefaultContext<T> @JvmOverloads constructor(
   override fun post(event: Any) = bus.post(event)
 
   override fun advanceIndex(delta: Int): Boolean {
-    Preconditions.checkArgument(delta >= 0, "A 'delta' must be greater or equal 0.")
+    require(delta >= 0) { "A 'delta' must be greater or equal to 0." }
     if (currentIndex + delta <= inputBuffer.length) {
       currentIndex += delta
       invalidateCache()

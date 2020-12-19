@@ -35,8 +35,8 @@ class InputBufferTest {
   @ParameterizedTest
   @MethodSource("provideInputBuffers")
   fun test_getChar_invalid_indexOutOfRange(ib: InputBuffer) {
-    assertThrows(IndexOutOfBoundsException::class.java) { ib.getChar(-1) }
-    assertThrows(IndexOutOfBoundsException::class.java) { ib.getChar(6) }
+    assertThrows(IllegalArgumentException::class.java) { ib.getChar(-1) }
+    assertThrows(IllegalArgumentException::class.java) { ib.getChar(6) }
   }
 
   @ParameterizedTest
@@ -53,8 +53,8 @@ class InputBufferTest {
   @ParameterizedTest
   @MethodSource("provideInputBuffers")
   fun test_getCodePoint_invalid_indexOutOfRange(ib: InputBuffer) {
-    assertThrows(IndexOutOfBoundsException::class.java) { ib.getCodePoint(-1) }
-    assertThrows(IndexOutOfBoundsException::class.java) { ib.getCodePoint(6) }
+    assertThrows(IllegalArgumentException::class.java) { ib.getCodePoint(-1) }
+    assertThrows(IllegalArgumentException::class.java) { ib.getCodePoint(6) }
   }
 
   @ParameterizedTest
@@ -75,9 +75,9 @@ class InputBufferTest {
   @ParameterizedTest
   @MethodSource("provideInputBuffers")
   fun test_subSequence_invalid_indexOutOfRange(ib: InputBuffer) {
-    assertThrows(IndexOutOfBoundsException::class.java) { ib.subSequence(-2, 1) }
-    assertThrows(IndexOutOfBoundsException::class.java) { ib.subSequence(0, 7) }
-    assertThrows(IndexOutOfBoundsException::class.java) { ib.subSequence(5, 3) }
+    assertThrows(IllegalArgumentException::class.java) { ib.subSequence(-2, 1) }
+    assertThrows(IllegalArgumentException::class.java) { ib.subSequence(0, 7) }
+    assertThrows(IllegalArgumentException::class.java) { ib.subSequence(5, 3) }
   }
 
   companion object {

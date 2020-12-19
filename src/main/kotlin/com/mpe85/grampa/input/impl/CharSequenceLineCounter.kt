@@ -1,6 +1,5 @@
 package com.mpe85.grampa.input.impl
 
-import com.google.common.base.Preconditions
 import com.mpe85.grampa.input.InputPosition
 import com.mpe85.grampa.input.LineCounter
 import java.util.NavigableMap
@@ -40,7 +39,7 @@ class CharSequenceLineCounter(input: CharSequence) : LineCounter {
   override val lineCount get() = lines.size
 
   override fun getPosition(index: Int): InputPosition {
-    Preconditions.checkElementIndex(index, length, "An 'index' must not be out of range.")
+    require(index in 0 until length) { "An 'index' must not be out of bounds." }
     return lines.floorEntry(index).let {
       InputPosition(it.value, index - it.key + 1)
     }

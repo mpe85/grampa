@@ -10,6 +10,7 @@ import com.mpe85.grampa.input.InputBuffer
  */
 class StringBuilderInputBuffer(private val stringBuilder: StringBuilder) : CharSequenceInputBuffer(stringBuilder) {
 
-  override fun getCodePoint(index: Int) = stringBuilder.codePointAt(index)
+  override fun getCodePoint(index: Int) =
+    stringBuilder.codePointAt(index.also { require(it in 0 until length) { "An 'index' must not be out of bounds." } })
 
 }

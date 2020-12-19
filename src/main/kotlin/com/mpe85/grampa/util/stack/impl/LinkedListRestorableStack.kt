@@ -1,6 +1,5 @@
 package com.mpe85.grampa.util.stack.impl
 
-import com.google.common.base.Preconditions
 import com.mpe85.grampa.util.stack.RestorableStack
 import java.util.ArrayDeque
 import java.util.Collections
@@ -82,6 +81,8 @@ class LinkedListRestorableStack<E> : LinkedList<E>, RestorableStack<E> {
 
   override fun copy() = LinkedListRestorableStack(this)
 
-  private fun checkIndex(down: Int) = Preconditions.checkPositionIndex(down, size, "A 'down' index must be in range.")
+  private fun checkIndex(down: Int) = down.also {
+    require(it in 0..size) { "A 'down' index must not be out of bounds." }
+  }
 
 }

@@ -2,7 +2,6 @@ package com.mpe85.grampa.rule.impl
 
 import com.google.common.base.MoreObjects.ToStringHelper
 import com.google.common.base.MoreObjects.toStringHelper
-import com.google.common.base.Preconditions
 import com.mpe85.grampa.rule.ReferenceRule
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.visitor.RuleVisitor
@@ -33,7 +32,7 @@ abstract class AbstractRule<T>(children: List<Rule<T>> = emptyList()) : Rule<T> 
     get() = children.getOrNull(0)
 
   override fun replaceReferenceRule(index: Int, replacementRule: Rule<T>): Rule<T> {
-    Preconditions.checkElementIndex(index, children.size, "An 'index' must not be out of range.")
+    require(index in children.indices) { "An 'index' must not be out of bounds." }
     require(children[index] is ReferenceRule<*>) { "Only reference rules can be replaced." }
     return internalChildren.set(index, replacementRule)
   }

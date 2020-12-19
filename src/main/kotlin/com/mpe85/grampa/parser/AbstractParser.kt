@@ -6,7 +6,6 @@ import com.google.common.base.CharMatcher.any
 import com.google.common.base.CharMatcher.anyOf
 import com.google.common.base.CharMatcher.inRange
 import com.google.common.base.CharMatcher.noneOf
-import com.google.common.base.Preconditions.checkArgument
 import com.google.common.primitives.Ints
 import com.ibm.icu.lang.UCharacter
 import com.mpe85.grampa.builder.RepeatRuleBuilder
@@ -202,7 +201,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @return a rule
    */
   protected open fun codePointRange(lowerBound: Int, upperBound: Int): Rule<T> {
-    checkArgument(lowerBound <= upperBound, "A 'lowerBound' must not be greater than an 'upperBound'.")
+    require(lowerBound <= upperBound) { "A 'lowerBound' must not be greater than an 'upperBound'." }
     return CodePointPredicateRule { cp -> cp in lowerBound..upperBound }
   }
 

@@ -2,12 +2,12 @@ package com.mpe85.grampa.input.impl
 
 import com.mpe85.grampa.input.InputPosition
 import com.mpe85.grampa.input.LineCounter
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
-import kotlin.test.Test
-import kotlin.test.assertEquals
 
 @TestInstance(PER_CLASS)
 class CharSequenceLineCounterTest {
@@ -89,10 +89,10 @@ class CharSequenceLineCounterTest {
   fun test_getPosition_invalid_indexOutOfRange() {
     val lc: LineCounter = CharSequenceLineCounter("foobar")
     assertEquals(1, lc.lineCount)
-    assertThrows<IndexOutOfBoundsException> { lc.getPosition(-4711) }
-    assertThrows<IndexOutOfBoundsException> { lc.getPosition(-1) }
-    assertThrows<IndexOutOfBoundsException> { lc.getPosition(6) }
-    assertThrows<IndexOutOfBoundsException> { lc.getPosition(666) }
+    assertThrows<IllegalArgumentException> { lc.getPosition(-4711) }
+    assertThrows<IllegalArgumentException> { lc.getPosition(-1) }
+    assertThrows<IllegalArgumentException> { lc.getPosition(6) }
+    assertThrows<IllegalArgumentException> { lc.getPosition(666) }
     assertDoesNotThrow { lc.getPosition(0) }
     assertDoesNotThrow { lc.getPosition(5) }
   }
