@@ -26,6 +26,7 @@ group = "com.mpe85"
 
 repositories {
   jcenter()
+  //mavenCentral()
 }
 
 configurations {
