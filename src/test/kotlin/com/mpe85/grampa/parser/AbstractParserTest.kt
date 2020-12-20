@@ -1,6 +1,5 @@
 package com.mpe85.grampa.parser
 
-import com.google.common.collect.Sets
 import com.mpe85.grampa.event.MatchSuccessEvent
 import com.mpe85.grampa.event.ParseEventListener
 import com.mpe85.grampa.event.PostParseEvent
@@ -289,7 +288,7 @@ class AbstractParserTest {
   fun anyOfChars_valid_set() {
     class Parser : AbstractParser<Int>() {
       override fun root(): Rule<Int> {
-        return anyOfChars(Sets.newHashSet('a', 'f'))
+        return anyOfChars(setOf('a', 'f'))
       }
     }
 
@@ -374,7 +373,7 @@ class AbstractParserTest {
   fun noneOfChars_valid_set() {
     class Parser : AbstractParser<Int>() {
       override fun root(): Rule<Int> {
-        return noneOfChars(Sets.newHashSet('a', 'f'))
+        return noneOfChars(setOf('a', 'f'))
       }
     }
 
@@ -556,7 +555,7 @@ class AbstractParserTest {
   fun anyOfCodePoint_valid_set() {
     class Parser : AbstractParser<Int>() {
       override fun root(): Rule<Int> {
-        return anyOfCodePoints(Sets.newHashSet('a'.toInt(), "\uD835\uDD38".codePointAt(0)))
+        return anyOfCodePoints(setOf('a'.toInt(), "\uD835\uDD38".codePointAt(0)))
       }
     }
 
@@ -658,7 +657,7 @@ class AbstractParserTest {
   fun noneOfCodePoints_valid_set() {
     class Parser : AbstractParser<Int>() {
       override fun root(): Rule<Int> {
-        return noneOfCodePoints(Sets.newHashSet('a'.toInt(), "\uD835\uDD38".codePointAt(0)))
+        return noneOfCodePoints(setOf('a'.toInt(), "\uD835\uDD38".codePointAt(0)))
       }
     }
 
@@ -927,7 +926,7 @@ class AbstractParserTest {
   fun strings_invalid_set_empty() {
     class Parser : AbstractParser<Int>() {
       override fun root(): Rule<Int> {
-        return strings(Sets.newHashSet())
+        return strings(setOf())
       }
     }
 
@@ -971,7 +970,7 @@ class AbstractParserTest {
     class Parser : AbstractParser<Int>() {
       override fun root(): Rule<Int> {
         return sequence(
-          ignoreCase(Sets.newHashSet("foo")),
+          ignoreCase(setOf("foo")),
           command { ctx: ActionContext<Int> -> stringsRuleMatch.set(ctx.previousMatch) },
           string("baz")
         )
@@ -1009,7 +1008,7 @@ class AbstractParserTest {
   fun ignoreCase_strings_invalid_set_empty() {
     class Parser : AbstractParser<Int>() {
       override fun root(): Rule<Int> {
-        return ignoreCase(Sets.newHashSet())
+        return ignoreCase(setOf())
       }
     }
 
