@@ -11,7 +11,9 @@ import com.mpe85.grampa.input.InputBuffer
  */
 class StringSegmentInputBuffer(private val stringSegment: StringSegment) : CharSequenceInputBuffer(stringSegment) {
 
-  override fun getCodePoint(index: Int) =
-    stringSegment.codePointAt(index.also { require(it in 0 until length) { "An 'index' must not be out of bounds." } })
+  override fun getCodePoint(index: Int) = index.let {
+    require(it in 0 until length) { "An 'index' must not be out of bounds." }
+    stringSegment.codePointAt(it)
+  }
 
 }

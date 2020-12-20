@@ -12,11 +12,15 @@ open class CharSequenceInputBuffer(private val charSequence: CharSequence) : Inp
 
   private val lineCounter = CharSequenceLineCounter(charSequence)
 
-  override fun getChar(index: Int) =
-    charSequence[index.also { require(it in 0 until length) { "An 'index' must not be out of bounds." } }]
+  override fun getChar(index: Int) = index.let {
+    require(it in 0 until length) { "An 'index' must not be out of bounds." }
+    charSequence[it]
+  }
 
-  override fun getCodePoint(index: Int) = charSequence.toString()
-    .codePointAt(index.also { require(it in 0 until length) { "An 'index' must not be out of bounds." } })
+  override fun getCodePoint(index: Int) = index.let {
+    require(it in 0 until length) { "An 'index' must not be out of bounds." }
+    charSequence.toString().codePointAt(it)
+  }
 
   override val length get() = charSequence.length
 
@@ -26,8 +30,9 @@ open class CharSequenceInputBuffer(private val charSequence: CharSequence) : Inp
     return charSequence.subSequence(startIndex, endIndex)
   }
 
-  override fun getPosition(index: Int) = lineCounter.getPosition(
-    index.also { require(it in 0 until length) { "A 'startIndex' must not be out of bounds." } }
-  )
+  override fun getPosition(index: Int) = index.let {
+    require(it in 0 until length) { "A 'startIndex' must not be out of bounds." }
+    lineCounter.getPosition(it)
+  }
 
 }

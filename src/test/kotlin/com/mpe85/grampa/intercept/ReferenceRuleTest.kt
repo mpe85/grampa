@@ -47,9 +47,9 @@ class ReferenceRuleTest {
     assertNotEquals(rule1, Any())
     assertEquals(rule1.hashCode(), rule2.hashCode())
     assertNotEquals(rule1.hashCode(), rule3.hashCode())
-    assertEquals("ReferenceRule{#children=0, hashCode=${rule1.hashCode()}}", rule1.toString())
-    assertEquals("ReferenceRule{#children=0, hashCode=${rule2.hashCode()}}", rule2.toString())
-    assertEquals("ReferenceRule{#children=0, hashCode=${rule3.hashCode()}}", rule3.toString())
+    assertEquals("ReferenceRuleImpl{#children=0, hashCode=${rule1.hashCode()}}", rule1.toString())
+    assertEquals("ReferenceRuleImpl{#children=0, hashCode=${rule2.hashCode()}}", rule2.toString())
+    assertEquals("ReferenceRuleImpl{#children=0, hashCode=${rule3.hashCode()}}", rule3.toString())
   }
 
   @Test

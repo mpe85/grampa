@@ -50,7 +50,7 @@ open class DefaultParseRunner<T>(parser: Parser<T>) {
    * @param charSequence a character sequence
    * @return the parse result
    */
-  fun run(charSequence: CharSequence?) = run(CharSequenceInputBuffer(charSequence!!))
+  fun run(charSequence: CharSequence) = run(CharSequenceInputBuffer(charSequence))
 
   /**
    * Run the parser against an input buffer.

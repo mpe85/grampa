@@ -5,7 +5,6 @@ import com.ibm.icu.lang.UCharacter.toLowerCase
 import com.ibm.icu.util.BytesTrie.Result.FINAL_VALUE
 import com.ibm.icu.util.BytesTrie.Result.INTERMEDIATE_VALUE
 import com.ibm.icu.util.BytesTrie.Result.NO_MATCH
-import com.ibm.icu.util.CharsTrie
 import com.ibm.icu.util.CharsTrieBuilder
 import com.ibm.icu.util.StringTrieBuilder.Option.FAST
 import com.mpe85.grampa.rule.RuleContext
@@ -22,11 +21,12 @@ import java.util.Objects.hash
 class TrieRule<T> @JvmOverloads constructor(strings: Set<String>, private val ignoreCase: Boolean = false) :
   AbstractRule<T>() {
 
-  private val trie: CharsTrie = CharsTrieBuilder().apply {
+  private val trie = CharsTrieBuilder().run {
     strings.forEach { s ->
       add(if (ignoreCase) toLowerCase(s) else s, 0)
     }
-  }.build(FAST)
+    build(FAST)
+  }
 
   /**
    * C'tor. Construct a case-sensitive trie.

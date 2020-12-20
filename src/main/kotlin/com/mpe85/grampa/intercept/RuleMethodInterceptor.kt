@@ -1,6 +1,7 @@
 package com.mpe85.grampa.intercept
 
 import com.google.common.base.MoreObjects.ToStringHelper
+import com.mpe85.grampa.rule.ReferenceRule
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.rule.impl.AbstractRule
@@ -13,7 +14,6 @@ import net.bytebuddy.implementation.bind.annotation.AllArguments
 import net.bytebuddy.implementation.bind.annotation.Origin
 import net.bytebuddy.implementation.bind.annotation.RuntimeType
 import net.bytebuddy.implementation.bind.annotation.SuperCall
-import com.mpe85.grampa.rule.ReferenceRule as IReferenceRule
 
 /**
  * An interceptor for the rule methods of a parser. If a rule method gets called for the second time, the actual rule is
@@ -58,7 +58,7 @@ class RuleMethodInterceptor<T> {
       }
       return rule
     }
-    return ReferenceRule(hash)
+    return ReferenceRuleImpl(hash)
   }
 
   /**
@@ -78,13 +78,13 @@ class RuleMethodInterceptor<T> {
  * @param T the type of the stack elements
  * @param hashCode the hash code of the referenced rule
  */
-private class ReferenceRule<T>(private val hashCode: Int) : IReferenceRule<T>, AbstractRule<T>() {
+private class ReferenceRuleImpl<T>(private val hashCode: Int) : ReferenceRule<T>, AbstractRule<T>() {
   override fun match(context: RuleContext<T>) = false
   override fun hashCode() = hashCode
 
   override fun equals(obj: Any?): Boolean {
     if (obj != null && javaClass == obj.javaClass) {
-      val other = obj as ReferenceRule<*>
+      val other = obj as ReferenceRuleImpl<*>
       return hashCode == other.hashCode
     }
     return false
