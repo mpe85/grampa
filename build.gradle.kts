@@ -39,6 +39,7 @@ dependencies {
   implementation("net.bytebuddy:byte-buddy:1.10.18")
   implementation("com.ibm.icu:icu4j:68.2")
   implementation("org.greenrobot:eventbus:3.2.0")
+  implementation("au.com.console:kassava:2.1.0")
   compileOnly("com.github.spotbugs:spotbugs-annotations:4.2.0")
   testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
   testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.0")
