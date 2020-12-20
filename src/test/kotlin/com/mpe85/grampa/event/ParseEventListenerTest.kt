@@ -40,7 +40,7 @@ class ParseEventListenerTest {
   @Test
   fun postEvent_exception() {
     val ex = RuntimeException("failure")
-    var exEvent: SubscriberExceptionEvent? = null
+
 
     class TestListener : ParseEventListener<String>() {
       override fun beforeParse(event: PreParseEvent<String>) = throw ex
@@ -49,6 +49,8 @@ class ParseEventListenerTest {
       fun exHandler(event: SubscriberExceptionEvent) {
         exEvent = event
       }
+
+      var exEvent: SubscriberExceptionEvent? = null
     }
 
     val listener = TestListener()
@@ -57,9 +59,9 @@ class ParseEventListenerTest {
     bus.register(listener)
     bus.post(event)
 
-    assertNotNull(exEvent)
-    assertEquals(listener, exEvent?.causingSubscriber)
-    assertEquals(event, exEvent?.causingEvent)
-    assertEquals(ex, exEvent?.throwable)
+    assertNotNull(listener.exEvent)
+    assertEquals(listener, listener.exEvent?.causingSubscriber)
+    assertEquals(event, listener.exEvent?.causingEvent)
+    assertEquals(ex, listener.exEvent?.throwable)
   }
 }
