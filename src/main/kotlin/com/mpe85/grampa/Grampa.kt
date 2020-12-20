@@ -1,6 +1,5 @@
 package com.mpe85.grampa
 
-import com.google.common.reflect.Invokable
 import com.mpe85.grampa.exception.ParserCreateException
 import com.mpe85.grampa.intercept.RuleMethodInterceptor
 import com.mpe85.grampa.parser.Parser
@@ -8,10 +7,23 @@ import com.mpe85.grampa.rule.Rule
 import java.lang.reflect.Constructor
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
-import java.util.stream.Stream
+import java.lang.reflect.Modifier.isFinal
+import java.lang.reflect.Modifier.isProtected
+import java.lang.reflect.Modifier.isPublic
+import java.lang.reflect.Modifier.isStatic
+import kotlin.reflect.KClass
+import kotlin.reflect.KFunction
+import kotlin.reflect.KVisibility.PROTECTED
+import kotlin.reflect.KVisibility.PUBLIC
+import kotlin.reflect.full.declaredFunctions
+import kotlin.reflect.full.hasAnnotation
+import kotlin.reflect.full.isSubclassOf
+import kotlin.reflect.full.superclasses
+import kotlin.reflect.jvm.javaMethod
+import kotlin.reflect.jvm.jvmErasure
 import net.bytebuddy.ByteBuddy
-import net.bytebuddy.implementation.MethodDelegation
-import net.bytebuddy.matcher.ElementMatchers
+import net.bytebuddy.implementation.MethodDelegation.withDefaultConfiguration
+import net.bytebuddy.matcher.ElementMatchers.returns
 
 /**
  * Main class containing static methods for parser creation
@@ -71,41 +83,54 @@ object Grampa {
   }
 
   private fun <U : Parser<T>, T> createParserSubClass(parserClass: Class<U>): Class<out U> {
-    validateParserClass(parserClass)
+    parserClass.kotlin.validate()
     return ByteBuddy()
       .subclass(parserClass)
-      .method(ElementMatchers.returns(Rule::class.java))
-      .intercept(MethodDelegation.withDefaultConfiguration().to(RuleMethodInterceptor<Any>()))
+      .method(returns(Rule::class.java))
+      .intercept(withDefaultConfiguration().to(RuleMethodInterceptor<Any>()))
       .make()
       .load(parserClass.classLoader)
       .loaded
   }
 
-  private fun validateParserClass(parserClass: Class<*>) {
-    Stream.of(*parserClass.declaredMethods)
-      .filter { m: Method -> m.returnType == Rule::class.java }
-      .map { method -> Invokable.from(method) }
-      .forEach { obj -> validateRuleMethod(obj) }
-    if (parserClass.superclass != Any::class.java) {
-      validateParserClass(parserClass.superclass)
+  private fun KClass<*>.validate() {
+    declaredFunctions.filter { it.returnType.jvmErasure.isSubclassOf(Rule::class) }.forEach {
+      it.validate()
+    }
+    superclasses.forEach {
+      it.validate()
     }
   }
 
-  private fun validateRuleMethod(invokable: Invokable<*, Any>) {
-    if (!invokable.isPublic && !invokable.isProtected) {
-      throw ParserCreateException("Rule methods must be public or protected.")
+  private fun KFunction<*>.validate() {
+    this.javaMethod?.let { method ->
+      if (!method.isPublic() && !method.isProtected()) {
+        throw ParserCreateException("Rule methods must be public or protected.")
+      }
+      if (method.isFinal() && !method.isSafeVarArgsRuleMethod()) {
+        throw ParserCreateException("Rule methods must not be final.")
+      }
+      if (method.isStatic()) {
+        throw ParserCreateException("Rule methods must not be static.")
+      }
     }
-    if (invokable.isFinal && !isSafeVarArgsRuleMethod(invokable)) {
-      throw ParserCreateException("Rule methods must not be final.")
+    if (!isPublic() && !isProtected()) {
+      throw ParserCreateException("Rule functions must be public or protected.")
     }
-    if (invokable.isStatic) {
-      throw ParserCreateException("Rule methods must not be static.")
+    if (isFinal && !isSafeVarArgsRuleFunction()) {
+      throw ParserCreateException("Rule functions must not be final.")
     }
   }
 
-  private fun isSafeVarArgsRuleMethod(invokable: Invokable<*, Any>): Boolean {
-    return invokable.isVarArgs && invokable.isAnnotationPresent(SafeVarargs::class.java)
-  }
+  private fun Method.isPublic() = isPublic(modifiers)
+  private fun Method.isProtected() = isProtected(modifiers)
+  private fun Method.isFinal() = isFinal(modifiers)
+  private fun Method.isStatic() = isStatic(modifiers)
+  private fun Method.isSafeVarArgsRuleMethod() = isVarArgs && isAnnotationPresent(SafeVarargs::class.java)
+
+  private fun KFunction<*>.isPublic() = visibility == PUBLIC
+  private fun KFunction<*>.isProtected() = visibility == PROTECTED
+  private fun KFunction<*>.isSafeVarArgsRuleFunction() = parameters.any { it.isVararg } && hasAnnotation<SafeVarargs>()
 
   /**
    * A parser c'tor (intermediate class for fluent API). This class wraps a [Constructor] and offers a var args
