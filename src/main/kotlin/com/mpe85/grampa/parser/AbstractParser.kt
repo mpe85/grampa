@@ -1,12 +1,5 @@
 package com.mpe85.grampa.parser
 
-import com.google.common.base.CharMatcher
-import com.google.common.base.CharMatcher.`is`
-import com.google.common.base.CharMatcher.any
-import com.google.common.base.CharMatcher.anyOf
-import com.google.common.base.CharMatcher.inRange
-import com.google.common.base.CharMatcher.noneOf
-import com.google.common.primitives.Ints
 import com.ibm.icu.lang.UCharacter
 import com.mpe85.grampa.builder.RepeatRuleBuilder
 import com.mpe85.grampa.rule.Action
@@ -30,6 +23,7 @@ import com.mpe85.grampa.rule.impl.TrieRule
 import com.mpe85.grampa.rule.toAction
 import java.util.Arrays.binarySearch
 import java.util.Arrays.sort
+import kotlin.text.Charsets.US_ASCII
 
 /**
  * An abstract parser that defines a bunch of useful parser rules and actions. A concrete parser class should usually
@@ -40,12 +34,14 @@ import java.util.Arrays.sort
  */
 abstract class AbstractParser<T> : Parser<T> {
 
+  private val asciiEncoder = US_ASCII.newEncoder()
+
   private val emptyRule = EmptyRule<T>()
   private val neverRule = NeverRule<T>()
   private val eoiRule = EndOfInputRule<T>()
-  private val anyCharRule = CharPredicateRule<T>(any()::test)
+  private val anyCharRule = CharPredicateRule<T> { true }
   private val anyCodePointRule = CodePointPredicateRule<T>(UCharacter::isLegal)
-  private val asciiRule = CharPredicateRule<T>(CharMatcher.ascii()::test)
+  private val asciiRule = CharPredicateRule<T>(asciiEncoder::canEncode)
   private val bmpRule = CodePointPredicateRule<T>(UCharacter::isBMP)
   private val digitRule = CodePointPredicateRule<T>(UCharacter::isDigit)
   private val javaIdentStartRule = CodePointPredicateRule<T>(Character::isJavaIdentifierStart)
@@ -101,7 +97,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param character the character to match
    * @return a rule
    */
-  protected open fun character(character: Char) = CharPredicateRule<T>(`is`(character)::test)
+  protected open fun character(character: Char) = CharPredicateRule<T> { it == character }
 
   /**
    * A rule that matches a specific character, ignoring the case of the character (case-insensitive).
@@ -110,7 +106,8 @@ abstract class AbstractParser<T> : Parser<T> {
    * @return a rule
    */
   protected open fun ignoreCase(character: Char) =
-    CharPredicateRule<T>(`is`(Character.toLowerCase(character)).or(`is`(Character.toUpperCase(character)))::test)
+    CharPredicateRule<T> { Character.toLowerCase(it) == Character.toLowerCase(character) }
+
 
   /**
    * A rule that matches a character within a range of characters.
@@ -119,8 +116,10 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param upperBound the upper bound of the character range (inclusive)
    * @return a rule
    */
-  protected open fun charRange(lowerBound: Char, upperBound: Char) =
-    CharPredicateRule<T>(inRange(lowerBound, upperBound)::test)
+  protected open fun charRange(lowerBound: Char, upperBound: Char): Rule<T> {
+    require(lowerBound <= upperBound) { "A 'lowerBound' must not be greater than an 'upperBound'." }
+    return CharPredicateRule { it in lowerBound..upperBound }
+  }
 
   /**
    * A rule that matches a character within a set of characters.
@@ -128,7 +127,14 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param characters a variable number of characters
    * @return a rule
    */
-  protected open fun anyOfChars(vararg characters: Char) = anyOfChars(String(characters))
+  protected open fun anyOfChars(vararg characters: Char) = when {
+    characters.isEmpty() -> neverRule
+    characters.size == 1 -> character(characters.first())
+    else -> {
+      sort(characters)
+      CharPredicateRule { binarySearch(characters, it) >= 0 }
+    }
+  }
 
   /**
    * A rule that matches a character within a set of characters.
@@ -136,7 +142,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param characters a set of characters
    * @return a rule
    */
-  protected open fun anyOfChars(characters: Set<Char>) = anyOfChars(characters.joinToString(""))
+  protected open fun anyOfChars(characters: Set<Char>) = anyOfChars(*characters.toCharArray())
 
   /**
    * A rule that matches a character within a set of characters.
@@ -144,11 +150,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param characters a string containing the set of characters.
    * @return a rule
    */
-  protected open fun anyOfChars(characters: String) = when {
-    characters.isEmpty() -> neverRule
-    characters.length == 1 -> character(characters.first())
-    else -> CharPredicateRule(anyOf(characters)::test)
-  }
+  protected open fun anyOfChars(characters: String) = anyOfChars(*characters.toCharArray())
 
   /**
    * A rule that matches a character not in a set of characters.
@@ -156,7 +158,13 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param characters a variable number of characters
    * @return a rule
    */
-  protected open fun noneOfChars(vararg characters: Char) = noneOfChars(String(characters))
+  protected open fun noneOfChars(vararg characters: Char) = when {
+    characters.isEmpty() -> anyCharRule
+    else -> {
+      sort(characters)
+      CharPredicateRule { binarySearch(characters, it) < 0 }
+    }
+  }
 
   /**
    * A rule that matches a character not in a set of characters.
@@ -164,7 +172,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param characters a set of characters
    * @return a rule
    */
-  protected open fun noneOfChars(characters: Set<Char>) = noneOfChars(characters.joinToString(""))
+  protected open fun noneOfChars(characters: Set<Char>) = noneOfChars(*characters.toCharArray())
 
   /**
    * A rule that matches a character not in a a set of characters.
@@ -172,8 +180,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param characters a string containing the set of characters.
    * @return a rule
    */
-  protected open fun noneOfChars(characters: String) =
-    if (characters.isEmpty()) anyCharRule else CharPredicateRule(noneOf(characters)::test)
+  protected open fun noneOfChars(characters: String) = noneOfChars(*characters.toCharArray())
 
   /**
    * A rule that matches a specific code point.
@@ -181,7 +188,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param codePoint the code point to match
    * @return a rule
    */
-  protected open fun codePoint(codePoint: Int) = CodePointPredicateRule<T> { cp -> cp == codePoint }
+  protected open fun codePoint(codePoint: Int) = CodePointPredicateRule<T> { it == codePoint }
 
   /**
    * A rule that matches a specific code point, ignoring the case of the code point (case-insensitive).
@@ -189,9 +196,8 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param codePoint the code point to match
    * @return a rule
    */
-  protected open fun ignoreCase(codePoint: Int) = CodePointPredicateRule<T> { cp ->
-    cp in setOf(UCharacter.toLowerCase(codePoint), UCharacter.toUpperCase(codePoint))
-  }
+  protected open fun ignoreCase(codePoint: Int) =
+    CodePointPredicateRule<T> { UCharacter.toLowerCase(it) == UCharacter.toLowerCase(codePoint) }
 
   /**
    * A rule that matches a code point within a range of code points.
@@ -202,7 +208,7 @@ abstract class AbstractParser<T> : Parser<T> {
    */
   protected open fun codePointRange(lowerBound: Int, upperBound: Int): Rule<T> {
     require(lowerBound <= upperBound) { "A 'lowerBound' must not be greater than an 'upperBound'." }
-    return CodePointPredicateRule { cp -> cp in lowerBound..upperBound }
+    return CodePointPredicateRule { it in lowerBound..upperBound }
   }
 
   /**
@@ -216,9 +222,17 @@ abstract class AbstractParser<T> : Parser<T> {
     codePoints.size == 1 -> codePoint(codePoints.first())
     else -> {
       sort(codePoints)
-      CodePointPredicateRule { cp -> binarySearch(codePoints, cp) >= 0 }
+      CodePointPredicateRule { binarySearch(codePoints, it) >= 0 }
     }
   }
+
+  /**
+   * A rule that matches a code point within a set of code points.
+   *
+   * @param codePoints a set of code points.
+   * @return a rule
+   */
+  protected open fun anyOfCodePoints(codePoints: Set<Int>) = anyOfCodePoints(*codePoints.toIntArray())
 
   /**
    * A rule that matches a code point within a set of code points.
@@ -229,24 +243,26 @@ abstract class AbstractParser<T> : Parser<T> {
   protected open fun anyOfCodePoints(codePoints: String) = anyOfCodePoints(*codePoints.codePoints().toArray())
 
   /**
-   * A rule that matches a code point within a set of code points.
-   *
-   * @param codePoints a set of code points.
-   * @return a rule
-   */
-  protected open fun anyOfCodePoints(codePoints: Set<Int>) = anyOfCodePoints(*Ints.toArray(codePoints))
-
-  /**
    * A rule that matches a code point not in a set of code points.
    *
    * @param codePoints a variable number of code points
    * @return a rule
    */
-  protected open fun noneOfCodePoints(vararg codePoints: Int) =
-    if (codePoints.isEmpty()) anyCodePointRule else {
+  protected open fun noneOfCodePoints(vararg codePoints: Int) = when {
+    codePoints.isEmpty() -> anyCodePointRule
+    else -> {
       sort(codePoints)
-      CodePointPredicateRule { cp -> binarySearch(codePoints, cp) < 0 }
+      CodePointPredicateRule { binarySearch(codePoints, it) < 0 }
     }
+  }
+
+  /**
+   * A rule that matches a code point not in a set of code points.
+   *
+   * @param codePoints a set of code points.
+   * @return a rule
+   */
+  protected open fun noneOfCodePoints(codePoints: Set<Int>) = noneOfCodePoints(*codePoints.toIntArray())
 
   /**
    * A rule that matches a code point not in a set of code points.
@@ -255,14 +271,6 @@ abstract class AbstractParser<T> : Parser<T> {
    * @return a rule
    */
   protected open fun noneOfCodePoints(codePoints: String) = noneOfCodePoints(*codePoints.codePoints().toArray())
-
-  /**
-   * A rule that matches a code point not in a set of code points.
-   *
-   * @param codePoints a set of code points.
-   * @return a rule
-   */
-  protected open fun noneOfCodePoints(codePoints: Set<Int>) = noneOfCodePoints(*Ints.toArray(codePoints))
 
   /**
    * A rule that matches a specific string.
