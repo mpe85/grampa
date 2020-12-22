@@ -1,3 +1,4 @@
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.github.spotbugs.snom.SpotBugsExtension
 import com.github.spotbugs.snom.SpotBugsTask
 import java.util.Date
@@ -13,13 +14,12 @@ buildscript {
 
 plugins {
   id(Plugins.bintray) version Versions.bintray
-  id(Plugins.detekt) version Versions.detekt
+  //id(Plugins.detekt) version Versions.detekt
   id(Plugins.dokka) version Versions.dokka
   kotlin(Plugins.kotlinJvm) version Versions.kotlin
   id(Plugins.mavenPublish)
   id(Plugins.versions) version Versions.versions
   jacoco
-  maven
 
   id("com.github.spotbugs") version "4.6.0"
 }
@@ -115,6 +115,19 @@ tasks {
   }
 }
 
+tasks.withType<DependencyUpdatesTask> {
+  revision = "release"
+  resolutionStrategy {
+    componentSelection {
+      all {
+        rejectVersionIf {
+          candidate.version.isNonStable() && !currentVersion.isNonStable()
+        }
+      }
+    }
+  }
+}
+
 configure<SpotBugsExtension> {
   setEffort("max")
   setReportLevel("low")
@@ -184,4 +197,11 @@ bintray {
       vcsTag = "${project.version}"
     }
   }
+}
+
+fun String.isNonStable(): Boolean {
+  val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { toUpperCase().contains(it) }
+  val regex = "^[0-9,.v-]+$".toRegex()
+  val isStable = stableKeyword || regex.matches(this)
+  return isStable.not()
 }
