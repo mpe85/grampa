@@ -27,7 +27,7 @@ class TestRule<T>(private var rule: Rule<T>) : AbstractRule<T>(rule) {
     return false
   }
 
-  override val isPredicate = true
+  override val testRule get() = true
 
   override fun hashCode() = kotlinHashCode(properties)
   override fun equals(other: Any?) = kotlinEquals(other, properties)

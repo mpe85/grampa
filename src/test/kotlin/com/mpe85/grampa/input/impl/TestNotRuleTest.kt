@@ -8,6 +8,6 @@ import org.junit.jupiter.api.Test
 class TestNotRuleTest {
   @Test
   fun isPredicate() {
-    assertTrue(TestNotRule(EmptyRule<Unit>()).isPredicate)
+    assertTrue(TestNotRule(EmptyRule<Unit>()).testRule)
   }
 }

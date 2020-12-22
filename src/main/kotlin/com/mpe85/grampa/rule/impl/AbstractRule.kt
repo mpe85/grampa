@@ -22,13 +22,11 @@ abstract class AbstractRule<T>(children: List<Rule<T>> = emptyList()) : Rule<T> 
    */
   protected constructor(child: Rule<T>) : this(listOf(child))
 
-  override val children: List<Rule<T>>
-    get() = internalChildren
+  override val children: List<Rule<T>> get() = internalChildren
 
-  override val child: Rule<T>?
-    get() = internalChildren.getOrNull(0)
+  override val child: Rule<T>? get() = internalChildren.getOrNull(0)
 
-  override val isPredicate = false
+  override val testRule get() = false
 
   override fun replaceReferenceRule(index: Int, replacementRule: Rule<T>): Rule<T> {
     require(index in children.indices) { "An 'index' must not be out of bounds." }

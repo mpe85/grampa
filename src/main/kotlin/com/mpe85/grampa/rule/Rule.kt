@@ -9,13 +9,13 @@ import com.mpe85.grampa.visitor.RuleVisitor
  * @param T The type of the stack elements
  * @property children The child rules of the rule
  * @property child The (first) child rule of the rule
- * @property isPredicate Indicates if the rule is directly or indirectly part of a predicate rule.
+ * @property testRule Indicates if the rule is directly or indirectly part of a test rule.
  */
 interface Rule<T> {
 
   val children: List<Rule<T>>
   val child: Rule<T>?
-  val isPredicate: Boolean
+  val testRule: Boolean
 
   /**
    * Replace a reference rule inside the list of child rules.

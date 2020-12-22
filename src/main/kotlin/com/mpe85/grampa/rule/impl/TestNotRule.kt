@@ -17,7 +17,7 @@ class TestNotRule<T>(private val rule: Rule<T>) : AbstractRule<T>(rule) {
 
   override fun match(context: RuleContext<T>) = !context.createChildContext(rule).run()
 
-  override val isPredicate = true
+  override val testRule get() = true
 
   override fun hashCode() = kotlinHashCode(properties)
   override fun equals(other: Any?) = kotlinEquals(other, properties)

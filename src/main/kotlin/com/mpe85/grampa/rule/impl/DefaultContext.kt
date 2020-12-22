@@ -71,7 +71,7 @@ class DefaultContext<T> @JvmOverloads constructor(
     get() = inputBuffer.getPosition(currentIndex)
 
   override val inPredicate: Boolean
-    get() = rule.isPredicate || parentContext?.inPredicate ?: false
+    get() = rule.testRule || parentContext?.inPredicate ?: false
 
   override val parent: RuleContext<T>?
     get() = parentContext
