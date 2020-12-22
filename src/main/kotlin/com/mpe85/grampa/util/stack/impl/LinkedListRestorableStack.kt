@@ -2,7 +2,7 @@ package com.mpe85.grampa.util.stack.impl
 
 import com.mpe85.grampa.util.stack.RestorableStack
 import java.util.ArrayDeque
-import java.util.Collections
+import java.util.Collections.swap
 import java.util.Deque
 import java.util.LinkedList
 
@@ -10,7 +10,7 @@ import java.util.LinkedList
  * A linked list implementation of a restorable stack.
  *
  * @author mpe85
- * @param E the type of the stack elements
+ * @param[E] The type of the stack elements
  */
 class LinkedListRestorableStack<E> : LinkedList<E>, RestorableStack<E> {
 
@@ -21,14 +21,14 @@ class LinkedListRestorableStack<E> : LinkedList<E>, RestorableStack<E> {
   private val snapshots = ArrayDeque<Deque<E>>()
 
   /**
-   * Default c'tor.
+   * Construct an empty restorable stack.
    */
   constructor() : super()
 
   /**
-   * C'tor.
+   * Construct a restorable stack with initial elements.
    *
-   * @param c the initial elements of the stack.
+   * @param[c] The initial elements on the stack.
    */
   constructor(c: Collection<E>) : super(c)
 
@@ -57,15 +57,16 @@ class LinkedListRestorableStack<E> : LinkedList<E>, RestorableStack<E> {
 
   override fun swap() {
     check(size >= 2) { "Swapping the two top stack values is not possible when the stack contains lesser than two values." }
-    Collections.swap(this, 0, 1)
+    swap(this, 0, 1)
   }
 
   override fun takeSnapshot() = snapshots.push(copy())
 
   override fun restoreSnapshot() {
-    val snapshot = snapshots.pop()
-    clear()
-    addAll(snapshot)
+    snapshots.pop().let {
+      clear()
+      addAll(it)
+    }
   }
 
   override fun discardSnapshot() {
@@ -76,8 +77,7 @@ class LinkedListRestorableStack<E> : LinkedList<E>, RestorableStack<E> {
 
   override fun clearAllSnapshots() = snapshots.clear()
 
-  override val snapshotCount: Int
-    get() = snapshots.size
+  override val snapshotCount get() = snapshots.size
 
   override fun copy() = LinkedListRestorableStack(this)
 
