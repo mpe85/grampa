@@ -42,6 +42,7 @@ dependencies {
   testImplementation("org.mockito:mockito-junit-jupiter:3.6.28")
   testImplementation(kotlin("test-junit5"))
   testImplementation("io.mockk:mockk:1.10.3")
+  testCompileOnly("com.github.spotbugs:spotbugs-annotations:4.2.0")
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
 }
 
