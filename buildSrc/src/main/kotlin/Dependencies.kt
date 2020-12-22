@@ -8,6 +8,7 @@ object Versions {
   const val kassava = "2.1.0"
   const val kotest = "4.3.2"
   const val kotlin = "1.4.21"
+  const val mockk = "1.10.3"
   const val versions = "0.36.0"
 }
 
@@ -29,4 +30,5 @@ object Libs {
   const val kotestRunnerJunit5 = "io.kotest:kotest-runner-junit5:${Versions.kotest}"
   const val kotlinReflect = "org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin}"
   const val kotlinStdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin}"
+  const val mockk = "io.mockk:mockk:${Versions.mockk}"
 }
