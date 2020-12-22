@@ -94,7 +94,7 @@ object Grampa {
   }
 
   private fun KClass<*>.validate() {
-    declaredFunctions.filter { it.returnType.jvmErasure.isSubclassOf(Rule::class) }.forEach {
+    declaredFunctions.asSequence().filter { it.returnType.jvmErasure.isSubclassOf(Rule::class) }.forEach {
       it.validate()
     }
     superclasses.forEach {
