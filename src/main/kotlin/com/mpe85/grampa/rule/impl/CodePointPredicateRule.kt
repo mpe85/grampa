@@ -1,29 +1,31 @@
 package com.mpe85.grampa.rule.impl
 
+import au.com.console.kassava.kotlinEquals
+import au.com.console.kassava.kotlinHashCode
+import au.com.console.kassava.kotlinToString
 import com.ibm.icu.lang.UCharacter.charCount
 import com.mpe85.grampa.rule.RuleContext
-import java.util.Objects.hash
 
 /**
  * A code point predicate rule implementation.
  *
  * @author mpe85
- * @param T the type of the stack elements
- * @property predicate a predicate that is tested by the rule
+ * @param T The type of the stack elements
+ * @property predicate A predicate that is tested by the rule
  */
 class CodePointPredicateRule<T>(private val predicate: (Int) -> Boolean) : AbstractRule<T>() {
 
   /**
-   * C'tor. Create a code point predicate rules that exactly matches a specific code point.
+   * Construct a code point predicate rule that exactly matches a specific code point.
    *
-   * @param codePoint a code point
+   * @param codePoint A code point
    */
   constructor(codePoint: Int) : this({ cp -> cp == codePoint })
 
   /**
-   * C'tor. Create a code point predicate rules that exactly matches a specific character.
+   * Construct a code point predicate rule that exactly matches a specific character.
    *
-   * @param char a character
+   * @param char A character
    */
   constructor(char: Char) : this({ cp -> cp == char.toInt() })
 
@@ -31,15 +33,12 @@ class CodePointPredicateRule<T>(private val predicate: (Int) -> Boolean) : Abstr
       && predicate(context.currentCodePoint)
       && context.advanceIndex(charCount(context.currentCodePoint))
 
-  override fun hashCode() = hash(super.hashCode(), predicate)
+  override fun hashCode() = kotlinHashCode(properties)
+  override fun equals(other: Any?) = kotlinEquals(other, properties)
+  override fun toString() = kotlinToString(properties)
 
-  override fun equals(obj: Any?): Boolean {
-    if (obj != null && javaClass == obj.javaClass) {
-      val other = obj as CodePointPredicateRule<*>
-      return (super.equals(other)
-          && predicate == other.predicate)
-    }
-    return false
+  companion object {
+    private val properties = arrayOf(CodePointPredicateRule<*>::predicate)
   }
 
 }

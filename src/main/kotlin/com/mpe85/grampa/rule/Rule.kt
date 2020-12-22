@@ -6,10 +6,10 @@ import com.mpe85.grampa.visitor.RuleVisitor
  * Defines a parser rule.
  *
  * @author mpe85
- * @param T the type of the stack elements
- * @property children the child rules of the rule
- * @property child the (first) child rule of the rule
- * @property isPredicate if the rule is directly or indirectly part of a predicate rule.
+ * @param T The type of the stack elements
+ * @property children The child rules of the rule
+ * @property child The (first) child rule of the rule
+ * @property isPredicate Indicates if the rule is directly or indirectly part of a predicate rule.
  */
 interface Rule<T> {
 

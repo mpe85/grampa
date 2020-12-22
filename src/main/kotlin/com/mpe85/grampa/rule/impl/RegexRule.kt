@@ -1,8 +1,9 @@
 package com.mpe85.grampa.rule.impl
 
-import com.google.common.base.MoreObjects.ToStringHelper
+import au.com.console.kassava.kotlinEquals
+import au.com.console.kassava.kotlinHashCode
+import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.rule.RuleContext
-import java.util.Objects.hash
 import java.util.regex.Pattern
 import java.util.regex.Pattern.compile
 
@@ -10,15 +11,15 @@ import java.util.regex.Pattern.compile
  * A regular expression rule implementation.
  *
  * @author mpe85
- * @param T the type of the stack elements
- * @property pattern a compiled regular expression
+ * @param T The type of the stack elements
+ * @property pattern A compiled regular expression
  */
 class RegexRule<T>(private val pattern: Pattern) : AbstractRule<T>() {
 
   /**
-   * C'tor. Constructs a regex rule using a regex string.
+   * Construct a regex rule using a regex string.
    *
-   * @param regex a string containing a regular expression
+   * @param regex A string containing a regular expression
    */
   constructor(regex: String) : this(compile(regex))
 
@@ -26,18 +27,12 @@ class RegexRule<T>(private val pattern: Pattern) : AbstractRule<T>() {
     matcher.lookingAt() && context.advanceIndex(matcher.end())
   }
 
-  override fun hashCode() = hash(super.hashCode(), pattern)
+  override fun hashCode() = kotlinHashCode(properties)
+  override fun equals(other: Any?) = kotlinEquals(other, properties)
+  override fun toString() = kotlinToString(properties)
 
-  override fun equals(obj: Any?): Boolean {
-    if (obj != null && javaClass == obj.javaClass) {
-      val other = obj as RegexRule<*>
-      return super.equals(other)
-          && pattern == other.pattern
-    }
-    return false
+  companion object {
+    private val properties = arrayOf(RegexRule<*>::pattern)
   }
-
-  override fun toStringHelper(): ToStringHelper = super.toStringHelper()
-    .add("pattern", pattern)
 
 }

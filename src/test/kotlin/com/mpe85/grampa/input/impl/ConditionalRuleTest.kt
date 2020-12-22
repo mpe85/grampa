@@ -23,15 +23,15 @@ class ConditionalRuleTest {
     Assertions.assertEquals(rule1.hashCode(), rule2.hashCode())
     Assertions.assertNotEquals(rule1.hashCode(), rule3.hashCode())
     Assertions.assertEquals(
-      "ConditionalRule{#children=2, thenRule=EmptyRule{#children=0}, elseRule=NeverRule{#children=0}}",
+      "ConditionalRule(condition=fun java.util.function.Predicate<T>.test(T): kotlin.Boolean, thenRule=EmptyRule(), elseRule=NeverRule())",
       rule1.toString()
     )
     Assertions.assertEquals(
-      "ConditionalRule{#children=2, thenRule=EmptyRule{#children=0}, elseRule=NeverRule{#children=0}}",
+      "ConditionalRule(condition=fun java.util.function.Predicate<T>.test(T): kotlin.Boolean, thenRule=EmptyRule(), elseRule=NeverRule())",
       rule2.toString()
     )
     Assertions.assertEquals(
-      "ConditionalRule{#children=1, thenRule=EmptyRule{#children=0}, elseRule=null}",
+      "ConditionalRule(condition=fun java.util.function.Predicate<T>.test(T): kotlin.Boolean, thenRule=EmptyRule(), elseRule=null)",
       rule3.toString()
     )
   }

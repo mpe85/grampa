@@ -26,9 +26,9 @@ class RegexRuleTest {
     assertFalse(rule1.equals(Any()))
     assertEquals(rule1.hashCode(), rule2.hashCode())
     assertNotEquals(rule1.hashCode(), rule3.hashCode())
-    assertEquals("RegexRule{#children=0, pattern=[a]{3}}", rule1.toString())
-    assertEquals("RegexRule{#children=0, pattern=[a]{3}}", rule2.toString())
-    assertEquals("RegexRule{#children=0, pattern=[a]{3}}", rule3.toString())
+    assertEquals("RegexRule(pattern=[a]{3})", rule1.toString())
+    assertEquals("RegexRule(pattern=[a]{3})", rule2.toString())
+    assertEquals("RegexRule(pattern=[a]{3})", rule3.toString())
   }
 
   @Test

@@ -21,8 +21,8 @@ class ActionRuleTest {
     assertFalse(rule1.equals(Any()))
     assertEquals(rule1.hashCode(), rule2.hashCode())
     assertNotEquals(rule1.hashCode(), rule3.hashCode())
-    assertEquals("ActionRule{#children=0, skippable=false}", rule1.toString())
-    assertEquals("ActionRule{#children=0, skippable=false}", rule2.toString())
-    assertEquals("ActionRule{#children=0, skippable=false}", rule3.toString())
+    assertEquals("ActionRule{action=, skippable=false}", rule1.toString())
+    assertEquals("ActionRule{action=, skippable=false}", rule2.toString())
+    assertEquals("ActionRule{action=, skippable=false}", rule3.toString())
   }
 }

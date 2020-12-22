@@ -18,8 +18,8 @@ class StringRuleTest {
     assertFalse(rule1.equals(Any()))
     assertEquals(rule1.hashCode(), rule2.hashCode())
     assertNotEquals(rule1.hashCode(), rule3.hashCode())
-    assertEquals("StringRule{#children=0, string=string, ignoreCase=false}", rule1.toString())
-    assertEquals("StringRule{#children=0, string=string, ignoreCase=false}", rule2.toString())
-    assertEquals("StringRule{#children=0, string=string, ignoreCase=true}", rule3.toString())
+    assertEquals("StringRule(string=string, ignoreCase=false)", rule1.toString())
+    assertEquals("StringRule(string=string, ignoreCase=false)", rule2.toString())
+    assertEquals("StringRule(string=string, ignoreCase=true)", rule3.toString())
   }
 }

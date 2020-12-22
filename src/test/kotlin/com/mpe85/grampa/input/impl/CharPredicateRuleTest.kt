@@ -26,9 +26,18 @@ class CharPredicateRuleTest {
     assertFalse(rule1.equals(Any()))
     assertEquals(rule1.hashCode(), rule2.hashCode())
     assertNotEquals(rule1.hashCode(), rule3.hashCode())
-    assertEquals("CharPredicateRule{#children=0}", rule1.toString())
-    assertEquals("CharPredicateRule{#children=0}", rule2.toString())
-    assertEquals("CharPredicateRule{#children=0}", rule3.toString())
+    assertEquals(
+      "CharPredicateRule(predicate=fun java.util.function.Predicate<T>.test(T): kotlin.Boolean)",
+      rule1.toString()
+    )
+    assertEquals(
+      "CharPredicateRule(predicate=fun java.util.function.Predicate<T>.test(T): kotlin.Boolean)",
+      rule2.toString()
+    )
+    assertEquals(
+      "CharPredicateRule(predicate=(kotlin.Char) -> kotlin.Boolean)",
+      rule3.toString()
+    )
   }
 
   @Test

@@ -1,18 +1,19 @@
 package com.mpe85.grampa.rule.impl
 
-import com.google.common.base.MoreObjects.ToStringHelper
+import au.com.console.kassava.kotlinEquals
+import au.com.console.kassava.kotlinHashCode
+import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.RuleContext
-import java.util.Objects.hash
 
 /**
  * A repeat rule implementation.
  *
  * @author mpe85
- * @param T the type of the stack elements
- * @param rule the rule to repeat
- * @param min the minimum number of cycles
- * @param max an optional maximum number of cycles
+ * @param T The type of the stack elements
+ * @param rule The rule to repeat
+ * @param min The minimum number of cycles
+ * @param max An optional maximum number of cycles
  */
 class RepeatRule<T>(private val rule: Rule<T>, private val min: Int, private val max: Int?) : AbstractRule<T>(rule) {
 
@@ -34,20 +35,12 @@ class RepeatRule<T>(private val rule: Rule<T>, private val min: Int, private val
     return iterations >= min
   }
 
-  override fun hashCode() = hash(super.hashCode(), min, max)
+  override fun hashCode() = kotlinHashCode(properties)
+  override fun equals(other: Any?) = kotlinEquals(other, properties)
+  override fun toString() = kotlinToString(properties)
 
-  override fun equals(obj: Any?): Boolean {
-    if (obj != null && javaClass == obj.javaClass) {
-      val other = obj as RepeatRule<*>
-      return super.equals(other)
-          && min == other.min
-          && max == other.max
-    }
-    return false
+  companion object {
+    private val properties = arrayOf(RepeatRule<*>::rule, RepeatRule<*>::min, RepeatRule<*>::max)
   }
-
-  override fun toStringHelper(): ToStringHelper = super.toStringHelper()
-    .add("min", min)
-    .add("max", max)
 
 }

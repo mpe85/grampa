@@ -1,6 +1,8 @@
 package com.mpe85.grampa.intercept
 
-import com.google.common.base.MoreObjects.ToStringHelper
+import au.com.console.kassava.kotlinEquals
+import au.com.console.kassava.kotlinHashCode
+import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.rule.ReferenceRule
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.RuleContext
@@ -35,10 +37,10 @@ class RuleMethodInterceptor<T> {
   /**
    * Intercept rule methods.
    *
-   * @param method a rule method
-   * @param superCallable the method body wrapped inside a callable
-   * @param args the arguments with which the method was called
-   * @return a parser rule
+   * @param method A rule method
+   * @param superCallable The method body wrapped inside a callable
+   * @param args The arguments with which the method was called
+   * @return A parser rule
    * @throws Exception may be thrown when the actual method is called via the callable
    */
   @RuntimeType
@@ -64,7 +66,7 @@ class RuleMethodInterceptor<T> {
   /**
    * Check if a rule method is the root rule method.
    *
-   * @return true if it is the root rule method, false otherwise
+   * @return true if it is the root rule method, otherwise false
    */
   private fun Method.isRoot() = ROOT == name && parameterCount == 0
 
@@ -75,21 +77,17 @@ class RuleMethodInterceptor<T> {
  * Note that this is only used by [RuleMethodInterceptor].
  *
  * @author mpe85
- * @param T the type of the stack elements
- * @param hashCode the hash code of the referenced rule
+ * @param T The type of the stack elements
+ * @param referencedRuleHash The hash code of the referenced rule
  */
-private class ReferenceRuleImpl<T>(private val hashCode: Int) : ReferenceRule<T>, AbstractRule<T>() {
+private class ReferenceRuleImpl<T>(override val referencedRuleHash: Int) : ReferenceRule<T>, AbstractRule<T>() {
   override fun match(context: RuleContext<T>) = false
-  override fun hashCode() = hashCode
 
-  override fun equals(obj: Any?): Boolean {
-    if (obj != null && javaClass == obj.javaClass) {
-      val other = obj as ReferenceRuleImpl<*>
-      return hashCode == other.hashCode
-    }
-    return false
+  override fun hashCode() = kotlinHashCode(properties)
+  override fun equals(other: Any?) = kotlinEquals(other, properties)
+  override fun toString() = kotlinToString(properties)
+
+  companion object {
+    private val properties = arrayOf(ReferenceRuleImpl<*>::referencedRuleHash)
   }
-
-  override fun toStringHelper(): ToStringHelper = super.toStringHelper()
-    .add("hashCode", hashCode)
 }

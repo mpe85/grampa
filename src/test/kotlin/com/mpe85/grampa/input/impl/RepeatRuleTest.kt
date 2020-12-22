@@ -22,9 +22,9 @@ class RepeatRuleTest {
     assertFalse(rule1.equals(Any()))
     assertEquals(rule1.hashCode(), rule2.hashCode())
     assertNotEquals(rule1.hashCode(), rule3.hashCode())
-    assertEquals("RepeatRule{#children=1, min=0, max=5}", rule1.toString())
-    assertEquals("RepeatRule{#children=1, min=0, max=5}", rule2.toString())
-    assertEquals("RepeatRule{#children=1, min=2, max=null}", rule3.toString())
+    assertEquals("RepeatRule(rule=EmptyRule(), min=0, max=5)", rule1.toString())
+    assertEquals("RepeatRule(rule=EmptyRule(), min=0, max=5)", rule2.toString())
+    assertEquals("RepeatRule(rule=EmptyRule(), min=2, max=null)", rule3.toString())
   }
 
   @Test

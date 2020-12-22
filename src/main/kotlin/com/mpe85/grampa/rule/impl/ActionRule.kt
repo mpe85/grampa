@@ -1,18 +1,19 @@
 package com.mpe85.grampa.rule.impl
 
-import com.google.common.base.MoreObjects.ToStringHelper
+import au.com.console.kassava.kotlinEquals
+import au.com.console.kassava.kotlinHashCode
+import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.exception.ActionRunException
 import com.mpe85.grampa.rule.Action
 import com.mpe85.grampa.rule.RuleContext
-import java.util.Objects.hash
 
 /**
  * An action rule implementation.
  *
  * @author mpe85
- * @param T the type of the stack elements
- * @param action an action
- * @param skippable if the action is skippable inside predicate rules
+ * @param T The type of the stack elements
+ * @param action An action
+ * @param skippable Indicates if the action is skippable inside predicate rules
  */
 open class ActionRule<T> @JvmOverloads constructor(
   private val action: Action<T>,
@@ -27,19 +28,12 @@ open class ActionRule<T> @JvmOverloads constructor(
     throw ActionRunException("Failed to run action.", ex)
   }
 
-  override fun hashCode() = hash(super.hashCode(), action, skippable)
+  override fun hashCode() = kotlinHashCode(properties)
+  override fun equals(other: Any?) = kotlinEquals(other, properties)
+  override fun toString() = kotlinToString(properties)
 
-  override fun equals(obj: Any?): Boolean {
-    if (obj != null && javaClass == obj.javaClass) {
-      val other = obj as ActionRule<*>
-      return super.equals(other)
-          && action == other.action
-          && skippable == other.skippable
-    }
-    return false
+  companion object {
+    private val properties = arrayOf(ActionRule<*>::action, ActionRule<*>::skippable)
   }
-
-  override fun toStringHelper(): ToStringHelper = super.toStringHelper()
-    .add("skippable", skippable)
 
 }

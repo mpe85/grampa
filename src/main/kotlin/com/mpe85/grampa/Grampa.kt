@@ -36,10 +36,10 @@ object Grampa {
    * Creates a new parser instance using the given parser class. The parser class must have a no-args c'tor which will
    * be called by this method.
    *
-   * @param U the type of the parser
-   * @param T the type of the stack elements
-   * @param parserClass a parser class
-   * @return a parser instance
+   * @param U The type of the parser
+   * @param T The type of the stack elements
+   * @param parserClass A parser class
+   * @return A parser instance
    */
   @JvmStatic
   fun <U : Parser<T>, T> createParser(parserClass: Class<U>): U {
@@ -65,11 +65,11 @@ object Grampa {
    * a c'tor which matches the passed parameter types. The creation of the parser instance must be finalized by
    * calling [ParserCtor.withArgs] on the returned [ParserCtor].
    *
-   * @param U the type of the parser
-   * @param T the type of the stack elements
-   * @param parserClass a parser class
-   * @param ctorParamTypes the parameter types of the c'tor
-   * @return a parser c'tor
+   * @param U The type of the parser
+   * @param T The type of the stack elements
+   * @param parserClass A parser class
+   * @param ctorParamTypes The parameter types of the c'tor
+   * @return A parser c'tor
    */
   @JvmStatic
   fun <U : Parser<T>, T> createParser(parserClass: Class<U>, vararg ctorParamTypes: Class<*>): ParserCtor<U> {
@@ -139,15 +139,15 @@ object Grampa {
    * @author mpe85
    *
    * @param T The type to which the c'tor belongs to
-   * @param ctor the wrapped [Constructor]
+   * @param ctor The wrapped [Constructor]
    */
   class ParserCtor<T>(private val ctor: Constructor<out T>) {
 
     /**
      * Call the wrapped c'tor using the given c'tor args. The arguments must match the c'tor parameter list.
      *
-     * @param args c'tor args
-     * @return a new instance
+     * @param args C'tor args
+     * @return A new instance
      */
     fun withArgs(vararg args: Any): T {
       return try {

@@ -18,7 +18,7 @@ class ReferenceRuleReplaceVisitor<T>(private val replacementRules: Map<Int, Rule
   override fun visit(rule: AbstractRule<T>) {
     rule.children.forEachIndexed { index, childRule ->
       (childRule as? ReferenceRule<T>)?.let { refRule ->
-        replacementRules[refRule.hashCode()]?.let { replRule -> rule.replaceReferenceRule(index, replRule) }
+        replacementRules[refRule.referencedRuleHash]?.let { replRule -> rule.replaceReferenceRule(index, replRule) }
       } ?: childRule.accept(this)
     }
   }

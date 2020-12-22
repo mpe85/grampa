@@ -47,9 +47,9 @@ class ReferenceRuleTest {
     assertNotEquals(rule1, Any())
     assertEquals(rule1.hashCode(), rule2.hashCode())
     assertNotEquals(rule1.hashCode(), rule3.hashCode())
-    assertEquals("ReferenceRuleImpl{#children=0, hashCode=${rule1.hashCode()}}", rule1.toString())
-    assertEquals("ReferenceRuleImpl{#children=0, hashCode=${rule2.hashCode()}}", rule2.toString())
-    assertEquals("ReferenceRuleImpl{#children=0, hashCode=${rule3.hashCode()}}", rule3.toString())
+    assertEquals("ReferenceRuleImpl{referencedRuleHash=${rule1.hashCode()}}", rule1.toString())
+    assertEquals("ReferenceRuleImpl{referencedRuleHash=${rule2.hashCode()}}", rule2.toString())
+    assertEquals("ReferenceRuleImpl{referencedRuleHash=${rule3.hashCode()}}", rule3.toString())
   }
 
   @Test
@@ -61,9 +61,7 @@ class ReferenceRuleTest {
   private fun createReferenceRule(ruleMethod: String): ReferenceRule<Int> {
     val interceptor = RuleMethodInterceptor<Int>()
     val supplier = ThrowingSupplier {
-      interceptor.intercept(
-        RuleMethods::class.java.getDeclaredMethod(ruleMethod), RuleMethods()
-      )
+      interceptor.intercept(RuleMethods::class.java.getDeclaredMethod(ruleMethod), RuleMethods())
     }
     assertDoesNotThrow(supplier)
     val rule = assertDoesNotThrow(supplier)

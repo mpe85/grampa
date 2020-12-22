@@ -1,17 +1,18 @@
 package com.mpe85.grampa.rule.impl
 
-import com.google.common.base.MoreObjects.ToStringHelper
+import au.com.console.kassava.kotlinEquals
+import au.com.console.kassava.kotlinHashCode
+import au.com.console.kassava.kotlinToString
 import com.ibm.icu.lang.UCharacter.toLowerCase
 import com.mpe85.grampa.rule.RuleContext
-import java.util.Objects.hash
 
 /**
  * A string rule implementation.
  *
  * @author mpe85
- * @param T the type of the stack elements
- * @param string a string
- * @property ignoreCase if true, the case is ignored
+ * @param T The type of the stack elements
+ * @param string A string
+ * @property ignoreCase Indicates if the case should be ignored
  */
 class StringRule<T> @JvmOverloads constructor(string: String, private val ignoreCase: Boolean = false) :
   AbstractRule<T>() {
@@ -27,20 +28,12 @@ class StringRule<T> @JvmOverloads constructor(string: String, private val ignore
     return false
   }
 
-  override fun hashCode() = hash(super.hashCode(), string, ignoreCase)
+  override fun hashCode() = kotlinHashCode(properties)
+  override fun equals(other: Any?) = kotlinEquals(other, properties)
+  override fun toString() = kotlinToString(properties)
 
-  override fun equals(obj: Any?): Boolean {
-    if (obj != null && javaClass == obj.javaClass) {
-      val other = obj as StringRule<*>
-      return super.equals(other)
-          && string == other.string
-          && ignoreCase == other.ignoreCase
-    }
-    return false
+  companion object {
+    private val properties = arrayOf(StringRule<*>::string, StringRule<*>::ignoreCase)
   }
-
-  override fun toStringHelper(): ToStringHelper = super.toStringHelper()
-    .add("string", string)
-    .add("ignoreCase", ignoreCase)
 
 }

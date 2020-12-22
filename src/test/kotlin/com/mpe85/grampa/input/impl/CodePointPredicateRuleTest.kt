@@ -26,9 +26,18 @@ class CodePointPredicateRuleTest {
     assertFalse(rule1.equals(Any()))
     assertEquals(rule1.hashCode(), rule2.hashCode())
     assertNotEquals(rule1.hashCode(), rule3.hashCode())
-    assertEquals("CodePointPredicateRule{#children=0}", rule1.toString())
-    assertEquals("CodePointPredicateRule{#children=0}", rule2.toString())
-    assertEquals("CodePointPredicateRule{#children=0}", rule3.toString())
+    assertEquals(
+      "CodePointPredicateRule(predicate=fun java.util.function.Predicate<T>.test(T): kotlin.Boolean)",
+      rule1.toString()
+    )
+    assertEquals(
+      "CodePointPredicateRule(predicate=fun java.util.function.Predicate<T>.test(T): kotlin.Boolean)",
+      rule2.toString()
+    )
+    assertEquals(
+      "CodePointPredicateRule(predicate=(kotlin.Int) -> kotlin.Boolean)",
+      rule3.toString()
+    )
   }
 
   @Test

@@ -1,19 +1,20 @@
 package com.mpe85.grampa.rule.impl
 
-import com.google.common.base.MoreObjects.ToStringHelper
+import au.com.console.kassava.kotlinEquals
+import au.com.console.kassava.kotlinHashCode
+import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.rule.ActionContext
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.RuleContext
-import java.util.Objects.hash
 
 /**
  * A rule implementation that runs one of two sub rules, depending on a condition.
  *
  * @author mpe85
- * @param T the type of the stack elements
- * @property condition a condition that is evaluated when the rule is run
- * @property thenRule a rule to run if the condition evaluates to true
- * @property elseRule an optional rule to run if the condition evaluates to false
+ * @param T The type of the stack elements
+ * @property condition A condition that is evaluated when the rule is run
+ * @property thenRule A rule to run if the condition evaluates to true
+ * @property elseRule An optional rule to run if the condition evaluates to false
  */
 class ConditionalRule<T> @JvmOverloads constructor(
   private val condition: (ActionContext<T>) -> Boolean,
@@ -24,21 +25,13 @@ class ConditionalRule<T> @JvmOverloads constructor(
   override fun match(context: RuleContext<T>) =
     if (condition(context)) thenRule.match(context) else elseRule?.match(context) ?: true
 
-  override fun hashCode() = hash(super.hashCode(), condition, thenRule, elseRule)
+  override fun hashCode() = kotlinHashCode(properties)
+  override fun equals(other: Any?) = kotlinEquals(other, properties)
+  override fun toString() = kotlinToString(properties)
 
-  override fun equals(obj: Any?): Boolean {
-    if (obj != null && javaClass == obj.javaClass) {
-      val other = obj as ConditionalRule<*>
-      return (super.equals(other)
-          && condition == other.condition
-          && thenRule == other.thenRule
-          && elseRule == other.elseRule)
-    }
-    return false
+  companion object {
+    private val properties =
+      arrayOf(ConditionalRule<*>::condition, ConditionalRule<*>::thenRule, ConditionalRule<*>::elseRule)
   }
-
-  override fun toStringHelper(): ToStringHelper = super.toStringHelper()
-    .add("thenRule", thenRule)
-    .add("elseRule", elseRule)
 
 }

@@ -18,8 +18,8 @@ class TrieRuleTest {
     assertFalse(rule1.equals(Any()))
     assertEquals(rule1.hashCode(), rule2.hashCode())
     assertNotEquals(rule1.hashCode(), rule3.hashCode())
-    assertEquals("TrieRule{#children=0, strings=[bar, foo], ignoreCase=false}", rule1.toString())
-    assertEquals("TrieRule{#children=0, strings=[bar, foo], ignoreCase=false}", rule2.toString())
-    assertEquals("TrieRule{#children=0, strings=[foobar], ignoreCase=false}", rule3.toString())
+    assertEquals("TrieRule(strings=[bar, foo], ignoreCase=false)", rule1.toString())
+    assertEquals("TrieRule(strings=[bar, foo], ignoreCase=false)", rule2.toString())
+    assertEquals("TrieRule(strings=[foobar], ignoreCase=false)", rule3.toString())
   }
 }
