@@ -36,7 +36,7 @@ configurations {
 dependencies {
   implementation(kotlin("stdlib-jdk8", "1.4.21"))
   implementation(kotlin("reflect", "1.4.21"))
-  implementation("net.bytebuddy:byte-buddy:1.10.18")
+  implementation("net.bytebuddy:byte-buddy:1.10.19")
   implementation("com.ibm.icu:icu4j:68.2")
   implementation("org.greenrobot:eventbus:3.2.0")
   implementation("au.com.console:kassava:2.1.0")
