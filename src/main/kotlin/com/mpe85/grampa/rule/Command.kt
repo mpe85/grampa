@@ -6,6 +6,7 @@ package com.mpe85.grampa.rule
  * @author mpe85
  * @param T the type of the stack elements
  */
+@FunctionalInterface
 fun interface Command<T> {
 
   /**

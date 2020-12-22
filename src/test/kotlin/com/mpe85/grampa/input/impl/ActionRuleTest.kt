@@ -13,16 +13,25 @@ class ActionRuleTest {
   @Test
   fun equalsHashCodeToString() {
     val action = Action { _: ActionContext<String> -> true }
-    val rule1 = ActionRule(action)
-    val rule2 = ActionRule(action, false)
+    val rule1 = ActionRule(action::run)
+    val rule2 = ActionRule(action::run, false)
     val rule3 = ActionRule({ _: ActionContext<String> -> true })
     assertTrue(rule1.equals(rule2))
     assertFalse(rule1.equals(rule3))
     assertFalse(rule1.equals(Any()))
     assertEquals(rule1.hashCode(), rule2.hashCode())
     assertNotEquals(rule1.hashCode(), rule3.hashCode())
-    assertEquals("ActionRule{action=, skippable=false}", rule1.toString())
-    assertEquals("ActionRule{action=, skippable=false}", rule2.toString())
-    assertEquals("ActionRule{action=, skippable=false}", rule3.toString())
+    assertEquals(
+      "ActionRule(action=fun com.mpe85.grampa.rule.Action<T>.run(com.mpe85.grampa.rule.ActionContext<T>): kotlin.Boolean, skippable=false)",
+      rule1.toString()
+    )
+    assertEquals(
+      "ActionRule(action=fun com.mpe85.grampa.rule.Action<T>.run(com.mpe85.grampa.rule.ActionContext<T>): kotlin.Boolean, skippable=false)",
+      rule2.toString()
+    )
+    assertEquals(
+      "ActionRule(action=(com.mpe85.grampa.rule.ActionContext<kotlin.String>) -> kotlin.Boolean, skippable=false)",
+      rule3.toString()
+    )
   }
 }

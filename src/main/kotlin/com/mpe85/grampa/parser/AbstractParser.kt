@@ -553,7 +553,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param action the action to run
    * @return a rule
    */
-  protected open fun action(action: Action<T>) = ActionRule(action)
+  protected open fun action(action: Action<T>) = ActionRule(action::run)
 
   /**
    * A rule that executes a command.
@@ -569,7 +569,7 @@ abstract class AbstractParser<T> : Parser<T> {
    * @param action the skippable action to run
    * @return a rule
    */
-  protected open fun skippableAction(action: Action<T>) = ActionRule(action, true)
+  protected open fun skippableAction(action: Action<T>) = ActionRule(action::run, true)
 
   /**
    * A rule that executes a command. The command is skipped if the rule is run inside a predicate rule.

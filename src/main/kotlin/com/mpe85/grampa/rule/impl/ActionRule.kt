@@ -4,7 +4,7 @@ import au.com.console.kassava.kotlinEquals
 import au.com.console.kassava.kotlinHashCode
 import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.exception.ActionRunException
-import com.mpe85.grampa.rule.Action
+import com.mpe85.grampa.rule.ActionContext
 import com.mpe85.grampa.rule.RuleContext
 
 /**
@@ -16,14 +16,14 @@ import com.mpe85.grampa.rule.RuleContext
  * @param skippable Indicates if the action is skippable inside predicate rules
  */
 open class ActionRule<T> @JvmOverloads constructor(
-  private val action: Action<T>,
+  private val action: (context: ActionContext<T>) -> Boolean,
   private val skippable: Boolean = false
 ) : AbstractRule<T>() {
 
   override fun match(context: RuleContext<T>) = if (context.inPredicate && skippable) {
     true
   } else try {
-    action.run(context)
+    action(context)
   } catch (ex: RuntimeException) {
     throw ActionRunException("Failed to run action.", ex)
   }

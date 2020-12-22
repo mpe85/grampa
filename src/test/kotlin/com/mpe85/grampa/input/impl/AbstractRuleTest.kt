@@ -1,5 +1,8 @@
 package com.mpe85.grampa.input.impl
 
+import au.com.console.kassava.kotlinEquals
+import au.com.console.kassava.kotlinHashCode
+import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.rule.ReferenceRule
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.RuleContext
@@ -25,6 +28,10 @@ class AbstractRuleTest {
     override fun match(context: RuleContext<String>): Boolean {
       return false
     }
+
+    override fun hashCode() = kotlinHashCode(arrayOf())
+    override fun equals(other: Any?) = kotlinEquals(other, arrayOf())
+    override fun toString() = kotlinToString(arrayOf())
   }
 
   @Test
@@ -34,8 +41,8 @@ class AbstractRuleTest {
     assertEquals(rule1, rule2)
     assertNotEquals(rule1, Any())
     assertEquals(rule1.hashCode(), rule2.hashCode())
-    assertEquals("SomeRule{#children=0}", rule1.toString())
-    assertEquals("SomeRule{#children=0}", rule2.toString())
+    assertEquals("SomeRule()", rule1.toString())
+    assertEquals("SomeRule()", rule2.toString())
   }
 
   @Test

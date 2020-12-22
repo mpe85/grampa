@@ -2087,7 +2087,7 @@ class AbstractParserTest {
 
   @Test
   fun action_invalid_illegalAdvanceIndex() {
-    class EvilActionRule(action: Action<Int>) : ActionRule<Int>(action) {
+    class EvilActionRule(action: Action<Int>) : ActionRule<Int>(action::run) {
       override fun match(context: RuleContext<Int>): Boolean {
         return super.match(context) && context.advanceIndex(1000)
       }
