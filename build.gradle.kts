@@ -13,13 +13,13 @@ buildscript {
 
 plugins {
   java
-  kotlin("jvm") version "1.4.21"
+  kotlin("jvm") version Versions.kotlin
   jacoco
   maven
   `maven-publish`
-  id("com.jfrog.bintray") version "1.8.5"
+  id(Plugins.bintray) version Versions.bintray
   id("com.github.spotbugs") version "4.6.0"
-  id("com.github.ben-manes.versions") version "0.36.0"
+  id(Plugins.versions) version Versions.versions
 }
 
 group = "com.mpe85"
@@ -30,12 +30,12 @@ repositories {
 }
 
 dependencies {
-  implementation(kotlin("stdlib-jdk8", "1.4.21"))
-  implementation(kotlin("reflect", "1.4.21"))
-  implementation("net.bytebuddy:byte-buddy:1.10.19")
-  implementation("com.ibm.icu:icu4j:68.2")
-  implementation("org.greenrobot:eventbus:3.2.0")
-  implementation("au.com.console:kassava:2.1.0")
+  implementation(Libs.byteBuddy)
+  implementation(Libs.eventBus)
+  implementation(Libs.icu4j)
+  implementation(Libs.kassava)
+  implementation(Libs.kotlinReflect)
+  implementation(Libs.kotlinStdlib)
   compileOnly("com.github.spotbugs:spotbugs-annotations:4.2.0")
   testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
   testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.0")
