@@ -12,17 +12,20 @@ buildscript {
 }
 
 plugins {
-  java
-  kotlin("jvm") version Versions.kotlin
+  id(Plugins.bintray) version Versions.bintray
+  id(Plugins.detekt) version Versions.detekt
+  id(Plugins.dokka) version Versions.dokka
+  kotlin(Plugins.kotlinJvm) version Versions.kotlin
+  id(Plugins.mavenPublish)
+  id(Plugins.versions) version Versions.versions
   jacoco
   maven
-  `maven-publish`
-  id(Plugins.bintray) version Versions.bintray
+
   id("com.github.spotbugs") version "4.6.0"
-  id(Plugins.versions) version Versions.versions
 }
 
 group = "com.mpe85"
+version = "0.9.3-SNAPSHOT"
 
 repositories {
   jcenter()
@@ -37,6 +40,8 @@ dependencies {
   implementation(Libs.kotlinReflect)
   implementation(Libs.kotlinStdlib)
   compileOnly("com.github.spotbugs:spotbugs-annotations:4.2.0")
+  testImplementation(Libs.kotestAssertionsCore)
+  testImplementation(Libs.kotestRunnerJunit5)
   testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
   testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.0")
   testImplementation("org.mockito:mockito-junit-jupiter:3.6.28")
