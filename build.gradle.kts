@@ -29,10 +29,6 @@ repositories {
   mavenCentral()
 }
 
-configurations {
-  testCompileOnly.get().extendsFrom(configurations.compileOnly.get())
-}
-
 dependencies {
   implementation(kotlin("stdlib-jdk8", "1.4.21"))
   implementation(kotlin("reflect", "1.4.21"))
