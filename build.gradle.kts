@@ -4,14 +4,6 @@ import com.github.spotbugs.snom.SpotBugsTask
 import java.util.Date
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-buildscript {
-  repositories {
-    jcenter()
-  }
-  dependencies {
-  }
-}
-
 plugins {
   id(Plugins.bintray) version Versions.bintray
   //id(Plugins.detekt) version Versions.detekt
