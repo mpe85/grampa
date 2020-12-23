@@ -1,9 +1,9 @@
 package com.mpe85.grampa.rule.impl
 
-import au.com.console.kassava.kotlinEquals
 import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.RuleContext
+import com.mpe85.grampa.util.checkEquality
 import java.util.Objects.hash
 
 /**
@@ -36,7 +36,9 @@ class RepeatRule<T>(private val rule: Rule<T>, private val min: Int, private val
   }
 
   override fun hashCode() = hash(super.hashCode(), min, max)
-  override fun equals(other: Any?) = kotlinEquals(other, properties)
+  override fun equals(other: Any?) =
+    checkEquality(other, { super.equals(other) }, RepeatRule<T>::min, RepeatRule<T>::max)
+
   override fun toString() = kotlinToString(properties)
 
   companion object {

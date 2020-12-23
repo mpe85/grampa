@@ -1,6 +1,5 @@
 package com.mpe85.grampa.rule.impl
 
-import au.com.console.kassava.kotlinEquals
 import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.RuleContext
@@ -18,7 +17,6 @@ class TestNotRule<T>(private val rule: Rule<T>) : AbstractRule<T>(rule) {
 
   override val testRule get() = true
   
-  override fun equals(other: Any?) = kotlinEquals(other, properties)
   override fun toString() = kotlinToString(properties)
 
   companion object {

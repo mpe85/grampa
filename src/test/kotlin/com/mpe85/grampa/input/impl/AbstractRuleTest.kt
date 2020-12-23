@@ -1,6 +1,5 @@
 package com.mpe85.grampa.input.impl
 
-import au.com.console.kassava.kotlinEquals
 import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.rule.ReferenceRule
 import com.mpe85.grampa.rule.Rule
@@ -28,7 +27,6 @@ class AbstractRuleTest {
       return false
     }
     
-    override fun equals(other: Any?) = kotlinEquals(other, arrayOf())
     override fun toString() = kotlinToString(arrayOf())
   }
 

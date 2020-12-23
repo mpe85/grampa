@@ -1,9 +1,9 @@
 package com.mpe85.grampa.rule.impl
 
-import au.com.console.kassava.kotlinEquals
 import au.com.console.kassava.kotlinToString
 import com.ibm.icu.lang.UCharacter.charCount
 import com.mpe85.grampa.rule.RuleContext
+import com.mpe85.grampa.util.checkEquality
 import java.util.Objects.hash
 
 /**
@@ -34,7 +34,7 @@ class CodePointPredicateRule<T>(private val predicate: (Int) -> Boolean) : Abstr
       && context.advanceIndex(charCount(context.currentCodePoint))
 
   override fun hashCode() = hash(super.hashCode(), predicate)
-  override fun equals(other: Any?) = kotlinEquals(other, properties)
+  override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, CodePointPredicateRule<T>::predicate)
   override fun toString() = kotlinToString(properties)
 
   companion object {

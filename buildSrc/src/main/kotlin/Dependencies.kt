@@ -1,6 +1,7 @@
 object Versions {
   const val bintray = "1.8.5"
   const val byteBuddy = "1.10.19"
+  const val commonsLang3 = "3.11"
   const val detekt = "1.15.0"
   const val dokka = "1.4.20"
   const val eventBus = "3.2.0"
@@ -23,6 +24,7 @@ object Plugins {
 
 object Libs {
   const val byteBuddy = "net.bytebuddy:byte-buddy:${Versions.byteBuddy}"
+  const val commonsLang3 = "org.apache.commons:commons-lang3:${Versions.commonsLang3}"
   const val eventBus = "org.greenrobot:eventbus:${Versions.eventBus}"
   const val icu4j = "com.ibm.icu:icu4j:${Versions.icu4j}"
   const val kassava = "au.com.console:kassava:${Versions.kassava}"

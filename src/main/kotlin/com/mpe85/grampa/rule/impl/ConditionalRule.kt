@@ -1,10 +1,10 @@
 package com.mpe85.grampa.rule.impl
 
-import au.com.console.kassava.kotlinEquals
 import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.rule.ActionContext
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.RuleContext
+import com.mpe85.grampa.util.checkEquality
 import java.util.Objects.hash
 
 /**
@@ -26,7 +26,14 @@ class ConditionalRule<T> @JvmOverloads constructor(
     if (condition(context)) thenRule.match(context) else elseRule?.match(context) ?: true
 
   override fun hashCode() = hash(super.hashCode(), condition, thenRule, elseRule)
-  override fun equals(other: Any?) = kotlinEquals(other, properties)
+  override fun equals(other: Any?) = checkEquality(
+    other,
+    { super.equals(other) },
+    ConditionalRule<T>::condition,
+    ConditionalRule<T>::thenRule,
+    ConditionalRule<T>::elseRule
+  )
+
   override fun toString() = kotlinToString(properties)
 
   companion object {
