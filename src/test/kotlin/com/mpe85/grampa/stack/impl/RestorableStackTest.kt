@@ -1,9 +1,9 @@
-package com.mpe85.grampa.util.stack.impl
+package com.mpe85.grampa.stack.impl
 
-import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 
 @TestInstance(PER_CLASS)
 class RestorableStackTest {

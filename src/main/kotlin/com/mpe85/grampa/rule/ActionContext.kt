@@ -1,7 +1,7 @@
 package com.mpe85.grampa.rule
 
 import com.mpe85.grampa.input.InputPosition
-import com.mpe85.grampa.util.stack.RestorableStack
+import com.mpe85.grampa.stack.RestorableStack
 
 /**
  * Defines a context for parser action rules.

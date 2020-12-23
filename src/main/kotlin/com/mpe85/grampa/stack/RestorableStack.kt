@@ -1,4 +1,4 @@
-package com.mpe85.grampa.util.stack
+package com.mpe85.grampa.stack
 
 import java.util.Deque
 

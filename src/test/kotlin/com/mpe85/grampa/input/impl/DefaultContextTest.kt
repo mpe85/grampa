@@ -3,7 +3,7 @@ package com.mpe85.grampa.input.impl
 import com.mpe85.grampa.input.InputBuffer
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.impl.DefaultContext
-import com.mpe85.grampa.util.stack.RestorableStack
+import com.mpe85.grampa.stack.RestorableStack
 import org.greenrobot.eventbus.EventBus
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test

@@ -1,6 +1,6 @@
-package com.mpe85.grampa.util.stack.impl
+package com.mpe85.grampa.stack.impl
 
-import com.mpe85.grampa.util.stack.RestorableStack
+import com.mpe85.grampa.stack.RestorableStack
 import java.util.ArrayDeque
 import java.util.Collections.swap
 import java.util.Deque

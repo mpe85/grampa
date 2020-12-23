@@ -7,7 +7,7 @@ import com.mpe85.grampa.input.InputBuffer
 import com.mpe85.grampa.rule.ActionContext
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.RuleContext
-import com.mpe85.grampa.util.stack.RestorableStack
+import com.mpe85.grampa.stack.RestorableStack
 import org.greenrobot.eventbus.EventBus
 
 class DefaultContext<T> @JvmOverloads constructor(

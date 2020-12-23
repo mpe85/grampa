@@ -8,8 +8,8 @@ import com.mpe85.grampa.input.impl.CharSequenceInputBuffer
 import com.mpe85.grampa.parser.Parser
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.impl.DefaultContext
-import com.mpe85.grampa.util.stack.RestorableStack
-import com.mpe85.grampa.util.stack.impl.LinkedListRestorableStack
+import com.mpe85.grampa.stack.RestorableStack
+import com.mpe85.grampa.stack.impl.LinkedListRestorableStack
 import org.greenrobot.eventbus.EventBus
 
 /**
