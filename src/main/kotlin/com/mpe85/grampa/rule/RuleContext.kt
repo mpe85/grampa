@@ -3,7 +3,7 @@ package com.mpe85.grampa.rule
 import com.mpe85.grampa.input.InputBuffer
 
 /**
- * Defines a context for parser rules.
+ * A context for parser rules.
  *
  * @author mpe85
  * @param T the type of the stack elements

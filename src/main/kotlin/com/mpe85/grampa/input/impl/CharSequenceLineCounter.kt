@@ -10,7 +10,7 @@ import kotlin.streams.asSequence
  * A [LineCounter] implementation for [CharSequence]s.
  *
  * @author mpe85
- * @param input the input in which the lines are counted
+ * @param[input] The input in which the lines are counted
  */
 class CharSequenceLineCounter(input: CharSequence) : LineCounter {
 

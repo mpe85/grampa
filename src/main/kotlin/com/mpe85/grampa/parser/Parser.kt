@@ -3,17 +3,17 @@ package com.mpe85.grampa.parser
 import com.mpe85.grampa.rule.Rule
 
 /**
- * Defines a parser.
+ * The parser interface.
  *
  * @author mpe85
- * @param T the type of the stack elements
+ * @param[T] The type of the stack elements
  */
 interface Parser<T> {
 
   /**
    * Get the root rule of the parser.
    *
-   * @return a parser rule
+   * @return A parser rule
    */
   fun root(): Rule<T>
 

@@ -24,7 +24,7 @@ import net.bytebuddy.implementation.bind.annotation.SuperCall
  * recursions caused by circular rule dependencies.
  *
  * @author mpe85
- * @param T the type of the stack elements
+ * @param[T] The type of the stack elements
  */
 class RuleMethodInterceptor<T> {
 
@@ -37,11 +37,11 @@ class RuleMethodInterceptor<T> {
   /**
    * Intercept rule methods.
    *
-   * @param method A rule method
-   * @param superCallable The method body wrapped inside a callable
-   * @param args The arguments with which the method was called
+   * @param[method] A rule method
+   * @param[superCallable] The method body wrapped inside a callable
+   * @param[args] The arguments with which the method was called
    * @return A parser rule
-   * @throws Exception may be thrown when the actual method is called via the callable
+   * @throws[Exception] may be thrown when the actual method is called via the callable
    */
   @RuntimeType
   @Throws(Exception::class)
@@ -66,7 +66,7 @@ class RuleMethodInterceptor<T> {
   /**
    * Check if a rule method is the root rule method.
    *
-   * @return true if it is the root rule method, otherwise false
+   * @return true if it is the root rule method
    */
   private fun Method.isRoot() = ROOT == name && parameterCount == 0
 
@@ -77,8 +77,8 @@ class RuleMethodInterceptor<T> {
  * Note that this is only used by [RuleMethodInterceptor].
  *
  * @author mpe85
- * @param T The type of the stack elements
- * @param referencedRuleHash The hash code of the referenced rule
+ * @param[T] The type of the stack elements
+ * @property[referencedRuleHash] The hash code of the referenced rule
  */
 private class ReferenceRuleImpl<T>(override val referencedRuleHash: Int) : ReferenceRule<T>, AbstractRule<T>() {
   override fun match(context: RuleContext<T>) = false

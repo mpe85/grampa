@@ -10,15 +10,15 @@ interface LineCounter {
   /**
    * Get the line count.
    *
-   * @return the line count
+   * @return The line count
    */
   val lineCount: Int
 
   /**
    * Get the position of a character at a given index.
    *
-   * @param index a valid index
-   * @return the input position
+   * @param[index] A valid index
+   * @return The input position
    */
   fun getPosition(index: Int): InputPosition
 
