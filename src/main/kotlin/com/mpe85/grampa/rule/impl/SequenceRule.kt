@@ -1,8 +1,8 @@
 package com.mpe85.grampa.rule.impl
 
-import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.RuleContext
+import com.mpe85.grampa.util.stringify
 
 /**
  * A sequence rule implementation.
@@ -14,11 +14,7 @@ import com.mpe85.grampa.rule.RuleContext
 class SequenceRule<T>(rules: List<Rule<T>>) : AbstractRule<T>(rules) {
 
   override fun match(context: RuleContext<T>) = children.all { c -> context.createChildContext(c).run() }
-  
-  override fun toString() = kotlinToString(properties)
 
-  companion object {
-    private val properties = arrayOf(SequenceRule<*>::children)
-  }
+  override fun toString() = stringify(SequenceRule<T>::children)
 
 }

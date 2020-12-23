@@ -1,10 +1,10 @@
 package com.mpe85.grampa.rule.impl
 
-import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.exception.ActionRunException
 import com.mpe85.grampa.rule.ActionContext
 import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.util.checkEquality
+import com.mpe85.grampa.util.stringify
 import java.util.Objects.hash
 
 /**
@@ -32,10 +32,6 @@ open class ActionRule<T> @JvmOverloads constructor(
   override fun equals(other: Any?) =
     checkEquality(other, { super.equals(other) }, ActionRule<T>::action, ActionRule<T>::skippable)
 
-  override fun toString() = kotlinToString(properties)
-
-  companion object {
-    private val properties = arrayOf(ActionRule<*>::action, ActionRule<*>::skippable)
-  }
+  override fun toString() = stringify(ActionRule<T>::action, ActionRule<T>::skippable)
 
 }

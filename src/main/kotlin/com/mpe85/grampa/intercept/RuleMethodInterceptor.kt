@@ -1,11 +1,11 @@
 package com.mpe85.grampa.intercept
 
-import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.rule.ReferenceRule
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.rule.impl.AbstractRule
 import com.mpe85.grampa.util.checkEquality
+import com.mpe85.grampa.util.stringify
 import com.mpe85.grampa.visitor.impl.ReferenceRuleReplaceVisitor
 import java.lang.reflect.Method
 import java.util.HashMap
@@ -80,13 +80,11 @@ class RuleMethodInterceptor<T> {
  * @property[referencedRuleHash] The hash code of the referenced rule
  */
 private class ReferenceRuleImpl<T>(override val referencedRuleHash: Int) : ReferenceRule<T>, AbstractRule<T>() {
+  
   override fun match(context: RuleContext<T>) = false
 
   override fun hashCode() = hash(super.hashCode(), referencedRuleHash)
   override fun equals(other: Any?) = checkEquality(other, ReferenceRuleImpl<T>::referencedRuleHash)
-  override fun toString() = kotlinToString(properties)
+  override fun toString() = stringify(ReferenceRuleImpl<T>::referencedRuleHash)
 
-  companion object {
-    private val properties = arrayOf(ReferenceRuleImpl<*>::referencedRuleHash)
-  }
 }

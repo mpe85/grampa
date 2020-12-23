@@ -1,10 +1,10 @@
 package com.mpe85.grampa.rule.impl
 
-import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.rule.ActionContext
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.util.checkEquality
+import com.mpe85.grampa.util.stringify
 import java.util.Objects.hash
 
 /**
@@ -34,11 +34,7 @@ class ConditionalRule<T> @JvmOverloads constructor(
     ConditionalRule<T>::elseRule
   )
 
-  override fun toString() = kotlinToString(properties)
-
-  companion object {
-    private val properties =
-      arrayOf(ConditionalRule<*>::condition, ConditionalRule<*>::thenRule, ConditionalRule<*>::elseRule)
-  }
+  override fun toString() =
+    stringify(ConditionalRule<T>::condition, ConditionalRule<T>::thenRule, ConditionalRule<T>::elseRule)
 
 }

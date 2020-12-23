@@ -1,8 +1,8 @@
 package com.mpe85.grampa.rule.impl
 
-import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.RuleContext
+import com.mpe85.grampa.util.stringify
 
 /**
  * A predicate rule implementation that tests if its child rule does not match.
@@ -13,14 +13,10 @@ import com.mpe85.grampa.rule.RuleContext
  */
 class TestNotRule<T>(private val rule: Rule<T>) : AbstractRule<T>(rule) {
 
+  override val testRule get() = true
+
   override fun match(context: RuleContext<T>) = !context.createChildContext(rule).run()
 
-  override val testRule get() = true
-  
-  override fun toString() = kotlinToString(properties)
-
-  companion object {
-    private val properties = arrayOf(TestNotRule<*>::rule)
-  }
+  override fun toString() = stringify(TestNotRule<T>::rule)
 
 }

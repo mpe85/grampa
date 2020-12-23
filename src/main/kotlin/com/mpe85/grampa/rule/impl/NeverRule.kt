@@ -1,7 +1,7 @@
 package com.mpe85.grampa.rule.impl
 
-import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.rule.RuleContext
+import com.mpe85.grampa.util.stringify
 
 /**
  * A rule implementation that never matches.
@@ -12,7 +12,7 @@ import com.mpe85.grampa.rule.RuleContext
 class NeverRule<T> : AbstractRule<T>() {
 
   override fun match(context: RuleContext<T>) = false
-  
-  override fun toString() = kotlinToString(arrayOf())
+
+  override fun toString() = stringify()
 
 }

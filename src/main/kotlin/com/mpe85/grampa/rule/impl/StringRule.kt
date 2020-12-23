@@ -1,9 +1,9 @@
 package com.mpe85.grampa.rule.impl
 
-import au.com.console.kassava.kotlinToString
 import com.ibm.icu.lang.UCharacter.toLowerCase
 import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.util.checkEquality
+import com.mpe85.grampa.util.stringify
 import java.util.Objects.hash
 
 /**
@@ -32,10 +32,6 @@ class StringRule<T> @JvmOverloads constructor(string: String, private val ignore
   override fun equals(other: Any?) =
     checkEquality(other, { super.equals(other) }, StringRule<T>::string, StringRule<T>::ignoreCase)
 
-  override fun toString() = kotlinToString(properties)
-
-  companion object {
-    private val properties = arrayOf(StringRule<*>::string, StringRule<*>::ignoreCase)
-  }
+  override fun toString() = stringify(StringRule<T>::string, StringRule<T>::ignoreCase)
 
 }

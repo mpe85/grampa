@@ -1,8 +1,8 @@
 package com.mpe85.grampa.rule.impl
 
-import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.RuleContext
+import com.mpe85.grampa.util.stringify
 
 /**
  * A predicate rule implementation that tests if its child rule matches.
@@ -12,6 +12,8 @@ import com.mpe85.grampa.rule.RuleContext
  * @property[rule] The child rule to test
  */
 class TestRule<T>(private var rule: Rule<T>) : AbstractRule<T>(rule) {
+
+  override val testRule get() = true
 
   override fun match(context: RuleContext<T>): Boolean {
     val currentIndex = context.currentIndex
@@ -25,12 +27,6 @@ class TestRule<T>(private var rule: Rule<T>) : AbstractRule<T>(rule) {
     return false
   }
 
-  override val testRule get() = true
-  
-  override fun toString() = kotlinToString(properties)
-
-  companion object {
-    private val properties = arrayOf(TestRule<*>::rule)
-  }
+  override fun toString() = stringify(TestRule<T>::rule)
 
 }

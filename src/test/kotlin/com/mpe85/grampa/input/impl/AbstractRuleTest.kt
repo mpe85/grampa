@@ -1,17 +1,17 @@
 package com.mpe85.grampa.input.impl
 
-import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.rule.ReferenceRule
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.rule.impl.AbstractRule
 import com.mpe85.grampa.rule.impl.EmptyRule
 import com.mpe85.grampa.rule.impl.NeverRule
-import org.junit.jupiter.api.Assertions
+import com.mpe85.grampa.util.stringify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
@@ -26,8 +26,8 @@ class AbstractRuleTest {
     override fun match(context: RuleContext<String>): Boolean {
       return false
     }
-    
-    override fun toString() = kotlinToString(arrayOf())
+
+    override fun toString() = stringify()
   }
 
   @Test
@@ -50,7 +50,7 @@ class AbstractRuleTest {
   @Test
   fun replaceReferenceRule_invalid() {
     val rule = SomeRule(EmptyRule())
-    Assertions.assertThrows(IllegalArgumentException::class.java) { rule.replaceReferenceRule(0, NeverRule()) }
+    assertThrows(IllegalArgumentException::class.java) { rule.replaceReferenceRule(0, NeverRule()) }
   }
 
   @Test

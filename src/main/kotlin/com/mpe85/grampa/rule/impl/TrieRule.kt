@@ -1,6 +1,5 @@
 package com.mpe85.grampa.rule.impl
 
-import au.com.console.kassava.kotlinToString
 import com.ibm.icu.lang.UCharacter.toLowerCase
 import com.ibm.icu.util.BytesTrie.Result.FINAL_VALUE
 import com.ibm.icu.util.BytesTrie.Result.INTERMEDIATE_VALUE
@@ -9,6 +8,7 @@ import com.ibm.icu.util.CharsTrieBuilder
 import com.ibm.icu.util.StringTrieBuilder.Option.FAST
 import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.util.checkEquality
+import com.mpe85.grampa.util.stringify
 import java.util.Objects.hash
 
 /**
@@ -70,10 +70,6 @@ class TrieRule<T> @JvmOverloads constructor(strings: Set<String>, private val ig
   override fun equals(other: Any?) =
     checkEquality(other, { super.equals(other) }, TrieRule<T>::strings, TrieRule<T>::ignoreCase)
 
-  override fun toString() = kotlinToString(properties)
-
-  companion object {
-    private val properties = arrayOf(TrieRule<*>::strings, TrieRule<*>::ignoreCase)
-  }
+  override fun toString() = stringify(TrieRule<T>::strings, TrieRule<T>::ignoreCase)
 
 }

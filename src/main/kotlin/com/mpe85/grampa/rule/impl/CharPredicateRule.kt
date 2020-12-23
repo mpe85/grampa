@@ -1,8 +1,8 @@
 package com.mpe85.grampa.rule.impl
 
-import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.util.checkEquality
+import com.mpe85.grampa.util.stringify
 import java.util.Objects.hash
 
 /**
@@ -27,10 +27,6 @@ class CharPredicateRule<T>(private val predicate: (Char) -> Boolean) : AbstractR
 
   override fun hashCode() = hash(super.hashCode(), predicate)
   override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, CharPredicateRule<T>::predicate)
-  override fun toString() = kotlinToString(properties)
-
-  companion object {
-    private val properties = arrayOf(CharPredicateRule<*>::predicate)
-  }
+  override fun toString() = stringify(CharPredicateRule<T>::predicate)
 
 }

@@ -26,10 +26,8 @@ repositories {
 
 dependencies {
   implementation(Libs.byteBuddy)
-  implementation(Libs.commonsLang3)
   implementation(Libs.eventBus)
   implementation(Libs.icu4j)
-  implementation(Libs.kassava)
   implementation(Libs.kotlinReflect)
   implementation(Libs.kotlinStdlib)
   compileOnly("com.github.spotbugs:spotbugs-annotations:4.2.0")

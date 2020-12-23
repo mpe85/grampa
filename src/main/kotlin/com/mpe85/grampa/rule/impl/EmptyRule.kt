@@ -1,7 +1,7 @@
 package com.mpe85.grampa.rule.impl
 
-import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.rule.RuleContext
+import com.mpe85.grampa.util.stringify
 
 /**
  * A rule implementation that matches an empty input.
@@ -12,7 +12,7 @@ import com.mpe85.grampa.rule.RuleContext
 class EmptyRule<T> : AbstractRule<T>() {
 
   override fun match(context: RuleContext<T>) = true
-  
-  override fun toString() = kotlinToString(arrayOf())
+
+  override fun toString() = stringify()
 
 }

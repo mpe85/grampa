@@ -1,7 +1,7 @@
 package com.mpe85.grampa.rule.impl
 
-import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.rule.RuleContext
+import com.mpe85.grampa.util.stringify
 
 /**
  * A rule implementation that matches the end of the input.
@@ -13,6 +13,6 @@ class EndOfInputRule<T> : AbstractRule<T>() {
 
   override fun match(context: RuleContext<T>) = context.atEndOfInput
 
-  override fun toString() = kotlinToString(arrayOf())
+  override fun toString() = stringify()
 
 }
