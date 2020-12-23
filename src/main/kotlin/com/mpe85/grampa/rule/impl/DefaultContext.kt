@@ -4,7 +4,6 @@ import com.mpe85.grampa.event.MatchFailureEvent
 import com.mpe85.grampa.event.MatchSuccessEvent
 import com.mpe85.grampa.event.PreMatchEvent
 import com.mpe85.grampa.input.InputBuffer
-import com.mpe85.grampa.input.InputPosition
 import com.mpe85.grampa.rule.ActionContext
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.RuleContext
@@ -36,8 +35,7 @@ class DefaultContext<T> @JvmOverloads constructor(
   override var previousMatch = parentContext?.previousMatch
 
 
-  override val isAtEndOfInput: Boolean
-    get() = currentIndex == inputBuffer.length
+  override val atEndOfInput get() = currentIndex == inputBuffer.length
 
   override val currentChar: Char
     get() {
@@ -55,26 +53,19 @@ class DefaultContext<T> @JvmOverloads constructor(
       return cachedCurrentCodePoint as Int
     }
 
-  override val numberOfCharsLeft: Int
-    get() = inputBuffer.length - currentIndex
+  override val numberOfCharsLeft get() = inputBuffer.length - currentIndex
 
-  override val input: CharSequence
-    get() = inputBuffer.subSequence(0, inputBuffer.length)
+  override val input get() = inputBuffer.subSequence(0, inputBuffer.length)
 
-  override val matchedInput: CharSequence
-    get() = inputBuffer.subSequence(0, currentIndex)
+  override val matchedInput get() = inputBuffer.subSequence(0, currentIndex)
 
-  override val restOfInput: CharSequence
-    get() = inputBuffer.subSequence(currentIndex, inputBuffer.length)
+  override val restOfInput get() = inputBuffer.subSequence(currentIndex, inputBuffer.length)
 
-  override val position: InputPosition
-    get() = inputBuffer.getPosition(currentIndex)
+  override val position get() = inputBuffer.getPosition(currentIndex)
 
-  override val inPredicate: Boolean
-    get() = rule.testRule || parentContext?.inPredicate ?: false
+  override val inTestRule get() = rule.testRule || parentContext?.inTestRule ?: false
 
-  override val parent: RuleContext<T>?
-    get() = parentContext
+  override val parent get() = parentContext
 
   override fun post(event: Any) = bus.post(event)
 

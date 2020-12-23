@@ -29,7 +29,7 @@ class CodePointPredicateRule<T>(private val predicate: (Int) -> Boolean) : Abstr
    */
   constructor(char: Char) : this({ cp -> cp == char.toInt() })
 
-  override fun match(context: RuleContext<T>) = !context.isAtEndOfInput
+  override fun match(context: RuleContext<T>) = !context.atEndOfInput
       && predicate(context.currentCodePoint)
       && context.advanceIndex(charCount(context.currentCodePoint))
 

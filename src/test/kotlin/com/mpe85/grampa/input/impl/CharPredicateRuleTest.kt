@@ -42,7 +42,7 @@ class CharPredicateRuleTest {
 
   @Test
   fun match(@Mock ctx: RuleContext<String?>) {
-    Mockito.`when`(ctx.isAtEndOfInput).thenReturn(false)
+    Mockito.`when`(ctx.atEndOfInput).thenReturn(false)
     Mockito.`when`(ctx.currentChar).thenReturn('a')
     Mockito.`when`(ctx.advanceIndex(1)).thenReturn(true)
     val rule1 = CharPredicateRule<String?>('a')

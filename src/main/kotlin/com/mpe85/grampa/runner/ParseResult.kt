@@ -17,7 +17,7 @@ import com.mpe85.grampa.rule.RuleContext
  */
 class ParseResult<T>(val matched: Boolean, context: RuleContext<T>) {
 
-  val matchedEntireInput = matched && context.isAtEndOfInput
+  val matchedEntireInput = matched && context.atEndOfInput
   val matchedInput = if (matched) context.matchedInput else null
   val restOfInput: CharSequence = if (matched) context.restOfInput else context.input
   val stack = context.stack.copy()

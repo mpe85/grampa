@@ -13,7 +13,7 @@ import com.mpe85.grampa.rule.RuleContext
  */
 class EndOfInputRule<T> : AbstractRule<T>() {
 
-  override fun match(context: RuleContext<T>) = context.isAtEndOfInput
+  override fun match(context: RuleContext<T>) = context.atEndOfInput
 
   override fun hashCode() = kotlinHashCode(arrayOf())
   override fun equals(other: Any?) = kotlinEquals(other, arrayOf())

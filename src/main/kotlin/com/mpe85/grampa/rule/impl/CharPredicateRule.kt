@@ -21,7 +21,7 @@ class CharPredicateRule<T>(private val predicate: (Char) -> Boolean) : AbstractR
    */
   constructor(character: Char) : this({ c -> c == character })
 
-  override fun match(context: RuleContext<T>) = !context.isAtEndOfInput
+  override fun match(context: RuleContext<T>) = !context.atEndOfInput
       && predicate(context.currentChar)
       && context.advanceIndex(1)
 
