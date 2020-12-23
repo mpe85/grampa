@@ -26,19 +26,19 @@ import net.bytebuddy.implementation.MethodDelegation.withDefaultConfiguration
 import net.bytebuddy.matcher.ElementMatchers.returns
 
 /**
- * Main class containing static methods for parser creation
+ * Main class containing static methods for parser creation.
  *
  * @author mpe85
  */
 object Grampa {
 
   /**
-   * Creates a new parser instance using the given parser class. The parser class must have a no-args c'tor which will
+   * Create a new parser instance using the given parser class. The parser class must have a no-args c'tor which will
    * be called by this method.
    *
-   * @param U The type of the parser
-   * @param T The type of the stack elements
-   * @param parserClass A parser class
+   * @param[U] The type of the parser
+   * @param[T] The type of the stack elements
+   * @param[parserClass] A parser class
    * @return A parser instance
    */
   @JvmStatic
@@ -61,15 +61,15 @@ object Grampa {
   }
 
   /**
-   * Creates a new parser instance using the given parser class and c'tor parameter types. The parser class must have
-   * a c'tor which matches the passed parameter types. The creation of the parser instance must be finalized by
-   * calling [ParserCtor.withArgs] on the returned [ParserCtor].
+   * Create a new parser instance using the given parser class and constructor parameter types.
+   * The parser class must have a constructor which matches the passed parameter types.
+   * The creation of the parser instance must be finalized by calling [ParserCtor.withArgs] on the returned [ParserCtor].
    *
-   * @param U The type of the parser
-   * @param T The type of the stack elements
-   * @param parserClass A parser class
-   * @param ctorParamTypes The parameter types of the c'tor
-   * @return A parser c'tor
+   * @param[U] The type of the parser
+   * @param[T] The type of the stack elements
+   * @param[parserClass] A parser class
+   * @param[ctorParamTypes] The parameter types of the constructor
+   * @return A parser constructor
    */
   @JvmStatic
   fun <U : Parser<T>, T> createParser(parserClass: Class<U>, vararg ctorParamTypes: Class<*>): ParserCtor<U> {
@@ -133,20 +133,21 @@ object Grampa {
   private fun KFunction<*>.isSafeVarArgsRuleFunction() = parameters.any { it.isVararg } && hasAnnotation<SafeVarargs>()
 
   /**
-   * A parser c'tor (intermediate class for fluent API). This class wraps a [Constructor] and offers a var args
-   * method for calling that c'tor.
+   * A parser constructor (intermediate class for fluent API).
+   * This class wraps a [Constructor] and offers a var args method for calling that constructor.
    *
    * @author mpe85
    *
-   * @param T The type to which the c'tor belongs to
-   * @param ctor The wrapped [Constructor]
+   * @param[T] The type to which the constructor belongs to
+   * @param[ctor] The wrapped [Constructor]
    */
   class ParserCtor<T>(private val ctor: Constructor<out T>) {
 
     /**
-     * Call the wrapped c'tor using the given c'tor args. The arguments must match the c'tor parameter list.
+     * Call the wrapped constructor using the given constructor args.
+     * The arguments must match the constructor parameter list.
      *
-     * @param args C'tor args
+     * @param[args] Constructor arguments
      * @return A new instance
      */
     fun withArgs(vararg args: Any): T {

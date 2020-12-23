@@ -10,22 +10,22 @@ import com.mpe85.grampa.rule.RuleContext
  * A code point predicate rule implementation.
  *
  * @author mpe85
- * @param T The type of the stack elements
- * @property predicate A predicate that is tested by the rule
+ * @param[T] The type of the stack elements
+ * @property[predicate] A predicate that is tested by the rule
  */
 class CodePointPredicateRule<T>(private val predicate: (Int) -> Boolean) : AbstractRule<T>() {
 
   /**
    * Construct a code point predicate rule that exactly matches a specific code point.
    *
-   * @param codePoint A code point
+   * @param[codePoint] A code point
    */
   constructor(codePoint: Int) : this({ cp -> cp == codePoint })
 
   /**
    * Construct a code point predicate rule that exactly matches a specific character.
    *
-   * @param char A character
+   * @param[char] A character
    */
   constructor(char: Char) : this({ cp -> cp == char.toInt() })
 

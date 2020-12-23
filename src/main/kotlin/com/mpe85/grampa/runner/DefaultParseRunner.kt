@@ -16,15 +16,15 @@ import org.greenrobot.eventbus.EventBus
  * The default parse runner. May be overridden by a custom implementation.
  *
  * @author mpe85
- * @param T the type of the stack elements
- * @param parser a parser instance
+ * @param[T] The type of the stack elements
+ * @param[parser] A parser instance
  */
 open class DefaultParseRunner<T>(parser: Parser<T>) {
 
   /**
    * Get the root rule of the parser.
    *
-   * @return the root rule
+   * @return The root rule
    */
   val rootRule: Rule<T> = parser.root()
   private val bus = EventBus.builder().logNoSubscriberMessages(false).build()
@@ -33,30 +33,30 @@ open class DefaultParseRunner<T>(parser: Parser<T>) {
   /**
    * Register a listener to the parser event bus.
    *
-   * @param listener a parse event listener
+   * @param[listener] A parse event listener
    */
   fun registerListener(listener: ParseEventListener<T>) = bus.register(listener)
 
   /**
    * Unregister a listener to the parser event bus.
    *
-   * @param listener a parse event listener
+   * @param[listener] A parse event listener
    */
   fun unregisterListener(listener: ParseEventListener<T>) = bus.unregister(listener)
 
   /**
    * Run the parser against a character sequence.
    *
-   * @param charSequence a character sequence
-   * @return the parse result
+   * @param[charSequence] A character sequence
+   * @return The parse result
    */
   fun run(charSequence: CharSequence) = run(CharSequenceInputBuffer(charSequence))
 
   /**
    * Run the parser against an input buffer.
    *
-   * @param inputBuffer an input buffer
-   * @return the parse result
+   * @param[inputBuffer] An input buffer
+   * @return The parse result
    */
   fun run(inputBuffer: InputBuffer): ParseResult<T> {
     resetStack()
@@ -71,8 +71,8 @@ open class DefaultParseRunner<T>(parser: Parser<T>) {
   /**
    * Create the initial root context for the parser's root rule.
    *
-   * @param inputBuffer an input buffer
-   * @return a rule context
+   * @param[inputBuffer] An input buffer
+   * @return A rule context
    */
   protected fun createRootContext(inputBuffer: InputBuffer) =
     DefaultContext(inputBuffer, 0, rootRule, 0, valueStack!!, bus)

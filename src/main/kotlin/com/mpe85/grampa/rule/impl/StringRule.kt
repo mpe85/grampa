@@ -10,9 +10,9 @@ import com.mpe85.grampa.rule.RuleContext
  * A string rule implementation.
  *
  * @author mpe85
- * @param T The type of the stack elements
- * @param string A string
- * @property ignoreCase Indicates if the case should be ignored
+ * @param[T] The type of the stack elements
+ * @param[string] A string
+ * @property[ignoreCase] Indicates if the case should be ignored
  */
 class StringRule<T> @JvmOverloads constructor(string: String, private val ignoreCase: Boolean = false) :
   AbstractRule<T>() {

@@ -11,10 +11,10 @@ import com.mpe85.grampa.rule.RuleContext
  * A rule implementation that runs one of two sub rules, depending on a condition.
  *
  * @author mpe85
- * @param T The type of the stack elements
- * @property condition A condition that is evaluated when the rule is run
- * @property thenRule A rule to run if the condition evaluates to true
- * @property elseRule An optional rule to run if the condition evaluates to false
+ * @param[T] The type of the stack elements
+ * @property[condition] A condition that is evaluated when the rule is run
+ * @property[thenRule] A rule to run if the condition evaluates to true
+ * @property[elseRule] An optional rule to run if the condition evaluates to false
  */
 class ConditionalRule<T> @JvmOverloads constructor(
   private val condition: (ActionContext<T>) -> Boolean,

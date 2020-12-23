@@ -10,8 +10,8 @@ import com.mpe85.grampa.rule.RuleContext
  * A sequence rule implementation.
  *
  * @author mpe85
- * @param T The type of the stack elements
- * @param rules A list of child rules
+ * @param[T] The type of the stack elements
+ * @param[rules] A list of child rules
  */
 class SequenceRule<T>(rules: List<Rule<T>>) : AbstractRule<T>(rules) {
 

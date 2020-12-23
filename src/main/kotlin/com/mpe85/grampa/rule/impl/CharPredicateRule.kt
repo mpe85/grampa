@@ -9,15 +9,15 @@ import com.mpe85.grampa.rule.RuleContext
  * A character predicate rule implementation.
  *
  * @author mpe85
- * @param T The type of the stack elements
- * @property predicate A predicate that is tested by the rule
+ * @param[T] The type of the stack elements
+ * @property[predicate] A predicate that is tested by the rule
  */
 class CharPredicateRule<T>(private val predicate: (Char) -> Boolean) : AbstractRule<T>() {
 
   /**
    * Construct a character predicate rule that exactly matches a specific character.
    *
-   * @param character a character
+   * @param[character] A character
    */
   constructor(character: Char) : this({ c -> c == character })
 

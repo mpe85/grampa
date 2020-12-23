@@ -10,8 +10,8 @@ import com.mpe85.grampa.rule.RuleContext
  * A predicate rule implementation that tests if its child rule matches.
  *
  * @author mpe85
- * @param T The type of the stack elements
- * @property rule The child rule to test
+ * @param[T] The type of the stack elements
+ * @property[rule] The child rule to test
  */
 class TestRule<T>(private var rule: Rule<T>) : AbstractRule<T>(rule) {
 

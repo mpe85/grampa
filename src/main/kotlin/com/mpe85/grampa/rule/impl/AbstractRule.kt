@@ -8,8 +8,8 @@ import com.mpe85.grampa.visitor.RuleVisitor
  * An abstract rule that is base for all rule implementations.
  *
  * @author mpe85
- * @param T The type of the stack elements
- * @param children A list of child rules
+ * @param[T] The type of the stack elements
+ * @param[children] A list of child rules
  */
 abstract class AbstractRule<T>(children: List<Rule<T>> = emptyList()) : Rule<T> {
 
@@ -18,7 +18,7 @@ abstract class AbstractRule<T>(children: List<Rule<T>> = emptyList()) : Rule<T> 
   /**
    * Construct an abstract rule with one child rule.
    *
-   * @param child A child rule
+   * @param[child] A child rule
    */
   protected constructor(child: Rule<T>) : this(listOf(child))
 

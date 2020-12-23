@@ -15,10 +15,10 @@ import com.mpe85.grampa.rule.RuleContext
  * A trie (prefix tree) rule implementation that matches the input against a dictionary.
  *
  * @author mpe85
- * @param T The type of the stack elements
- * @param strings A set of strings
- * @property ignoreCase Indicates if the case of the strings should be ignored
- * @property strings A set containing all strings inside the trie
+ * @param[T] The type of the stack elements
+ * @param[strings] A set of strings
+ * @property[ignoreCase] Indicates if the case of the strings should be ignored
+ * @property[strings] A set containing all strings inside the trie
  */
 class TrieRule<T> @JvmOverloads constructor(strings: Set<String>, private val ignoreCase: Boolean = false) :
   AbstractRule<T>() {
@@ -33,15 +33,15 @@ class TrieRule<T> @JvmOverloads constructor(strings: Set<String>, private val ig
   /**
    * Construct a case-sensitive trie.
    *
-   * @param strings A variable number of strings
+   * @param[strings] A variable number of strings
    */
   constructor(vararg strings: String) : this(strings.toSet())
 
   /**
-   * Construct A trie (case-sensitive or case-insensitive).
+   * Construct a case-sensitive or case-insensitive trie.
    *
-   * @param ignoreCase Indicates if the case of the strings should be ignored
-   * @param strings A variable number of strings
+   * @param[ignoreCase] Indicates if the case of the strings should be ignored
+   * @param[strings] A variable number of strings
    */
   constructor(ignoreCase: Boolean, vararg strings: String) : this(strings.toSet(), ignoreCase)
 

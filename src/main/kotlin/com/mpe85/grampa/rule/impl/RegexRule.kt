@@ -11,15 +11,15 @@ import java.util.regex.Pattern.compile
  * A regular expression rule implementation.
  *
  * @author mpe85
- * @param T The type of the stack elements
- * @property pattern A compiled regular expression
+ * @param[T] The type of the stack elements
+ * @property[pattern] A compiled regular expression
  */
 class RegexRule<T>(private val pattern: Pattern) : AbstractRule<T>() {
 
   /**
    * Construct a regex rule using a regex string.
    *
-   * @param regex A string containing a regular expression
+   * @param[regex] A string containing a regular expression
    */
   constructor(regex: String) : this(compile(regex))
 

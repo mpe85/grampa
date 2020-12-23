@@ -10,10 +10,10 @@ import com.mpe85.grampa.rule.RuleContext
  * A repeat rule implementation.
  *
  * @author mpe85
- * @param T The type of the stack elements
- * @param rule The rule to repeat
- * @param min The minimum number of cycles
- * @param max An optional maximum number of cycles
+ * @param[T] The type of the stack elements
+ * @property[rule] The rule to repeat
+ * @property[min] The minimum number of cycles
+ * @property[max] An optional maximum number of cycles
  */
 class RepeatRule<T>(private val rule: Rule<T>, private val min: Int, private val max: Int?) : AbstractRule<T>(rule) {
 

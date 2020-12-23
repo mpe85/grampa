@@ -10,8 +10,8 @@ import com.mpe85.grampa.rule.RuleContext
  * A rule implementation that matches the first successful rule of its child rules.
  *
  * @author mpe85
- * @param T The type of the stack elements
- * @param rules A list of child rules
+ * @param[T] The type of the stack elements
+ * @param[rules] A list of child rules
  */
 class FirstOfRule<T>(rules: List<Rule<T>>) : AbstractRule<T>(rules) {
 

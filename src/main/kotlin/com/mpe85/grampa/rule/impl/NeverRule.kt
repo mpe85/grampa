@@ -9,7 +9,7 @@ import com.mpe85.grampa.rule.RuleContext
  * A rule implementation that never matches.
  *
  * @author mpe85
- * @param T The type of the stack elements
+ * @param[T] The type of the stack elements
  */
 class NeverRule<T> : AbstractRule<T>() {
 

@@ -7,22 +7,22 @@ import com.mpe85.grampa.util.stack.RestorableStack
  * Defines a context for parser action rules.
  *
  * @author mpe85
- * @param T the type of the stack elements
- * @property level the current level (depth) inside the context parent/child hierarchy
- * @property startIndex the start index inside the parser input where the context tries to match its rule
- * @property currentIndex the current index inside the parser input
- * @property isAtEndOfInput if the current index is at the end of the input
- * @property currentChar the character at the current index
- * @property currentCodePoint the code point at the current index
- * @property numberOfCharsLeft the number of characters left in the input.
- * @property input the entire parser input
- * @property matchedInput the input that is already matched successfully
- * @property restOfInput the rest of the input that is not matched yet
- * @property previousMatch the part of the input that was matched by the previous rule
- * @property position the position of the current index
- * @property inPredicate if the context is inside a predicate rule
- * @property stack the parser stack
- * @property parent the parent context of the context
+ * @param[T] The type of the stack elements
+ * @property[level] The current level (depth) inside the context parent/child hierarchy
+ * @property[startIndex] The start index inside the parser input where the context tries to match its rule
+ * @property[currentIndex] The current index inside the parser input
+ * @property[isAtEndOfInput] Indicates if the current index is at the end of the input
+ * @property[currentChar] The character at the current index
+ * @property[currentCodePoint] The code point at the current index
+ * @property[numberOfCharsLeft] The number of characters left in the input.
+ * @property[input] The entire parser input
+ * @property[matchedInput] The input that is already matched successfully
+ * @property[restOfInput] The rest of the input that is not matched yet
+ * @property[previousMatch] The part of the input that was matched by the previous rule
+ * @property[position] The position of the current index
+ * @property[inPredicate] Indicates if the context is inside a test rule
+ * @property[stack] The parser stack
+ * @property[parent] The parent context of the context
  */
 interface ActionContext<T> {
 
@@ -45,7 +45,7 @@ interface ActionContext<T> {
   /**
    * Post a parser event to the event bus.
    *
-   * @param event an event to post
+   * @param[event] An event to post
    */
   fun post(event: Any)
 

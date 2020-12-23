@@ -11,9 +11,9 @@ import com.mpe85.grampa.rule.RuleContext
  * An action rule implementation.
  *
  * @author mpe85
- * @param T The type of the stack elements
- * @param action An action
- * @param skippable Indicates if the action is skippable inside predicate rules
+ * @param[T] The type of the stack elements
+ * @property[action] An action
+ * @property[skippable] Indicates if the action is skippable inside test rules
  */
 open class ActionRule<T> @JvmOverloads constructor(
   private val action: (context: ActionContext<T>) -> Boolean,
