@@ -1,9 +1,9 @@
 package com.mpe85.grampa.rule.impl
 
 import au.com.console.kassava.kotlinEquals
-import au.com.console.kassava.kotlinHashCode
 import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.rule.RuleContext
+import java.util.Objects.hash
 
 /**
  * A character predicate rule implementation.
@@ -25,7 +25,7 @@ class CharPredicateRule<T>(private val predicate: (Char) -> Boolean) : AbstractR
       && predicate(context.currentChar)
       && context.advanceIndex(1)
 
-  override fun hashCode() = kotlinHashCode(properties)
+  override fun hashCode() = hash(super.hashCode(), predicate)
   override fun equals(other: Any?) = kotlinEquals(other, properties)
   override fun toString() = kotlinToString(properties)
 

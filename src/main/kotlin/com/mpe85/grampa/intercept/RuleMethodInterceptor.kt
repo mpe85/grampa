@@ -1,7 +1,6 @@
 package com.mpe85.grampa.intercept
 
 import au.com.console.kassava.kotlinEquals
-import au.com.console.kassava.kotlinHashCode
 import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.rule.ReferenceRule
 import com.mpe85.grampa.rule.Rule
@@ -10,7 +9,7 @@ import com.mpe85.grampa.rule.impl.AbstractRule
 import com.mpe85.grampa.visitor.impl.ReferenceRuleReplaceVisitor
 import java.lang.reflect.Method
 import java.util.HashMap
-import java.util.Objects
+import java.util.Objects.hash
 import java.util.concurrent.Callable
 import net.bytebuddy.implementation.bind.annotation.AllArguments
 import net.bytebuddy.implementation.bind.annotation.Origin
@@ -50,7 +49,7 @@ class RuleMethodInterceptor<T> {
     @SuperCall superCallable: Callable<Rule<T>>,
     @AllArguments vararg args: Any?
   ): Rule<T> {
-    val hash = Objects.hash(method.name, args.contentHashCode())
+    val hash = hash(method.name, args.contentHashCode())
     if (!rules.containsKey(hash)) {
       rules[hash] = null
       val rule = superCallable.call()
@@ -83,7 +82,7 @@ class RuleMethodInterceptor<T> {
 private class ReferenceRuleImpl<T>(override val referencedRuleHash: Int) : ReferenceRule<T>, AbstractRule<T>() {
   override fun match(context: RuleContext<T>) = false
 
-  override fun hashCode() = kotlinHashCode(properties)
+  override fun hashCode() = hash(super.hashCode(), referencedRuleHash)
   override fun equals(other: Any?) = kotlinEquals(other, properties)
   override fun toString() = kotlinToString(properties)
 

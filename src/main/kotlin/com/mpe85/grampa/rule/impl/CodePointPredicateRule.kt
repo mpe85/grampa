@@ -1,10 +1,10 @@
 package com.mpe85.grampa.rule.impl
 
 import au.com.console.kassava.kotlinEquals
-import au.com.console.kassava.kotlinHashCode
 import au.com.console.kassava.kotlinToString
 import com.ibm.icu.lang.UCharacter.charCount
 import com.mpe85.grampa.rule.RuleContext
+import java.util.Objects.hash
 
 /**
  * A code point predicate rule implementation.
@@ -33,7 +33,7 @@ class CodePointPredicateRule<T>(private val predicate: (Int) -> Boolean) : Abstr
       && predicate(context.currentCodePoint)
       && context.advanceIndex(charCount(context.currentCodePoint))
 
-  override fun hashCode() = kotlinHashCode(properties)
+  override fun hashCode() = hash(super.hashCode(), predicate)
   override fun equals(other: Any?) = kotlinEquals(other, properties)
   override fun toString() = kotlinToString(properties)
 

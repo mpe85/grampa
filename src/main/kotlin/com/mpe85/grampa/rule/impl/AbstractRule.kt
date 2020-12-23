@@ -3,6 +3,7 @@ package com.mpe85.grampa.rule.impl
 import com.mpe85.grampa.rule.ReferenceRule
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.visitor.RuleVisitor
+import java.util.Objects.hash
 
 /**
  * An abstract rule that is base for all rule implementations.
@@ -35,5 +36,7 @@ abstract class AbstractRule<T>(children: List<Rule<T>> = emptyList()) : Rule<T> 
   }
 
   override fun accept(visitor: RuleVisitor<T>) = visitor.visit(this)
+
+  override fun hashCode() = hash(children)
 
 }

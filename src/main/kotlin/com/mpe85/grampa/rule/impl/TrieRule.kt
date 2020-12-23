@@ -1,7 +1,6 @@
 package com.mpe85.grampa.rule.impl
 
 import au.com.console.kassava.kotlinEquals
-import au.com.console.kassava.kotlinHashCode
 import au.com.console.kassava.kotlinToString
 import com.ibm.icu.lang.UCharacter.toLowerCase
 import com.ibm.icu.util.BytesTrie.Result.FINAL_VALUE
@@ -10,6 +9,7 @@ import com.ibm.icu.util.BytesTrie.Result.NO_MATCH
 import com.ibm.icu.util.CharsTrieBuilder
 import com.ibm.icu.util.StringTrieBuilder.Option.FAST
 import com.mpe85.grampa.rule.RuleContext
+import java.util.Objects.hash
 
 /**
  * A trie (prefix tree) rule implementation that matches the input against a dictionary.
@@ -66,7 +66,7 @@ class TrieRule<T> @JvmOverloads constructor(strings: Set<String>, private val ig
     return longestMatch > 0 && context.advanceIndex(longestMatch)
   }
 
-  override fun hashCode() = kotlinHashCode(properties)
+  override fun hashCode() = hash(super.hashCode(), strings, ignoreCase)
   override fun equals(other: Any?) = kotlinEquals(other, properties)
   override fun toString() = kotlinToString(properties)
 

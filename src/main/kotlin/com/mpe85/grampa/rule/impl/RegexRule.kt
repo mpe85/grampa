@@ -1,9 +1,9 @@
 package com.mpe85.grampa.rule.impl
 
 import au.com.console.kassava.kotlinEquals
-import au.com.console.kassava.kotlinHashCode
 import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.rule.RuleContext
+import java.util.Objects.hash
 import java.util.regex.Pattern
 import java.util.regex.Pattern.compile
 
@@ -27,7 +27,7 @@ class RegexRule<T>(private val pattern: Pattern) : AbstractRule<T>() {
     matcher.lookingAt() && context.advanceIndex(matcher.end())
   }
 
-  override fun hashCode() = kotlinHashCode(properties)
+  override fun hashCode() = hash(super.hashCode(), pattern)
   override fun equals(other: Any?) = kotlinEquals(other, properties)
   override fun toString() = kotlinToString(properties)
 

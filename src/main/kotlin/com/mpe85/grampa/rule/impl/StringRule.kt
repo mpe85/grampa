@@ -1,10 +1,10 @@
 package com.mpe85.grampa.rule.impl
 
 import au.com.console.kassava.kotlinEquals
-import au.com.console.kassava.kotlinHashCode
 import au.com.console.kassava.kotlinToString
 import com.ibm.icu.lang.UCharacter.toLowerCase
 import com.mpe85.grampa.rule.RuleContext
+import java.util.Objects.hash
 
 /**
  * A string rule implementation.
@@ -28,7 +28,7 @@ class StringRule<T> @JvmOverloads constructor(string: String, private val ignore
     return false
   }
 
-  override fun hashCode() = kotlinHashCode(properties)
+  override fun hashCode() = hash(super.hashCode(), string, ignoreCase)
   override fun equals(other: Any?) = kotlinEquals(other, properties)
   override fun toString() = kotlinToString(properties)
 

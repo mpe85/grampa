@@ -1,7 +1,6 @@
 package com.mpe85.grampa.rule.impl
 
 import au.com.console.kassava.kotlinEquals
-import au.com.console.kassava.kotlinHashCode
 import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.rule.RuleContext
 
@@ -14,8 +13,7 @@ import com.mpe85.grampa.rule.RuleContext
 class NeverRule<T> : AbstractRule<T>() {
 
   override fun match(context: RuleContext<T>) = false
-
-  override fun hashCode() = kotlinHashCode(arrayOf())
+  
   override fun equals(other: Any?) = kotlinEquals(other, arrayOf())
   override fun toString() = kotlinToString(arrayOf())
 

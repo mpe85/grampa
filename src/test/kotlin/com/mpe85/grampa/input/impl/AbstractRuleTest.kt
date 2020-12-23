@@ -1,7 +1,6 @@
 package com.mpe85.grampa.input.impl
 
 import au.com.console.kassava.kotlinEquals
-import au.com.console.kassava.kotlinHashCode
 import au.com.console.kassava.kotlinToString
 import com.mpe85.grampa.rule.ReferenceRule
 import com.mpe85.grampa.rule.Rule
@@ -28,8 +27,7 @@ class AbstractRuleTest {
     override fun match(context: RuleContext<String>): Boolean {
       return false
     }
-
-    override fun hashCode() = kotlinHashCode(arrayOf())
+    
     override fun equals(other: Any?) = kotlinEquals(other, arrayOf())
     override fun toString() = kotlinToString(arrayOf())
   }
