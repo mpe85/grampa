@@ -56,7 +56,9 @@ class LinkedListRestorableStack<E> : LinkedList<E>, RestorableStack<E> {
   }
 
   override fun swap() {
-    check(size >= 2) { "Swapping the two top stack values is not possible when the stack contains lesser than two values." }
+    check(size >= 2) {
+      "Swapping the two top stack values is not possible when the stack contains lesser than two values."
+    }
     swap(this, 0, 1)
   }
 
