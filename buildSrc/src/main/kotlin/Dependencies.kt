@@ -7,7 +7,7 @@ object Versions {
   const val icu4j = "68.2"
   const val kotest = "4.3.2"
   const val kotlin = "1.4.21"
-  const val mockk = "1.10.3"
+  const val mockk = "1.10.3-jdk8"
   const val versions = "0.36.0"
 }
 
