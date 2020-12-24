@@ -2,7 +2,6 @@ package com.mpe85.grampa.util
 
 import java.util.Objects.equals
 
-
 /**
  * Check if an object equals another object.
  *

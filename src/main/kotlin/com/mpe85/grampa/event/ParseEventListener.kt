@@ -16,8 +16,7 @@ abstract class ParseEventListener<T> {
    * @param[event] The posted event
    */
   @Subscribe
-  open fun beforeParse(event: PreParseEvent<T>) {
-  }
+  open fun beforeParse(event: PreParseEvent<T>) = Unit
 
   /**
    * Called on a [PreMatchEvent].
@@ -25,8 +24,7 @@ abstract class ParseEventListener<T> {
    * @param[event] The posted event
    */
   @Subscribe
-  open fun beforeMatch(event: PreMatchEvent<T>) {
-  }
+  open fun beforeMatch(event: PreMatchEvent<T>) = Unit
 
   /**
    * Called on a [MatchSuccessEvent].
@@ -34,8 +32,7 @@ abstract class ParseEventListener<T> {
    * @param[event] The posted event
    */
   @Subscribe
-  open fun afterMatchSuccess(event: MatchSuccessEvent<T>) {
-  }
+  open fun afterMatchSuccess(event: MatchSuccessEvent<T>) = Unit
 
   /**
    * Called on a [MatchFailureEvent].
@@ -43,8 +40,7 @@ abstract class ParseEventListener<T> {
    * @param[event] The posted event
    */
   @Subscribe
-  fun afterMatchFailure(event: MatchFailureEvent<T>) {
-  }
+  fun afterMatchFailure(event: MatchFailureEvent<T>) = Unit
 
   /**
    * Called on a [PostParseEvent].
@@ -52,7 +48,6 @@ abstract class ParseEventListener<T> {
    * @param[event] The posted event
    */
   @Subscribe
-  open fun afterParse(event: PostParseEvent<T>) {
-  }
+  open fun afterParse(event: PostParseEvent<T>) = Unit
 
 }

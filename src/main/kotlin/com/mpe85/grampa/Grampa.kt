@@ -5,7 +5,6 @@ import com.mpe85.grampa.intercept.RuleMethodInterceptor
 import com.mpe85.grampa.parser.Parser
 import com.mpe85.grampa.rule.Rule
 import java.lang.reflect.Constructor
-import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier.isFinal
 import java.lang.reflect.Modifier.isProtected
@@ -45,17 +44,9 @@ object Grampa {
   fun <U : Parser<T>, T> createParser(parserClass: Class<U>): U {
     return try {
       createParserSubClass(parserClass).getDeclaredConstructor().newInstance()
-    } catch (ex: InstantiationException) {
+    } catch (ex: ReflectiveOperationException) {
       throw ParserCreateException("Failed to create new parser instance.", ex)
-    } catch (ex: IllegalAccessException) {
-      throw ParserCreateException("Failed to create new parser instance.", ex)
-    } catch (ex: IllegalArgumentException) {
-      throw ParserCreateException("Failed to create new parser instance.", ex)
-    } catch (ex: InvocationTargetException) {
-      throw ParserCreateException("Failed to create new parser instance.", ex)
-    } catch (ex: NoSuchMethodException) {
-      throw ParserCreateException("Failed to create new parser instance.", ex)
-    } catch (ex: SecurityException) {
+    } catch (ex: RuntimeException) {
       throw ParserCreateException("Failed to create new parser instance.", ex)
     }
   }
@@ -63,7 +54,8 @@ object Grampa {
   /**
    * Create a new parser instance using the given parser class and constructor parameter types.
    * The parser class must have a constructor which matches the passed parameter types.
-   * The creation of the parser instance must be finalized by calling [ParserCtor.withArgs] on the returned [ParserCtor].
+   * The creation of the parser instance must be finalized by calling [ParserCtor.withArgs]
+   * on the returned [ParserCtor].
    *
    * @param[U] The type of the parser
    * @param[T] The type of the stack elements
@@ -153,13 +145,9 @@ object Grampa {
     fun withArgs(vararg args: Any): T {
       return try {
         ctor.newInstance(*args)
-      } catch (ex: InstantiationException) {
-        throw ParserCreateException("Failed to create new parser instance.", ex)
-      } catch (ex: IllegalAccessException) {
+      } catch (ex: ReflectiveOperationException) {
         throw ParserCreateException("Failed to create new parser instance.", ex)
       } catch (ex: IllegalArgumentException) {
-        throw ParserCreateException("Failed to create new parser instance.", ex)
-      } catch (ex: InvocationTargetException) {
         throw ParserCreateException("Failed to create new parser instance.", ex)
       }
     }
