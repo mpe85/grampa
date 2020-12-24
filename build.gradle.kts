@@ -2,6 +2,7 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.github.spotbugs.snom.SpotBugsExtension
 import com.github.spotbugs.snom.SpotBugsTask
 import java.util.Date
+import org.gradle.api.JavaVersion.VERSION_1_8
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -43,8 +44,8 @@ dependencies {
 }
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_11
-  targetCompatibility = JavaVersion.VERSION_11
+  sourceCompatibility = VERSION_1_8
+  targetCompatibility = VERSION_1_8
 }
 
 val javadocJar = tasks.create<Jar>("javadocJar") {
@@ -63,7 +64,7 @@ tasks {
     options.encoding = "UTF-8"
   }
   withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "11"
+    kotlinOptions.jvmTarget = VERSION_1_8.toString()
   }
   withType<Javadoc> {
     (options as? StandardJavadocDocletOptions)?.links("https://docs.oracle.com/en/java/javase/11/docs/api/")
