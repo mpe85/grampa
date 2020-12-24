@@ -26,7 +26,7 @@ class CharPredicateRule<T>(private val predicate: (Char) -> Boolean) : AbstractR
       && context.advanceIndex(1)
 
   override fun hashCode() = hash(super.hashCode(), predicate)
-  override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, CharPredicateRule<T>::predicate)
+  override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.predicate })
   override fun toString() = stringify(CharPredicateRule<T>::predicate)
 
 }
