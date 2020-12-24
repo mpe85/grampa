@@ -29,13 +29,8 @@ internal inline fun <reified T : Any> T.checkEquality(
  * @param[properties] The object properties that should be used in the string representation.
  * @return The string representation of the object
  */
-internal inline fun <reified T : Any> T.stringify(vararg properties: Pair<String, Any?> = emptyArray()) =
-  stringify(requireNotNull(T::class.simpleName), properties.toList())
-
-private fun <T : Any> T.stringify(className: String, properties: List<Pair<String, Any?>>) = buildString {
-  append("$className(")
-  append(properties.joinToString(", ") {
-    "${it.first}=${it.second}"
-  })
+internal fun Any.stringify(vararg properties: Pair<String, Any?> = emptyArray()) = buildString {
+  append("${this@stringify::class.simpleName}(")
+  append(properties.joinToString(", ") { "${it.first}=${it.second}" })
   append(")")
 }
