@@ -80,11 +80,11 @@ class RuleMethodInterceptor<T> {
  * @property[referencedRuleHash] The hash code of the referenced rule
  */
 private class ReferenceRuleImpl<T>(override val referencedRuleHash: Int) : ReferenceRule<T>, AbstractRule<T>() {
-  
+
   override fun match(context: RuleContext<T>) = false
 
   override fun hashCode() = hash(super.hashCode(), referencedRuleHash)
-  override fun equals(other: Any?) = checkEquality(other, ReferenceRuleImpl<T>::referencedRuleHash)
+  override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.referencedRuleHash })
   override fun toString() = stringify(ReferenceRuleImpl<T>::referencedRuleHash)
 
 }

@@ -39,6 +39,6 @@ abstract class AbstractRule<T>(children: List<Rule<T>> = emptyList()) : Rule<T> 
   override fun accept(visitor: RuleVisitor<T>) = visitor.visit(this)
 
   override fun hashCode() = hash(children, testRule)
-  override fun equals(other: Any?) = checkEquality(other, AbstractRule<T>::children, AbstractRule<T>::testRule)
+  override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.children }, { it.testRule })
 
 }

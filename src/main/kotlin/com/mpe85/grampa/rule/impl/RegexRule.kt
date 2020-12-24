@@ -28,7 +28,7 @@ class RegexRule<T>(private val pattern: Pattern) : AbstractRule<T>() {
   }
 
   override fun hashCode() = hash(super.hashCode(), pattern)
-  override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, RegexRule<T>::pattern)
+  override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.pattern })
   override fun toString() = stringify(RegexRule<T>::pattern)
 
 }

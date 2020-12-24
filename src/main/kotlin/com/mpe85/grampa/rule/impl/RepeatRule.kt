@@ -36,9 +36,7 @@ class RepeatRule<T>(private val rule: Rule<T>, private val min: Int, private val
   }
 
   override fun hashCode() = hash(super.hashCode(), min, max)
-  override fun equals(other: Any?) =
-    checkEquality(other, { super.equals(other) }, RepeatRule<T>::min, RepeatRule<T>::max)
-
+  override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.min }, { it.max })
   override fun toString() = stringify(RepeatRule<T>::rule, RepeatRule<T>::min, RepeatRule<T>::max)
 
 }

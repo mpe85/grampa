@@ -67,9 +67,7 @@ class TrieRule<T> @JvmOverloads constructor(strings: Set<String>, private val ig
   }
 
   override fun hashCode() = hash(super.hashCode(), strings, ignoreCase)
-  override fun equals(other: Any?) =
-    checkEquality(other, { super.equals(other) }, TrieRule<T>::strings, TrieRule<T>::ignoreCase)
-
+  override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.strings }, { it.ignoreCase })
   override fun toString() = stringify(TrieRule<T>::strings, TrieRule<T>::ignoreCase)
 
 }

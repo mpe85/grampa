@@ -29,8 +29,7 @@ class StringRule<T> @JvmOverloads constructor(string: String, private val ignore
   }
 
   override fun hashCode() = hash(super.hashCode(), string, ignoreCase)
-  override fun equals(other: Any?) =
-    checkEquality(other, { super.equals(other) }, StringRule<T>::string, StringRule<T>::ignoreCase)
+  override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.string }, { it.ignoreCase })
 
   override fun toString() = stringify(StringRule<T>::string, StringRule<T>::ignoreCase)
 

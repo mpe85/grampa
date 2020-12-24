@@ -34,7 +34,7 @@ class CodePointPredicateRule<T>(private val predicate: (Int) -> Boolean) : Abstr
       && context.advanceIndex(charCount(context.currentCodePoint))
 
   override fun hashCode() = hash(super.hashCode(), predicate)
-  override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, CodePointPredicateRule<T>::predicate)
+  override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.predicate })
   override fun toString() = stringify(CodePointPredicateRule<T>::predicate)
 
 }
