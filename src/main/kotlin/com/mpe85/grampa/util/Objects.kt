@@ -1,7 +1,6 @@
 package com.mpe85.grampa.util
 
 import java.util.Objects.equals
-import kotlin.reflect.KProperty1
 
 
 /**
@@ -30,13 +29,13 @@ internal inline fun <reified T : Any> T.checkEquality(
  * @param[properties] The object properties that should be used in the string representation.
  * @return The string representation of the object
  */
-internal inline fun <reified T : Any> T.stringify(vararg properties: KProperty1<T, Any?> = emptyArray()) =
+internal inline fun <reified T : Any> T.stringify(vararg properties: Pair<String, Any?> = emptyArray()) =
   stringify(requireNotNull(T::class.simpleName), properties.toList())
 
-private fun <T : Any> T.stringify(className: String, properties: List<KProperty1<T, Any?>>) = buildString {
+private fun <T : Any> T.stringify(className: String, properties: List<Pair<String, Any?>>) = buildString {
   append("$className(")
   append(properties.joinToString(", ") {
-    "${it.name}=${it.get(this@stringify)}"
+    "${it.first}=${it.second}"
   })
   append(")")
 }

@@ -15,6 +15,6 @@ class SequenceRule<T>(rules: List<Rule<T>>) : AbstractRule<T>(rules) {
 
   override fun match(context: RuleContext<T>) = children.all { c -> context.createChildContext(c).run() }
 
-  override fun toString() = stringify(SequenceRule<T>::children)
+  override fun toString() = stringify("children" to children)
 
 }

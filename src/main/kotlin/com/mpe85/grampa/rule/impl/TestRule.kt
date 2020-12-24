@@ -27,6 +27,6 @@ class TestRule<T>(private var rule: Rule<T>) : AbstractRule<T>(rule) {
     return false
   }
 
-  override fun toString() = stringify(TestRule<T>::rule)
+  override fun toString() = stringify("rule" to rule)
 
 }

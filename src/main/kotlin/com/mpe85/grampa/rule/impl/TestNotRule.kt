@@ -17,6 +17,6 @@ class TestNotRule<T>(private val rule: Rule<T>) : AbstractRule<T>(rule) {
 
   override fun match(context: RuleContext<T>) = !context.createChildContext(rule).run()
 
-  override fun toString() = stringify(TestNotRule<T>::rule)
+  override fun toString() = stringify("rule" to rule)
 
 }

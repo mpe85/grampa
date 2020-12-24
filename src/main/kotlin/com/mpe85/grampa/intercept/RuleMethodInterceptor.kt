@@ -85,6 +85,6 @@ private class ReferenceRuleImpl<T>(override val referencedRuleHash: Int) : Refer
 
   override fun hashCode() = hash(super.hashCode(), referencedRuleHash)
   override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.referencedRuleHash })
-  override fun toString() = stringify(ReferenceRuleImpl<T>::referencedRuleHash)
+  override fun toString() = stringify("referencedRuleHash" to referencedRuleHash)
 
 }

@@ -29,7 +29,6 @@ class ConditionalRule<T> @JvmOverloads constructor(
   override fun equals(other: Any?) =
     checkEquality(other, { super.equals(other) }, { it.condition }, { it.thenRule }, { it.elseRule })
 
-  override fun toString() =
-    stringify(ConditionalRule<T>::condition, ConditionalRule<T>::thenRule, ConditionalRule<T>::elseRule)
+  override fun toString() = stringify("condition" to condition, "thenRule" to thenRule, "elseRule" to elseRule)
 
 }

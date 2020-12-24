@@ -15,6 +15,6 @@ class FirstOfRule<T>(rules: List<Rule<T>>) : AbstractRule<T>(rules) {
 
   override fun match(context: RuleContext<T>) = children.any { c -> context.createChildContext(c).run() }
 
-  override fun toString() = stringify(FirstOfRule<T>::children)
+  override fun toString() = stringify("children" to children)
 
 }

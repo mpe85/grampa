@@ -35,6 +35,6 @@ class CodePointPredicateRule<T>(private val predicate: (Int) -> Boolean) : Abstr
 
   override fun hashCode() = hash(super.hashCode(), predicate)
   override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.predicate })
-  override fun toString() = stringify(CodePointPredicateRule<T>::predicate)
+  override fun toString() = stringify("predicate" to predicate)
 
 }
