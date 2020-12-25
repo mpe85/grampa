@@ -5,8 +5,7 @@ import com.mpe85.grampa.intercept.RuleMethodInterceptor
 import com.mpe85.grampa.parser.Parser
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.util.isFinal
-import com.mpe85.grampa.util.isProtected
-import com.mpe85.grampa.util.isPublic
+import com.mpe85.grampa.util.isPublicOrProtected
 import com.mpe85.grampa.util.isSafeVarArgsRuleFunction
 import com.mpe85.grampa.util.isSafeVarArgsRuleMethod
 import com.mpe85.grampa.util.isStatic
@@ -92,31 +91,22 @@ private fun <U : Parser<T>, T> KClass<U>.createParserSubClass(): KClass<out U> {
 
 private fun KClass<*>.validate() {
   declaredFunctions.asSequence().filter { it.returnType.jvmErasure.isSubclassOf(Rule::class) }.forEach {
-    it.validate()
+    it.requireOverridable()
+    it.javaMethod?.requireOverridable()
   }
   superclasses.forEach {
     it.validate()
   }
 }
 
-private fun KFunction<*>.validate() {
-  this.javaMethod?.validate()
-  if (!isPublic() && !isProtected()) {
-    throw ParserCreateException("Rule functions must be public or protected.")
-  }
-  if (isFinal && !isSafeVarArgsRuleFunction()) {
-    throw ParserCreateException("Rule functions must not be final.")
+private fun KFunction<*>.requireOverridable() {
+  if (!isPublicOrProtected() || isFinal && !isSafeVarArgsRuleFunction()) {
+    throw ParserCreateException("The rule method '$this' must be overridable.")
   }
 }
 
-private fun Method.validate() {
-  if (!isPublic() && !isProtected()) {
-    throw ParserCreateException("Rule methods must be public or protected.")
-  }
-  if (isFinal() && !isSafeVarArgsRuleMethod()) {
-    throw ParserCreateException("Rule methods must not be final.")
-  }
-  if (isStatic()) {
-    throw ParserCreateException("Rule methods must not be static.")
+private fun Method.requireOverridable() {
+  if (!isPublicOrProtected() || isFinal() && !isSafeVarArgsRuleMethod() || isStatic()) {
+    throw ParserCreateException("The rule method '$this' must be overridable.")
   }
 }
