@@ -16,11 +16,11 @@ import java.util.Objects.hash
  *
  * @author mpe85
  * @param[T] The type of the stack elements
- * @param[strings] A set of strings
+ * @param[strings] A collection of strings from which the trie is built up
  * @property[ignoreCase] Indicates if the case of the strings should be ignored
  * @property[strings] A set containing all strings inside the trie
  */
-class TrieRule<T> @JvmOverloads constructor(strings: Set<String>, private val ignoreCase: Boolean = false) :
+class TrieRule<T> @JvmOverloads constructor(strings: Collection<String>, private val ignoreCase: Boolean = false) :
   AbstractRule<T>() {
 
   private val trie = CharsTrieBuilder().run {
@@ -35,7 +35,7 @@ class TrieRule<T> @JvmOverloads constructor(strings: Set<String>, private val ig
    *
    * @param[strings] A variable number of strings
    */
-  constructor(vararg strings: String) : this(strings.toSet())
+  constructor(vararg strings: String) : this(strings.toList())
 
   /**
    * Construct a case-sensitive or case-insensitive trie.

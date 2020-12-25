@@ -6,8 +6,6 @@ import com.mpe85.grampa.parser.Parser
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.util.isFinal
 import com.mpe85.grampa.util.isPublicOrProtected
-import com.mpe85.grampa.util.isSafeVarArgsRuleFunction
-import com.mpe85.grampa.util.isSafeVarArgsRuleMethod
 import com.mpe85.grampa.util.isStatic
 import java.lang.reflect.Method
 import kotlin.reflect.KClass
@@ -100,13 +98,13 @@ private fun KClass<*>.validate() {
 }
 
 private fun KFunction<*>.requireOverridable() {
-  if (!isPublicOrProtected() || isFinal && !isSafeVarArgsRuleFunction()) {
+  if (!isPublicOrProtected() || isFinal) {
     throw ParserCreateException("The rule method '$this' must be overridable.")
   }
 }
 
 private fun Method.requireOverridable() {
-  if (!isPublicOrProtected() || isFinal() && !isSafeVarArgsRuleMethod() || isStatic()) {
+  if (!isPublicOrProtected() || isFinal() || isStatic()) {
     throw ParserCreateException("The rule method '$this' must be overridable.")
   }
 }

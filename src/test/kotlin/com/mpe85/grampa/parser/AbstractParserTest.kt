@@ -3,7 +3,6 @@ package com.mpe85.grampa.parser
 import com.mpe85.grampa.event.MatchSuccessEvent
 import com.mpe85.grampa.event.ParseEventListener
 import com.mpe85.grampa.event.PostParseEvent
-import com.mpe85.grampa.exception.ActionRunException
 import com.mpe85.grampa.rule.Action
 import com.mpe85.grampa.rule.ActionContext
 import com.mpe85.grampa.rule.Rule
@@ -13,11 +12,11 @@ import com.mpe85.grampa.runner.DefaultParseRunner
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import java.util.concurrent.atomic.AtomicReference
 import org.greenrobot.eventbus.Subscribe
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
@@ -529,7 +528,7 @@ class AbstractParserTest {
         return codePointRange('b'.toInt(), 'a'.toInt())
       }
     }
-    Assertions.assertThrows(IllegalArgumentException::class.java) {
+    assertThrows(IllegalArgumentException::class.java) {
       DefaultParseRunner(Parser()).run("a")
     }
   }
@@ -2468,7 +2467,7 @@ class AbstractParserTest {
 
     val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    Assertions.assertThrows(ActionRunException::class.java) { runner.run("whatever") }
+    assertThrows(IndexOutOfBoundsException::class.java) { runner.run("whatever") }
   }
 
   @Test
@@ -2509,7 +2508,7 @@ class AbstractParserTest {
 
     val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    Assertions.assertThrows(ActionRunException::class.java) { runner.run("whatever") }
+    assertThrows(IllegalStateException::class.java) { runner.run("whatever") }
   }
 
   @Test
@@ -2537,7 +2536,7 @@ class AbstractParserTest {
 
     val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    Assertions.assertThrows(ActionRunException::class.java) { runner.run("whatever") }
+    assertThrows(IllegalStateException::class.java) { runner.run("whatever") }
   }
 
   @Test

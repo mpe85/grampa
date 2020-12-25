@@ -3,12 +3,12 @@ package com.mpe85.grampa.event
 import org.greenrobot.eventbus.Subscribe
 
 /**
- * Abstract listener for parse events. Concrete listeners must extend this class.
+ * Listener for parse events. Concrete listeners should extend this class.
  *
  * @author mpe85
  * @param[T] The type of the stack elements
  */
-abstract class ParseEventListener<T> {
+open class ParseEventListener<T> {
 
   /**
    * Called on a [PreParseEvent].
