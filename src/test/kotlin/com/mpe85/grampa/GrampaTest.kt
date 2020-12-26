@@ -1,6 +1,5 @@
 package com.mpe85.grampa
 
-import com.mpe85.grampa.exception.ParserCreateException
 import com.mpe85.grampa.input.impl.FinalRuleMethodTestParser
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.impl.CharPredicateRule
@@ -25,7 +24,7 @@ class GrampaTest {
 
   @Test
   fun createParser_invalid_privateRuleMethod() {
-    assertThrows(ParserCreateException::class.java) { InvalidParser::class.createParser() }
+    assertThrows(IllegalArgumentException::class.java) { InvalidParser::class.createParser() }
   }
 
   @Test
@@ -38,31 +37,31 @@ class GrampaTest {
 
   @Test
   fun createParser_invalid_ctor() {
-    assertThrows(ParserCreateException::class.java) {
+    assertThrows(IllegalArgumentException::class.java) {
       TestParser::class.createParser(4711)
     }
   }
 
   @Test
   fun createParser_invalid_args() {
-    assertThrows(ParserCreateException::class.java) {
+    assertThrows(IllegalArgumentException::class.java) {
       TestParser::class.createParser(4711)
     }
   }
 
   @Test
   fun createParser_invalid_noDefaultCtor() {
-    assertThrows(ParserCreateException::class.java) { NoDefaultCtorTestParser::class.createParser() }
+    assertThrows(IllegalArgumentException::class.java) { NoDefaultCtorTestParser::class.createParser() }
   }
 
   @Test
   fun createParser_invalid_finalRuleMethod() {
-    assertThrows(ParserCreateException::class.java) { FinalRuleMethodTestParser::class.createParser() }
+    assertThrows(IllegalArgumentException::class.java) { FinalRuleMethodTestParser::class.createParser() }
   }
 
   @Test
   fun createParser_invalid_staticRuleMethod() {
-    assertThrows(ParserCreateException::class.java) { StaticRuleMethodTestParser::class.createParser() }
+    assertThrows(IllegalArgumentException::class.java) { StaticRuleMethodTestParser::class.createParser() }
   }
 
   @Test
@@ -91,7 +90,7 @@ class GrampaTest {
 
   @Test
   fun createParser_invalid_vararg() {
-    assertThrows(ParserCreateException::class.java) { VarArgsTestParser::class.createParser() }
+    assertThrows(IllegalArgumentException::class.java) { VarArgsTestParser::class.createParser() }
   }
 
   private fun verifySuperParserRules(root: Rule<String>) {

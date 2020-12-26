@@ -1,6 +1,5 @@
 package com.mpe85.grampa
 
-import com.mpe85.grampa.exception.ParserCreateException
 import com.mpe85.grampa.intercept.RuleMethodInterceptor
 import com.mpe85.grampa.parser.Parser
 import com.mpe85.grampa.rule.Rule
@@ -28,11 +27,7 @@ import net.bytebuddy.matcher.ElementMatchers.returns
  * @param[T] The type of the stack elements
  * @return A parser instance
  */
-fun <U : Parser<T>, T> KClass<U>.createParser() = try {
-  createParserSubClass().createInstance()
-} catch (ex: IllegalArgumentException) {
-  throw ParserCreateException("Failed to create new parser instance.", ex)
-}
+fun <U : Parser<T>, T> KClass<U>.createParser() = createParserSubClass().createInstance()
 
 /**
  * Create a new parser instance using the given parser [Class].
@@ -61,7 +56,7 @@ fun <U : Parser<T>, T> KClass<U>.createParser(vararg args: Any?): U {
       continue
     }
   }
-  throw ParserCreateException("Failed to find a constructor that is callable with the given arguments.")
+  throw IllegalArgumentException("Failed to find a constructor that is callable with the given arguments.")
 }
 
 /**
@@ -99,12 +94,12 @@ private fun KClass<*>.validate() {
 
 private fun KFunction<*>.requireOverridable() {
   if (!isPublicOrProtected() || isFinal) {
-    throw ParserCreateException("The rule method '$this' must be overridable.")
+    throw IllegalArgumentException("The rule method '$this' must be overridable.")
   }
 }
 
 private fun Method.requireOverridable() {
   if (!isPublicOrProtected() || isFinal() || isStatic()) {
-    throw ParserCreateException("The rule method '$this' must be overridable.")
+    throw IllegalArgumentException("The rule method '$this' must be overridable.")
   }
 }
