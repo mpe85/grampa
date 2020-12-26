@@ -13,8 +13,6 @@ class ParseEventListenerTests : StringSpec({
   "Listens to event" {
     val listener = object : ParseEventListener<String>() {
       var called = false
-
-      @Subscribe
       override fun beforeParse(event: PreParseEvent<String>) {
         called = true
       }
@@ -32,8 +30,6 @@ class ParseEventListenerTests : StringSpec({
 
     val listener = object : ParseEventListener<String>() {
       var exEvent: SubscriberExceptionEvent? = null
-
-      @Subscribe
       override fun beforeParse(event: PreParseEvent<String>) = throw ex
 
       @Subscribe
