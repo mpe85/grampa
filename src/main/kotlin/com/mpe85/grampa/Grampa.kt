@@ -92,14 +92,11 @@ private fun KClass<*>.validate() {
   }
 }
 
-private fun KFunction<*>.requireOverridable() {
-  if (!isPublicOrProtected() || isFinal) {
-    throw IllegalArgumentException("The rule method '$this' must be overridable.")
-  }
+private fun KFunction<*>.requireOverridable() = require(isPublicOrProtected() && !isFinal) {
+  "The rule method '$this' must be overridable."
 }
 
-private fun Method.requireOverridable() {
-  if (!isPublicOrProtected() || isFinal() || isStatic()) {
-    throw IllegalArgumentException("The rule method '$this' must be overridable.")
-  }
+
+private fun Method.requireOverridable() = require(isPublicOrProtected() && !isFinal() && !isStatic()) {
+  "The rule method '$this' must be overridable."
 }
