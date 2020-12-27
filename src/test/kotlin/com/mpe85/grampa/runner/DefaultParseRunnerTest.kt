@@ -2,7 +2,7 @@ package com.mpe85.grampa.runner
 
 import com.mpe85.grampa.event.ParseEventListener
 import com.mpe85.grampa.event.PreMatchEvent
-import com.mpe85.grampa.parser.AbstractParser
+import com.mpe85.grampa.grammar.AbstractGrammar
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.impl.EmptyRule
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
@@ -24,25 +24,25 @@ class DefaultParseRunnerTest {
 
   @Test
   fun getRootRule() {
-    class Parser : AbstractParser<Int>() {
+    class Grammar : AbstractGrammar<Int>() {
       override fun root(): Rule<Int> {
         return empty()
       }
     }
 
-    val runner = DefaultParseRunner(Parser())
+    val runner = DefaultParseRunner(Grammar())
     assertTrue(runner.rootRule is EmptyRule<*>)
   }
 
   @Test
   fun registerListener() {
-    class Parser : AbstractParser<Int>() {
+    class Grammar : AbstractGrammar<Int>() {
       override fun root(): Rule<Int> {
         return empty()
       }
     }
 
-    val runner = DefaultParseRunner(Parser())
+    val runner = DefaultParseRunner(Grammar())
     val listener = IntegerTestListener()
     runner.registerListener(listener)
     assertDoesNotThrow<ParseResult<Int>> { runner.run("a") }
@@ -50,13 +50,13 @@ class DefaultParseRunnerTest {
 
   @Test
   fun unregisterListener() {
-    class Parser : AbstractParser<Int>() {
+    class Grammar : AbstractGrammar<Int>() {
       override fun root(): Rule<Int> {
         return empty()
       }
     }
 
-    val runner = DefaultParseRunner(Parser())
+    val runner = DefaultParseRunner(Grammar())
     val listener = IntegerTestListener()
     runner.registerListener(listener)
     runner.unregisterListener(listener)

@@ -1,6 +1,6 @@
 package com.mpe85.grampa.runner
 
-import com.mpe85.grampa.parser.Parser
+import com.mpe85.grampa.grammar.Grammar
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.impl.StringRule
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 class ParseRunnerTest {
   @Test
   fun test_run() {
-    val parser = object : Parser<Unit> {
+    val parser = object : Grammar<Unit> {
       override fun root(): Rule<Unit> {
         return StringRule("foo")
       }

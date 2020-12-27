@@ -1,4 +1,4 @@
-package com.mpe85.grampa.parser
+package com.mpe85.grampa.grammar
 
 import com.ibm.icu.lang.UCharacter
 import com.mpe85.grampa.builder.RepeatRuleBuilder
@@ -31,7 +31,7 @@ import kotlin.text.Charsets.US_ASCII
  * @author mpe85
  * @param[T] The type of the stack elements
  */
-abstract class AbstractParser<T> : Parser<T> {
+abstract class AbstractGrammar<T> : Grammar<T> {
 
   private val asciiEncoder = US_ASCII.newEncoder()
 

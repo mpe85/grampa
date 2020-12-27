@@ -1,9 +1,9 @@
 package com.mpe85.grampa
 
-import com.mpe85.grampa.parser.AbstractParser
+import com.mpe85.grampa.grammar.AbstractGrammar
 import com.mpe85.grampa.rule.Rule
 
-open class TestParser : AbstractParser<String> {
+open class TestGrammar : AbstractGrammar<String> {
   var dummy: String? = null
     private set
 

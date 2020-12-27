@@ -1,19 +1,19 @@
-package com.mpe85.grampa.parser
+package com.mpe85.grampa.grammar
 
 import com.mpe85.grampa.rule.Rule
 
 /**
- * The parser interface.
+ * The grammar interface.
  *
  * @author mpe85
  * @param[T] The type of the stack elements
  */
-interface Parser<T> {
+interface Grammar<T> {
 
   /**
-   * Get the root rule of the parser.
+   * Get the root rule of the grammer.
    *
-   * @return A parser rule
+   * @return A grammar rule
    */
   fun root(): Rule<T>
 

@@ -1,6 +1,6 @@
 package com.mpe85.grampa
 
-open class SubParser : SuperParser() {
+open class SubGrammar : SuperGrammar() {
 
   override fun root() = super.root()
 

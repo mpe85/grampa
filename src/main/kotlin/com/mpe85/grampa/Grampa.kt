@@ -1,7 +1,7 @@
 package com.mpe85.grampa
 
+import com.mpe85.grampa.grammar.Grammar
 import com.mpe85.grampa.intercept.RuleMethodInterceptor
-import com.mpe85.grampa.parser.Parser
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.util.isFinal
 import com.mpe85.grampa.util.isPublicOrProtected
@@ -27,7 +27,7 @@ import net.bytebuddy.matcher.ElementMatchers.returns
  * @param[T] The type of the stack elements
  * @return A parser instance
  */
-fun <U : Parser<T>, T> KClass<U>.createParser() = createParserSubClass().createInstance()
+fun <U : Grammar<T>, T> KClass<U>.createParser() = createParserSubClass().createInstance()
 
 /**
  * Create a new parser instance using the given parser [Class].
@@ -37,7 +37,7 @@ fun <U : Parser<T>, T> KClass<U>.createParser() = createParserSubClass().createI
  * @param[T] The type of the stack elements
  * @return A parser instance
  */
-fun <U : Parser<T>, T> Class<U>.createParser() = kotlin.createParser()
+fun <U : Grammar<T>, T> Class<U>.createParser() = kotlin.createParser()
 
 /**
  * Create a new parser instance using the given parser [KClass] and constructor arguments.
@@ -48,7 +48,7 @@ fun <U : Parser<T>, T> Class<U>.createParser() = kotlin.createParser()
  * @param[args] The constructor arguments
  * @return A parser instance
  */
-fun <U : Parser<T>, T> KClass<U>.createParser(vararg args: Any?): U {
+fun <U : Grammar<T>, T> KClass<U>.createParser(vararg args: Any?): U {
   for (constructor in createParserSubClass().constructors) {
     try {
       return constructor.call(*args)
@@ -68,9 +68,9 @@ fun <U : Parser<T>, T> KClass<U>.createParser(vararg args: Any?): U {
  * @param[args] The constructor arguments
  * @return A parser instance
  */
-fun <U : Parser<T>, T> Class<U>.createParser(vararg args: Any?) = kotlin.createParser(args)
+fun <U : Grammar<T>, T> Class<U>.createParser(vararg args: Any?) = kotlin.createParser(args)
 
-private fun <U : Parser<T>, T> KClass<U>.createParserSubClass(): KClass<out U> {
+private fun <U : Grammar<T>, T> KClass<U>.createParserSubClass(): KClass<out U> {
   validate()
   return ByteBuddy()
     .subclass(java)

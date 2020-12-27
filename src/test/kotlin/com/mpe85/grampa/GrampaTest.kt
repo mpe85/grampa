@@ -1,6 +1,6 @@
 package com.mpe85.grampa
 
-import com.mpe85.grampa.input.impl.FinalRuleMethodTestParser
+import com.mpe85.grampa.input.impl.FinalRuleMethodTestGrammar
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.impl.CharPredicateRule
 import com.mpe85.grampa.rule.impl.EmptyRule
@@ -16,7 +16,7 @@ class GrampaTest {
 
   @Test
   fun createParser_valid_noArgs() {
-    val p = TestParser::class.createParser()
+    val p = TestGrammar::class.createParser()
     assertNull(p.dummy)
     val root = p.root()
     verifyTestParserRules(root)
@@ -24,12 +24,12 @@ class GrampaTest {
 
   @Test
   fun createParser_invalid_privateRuleMethod() {
-    assertThrows(IllegalArgumentException::class.java) { InvalidParser::class.createParser() }
+    assertThrows(IllegalArgumentException::class.java) { InvalidGrammar::class.createParser() }
   }
 
   @Test
   fun createParser_valid_withArgs() {
-    val p = TestParser::class.createParser("foo")
+    val p = TestGrammar::class.createParser("foo")
     assertEquals("foo", p.dummy)
     val root = p.root()
     verifyTestParserRules(root)
@@ -38,37 +38,37 @@ class GrampaTest {
   @Test
   fun createParser_invalid_ctor() {
     assertThrows(IllegalArgumentException::class.java) {
-      TestParser::class.createParser(4711)
+      TestGrammar::class.createParser(4711)
     }
   }
 
   @Test
   fun createParser_invalid_args() {
     assertThrows(IllegalArgumentException::class.java) {
-      TestParser::class.createParser(4711)
+      TestGrammar::class.createParser(4711)
     }
   }
 
   @Test
   fun createParser_invalid_noDefaultCtor() {
-    assertThrows(IllegalArgumentException::class.java) { NoDefaultCtorTestParser::class.createParser() }
+    assertThrows(IllegalArgumentException::class.java) { NoDefaultCtorTestGrammar::class.createParser() }
   }
 
   @Test
   fun createParser_invalid_finalRuleMethod() {
-    assertThrows(IllegalArgumentException::class.java) { FinalRuleMethodTestParser::class.createParser() }
+    assertThrows(IllegalArgumentException::class.java) { FinalRuleMethodTestGrammar::class.createParser() }
   }
 
   @Test
   fun createParser_invalid_staticRuleMethod() {
-    assertThrows(IllegalArgumentException::class.java) { StaticRuleMethodTestParser::class.createParser() }
+    assertThrows(IllegalArgumentException::class.java) { StaticRuleMethodTestGrammar::class.createParser() }
   }
 
   @Test
   fun createParser_valid_inheritance() {
-    val superParser = SuperParser::class.createParser()
+    val superParser = SuperGrammar::class.createParser()
     verifySuperParserRules(superParser.root())
-    val subParser = SubParser::class.createParser()
+    val subParser = SubGrammar::class.createParser()
     verifySuperParserRules(subParser.root())
   }
 
@@ -90,7 +90,7 @@ class GrampaTest {
 
   @Test
   fun createParser_invalid_vararg() {
-    assertThrows(IllegalArgumentException::class.java) { VarArgsTestParser::class.createParser() }
+    assertThrows(IllegalArgumentException::class.java) { VarArgsTestGrammar::class.createParser() }
   }
 
   private fun verifySuperParserRules(root: Rule<String>) {

@@ -2,7 +2,7 @@ package com.mpe85.grampa
 
 import com.mpe85.grampa.rule.impl.EmptyRule
 
-object StaticRuleMethodTestParser : TestParser() {
+object StaticRuleMethodTestGrammar : TestGrammar() {
 
   internal fun staticRule() = EmptyRule<String>()
 
