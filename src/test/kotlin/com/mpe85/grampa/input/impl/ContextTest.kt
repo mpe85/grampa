@@ -1,9 +1,9 @@
 package com.mpe85.grampa.input.impl
 
+import com.mpe85.grampa.context.impl.Context
+import com.mpe85.grampa.context.impl.ContextState
 import com.mpe85.grampa.input.InputBuffer
 import com.mpe85.grampa.rule.Rule
-import com.mpe85.grampa.rule.impl.Context
-import com.mpe85.grampa.rule.impl.ContextState
 import com.mpe85.grampa.stack.RestorableStack
 import org.greenrobot.eventbus.EventBus
 import org.junit.jupiter.api.Assertions.assertThrows

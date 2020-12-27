@@ -1,4 +1,4 @@
-package com.mpe85.grampa.rule.impl
+package com.mpe85.grampa.context.impl
 
 import com.mpe85.grampa.context.ParserContext
 import com.mpe85.grampa.event.MatchFailureEvent

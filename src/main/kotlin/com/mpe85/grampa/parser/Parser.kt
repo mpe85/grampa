@@ -1,5 +1,7 @@
 package com.mpe85.grampa.parser
 
+import com.mpe85.grampa.context.impl.Context
+import com.mpe85.grampa.context.impl.ContextState
 import com.mpe85.grampa.event.ParseEventListener
 import com.mpe85.grampa.event.PostParseEvent
 import com.mpe85.grampa.event.PreParseEvent
@@ -7,8 +9,6 @@ import com.mpe85.grampa.grammar.Grammar
 import com.mpe85.grampa.input.InputBuffer
 import com.mpe85.grampa.input.impl.CharSequenceInputBuffer
 import com.mpe85.grampa.rule.Rule
-import com.mpe85.grampa.rule.impl.Context
-import com.mpe85.grampa.rule.impl.ContextState
 import com.mpe85.grampa.stack.impl.LinkedListRestorableStack
 import org.greenrobot.eventbus.EventBus
 
