@@ -88,17 +88,15 @@ class DefaultContext<T>(state: DefaultContextState<T>) : RuleContext<T> {
   override fun run(): Boolean {
     stack.takeSnapshot()
     bus.post(PreMatchEvent(this))
-    val matched = rule.match(this)
-    if (matched && parent != null) {
-      parent.currentIndex = currentIndex
+    return rule.match(this).also { matched ->
+      if (matched) {
+        parent?.currentIndex = currentIndex
+        bus.post(MatchSuccessEvent(this))
+      } else {
+        bus.post(MatchFailureEvent(this))
+      }
+      stack.removeSnapshot(!matched)
     }
-    if (matched) {
-      bus.post(MatchSuccessEvent(this))
-    } else {
-      bus.post(MatchFailureEvent(this))
-    }
-    stack.removeSnapshot(!matched)
-    return matched
   }
 
   override fun createChildContext(rule: Rule<T>) =
