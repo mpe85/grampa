@@ -3,12 +3,12 @@ package com.mpe85.grampa.grammar
 import com.mpe85.grampa.event.MatchSuccessEvent
 import com.mpe85.grampa.event.ParseEventListener
 import com.mpe85.grampa.event.PostParseEvent
+import com.mpe85.grampa.parser.Parser
 import com.mpe85.grampa.rule.Action
 import com.mpe85.grampa.rule.ActionContext
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.rule.impl.ActionRule
-import com.mpe85.grampa.runner.DefaultParseRunner
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import java.util.concurrent.atomic.AtomicReference
 import org.greenrobot.eventbus.Subscribe
@@ -36,7 +36,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("foo")
     assertTrue(result.matched)
@@ -53,7 +53,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("foo")
     assertFalse(result.matched)
@@ -70,7 +70,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("foo")
     assertTrue(result.matched)
@@ -87,7 +87,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("foo ")
     assertFalse(result.matched)
@@ -104,7 +104,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("f")
     assertTrue(result.matched)
@@ -121,7 +121,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("")
     assertFalse(result.matched)
@@ -138,7 +138,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\uD835\uDD38")
     assertTrue(result.matched)
@@ -155,7 +155,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("")
     assertFalse(result.matched)
@@ -172,7 +172,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("f")
     assertTrue(result.matched)
@@ -189,7 +189,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("g")
     assertFalse(result.matched)
@@ -206,7 +206,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("F")
     assertTrue(result.matched)
@@ -223,7 +223,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("G")
     assertFalse(result.matched)
@@ -240,7 +240,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("c")
     assertTrue(result.matched)
@@ -257,7 +257,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("h")
     assertFalse(result.matched)
@@ -274,7 +274,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("a")
     assertTrue(result.matched)
@@ -291,7 +291,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("a")
     assertTrue(result.matched)
@@ -308,7 +308,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("a")
     assertTrue(result.matched)
@@ -325,7 +325,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("c")
     assertFalse(result.matched)
@@ -342,7 +342,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("a")
     assertFalse(result.matched)
@@ -359,7 +359,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("c")
     assertTrue(result.matched)
@@ -376,7 +376,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("c")
     assertTrue(result.matched)
@@ -393,7 +393,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("c")
     assertTrue(result.matched)
@@ -410,7 +410,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("f")
     assertFalse(result.matched)
@@ -427,7 +427,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\uD835\uDD38")
     assertTrue(result.matched)
@@ -444,7 +444,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\uD835\uDD39")
     assertFalse(result.matched)
@@ -461,7 +461,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("F")
     assertTrue(result.matched)
@@ -478,7 +478,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("G")
     assertFalse(result.matched)
@@ -495,7 +495,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("a")
     assertTrue(result.matched)
@@ -512,7 +512,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("X")
     assertFalse(result.matched)
@@ -529,7 +529,7 @@ class AbstractGrammarTest {
       }
     }
     assertThrows(IllegalArgumentException::class.java) {
-      DefaultParseRunner(Grammar()).run("a")
+      Parser(Grammar()).run("a")
     }
   }
 
@@ -541,7 +541,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\uD835\uDD38")
     assertTrue(result.matched)
@@ -558,7 +558,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\uD835\uDD38")
     assertTrue(result.matched)
@@ -575,7 +575,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\uD835\uDD38")
     assertTrue(result.matched)
@@ -592,7 +592,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("b")
     assertFalse(result.matched)
@@ -609,7 +609,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("b")
     assertFalse(result.matched)
@@ -626,7 +626,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("b")
     assertTrue(result.matched)
@@ -643,7 +643,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("b")
     assertTrue(result.matched)
@@ -660,7 +660,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("b")
     assertTrue(result.matched)
@@ -677,7 +677,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("b")
     assertTrue(result.matched)
@@ -694,7 +694,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\uD835\uDD38")
     assertFalse(result.matched)
@@ -711,7 +711,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("foobart")
     assertTrue(result.matched)
@@ -728,7 +728,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("abc")
     assertTrue(result.matched)
@@ -745,7 +745,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("foobär")
     assertFalse(result.matched)
@@ -762,7 +762,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("fOObAr")
     assertTrue(result.matched)
@@ -779,7 +779,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("aBc")
     assertTrue(result.matched)
@@ -796,7 +796,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("c")
     assertTrue(result.matched)
@@ -813,7 +813,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("fOObÄr")
     assertFalse(result.matched)
@@ -830,7 +830,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("abcccccd")
     assertTrue(result.matched)
@@ -847,7 +847,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("ab")
     assertFalse(result.matched)
@@ -870,7 +870,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("foobaz")
     assertTrue(result.matched)
@@ -894,7 +894,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("foobaz")
     assertTrue(result.matched)
@@ -912,7 +912,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("fo")
     assertFalse(result.matched)
@@ -929,7 +929,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("fo")
     assertFalse(result.matched)
@@ -952,7 +952,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("fOObaz")
     assertTrue(result.matched)
@@ -976,7 +976,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("fOObaz")
     assertTrue(result.matched)
@@ -994,7 +994,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("fO")
     assertFalse(result.matched)
@@ -1011,7 +1011,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("fO")
     assertFalse(result.matched)
@@ -1028,7 +1028,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("#")
     assertTrue(result.matched)
@@ -1045,7 +1045,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("ß")
     assertFalse(result.matched)
@@ -1062,7 +1062,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("ß")
     assertTrue(result.matched)
@@ -1079,7 +1079,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\uD835\uDD38")
     assertFalse(result.matched)
@@ -1096,7 +1096,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("5")
     assertTrue(result.matched)
@@ -1113,7 +1113,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("O")
     assertFalse(result.matched)
@@ -1130,7 +1130,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("ä")
     assertTrue(result.matched)
@@ -1147,7 +1147,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("1")
     assertFalse(result.matched)
@@ -1164,7 +1164,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("1")
     assertTrue(result.matched)
@@ -1181,7 +1181,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("(")
     assertFalse(result.matched)
@@ -1198,7 +1198,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("Ü")
     assertTrue(result.matched)
@@ -1215,7 +1215,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("$")
     assertFalse(result.matched)
@@ -1232,7 +1232,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("x")
     assertTrue(result.matched)
@@ -1249,7 +1249,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("9")
     assertTrue(result.matched)
@@ -1266,7 +1266,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("%")
     assertFalse(result.matched)
@@ -1283,7 +1283,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("n")
     assertTrue(result.matched)
@@ -1300,7 +1300,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\n")
     assertFalse(result.matched)
@@ -1317,7 +1317,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run(" ")
     assertTrue(result.matched)
@@ -1334,7 +1334,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\n")
     assertFalse(result.matched)
@@ -1351,7 +1351,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\n")
     assertTrue(result.matched)
@@ -1368,7 +1368,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("_")
     assertFalse(result.matched)
@@ -1385,7 +1385,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\r")
     assertTrue(result.matched)
@@ -1402,7 +1402,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\n")
     assertFalse(result.matched)
@@ -1419,7 +1419,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\n")
     assertTrue(result.matched)
@@ -1436,7 +1436,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\r")
     assertFalse(result.matched)
@@ -1453,7 +1453,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\r\n")
     assertTrue(result.matched)
@@ -1470,7 +1470,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("\n\r")
     assertFalse(result.matched)
@@ -1491,7 +1491,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("abcd")
     assertTrue(result.matched)
@@ -1508,7 +1508,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("abcd")
     assertTrue(result.matched)
@@ -1533,7 +1533,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("whatever")
     assertTrue(result.matched)
@@ -1558,7 +1558,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("acdc")
     assertFalse(result.matched)
@@ -1581,7 +1581,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("foobazxxx")
     assertTrue(result.matched)
@@ -1598,7 +1598,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("foo")
     assertTrue(result.matched)
@@ -1615,7 +1615,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("foo")
     assertTrue(result.matched)
@@ -1636,7 +1636,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("babafoo")
     assertFalse(result.matched)
@@ -1653,7 +1653,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("a")
     assertTrue(result.matched)
@@ -1670,7 +1670,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("b")
     assertTrue(result.matched)
@@ -1687,7 +1687,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("b")
     assertTrue(result.matched)
@@ -1704,7 +1704,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("aaaaa")
     assertTrue(result.matched)
@@ -1721,7 +1721,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("a")
     assertTrue(result.matched)
@@ -1738,7 +1738,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("aaaaa")
     assertTrue(result.matched)
@@ -1755,7 +1755,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("b")
     assertFalse(result.matched)
@@ -1772,7 +1772,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(CharSequenceTestListener())
     val result = runner.run("zzzz")
     assertTrue(result.matched)
@@ -1789,7 +1789,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(CharSequenceTestListener())
     val result = runner.run("zzzzz")
     assertFalse(result.matched)
@@ -1806,7 +1806,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(CharSequenceTestListener())
     val result = runner.run("zzzzz")
     assertTrue(result.matched)
@@ -1823,7 +1823,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(CharSequenceTestListener())
     val result = runner.run("z")
     assertFalse(result.matched)
@@ -1840,7 +1840,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(CharSequenceTestListener())
     val result = runner.run("zz")
     assertTrue(result.matched)
@@ -1857,7 +1857,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(CharSequenceTestListener())
     val result = runner.run("zzzz")
     assertFalse(result.matched)
@@ -1874,7 +1874,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(CharSequenceTestListener())
     val result = runner.run("zzzzz")
     assertTrue(result.matched)
@@ -1891,7 +1891,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(CharSequenceTestListener())
     val result = runner.run("zzzzz")
     assertFalse(result.matched)
@@ -1911,7 +1911,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("whatever")
     assertTrue(result.matched)
@@ -1931,7 +1931,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("whatever")
     assertFalse(result.matched)
@@ -1951,7 +1951,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("whatever")
     assertTrue(result.matched)
@@ -1971,7 +1971,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("whatever")
     assertFalse(result.matched)
@@ -1988,7 +1988,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("z")
     assertTrue(result.matched)
@@ -2005,7 +2005,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("z")
     assertTrue(result.matched)
@@ -2022,7 +2022,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("1")
     assertTrue(result.matched)
@@ -2039,7 +2039,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     val result = runner.run("whatever")
     assertFalse(result.matched)
@@ -2061,7 +2061,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
   }
@@ -2079,7 +2079,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     assertNull(runner.run("whatever").stackTop)
   }
@@ -2098,7 +2098,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     assertFalse(runner.run("whatever").matched)
   }
@@ -2111,7 +2111,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
   }
@@ -2127,7 +2127,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
   }
@@ -2144,7 +2144,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     assertNull(runner.run("whatever").stackTop)
   }
@@ -2160,7 +2160,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     assertNull(runner.run("whatever").stackTop)
   }
@@ -2173,7 +2173,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
   }
@@ -2187,7 +2187,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     assertNull(runner.run("whatever").stackTop)
   }
@@ -2221,7 +2221,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     val listener = Listener()
     runner.registerListener(listener)
     runner.run("whatever")
@@ -2258,7 +2258,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     val listener = Listener()
     runner.registerListener(listener)
     runner.run("whatever")
@@ -2273,7 +2273,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     assertNull(runner.run("whatever").stackTop)
   }
@@ -2286,7 +2286,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     assertEquals(4712, runner.run("whatever").stackTop)
   }
@@ -2299,7 +2299,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     assertEquals(Integer.valueOf(4712), runner.run("whatever").stackTop)
     assertEquals(1, runner.run("whatever").stack.size)
@@ -2315,7 +2315,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     assertNull(runner.run("whatever").stackTop)
   }
@@ -2332,7 +2332,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     assertNull(runner.run("whatever").stackTop)
   }
 
@@ -2349,7 +2349,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     assertEquals(4712, runner.run("whatever").stackTop)
   }
 
@@ -2363,7 +2363,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     assertEquals(4711, runner.run("whatever").stackTop)
   }
@@ -2379,7 +2379,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     assertEquals(4712, runner.run("whatever").stackTop)
   }
@@ -2394,7 +2394,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     assertEquals(4711, runner.run("whatever").stackTop)
   }
 
@@ -2411,7 +2411,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     assertEquals(4712, runner.run("whatever").stackTop)
   }
 
@@ -2423,7 +2423,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     assertEquals(Integer.valueOf(4712), runner.run("whatever").stackTop)
     assertEquals(2, runner.run("whatever").stack.size)
@@ -2437,7 +2437,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     assertEquals(Integer.valueOf(4712), runner.run("whatever").stackTop)
     assertEquals(1, runner.run("whatever").stack.size)
@@ -2451,7 +2451,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     assertEquals(Integer.valueOf(4712), runner.run("whatever").stackTop)
     assertEquals(2, runner.run("whatever").stack.size)
@@ -2465,7 +2465,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     assertThrows(IndexOutOfBoundsException::class.java) { runner.run("whatever") }
   }
@@ -2478,7 +2478,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
   }
@@ -2491,7 +2491,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     assertEquals(2, runner.run("whatever").stack.size)
     assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
@@ -2506,7 +2506,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     assertThrows(IndexOutOfBoundsException::class.java) { runner.run("whatever") }
   }
@@ -2519,7 +2519,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     assertEquals(2, runner.run("whatever").stack.size)
     assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
@@ -2534,7 +2534,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
     assertThrows(IndexOutOfBoundsException::class.java) { runner.run("whatever") }
   }
@@ -2563,7 +2563,7 @@ class AbstractGrammarTest {
       }
     }
 
-    val runner = DefaultParseRunner(Grammar())
+    val runner = Parser(Grammar())
     runner.registerListener(CharSequenceTestListener())
     val result = runner.run("helloworldfoobarbaz")
     assertTrue(result.matched)

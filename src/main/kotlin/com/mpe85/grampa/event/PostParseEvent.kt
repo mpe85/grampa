@@ -1,6 +1,6 @@
 package com.mpe85.grampa.event
 
-import com.mpe85.grampa.runner.ParseResult
+import com.mpe85.grampa.parser.ParseResult
 
 /**
  * Event posted after a parse run.

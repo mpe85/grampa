@@ -193,7 +193,7 @@ class RestorableStackTest {
 
     assertEquals(2, stack.snapshotCount)
 
-    stack.clearAllSnapshots()
+    stack.clearSnapshots()
 
     assertEquals(0, stack.snapshotCount)
   }

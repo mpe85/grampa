@@ -1,4 +1,4 @@
-package com.mpe85.grampa.runner
+package com.mpe85.grampa.parser
 
 import com.mpe85.grampa.grammar.Grammar
 import com.mpe85.grampa.rule.Rule
@@ -15,7 +15,7 @@ class ParseRunnerTest {
         return StringRule("foo")
       }
     }
-    val runner = DefaultParseRunner(parser)
+    val runner = Parser(parser)
     assertTrue(runner.run("foo").matched)
     assertTrue(runner.run("foobar").matched)
     assertFalse(runner.run("bar").matched)

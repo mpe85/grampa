@@ -43,7 +43,12 @@ class LinkedListRestorableStack<E> : LinkedListStack<E>, RestorableStack<E> {
 
   override fun removeSnapshot(restore: Boolean) = if (restore) restoreSnapshot() else discardSnapshot()
 
-  override fun clearAllSnapshots() = snapshots.clear()
+  override fun clearSnapshots() = snapshots.clear()
+
+  override fun reset() {
+    clearSnapshots()
+    clear()
+  }
 
   override fun copy() = LinkedListRestorableStack(this)
 

@@ -1,4 +1,4 @@
-package com.mpe85.grampa.runner
+package com.mpe85.grampa.parser
 
 import com.mpe85.grampa.rule.RuleContext
 

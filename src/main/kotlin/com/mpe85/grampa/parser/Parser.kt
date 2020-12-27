@@ -1,4 +1,4 @@
-package com.mpe85.grampa.runner
+package com.mpe85.grampa.parser
 
 import com.mpe85.grampa.event.ParseEventListener
 import com.mpe85.grampa.event.PostParseEvent
@@ -9,27 +9,24 @@ import com.mpe85.grampa.input.impl.CharSequenceInputBuffer
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.impl.DefaultContext
 import com.mpe85.grampa.rule.impl.DefaultContextState
-import com.mpe85.grampa.stack.RestorableStack
 import com.mpe85.grampa.stack.impl.LinkedListRestorableStack
 import org.greenrobot.eventbus.EventBus
 
 /**
- * The default parse runner. May be overridden by a custom implementation.
+ * The parser that parses an input text using a given parser grammar.
  *
  * @author mpe85
  * @param[T] The type of the stack elements
- * @param[grammar] A parser instance
+ * @param[grammar] A grammar instance
+ * @property[rootRule] The root rule of the parser's grammar
+ * @property[bus] The parser's event bus
+ * @property[stack] The parser's value stack
  */
-open class DefaultParseRunner<T>(grammar: Grammar<T>) {
+class Parser<T>(grammar: Grammar<T>) {
 
-  /**
-   * Get the root rule of the parser.
-   *
-   * @return The root rule
-   */
-  val rootRule: Rule<T> = grammar.root()
+  private val rootRule: Rule<T> = grammar.root()
   private val bus = EventBus.builder().logNoSubscriberMessages(false).build()
-  private var valueStack: RestorableStack<T>? = null
+  private var stack = LinkedListRestorableStack<T>()
 
   /**
    * Register a listener to the parser event bus.
@@ -39,7 +36,7 @@ open class DefaultParseRunner<T>(grammar: Grammar<T>) {
   fun registerListener(listener: ParseEventListener<T>) = bus.register(listener)
 
   /**
-   * Unregister a listener to the parser event bus.
+   * Unregister a listener from the parser event bus.
    *
    * @param[listener] A parse event listener
    */
@@ -54,18 +51,15 @@ open class DefaultParseRunner<T>(grammar: Grammar<T>) {
   fun run(charSequence: CharSequence) = run(CharSequenceInputBuffer(charSequence))
 
   /**
-   * Run the parser against an input buffer.
+   * Run the parser against an input buffer. This function must only be called once.
    *
    * @param[inputBuffer] An input buffer
    * @return The parse result
    */
-  fun run(inputBuffer: InputBuffer): ParseResult<T> {
-    resetStack()
-    return createRootContext(inputBuffer).let { ctx ->
-      bus.post(PreParseEvent(ctx))
-      ParseResult(ctx.run(), ctx).also { res ->
-        bus.post(PostParseEvent(res))
-      }
+  fun run(inputBuffer: InputBuffer) = createRootContext(inputBuffer).let { ctx ->
+    bus.post(PreParseEvent(ctx))
+    ParseResult(ctx.run(), ctx).also { res ->
+      bus.post(PostParseEvent(res))
     }
   }
 
@@ -75,14 +69,7 @@ open class DefaultParseRunner<T>(grammar: Grammar<T>) {
    * @param[inputBuffer] An input buffer
    * @return A rule context
    */
-  protected fun createRootContext(inputBuffer: InputBuffer) =
-    DefaultContext(DefaultContextState(inputBuffer, 0, rootRule, 0, requireNotNull(valueStack), bus))
-
-  /**
-   * Reset (clear) the stack.
-   */
-  private fun resetStack() {
-    valueStack = LinkedListRestorableStack()
-  }
+  private fun createRootContext(inputBuffer: InputBuffer) =
+    DefaultContext(DefaultContextState(inputBuffer, 0, rootRule, 0, stack.apply { reset() }, bus))
 
 }

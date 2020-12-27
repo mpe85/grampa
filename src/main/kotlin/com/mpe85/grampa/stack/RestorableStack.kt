@@ -41,7 +41,12 @@ interface RestorableStack<E> : Stack<E> {
   /**
    * Remove all taken snapshots.
    */
-  fun clearAllSnapshots()
+  fun clearSnapshots()
+
+  /**
+   * Reset the stack, i.e. clear all snapshots and all elements on the stack.
+   */
+  fun reset()
 
   override fun copy(): RestorableStack<E>
 
