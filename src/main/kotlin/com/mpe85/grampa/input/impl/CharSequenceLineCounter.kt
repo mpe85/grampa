@@ -14,6 +14,7 @@ import kotlin.streams.asSequence
  */
 class CharSequenceLineCounter(input: CharSequence) : LineCounter {
 
+  override val lineCount get() = lines.size
   private val length = input.length
   private val lines = getLines(input)
 
@@ -35,8 +36,6 @@ class CharSequenceLineCounter(input: CharSequence) : LineCounter {
     }
     return map
   }
-
-  override val lineCount get() = lines.size
 
   override fun getPosition(index: Int): InputPosition {
     require(index in 0 until length) { "An 'index' must not be out of bounds." }

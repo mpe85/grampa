@@ -10,6 +10,7 @@ import com.mpe85.grampa.input.InputBuffer
  */
 open class CharSequenceInputBuffer(private val charSequence: CharSequence) : InputBuffer {
 
+  override val length get() = charSequence.length
   private val lineCounter = CharSequenceLineCounter(charSequence)
 
   override fun getChar(index: Int) = index.let {
@@ -21,8 +22,6 @@ open class CharSequenceInputBuffer(private val charSequence: CharSequence) : Inp
     require(it in 0 until length) { "An 'index' must not be out of bounds." }
     charSequence.toString().codePointAt(it)
   }
-
-  override val length get() = charSequence.length
 
   override fun subSequence(startIndex: Int, endIndex: Int): CharSequence {
     require(startIndex in 0..length) { "A 'startIndex' must not be out of bounds." }
