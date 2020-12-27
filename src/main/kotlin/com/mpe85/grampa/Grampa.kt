@@ -20,36 +20,36 @@ import net.bytebuddy.implementation.MethodDelegation.withDefaultConfiguration
 import net.bytebuddy.matcher.ElementMatchers.returns
 
 /**
- * Create a new parser instance using the given parser [KClass].
- * The parser class must have a no-args constructor which will be called by this function.
+ * Create a new grammar instance using the given grammar [KClass].
+ * The grammar class must have a no-args constructor which will be called by this function.
  *
- * @param[U] The type of the parser
+ * @param[U] The type of the grammar
  * @param[T] The type of the stack elements
- * @return A parser instance
+ * @return A grammar instance
  */
-fun <U : Grammar<T>, T> KClass<U>.createParser() = createParserSubClass().createInstance()
+fun <U : Grammar<T>, T> KClass<U>.createGrammar() = createGrammarSubClass().createInstance()
 
 /**
- * Create a new parser instance using the given parser [Class].
- * The parser class must have a no-args constructor which will be called by this function.
+ * Create a new grammar instance using the given grammar [Class].
+ * The grammar class must have a no-args constructor which will be called by this function.
  *
- * @param[U] The type of the parser
+ * @param[U] The type of the grammar
  * @param[T] The type of the stack elements
- * @return A parser instance
+ * @return A grammar instance
  */
-fun <U : Grammar<T>, T> Class<U>.createParser() = kotlin.createParser()
+fun <U : Grammar<T>, T> Class<U>.createGrammar() = kotlin.createGrammar()
 
 /**
- * Create a new parser instance using the given parser [KClass] and constructor arguments.
- * The parser class must have a constructor which matches the passed argument types.
+ * Create a new grammar instance using the given grammar [KClass] and constructor arguments.
+ * The grammar class must have a constructor which matches the passed argument types.
  *
- * @param[U] The type of the parser
+ * @param[U] The type of the grammar
  * @param[T] The type of the stack elements
  * @param[args] The constructor arguments
- * @return A parser instance
+ * @return A grammar instance
  */
-fun <U : Grammar<T>, T> KClass<U>.createParser(vararg args: Any?): U {
-  for (constructor in createParserSubClass().constructors) {
+fun <U : Grammar<T>, T> KClass<U>.createGrammar(vararg args: Any?): U {
+  for (constructor in createGrammarSubClass().constructors) {
     try {
       return constructor.call(*args)
     } catch (ex: IllegalArgumentException) {
@@ -60,17 +60,17 @@ fun <U : Grammar<T>, T> KClass<U>.createParser(vararg args: Any?): U {
 }
 
 /**
- * Create a new parser instance using the given parser [Class] and constructor arguments.
- * The parser class must have a constructor which matches the passed argument types.
+ * Create a new grammar instance using the given parser [Class] and constructor arguments.
+ * The grammar class must have a constructor which matches the passed argument types.
  *
- * @param[U] The type of the parser
+ * @param[U] The type of the grammar
  * @param[T] The type of the stack elements
  * @param[args] The constructor arguments
- * @return A parser instance
+ * @return A grammar instance
  */
-fun <U : Grammar<T>, T> Class<U>.createParser(vararg args: Any?) = kotlin.createParser(args)
+fun <U : Grammar<T>, T> Class<U>.createGrammar(vararg args: Any?) = kotlin.createGrammar(args)
 
-private fun <U : Grammar<T>, T> KClass<U>.createParserSubClass(): KClass<out U> {
+private fun <U : Grammar<T>, T> KClass<U>.createGrammarSubClass(): KClass<out U> {
   validate()
   return ByteBuddy()
     .subclass(java)
