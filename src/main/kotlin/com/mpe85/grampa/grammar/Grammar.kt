@@ -11,7 +11,7 @@ import com.mpe85.grampa.rule.Rule
 interface Grammar<T> {
 
   /**
-   * Get the root rule of the grammer.
+   * Get the root rule of the grammar.
    *
    * @return A grammar rule
    */
