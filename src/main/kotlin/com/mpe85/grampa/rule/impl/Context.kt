@@ -9,7 +9,7 @@ import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.stack.RestorableStack
 import org.greenrobot.eventbus.EventBus
 
-data class ContextState<T>(
+internal data class ContextState<T>(
   val inputBuffer: InputBuffer,
   val level: Int,
   val rule: Rule<T>,
@@ -19,7 +19,7 @@ data class ContextState<T>(
   val parentContext: ParserContext<T>? = null
 )
 
-class Context<T>(state: ContextState<T>) : ParserContext<T> {
+internal class Context<T>(state: ContextState<T>) : ParserContext<T> {
 
   override val inputBuffer = state.inputBuffer
   override val level = state.level
