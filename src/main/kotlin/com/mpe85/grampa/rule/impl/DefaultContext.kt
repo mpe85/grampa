@@ -26,7 +26,7 @@ class DefaultContext<T>(state: DefaultContextState<T>) : RuleContext<T> {
   private val rule = state.rule
   override val startIndex = state.startIndex
   override val stack = state.stack
-  private val bus = state.bus
+  override val bus = state.bus
   override val parent = state.parentContext
 
   override var currentIndex = startIndex
@@ -72,8 +72,6 @@ class DefaultContext<T>(state: DefaultContextState<T>) : RuleContext<T> {
   override val position get() = inputBuffer.getPosition(currentIndex)
 
   override val inTestRule get() = rule.testRule || parent?.inTestRule ?: false
-
-  override fun post(event: Any) = bus.post(event)
 
   override fun advanceIndex(delta: Int): Boolean {
     require(delta >= 0) { "A 'delta' must be greater or equal to 0." }

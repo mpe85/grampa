@@ -570,7 +570,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
    * @param[event] The event to post
    * @return A grammar rule
    */
-  protected open fun post(event: Any) = skippableCommand { ctx -> ctx.post(event) }
+  protected open fun post(event: Any) = skippableCommand { ctx -> ctx.bus.post(event) }
 
   /**
    * Post an event to the parser's event bus. Note that the event object is supplied by an event supplier at parser
@@ -579,7 +579,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
    * @param[supplier] An event supplier that is called when the rule is run
    * @return A grammar rule
    */
-  protected open fun post(supplier: (ActionContext<T>) -> Any) = skippableCommand { ctx -> ctx.post(supplier(ctx)) }
+  protected open fun post(supplier: (ActionContext<T>) -> Any) = skippableCommand { ctx -> ctx.bus.post(supplier(ctx)) }
 
   /**
    * Pop the top level element from the stack.

@@ -2,6 +2,7 @@ package com.mpe85.grampa.rule
 
 import com.mpe85.grampa.input.InputPosition
 import com.mpe85.grampa.stack.RestorableStack
+import org.greenrobot.eventbus.EventBus
 
 /**
  * Defines a context for parser action rules.
@@ -22,6 +23,7 @@ import com.mpe85.grampa.stack.RestorableStack
  * @property[position] The position of the current index
  * @property[inTestRule] Indicates if the context is inside a test rule
  * @property[stack] The parser stack
+ * @property[bus] The parser event bus
  * @property[parent] The parent context of the context
  */
 interface ActionContext<T> {
@@ -40,13 +42,7 @@ interface ActionContext<T> {
   val position: InputPosition
   val inTestRule: Boolean
   val stack: RestorableStack<T>
+  val bus: EventBus
   val parent: ActionContext<T>?
-
-  /**
-   * Post a parser event to the event bus.
-   *
-   * @param[event] An event to post
-   */
-  fun post(event: Any)
 
 }
