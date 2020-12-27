@@ -1,6 +1,6 @@
 package com.mpe85.grampa.rule.impl
 
-import com.mpe85.grampa.rule.RuleContext
+import com.mpe85.grampa.rule.ParserContext
 import com.mpe85.grampa.util.stringify
 
 /**
@@ -11,7 +11,7 @@ import com.mpe85.grampa.util.stringify
  */
 class NeverRule<T> : AbstractRule<T>() {
 
-  override fun match(context: RuleContext<T>) = false
+  override fun match(context: ParserContext<T>) = false
 
   override fun toString() = stringify()
 

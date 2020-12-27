@@ -1,6 +1,6 @@
 package com.mpe85.grampa.input.impl
 
-import com.mpe85.grampa.rule.RuleContext
+import com.mpe85.grampa.rule.ParserContext
 import com.mpe85.grampa.rule.impl.RegexRule
 import java.util.regex.Pattern
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -32,7 +32,7 @@ class RegexRuleTest {
   }
 
   @Test
-  fun match_valid(@Mock ctx: RuleContext<String?>) {
+  fun match_valid(@Mock ctx: ParserContext<String?>) {
     Mockito.`when`(ctx.restOfInput).thenReturn("aaa")
     Mockito.`when`(ctx.advanceIndex(3)).thenReturn(true)
     val rule = RegexRule<String?>("[a]{3}")
@@ -40,7 +40,7 @@ class RegexRuleTest {
   }
 
   @Test
-  fun match_invalid(@Mock ctx: RuleContext<String?>) {
+  fun match_invalid(@Mock ctx: ParserContext<String?>) {
     Mockito.`when`(ctx.restOfInput).thenReturn("aaa")
     Mockito.`when`(ctx.advanceIndex(3)).thenReturn(false)
     val rule = RegexRule<String?>("[a]{3}")

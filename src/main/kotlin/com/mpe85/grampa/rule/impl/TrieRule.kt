@@ -6,7 +6,7 @@ import com.ibm.icu.util.BytesTrie.Result.INTERMEDIATE_VALUE
 import com.ibm.icu.util.BytesTrie.Result.NO_MATCH
 import com.ibm.icu.util.CharsTrieBuilder
 import com.ibm.icu.util.StringTrieBuilder.Option.FAST
-import com.mpe85.grampa.rule.RuleContext
+import com.mpe85.grampa.rule.ParserContext
 import com.mpe85.grampa.util.checkEquality
 import com.mpe85.grampa.util.stringify
 import java.util.Objects.hash
@@ -50,7 +50,7 @@ class TrieRule<T> @JvmOverloads constructor(strings: Collection<String>, private
       .map { entry -> entry.chars.toString() }
       .toSet()
 
-  override fun match(context: RuleContext<T>): Boolean {
+  override fun match(context: ParserContext<T>): Boolean {
     var longestMatch = 0
     val codePoints = context.restOfInput.codePoints().toArray()
     for (i in codePoints.indices) {

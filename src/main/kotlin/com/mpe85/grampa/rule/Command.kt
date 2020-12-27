@@ -14,7 +14,7 @@ fun interface Command<T> {
    *
    * @param[context] An action context
    */
-  fun execute(context: ActionContext<T>)
+  fun execute(context: RuleContext<T>)
 
 }
 

@@ -1,7 +1,7 @@
 package com.mpe85.grampa.rule.impl
 
+import com.mpe85.grampa.rule.ParserContext
 import com.mpe85.grampa.rule.Rule
-import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.util.stringify
 
 /**
@@ -15,7 +15,7 @@ class TestNotRule<T>(private val rule: Rule<T>) : AbstractRule<T>(rule) {
 
   override val testRule get() = true
 
-  override fun match(context: RuleContext<T>) = !context.createChildContext(rule).run()
+  override fun match(context: ParserContext<T>) = !context.createChildContext(rule).run()
 
   override fun toString() = stringify("rule" to rule)
 

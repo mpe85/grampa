@@ -1,6 +1,6 @@
 package com.mpe85.grampa.event
 
-import com.mpe85.grampa.rule.RuleContext
+import com.mpe85.grampa.rule.ParserContext
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -20,7 +20,7 @@ class ParseEventListenerTests : StringSpec({
 
     EventBus.builder().logNoSubscriberMessages(false).build().apply {
       register(listener)
-      post(PreParseEvent(mockk<RuleContext<String>>(relaxed = true)))
+      post(PreParseEvent(mockk<ParserContext<String>>(relaxed = true)))
     }
 
     listener.called shouldBe true
@@ -38,7 +38,7 @@ class ParseEventListenerTests : StringSpec({
       }
     }
 
-    val event = PreParseEvent(mockk<RuleContext<String>>(relaxed = true))
+    val event = PreParseEvent(mockk<ParserContext<String>>(relaxed = true))
     EventBus.builder().logNoSubscriberMessages(false).build().apply {
       register(listener)
       post(event)

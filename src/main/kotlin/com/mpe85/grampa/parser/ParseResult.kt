@@ -1,6 +1,6 @@
 package com.mpe85.grampa.parser
 
-import com.mpe85.grampa.rule.RuleContext
+import com.mpe85.grampa.rule.ParserContext
 
 /**
  * A holder for the result of a parse run.
@@ -15,7 +15,7 @@ import com.mpe85.grampa.rule.RuleContext
  * @property[stack] The parser's stack
  * @property[stackTop] The top element of the parser's stack, or null if the stack is empty
  */
-class ParseResult<T>(val matched: Boolean, context: RuleContext<T>) {
+class ParseResult<T>(val matched: Boolean, context: ParserContext<T>) {
 
   val matchedEntireInput = matched && context.atEndOfInput
   val matchedInput = if (matched) context.matchedInput else null

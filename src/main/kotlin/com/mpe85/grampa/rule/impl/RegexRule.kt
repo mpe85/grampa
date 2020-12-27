@@ -1,6 +1,6 @@
 package com.mpe85.grampa.rule.impl
 
-import com.mpe85.grampa.rule.RuleContext
+import com.mpe85.grampa.rule.ParserContext
 import com.mpe85.grampa.util.checkEquality
 import com.mpe85.grampa.util.stringify
 import java.util.Objects.hash
@@ -23,7 +23,7 @@ class RegexRule<T>(private val pattern: Pattern) : AbstractRule<T>() {
    */
   constructor(regex: String) : this(compile(regex))
 
-  override fun match(context: RuleContext<T>) = pattern.matcher(context.restOfInput).let { matcher ->
+  override fun match(context: ParserContext<T>) = pattern.matcher(context.restOfInput).let { matcher ->
     matcher.lookingAt() && context.advanceIndex(matcher.end())
   }
 

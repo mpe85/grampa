@@ -3,9 +3,9 @@ package com.mpe85.grampa.grammar
 import com.ibm.icu.lang.UCharacter
 import com.mpe85.grampa.builder.RepeatRuleBuilder
 import com.mpe85.grampa.rule.Action
-import com.mpe85.grampa.rule.ActionContext
 import com.mpe85.grampa.rule.Command
 import com.mpe85.grampa.rule.Rule
+import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.rule.impl.ActionRule
 import com.mpe85.grampa.rule.impl.CharPredicateRule
 import com.mpe85.grampa.rule.impl.CodePointPredicateRule
@@ -519,7 +519,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
    * @param[elseRule] The rule to run if the condition is false
    * @return A grammar rule
    */
-  protected open fun conditional(condition: (ActionContext<T>) -> Boolean, thenRule: Rule<T>, elseRule: Rule<T>) =
+  protected open fun conditional(condition: (RuleContext<T>) -> Boolean, thenRule: Rule<T>, elseRule: Rule<T>) =
     ConditionalRule(condition, thenRule, elseRule)
 
   /**
@@ -529,7 +529,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
    * @param[thenRule] The rule to run if the condition is true
    * @return A grammar rule
    */
-  protected open fun conditional(condition: (ActionContext<T>) -> Boolean, thenRule: Rule<T>) =
+  protected open fun conditional(condition: (RuleContext<T>) -> Boolean, thenRule: Rule<T>) =
     ConditionalRule(condition, thenRule)
 
   /**
@@ -579,7 +579,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
    * @param[supplier] An event supplier that is called when the rule is run
    * @return A grammar rule
    */
-  protected open fun post(supplier: (ActionContext<T>) -> Any) = skippableCommand { ctx -> ctx.bus.post(supplier(ctx)) }
+  protected open fun post(supplier: (RuleContext<T>) -> Any) = skippableCommand { ctx -> ctx.bus.post(supplier(ctx)) }
 
   /**
    * Pop the top level element from the stack.
@@ -632,7 +632,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
    * @param[supplier] A replacement value supplier
    * @return A grammar rule
    */
-  protected open fun poke(supplier: (ActionContext<T>) -> T) = action { ctx ->
+  protected open fun poke(supplier: (RuleContext<T>) -> T) = action { ctx ->
     ctx.stack.poke(supplier(ctx))
     true
   }
@@ -645,7 +645,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
    * @param[supplier] A replacement value supplier
    * @return A grammar rule
    */
-  protected open fun poke(down: Int, supplier: (ActionContext<T>) -> T) = action { ctx ->
+  protected open fun poke(down: Int, supplier: (RuleContext<T>) -> T) = action { ctx ->
     ctx.stack.poke(down, supplier(ctx))
     true
   }
@@ -665,7 +665,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
    * @param[supplier] A value supplier
    * @return A grammar rule
    */
-  protected open fun push(supplier: (ActionContext<T>) -> T) = command { ctx -> ctx.stack.push(supplier(ctx)) }
+  protected open fun push(supplier: (RuleContext<T>) -> T) = command { ctx -> ctx.stack.push(supplier(ctx)) }
 
   /**
    * Duplicate the top stack element.
@@ -688,7 +688,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
    * @param[context] An action context
    * @return The popped element
    */
-  protected fun pop(context: ActionContext<T>): T = context.stack.pop()
+  protected fun pop(context: RuleContext<T>): T = context.stack.pop()
 
   /**
    * Pop an element from the stack at a given position. This method may be called by an action or command where the
@@ -698,7 +698,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
    * @param[context] An action context
    * @return The popped element
    */
-  protected fun pop(down: Int, context: ActionContext<T>) = context.stack.pop(down)
+  protected fun pop(down: Int, context: RuleContext<T>) = context.stack.pop(down)
 
   /**
    * Peek the top level element from the stack.
@@ -707,7 +707,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
    * @param[context] An action context
    * @return The peeked element
    */
-  protected fun peek(context: ActionContext<T>): T = context.stack.peek()
+  protected fun peek(context: RuleContext<T>): T = context.stack.peek()
 
   /**
    * Peek an element from the stack at a given position.
@@ -717,6 +717,6 @@ abstract class AbstractGrammar<T> : Grammar<T> {
    * @param[context] An action context
    * @return The peeked element
    */
-  protected fun peek(down: Int, context: ActionContext<T>) = context.stack.peek(down)
+  protected fun peek(down: Int, context: RuleContext<T>) = context.stack.peek(down)
 
 }

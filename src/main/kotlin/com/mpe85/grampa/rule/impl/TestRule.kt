@@ -1,7 +1,7 @@
 package com.mpe85.grampa.rule.impl
 
+import com.mpe85.grampa.rule.ParserContext
 import com.mpe85.grampa.rule.Rule
-import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.util.stringify
 
 /**
@@ -15,7 +15,7 @@ class TestRule<T>(private var rule: Rule<T>) : AbstractRule<T>(rule) {
 
   override val testRule get() = true
 
-  override fun match(context: RuleContext<T>): Boolean {
+  override fun match(context: ParserContext<T>): Boolean {
     val currentIndex = context.currentIndex
     context.stack.takeSnapshot()
     if (context.createChildContext(rule).run()) {

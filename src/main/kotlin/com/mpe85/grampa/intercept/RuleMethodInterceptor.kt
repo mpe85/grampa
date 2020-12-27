@@ -1,8 +1,8 @@
 package com.mpe85.grampa.intercept
 
+import com.mpe85.grampa.rule.ParserContext
 import com.mpe85.grampa.rule.ReferenceRule
 import com.mpe85.grampa.rule.Rule
-import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.rule.impl.AbstractRule
 import com.mpe85.grampa.util.checkEquality
 import com.mpe85.grampa.util.stringify
@@ -81,7 +81,7 @@ class RuleMethodInterceptor<T> {
  */
 private class ReferenceRuleImpl<T>(override val referencedRuleHash: Int) : ReferenceRule<T>, AbstractRule<T>() {
 
-  override fun match(context: RuleContext<T>) = false
+  override fun match(context: ParserContext<T>) = false
 
   override fun hashCode() = hash(super.hashCode(), referencedRuleHash)
   override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.referencedRuleHash })

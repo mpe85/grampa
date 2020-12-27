@@ -5,7 +5,7 @@ import com.mpe85.grampa.event.ParseEventListener
 import com.mpe85.grampa.event.PostParseEvent
 import com.mpe85.grampa.parser.Parser
 import com.mpe85.grampa.rule.Action
-import com.mpe85.grampa.rule.ActionContext
+import com.mpe85.grampa.rule.ParserContext
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.rule.impl.ActionRule
@@ -864,7 +864,7 @@ class AbstractGrammarTest {
       override fun root(): Rule<Int> {
         return sequence(
           strings("football", "foo", "foobar"),
-          command { ctx: ActionContext<Int> -> stringsRuleMatch.set(ctx.previousMatch) },
+          command { ctx: RuleContext<Int> -> stringsRuleMatch.set(ctx.previousMatch) },
           string("baz")
         )
       }
@@ -888,7 +888,7 @@ class AbstractGrammarTest {
       override fun root(): Rule<Int> {
         return sequence(
           strings("foo"),
-          command { ctx: ActionContext<Int> -> stringsRuleMatch.set(ctx.previousMatch) },
+          command { ctx: RuleContext<Int> -> stringsRuleMatch.set(ctx.previousMatch) },
           string("baz")
         )
       }
@@ -946,7 +946,7 @@ class AbstractGrammarTest {
       override fun root(): Rule<Int> {
         return sequence(
           ignoreCase("football", "foo", "foobar"),
-          command { ctx: ActionContext<Int> -> stringsRuleMatch.set(ctx.previousMatch) },
+          command { ctx: RuleContext<Int> -> stringsRuleMatch.set(ctx.previousMatch) },
           string("baz")
         )
       }
@@ -970,7 +970,7 @@ class AbstractGrammarTest {
       override fun root(): Rule<Int> {
         return sequence(
           ignoreCase(setOf("foo")),
-          command { ctx: ActionContext<Int> -> stringsRuleMatch.set(ctx.previousMatch) },
+          command { ctx: RuleContext<Int> -> stringsRuleMatch.set(ctx.previousMatch) },
           string("baz")
         )
       }
@@ -1523,9 +1523,9 @@ class AbstractGrammarTest {
       override fun root(): Rule<Int> {
         return sequence(
           push(4711),
-          push { ctx: ActionContext<Int> -> peek(ctx) + 4 },
-          sequence(push { ctx: ActionContext<Int> -> pop(1, ctx) + peek(ctx) }),
-          optional(action { ctx: ActionContext<Int> ->
+          push { ctx: RuleContext<Int> -> peek(ctx) + 4 },
+          sequence(push { ctx: RuleContext<Int> -> pop(1, ctx) + peek(ctx) }),
+          optional(action { ctx: RuleContext<Int> ->
             ctx.stack.push(0)
             false
           })
@@ -1984,7 +1984,7 @@ class AbstractGrammarTest {
   fun conditional_valid_then_withElse() {
     class Grammar : AbstractGrammar<Int>() {
       override fun root(): Rule<Int> {
-        return conditional({ ctx: ActionContext<Int> -> ctx.startIndex == 0 }, letter(), digit())
+        return conditional({ ctx: RuleContext<Int> -> ctx.startIndex == 0 }, letter(), digit())
       }
     }
 
@@ -2001,7 +2001,7 @@ class AbstractGrammarTest {
   fun conditional_valid_then_noElse() {
     class Grammar : AbstractGrammar<Int>() {
       override fun root(): Rule<Int> {
-        return conditional({ ctx: ActionContext<Int> -> ctx.startIndex == 0 }, letter())
+        return conditional({ ctx: RuleContext<Int> -> ctx.startIndex == 0 }, letter())
       }
     }
 
@@ -2018,7 +2018,7 @@ class AbstractGrammarTest {
   fun conditional_valid_else() {
     class Grammar : AbstractGrammar<Int>() {
       override fun root(): Rule<Int> {
-        return conditional({ ctx: ActionContext<Int> -> ctx.startIndex != 0 }, letter(), digit())
+        return conditional({ ctx: RuleContext<Int> -> ctx.startIndex != 0 }, letter(), digit())
       }
     }
 
@@ -2035,7 +2035,7 @@ class AbstractGrammarTest {
   fun conditional_invalid() {
     class Grammar : AbstractGrammar<Int>() {
       override fun root(): Rule<Int> {
-        return conditional({ ctx: ActionContext<Int> -> ctx.startIndex == 0 }, never(), empty())
+        return conditional({ ctx: RuleContext<Int> -> ctx.startIndex == 0 }, never(), empty())
       }
     }
 
@@ -2052,7 +2052,7 @@ class AbstractGrammarTest {
   fun action_valid() {
     class Grammar : AbstractGrammar<Int>() {
       override fun root(): Rule<Int> {
-        return action { ctx: ActionContext<Int> ->
+        return action { ctx: RuleContext<Int> ->
           ctx.stack.push(4711)
           assertEquals(0, ctx.level)
           assertNotNull(ctx.position)
@@ -2070,7 +2070,7 @@ class AbstractGrammarTest {
   fun action_invalid_failingAction() {
     class Grammar : AbstractGrammar<Int>() {
       override fun root(): Rule<Int> {
-        return action { ctx: ActionContext<Int> ->
+        return action { ctx: RuleContext<Int> ->
           ctx.stack.push(4711)
           assertEquals(0, ctx.level)
           assertNotNull(ctx.position)
@@ -2087,7 +2087,7 @@ class AbstractGrammarTest {
   @Test
   fun action_invalid_illegalAdvanceIndex() {
     class EvilActionRule(action: Action<Int>) : ActionRule<Int>(action::run) {
-      override fun match(context: RuleContext<Int>): Boolean {
+      override fun match(context: ParserContext<Int>): Boolean {
         return super.match(context) && context.advanceIndex(1000)
       }
     }
@@ -2107,7 +2107,7 @@ class AbstractGrammarTest {
   fun command_valid() {
     class Grammar : AbstractGrammar<Int>() {
       override fun root(): Rule<Int> {
-        return command { ctx: ActionContext<Int> -> ctx.stack.push(4711) }
+        return command { ctx: RuleContext<Int> -> ctx.stack.push(4711) }
       }
     }
 
@@ -2120,7 +2120,7 @@ class AbstractGrammarTest {
   fun skippableAction_valid_noSkip() {
     class Grammar : AbstractGrammar<Int>() {
       override fun root(): Rule<Int> {
-        return skippableAction { ctx: ActionContext<Int> ->
+        return skippableAction { ctx: RuleContext<Int> ->
           ctx.stack.push(4711)
           true
         }
@@ -2137,7 +2137,7 @@ class AbstractGrammarTest {
     class Grammar : AbstractGrammar<Int>() {
       override fun root(): Rule<Int> {
         return test(
-          skippableAction { ctx: ActionContext<Int> ->
+          skippableAction { ctx: RuleContext<Int> ->
             ctx.stack.push(4711)
             true
           })
@@ -2153,7 +2153,7 @@ class AbstractGrammarTest {
   fun skippableAction_invalid() {
     class Grammar : AbstractGrammar<Int>() {
       override fun root(): Rule<Int> {
-        return skippableAction { ctx: ActionContext<Int> ->
+        return skippableAction { ctx: RuleContext<Int> ->
           ctx.stack.push(4711)
           false
         }
@@ -2169,7 +2169,7 @@ class AbstractGrammarTest {
   fun skippableCommand_valid_noSkip() {
     class Grammar : AbstractGrammar<Int>() {
       override fun root(): Rule<Int> {
-        return skippableCommand { ctx: ActionContext<Int> -> ctx.stack.push(4711) }
+        return skippableCommand { ctx: RuleContext<Int> -> ctx.stack.push(4711) }
       }
     }
 
@@ -2183,7 +2183,7 @@ class AbstractGrammarTest {
     class Grammar : AbstractGrammar<Int>() {
       override fun root(): Rule<Int> {
         return test(
-          skippableCommand { ctx: ActionContext<Int> -> ctx.stack.push(4711) })
+          skippableCommand { ctx: RuleContext<Int> -> ctx.stack.push(4711) })
       }
     }
 
@@ -2198,7 +2198,7 @@ class AbstractGrammarTest {
       override fun root(): Rule<Int> {
         return sequence(
           string("whatever"),
-          post { ctx: ActionContext<Int> -> ctx.previousMatch!! })
+          post { ctx: RuleContext<Int> -> ctx.previousMatch!! })
       }
     }
 
@@ -2311,7 +2311,7 @@ class AbstractGrammarTest {
       override fun root(): Rule<Int> {
         return sequence(
           push(4711),
-          action { ctx: ActionContext<Int> -> pop(ctx) == 4711 })
+          action { ctx: RuleContext<Int> -> pop(ctx) == 4711 })
       }
     }
 
@@ -2326,7 +2326,7 @@ class AbstractGrammarTest {
       override fun root(): Rule<Number> {
         return sequence(
           push(4711),
-          action { ctx: ActionContext<Number> ->
+          action { ctx: RuleContext<Number> ->
             pop(ctx) == 4711
           })
       }
@@ -2343,7 +2343,7 @@ class AbstractGrammarTest {
         return sequence(
           push(4711),
           push(4712),
-          action { ctx: ActionContext<Number> ->
+          action { ctx: RuleContext<Number> ->
             pop(1, ctx) == 4711
           })
       }
@@ -2357,7 +2357,7 @@ class AbstractGrammarTest {
   fun peek_valid_top() {
     class Grammar : AbstractGrammar<Int>() {
       override fun root(): Rule<Int> {
-        return sequence(push(4711), action { ctx: ActionContext<Int> ->
+        return sequence(push(4711), action { ctx: RuleContext<Int> ->
           peek(ctx) == 4711
         })
       }
@@ -2375,7 +2375,7 @@ class AbstractGrammarTest {
         return sequence(
           push(4711),
           push(4712),
-          action { ctx: ActionContext<Int> -> peek(1, ctx) == 4711 })
+          action { ctx: RuleContext<Int> -> peek(1, ctx) == 4711 })
       }
     }
 
@@ -2388,7 +2388,7 @@ class AbstractGrammarTest {
   fun peekAs_valid_top() {
     class Grammar : AbstractGrammar<Number>() {
       override fun root(): Rule<Number> {
-        return sequence(push(4711), action { ctx: ActionContext<Number> ->
+        return sequence(push(4711), action { ctx: RuleContext<Number> ->
           peek(ctx) == 4711
         })
       }
@@ -2405,7 +2405,7 @@ class AbstractGrammarTest {
         return sequence(
           push(4711),
           push(4712),
-          action { ctx: ActionContext<Number> ->
+          action { ctx: RuleContext<Number> ->
             peek(1, ctx) == 4711
           })
       }
@@ -2546,20 +2546,20 @@ class AbstractGrammarTest {
         return sequence(
           string("hello"),
           string("world"),
-          push { ctx: ActionContext<CharSequence> -> ctx.parent?.previousMatch!! },
+          push { ctx: RuleContext<CharSequence> -> ctx.parent?.previousMatch!! },
           sequence(
             string("foo"),
             string("bar")
           ),
-          push { ctx: ActionContext<CharSequence> -> ctx.parent?.previousMatch!! },
+          push { ctx: RuleContext<CharSequence> -> ctx.parent?.previousMatch!! },
           test(string("baz")),
-          push { ctx: ActionContext<CharSequence> -> ctx.parent?.previousMatch!! },
+          push { ctx: RuleContext<CharSequence> -> ctx.parent?.previousMatch!! },
           sequence(
             test(string("ba")),
             string("b"),
             test(string("az"))
           ),
-          push { ctx: ActionContext<CharSequence> -> ctx.parent?.previousMatch!! })
+          push { ctx: RuleContext<CharSequence> -> ctx.parent?.previousMatch!! })
       }
     }
 

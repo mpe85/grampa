@@ -1,7 +1,7 @@
 package com.mpe85.grampa.rule.impl
 
 import com.ibm.icu.lang.UCharacter.charCount
-import com.mpe85.grampa.rule.RuleContext
+import com.mpe85.grampa.rule.ParserContext
 import com.mpe85.grampa.util.checkEquality
 import com.mpe85.grampa.util.stringify
 import java.util.Objects.hash
@@ -29,7 +29,7 @@ class CodePointPredicateRule<T>(private val predicate: (Int) -> Boolean) : Abstr
    */
   constructor(char: Char) : this({ cp -> cp == char.toInt() })
 
-  override fun match(context: RuleContext<T>) = !context.atEndOfInput
+  override fun match(context: ParserContext<T>) = !context.atEndOfInput
       && predicate(context.currentCodePoint)
       && context.advanceIndex(charCount(context.currentCodePoint))
 

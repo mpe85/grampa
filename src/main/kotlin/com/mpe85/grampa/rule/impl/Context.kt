@@ -4,22 +4,22 @@ import com.mpe85.grampa.event.MatchFailureEvent
 import com.mpe85.grampa.event.MatchSuccessEvent
 import com.mpe85.grampa.event.PreMatchEvent
 import com.mpe85.grampa.input.InputBuffer
+import com.mpe85.grampa.rule.ParserContext
 import com.mpe85.grampa.rule.Rule
-import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.stack.RestorableStack
 import org.greenrobot.eventbus.EventBus
 
-data class DefaultContextState<T>(
+data class ContextState<T>(
   val inputBuffer: InputBuffer,
   val level: Int,
   val rule: Rule<T>,
   val startIndex: Int,
   val stack: RestorableStack<T>,
   val bus: EventBus,
-  val parentContext: RuleContext<T>? = null
+  val parentContext: ParserContext<T>? = null
 )
 
-class DefaultContext<T>(state: DefaultContextState<T>) : RuleContext<T> {
+class Context<T>(state: ContextState<T>) : ParserContext<T> {
 
   override val inputBuffer = state.inputBuffer
   override val level = state.level
@@ -98,7 +98,7 @@ class DefaultContext<T>(state: DefaultContextState<T>) : RuleContext<T> {
   }
 
   override fun createChildContext(rule: Rule<T>) =
-    DefaultContext(DefaultContextState(inputBuffer, level + 1, rule, currentIndex, stack, bus, this))
+    Context(ContextState(inputBuffer, level + 1, rule, currentIndex, stack, bus, this))
 
   private fun invalidateCache() {
     cachedCurrentChar = null

@@ -1,6 +1,6 @@
 package com.mpe85.grampa.rule.impl
 
-import com.mpe85.grampa.rule.RuleContext
+import com.mpe85.grampa.rule.ParserContext
 import com.mpe85.grampa.util.checkEquality
 import com.mpe85.grampa.util.stringify
 import java.util.Objects.hash
@@ -21,7 +21,7 @@ class CharPredicateRule<T>(private val predicate: (Char) -> Boolean) : AbstractR
    */
   constructor(character: Char) : this({ c -> c == character })
 
-  override fun match(context: RuleContext<T>) = !context.atEndOfInput
+  override fun match(context: ParserContext<T>) = !context.atEndOfInput
       && predicate(context.currentChar)
       && context.advanceIndex(1)
 

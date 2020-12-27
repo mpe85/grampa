@@ -1,5 +1,6 @@
 package com.mpe85.grampa.event
 
+import com.mpe85.grampa.rule.ParserContext
 import com.mpe85.grampa.rule.RuleContext
 
 /**
@@ -18,7 +19,7 @@ sealed class RuleContextEvent<T>(val context: RuleContext<T>)
  * @param[T] The type of the stack elements
  * @param[context] The rule context in which the event was posted
  */
-class PreParseEvent<T>(context: RuleContext<T>) : RuleContextEvent<T>(context)
+class PreParseEvent<T>(context: ParserContext<T>) : RuleContextEvent<T>(context)
 
 /**
  * Event posted before a rule match.
@@ -27,7 +28,7 @@ class PreParseEvent<T>(context: RuleContext<T>) : RuleContextEvent<T>(context)
  * @param[T] The type of the stack elements
  * @param[context] The rule context in which the event was posted
  */
-class PreMatchEvent<T>(context: RuleContext<T>) : RuleContextEvent<T>(context)
+class PreMatchEvent<T>(context: ParserContext<T>) : RuleContextEvent<T>(context)
 
 /**
  * Event posted on a match success.
@@ -36,7 +37,7 @@ class PreMatchEvent<T>(context: RuleContext<T>) : RuleContextEvent<T>(context)
  * @param[T] The type of the stack elements
  * @param[context] The rule context in which the event was posted
  */
-class MatchSuccessEvent<T>(context: RuleContext<T>) : RuleContextEvent<T>(context)
+class MatchSuccessEvent<T>(context: ParserContext<T>) : RuleContextEvent<T>(context)
 
 /**
  * Event posted on a match failure.
@@ -45,4 +46,4 @@ class MatchSuccessEvent<T>(context: RuleContext<T>) : RuleContextEvent<T>(contex
  * @param[T] The type of the stack elements
  * @param[context] The rule context in which the event was posted
  */
-class MatchFailureEvent<T>(context: RuleContext<T>) : RuleContextEvent<T>(context)
+class MatchFailureEvent<T>(context: ParserContext<T>) : RuleContextEvent<T>(context)

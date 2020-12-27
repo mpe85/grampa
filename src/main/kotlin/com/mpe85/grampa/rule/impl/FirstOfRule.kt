@@ -1,7 +1,7 @@
 package com.mpe85.grampa.rule.impl
 
+import com.mpe85.grampa.rule.ParserContext
 import com.mpe85.grampa.rule.Rule
-import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.util.stringify
 
 /**
@@ -13,7 +13,7 @@ import com.mpe85.grampa.util.stringify
  */
 class FirstOfRule<T>(rules: List<Rule<T>>) : AbstractRule<T>(rules) {
 
-  override fun match(context: RuleContext<T>) = children.any { c -> context.createChildContext(c).run() }
+  override fun match(context: ParserContext<T>) = children.any { c -> context.createChildContext(c).run() }
 
   override fun toString() = stringify("children" to children)
 

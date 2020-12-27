@@ -7,8 +7,8 @@ import com.mpe85.grampa.grammar.Grammar
 import com.mpe85.grampa.input.InputBuffer
 import com.mpe85.grampa.input.impl.CharSequenceInputBuffer
 import com.mpe85.grampa.rule.Rule
-import com.mpe85.grampa.rule.impl.DefaultContext
-import com.mpe85.grampa.rule.impl.DefaultContextState
+import com.mpe85.grampa.rule.impl.Context
+import com.mpe85.grampa.rule.impl.ContextState
 import com.mpe85.grampa.stack.impl.LinkedListRestorableStack
 import org.greenrobot.eventbus.EventBus
 
@@ -71,7 +71,7 @@ class Parser<T>(grammar: Grammar<T>) {
    */
   private fun createRootContext(inputBuffer: InputBuffer) = stack.run {
     reset()
-    DefaultContext(DefaultContextState(inputBuffer, 0, rootRule, 0, this, bus))
+    Context(ContextState(inputBuffer, 0, rootRule, 0, this, bus))
   }
 
 }

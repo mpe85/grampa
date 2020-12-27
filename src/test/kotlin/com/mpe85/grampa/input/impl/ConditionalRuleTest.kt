@@ -1,6 +1,6 @@
 package com.mpe85.grampa.input.impl
 
-import com.mpe85.grampa.rule.ActionContext
+import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.rule.impl.ConditionalRule
 import com.mpe85.grampa.rule.impl.EmptyRule
 import com.mpe85.grampa.rule.impl.NeverRule
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test
 class ConditionalRuleTest {
   @Test
   fun equalsHashCodeToString() {
-    val pred = Predicate { _: ActionContext<String> -> true }
+    val pred = Predicate { _: RuleContext<String> -> true }
     val empty = EmptyRule<String>()
     val never = NeverRule<String>()
     val rule1 = ConditionalRule(pred::test, empty, never)

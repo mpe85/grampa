@@ -1,8 +1,8 @@
 package com.mpe85.grampa.intercept
 
+import com.mpe85.grampa.rule.ParserContext
 import com.mpe85.grampa.rule.ReferenceRule
 import com.mpe85.grampa.rule.Rule
-import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.rule.impl.EmptyRule
 import java.util.concurrent.Callable
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
@@ -53,7 +53,7 @@ class ReferenceRuleTest {
   }
 
   @Test
-  fun match(@Mock ctx: RuleContext<Int>) {
+  fun match(@Mock ctx: ParserContext<Int>) {
     val rule = createReferenceRule("rule1")
     assertFalse(rule.match(ctx))
   }

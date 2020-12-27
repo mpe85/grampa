@@ -1,7 +1,7 @@
 package com.mpe85.grampa.rule.impl
 
 import com.ibm.icu.lang.UCharacter.toLowerCase
-import com.mpe85.grampa.rule.RuleContext
+import com.mpe85.grampa.rule.ParserContext
 import com.mpe85.grampa.util.checkEquality
 import com.mpe85.grampa.util.stringify
 import java.util.Objects.hash
@@ -19,7 +19,7 @@ class StringRule<T> @JvmOverloads constructor(string: String, private val ignore
 
   private val string: String = if (ignoreCase) toLowerCase(string) else string
 
-  override fun match(context: RuleContext<T>): Boolean {
+  override fun match(context: ParserContext<T>): Boolean {
     if (context.numberOfCharsLeft >= string.length) {
       val nextChars = context.inputBuffer.subSequence(context.currentIndex, context.currentIndex + string.length)
       return string == (if (ignoreCase) toLowerCase(nextChars.toString()) else nextChars.toString())

@@ -1,6 +1,6 @@
 package com.mpe85.grampa.input.impl
 
-import com.mpe85.grampa.rule.RuleContext
+import com.mpe85.grampa.rule.ParserContext
 import com.mpe85.grampa.rule.impl.CharPredicateRule
 import java.util.function.Predicate
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -41,7 +41,7 @@ class CharPredicateRuleTest {
   }
 
   @Test
-  fun match(@Mock ctx: RuleContext<String?>) {
+  fun match(@Mock ctx: ParserContext<String?>) {
     Mockito.`when`(ctx.atEndOfInput).thenReturn(false)
     Mockito.`when`(ctx.currentChar).thenReturn('a')
     Mockito.`when`(ctx.advanceIndex(1)).thenReturn(true)

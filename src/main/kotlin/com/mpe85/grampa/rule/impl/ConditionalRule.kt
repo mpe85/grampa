@@ -1,6 +1,6 @@
 package com.mpe85.grampa.rule.impl
 
-import com.mpe85.grampa.rule.ActionContext
+import com.mpe85.grampa.rule.ParserContext
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.util.checkEquality
@@ -17,12 +17,12 @@ import java.util.Objects.hash
  * @property[elseRule] An optional rule to run if the condition evaluates to false
  */
 class ConditionalRule<T> @JvmOverloads constructor(
-  private val condition: (ActionContext<T>) -> Boolean,
+  private val condition: (RuleContext<T>) -> Boolean,
   private val thenRule: Rule<T>,
   private val elseRule: Rule<T>? = null
 ) : AbstractRule<T>(sequenceOf(thenRule, elseRule).filterNotNull().toList()) {
 
-  override fun match(context: RuleContext<T>) =
+  override fun match(context: ParserContext<T>) =
     if (condition(context)) thenRule.match(context) else elseRule?.match(context) ?: true
 
   override fun hashCode() = hash(super.hashCode(), condition, thenRule, elseRule)

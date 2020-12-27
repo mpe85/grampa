@@ -15,6 +15,6 @@ fun interface Action<T> {
    * @param [context] an action context
    * @return true if the action was successfully run
    */
-  fun run(context: ActionContext<T>): Boolean
+  fun run(context: RuleContext<T>): Boolean
 
 }

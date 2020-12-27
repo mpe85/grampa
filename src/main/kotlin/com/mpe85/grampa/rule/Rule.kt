@@ -32,7 +32,7 @@ interface Rule<T> {
    * @param[context] A rule context
    * @return true if the rule matched successfully
    */
-  fun match(context: RuleContext<T>): Boolean
+  fun match(context: ParserContext<T>): Boolean
 
 
   /**

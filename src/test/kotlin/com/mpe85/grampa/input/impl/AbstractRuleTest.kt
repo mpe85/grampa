@@ -1,8 +1,8 @@
 package com.mpe85.grampa.input.impl
 
+import com.mpe85.grampa.rule.ParserContext
 import com.mpe85.grampa.rule.ReferenceRule
 import com.mpe85.grampa.rule.Rule
-import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.rule.impl.AbstractRule
 import com.mpe85.grampa.rule.impl.EmptyRule
 import com.mpe85.grampa.rule.impl.NeverRule
@@ -23,7 +23,7 @@ class AbstractRuleTest {
     constructor()
     constructor(child: Rule<String>) : super(child)
 
-    override fun match(context: RuleContext<String>): Boolean {
+    override fun match(context: ParserContext<String>): Boolean {
       return false
     }
 

@@ -1,7 +1,7 @@
 package com.mpe85.grampa.rule.impl
 
+import com.mpe85.grampa.rule.ParserContext
 import com.mpe85.grampa.rule.Rule
-import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.util.checkEquality
 import com.mpe85.grampa.util.stringify
 import java.util.Objects.hash
@@ -24,7 +24,7 @@ class RepeatRule<T>(private val rule: Rule<T>, private val min: Int, private val
     }
   }
 
-  override fun match(context: RuleContext<T>): Boolean {
+  override fun match(context: ParserContext<T>): Boolean {
     var iterations = 0
     while (max == null || iterations < max) {
       if (!context.createChildContext(rule).run()) {
