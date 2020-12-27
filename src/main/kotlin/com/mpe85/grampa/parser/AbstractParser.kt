@@ -626,7 +626,7 @@ abstract class AbstractParser<T> : Parser<T> {
   }
 
   /**
-   * Replace an element in the stack. Note that the value is supplied by a value supplier at parser run time which
+   * Replace an element in the stack. Note that the value is supplied by a value supplier at parser runtime which
    * has access to the parser context.
    *
    * @param[supplier] A replacement value supplier

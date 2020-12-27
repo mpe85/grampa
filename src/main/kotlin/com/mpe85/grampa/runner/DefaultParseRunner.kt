@@ -8,6 +8,7 @@ import com.mpe85.grampa.input.impl.CharSequenceInputBuffer
 import com.mpe85.grampa.parser.Parser
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.impl.DefaultContext
+import com.mpe85.grampa.rule.impl.DefaultContextState
 import com.mpe85.grampa.stack.RestorableStack
 import com.mpe85.grampa.stack.impl.LinkedListRestorableStack
 import org.greenrobot.eventbus.EventBus
@@ -75,7 +76,7 @@ open class DefaultParseRunner<T>(parser: Parser<T>) {
    * @return A rule context
    */
   protected fun createRootContext(inputBuffer: InputBuffer) =
-    DefaultContext(inputBuffer, 0, rootRule, 0, valueStack!!, bus)
+    DefaultContext(DefaultContextState(inputBuffer, 0, rootRule, 0, requireNotNull(valueStack), bus))
 
   /**
    * Reset (clear) the stack.

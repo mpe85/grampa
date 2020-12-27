@@ -4,21 +4,30 @@ import com.mpe85.grampa.event.MatchFailureEvent
 import com.mpe85.grampa.event.MatchSuccessEvent
 import com.mpe85.grampa.event.PreMatchEvent
 import com.mpe85.grampa.input.InputBuffer
-import com.mpe85.grampa.rule.ActionContext
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.stack.RestorableStack
 import org.greenrobot.eventbus.EventBus
 
-class DefaultContext<T> @JvmOverloads constructor(
-  override val inputBuffer: InputBuffer,
-  override val level: Int,
-  private val rule: Rule<T>,
-  override val startIndex: Int,
-  override val stack: RestorableStack<T>,
-  private val bus: EventBus,
+data class DefaultContextState<T>(
+  val inputBuffer: InputBuffer,
+  val level: Int,
+  val rule: Rule<T>,
+  val startIndex: Int,
+  val stack: RestorableStack<T>,
+  val bus: EventBus,
   val parentContext: RuleContext<T>? = null
-) : RuleContext<T>, ActionContext<T> {
+)
+
+class DefaultContext<T>(state: DefaultContextState<T>) : RuleContext<T> {
+
+  override val inputBuffer = state.inputBuffer
+  override val level = state.level
+  private val rule = state.rule
+  override val startIndex = state.startIndex
+  override val stack = state.stack
+  private val bus = state.bus
+  override val parent = state.parentContext
 
   override var currentIndex = startIndex
     set(currentIndex) {
@@ -32,8 +41,7 @@ class DefaultContext<T> @JvmOverloads constructor(
 
   private var cachedCurrentChar: Char? = null
   private var cachedCurrentCodePoint: Int? = null
-  override var previousMatch = parentContext?.previousMatch
-
+  override var previousMatch = parent?.previousMatch
 
   override val atEndOfInput get() = currentIndex == inputBuffer.length
 
@@ -63,9 +71,7 @@ class DefaultContext<T> @JvmOverloads constructor(
 
   override val position get() = inputBuffer.getPosition(currentIndex)
 
-  override val inTestRule get() = rule.testRule || parentContext?.inTestRule ?: false
-
-  override val parent get() = parentContext
+  override val inTestRule get() = rule.testRule || parent?.inTestRule ?: false
 
   override fun post(event: Any) = bus.post(event)
 
@@ -83,8 +89,8 @@ class DefaultContext<T> @JvmOverloads constructor(
     stack.takeSnapshot()
     bus.post(PreMatchEvent(this))
     val matched = rule.match(this)
-    if (matched && parentContext != null) {
-      parentContext.currentIndex = currentIndex
+    if (matched && parent != null) {
+      parent.currentIndex = currentIndex
     }
     if (matched) {
       bus.post(MatchSuccessEvent(this))
@@ -96,7 +102,7 @@ class DefaultContext<T> @JvmOverloads constructor(
   }
 
   override fun createChildContext(rule: Rule<T>) =
-    DefaultContext(inputBuffer, level + 1, rule, currentIndex, stack, bus, this)
+    DefaultContext(DefaultContextState(inputBuffer, level + 1, rule, currentIndex, stack, bus, this))
 
   private fun invalidateCache() {
     cachedCurrentChar = null
