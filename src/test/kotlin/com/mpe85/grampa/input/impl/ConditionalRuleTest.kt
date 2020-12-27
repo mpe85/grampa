@@ -1,6 +1,6 @@
 package com.mpe85.grampa.input.impl
 
-import com.mpe85.grampa.rule.RuleContext
+import com.mpe85.grampa.context.RuleContext
 import com.mpe85.grampa.rule.impl.ConditionalRule
 import com.mpe85.grampa.rule.impl.EmptyRule
 import com.mpe85.grampa.rule.impl.NeverRule

@@ -1,6 +1,6 @@
 package com.mpe85.grampa.intercept
 
-import com.mpe85.grampa.rule.ParserContext
+import com.mpe85.grampa.context.ParserContext
 import com.mpe85.grampa.rule.ReferenceRule
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.impl.AbstractRule

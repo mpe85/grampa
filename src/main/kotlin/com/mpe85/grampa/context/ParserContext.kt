@@ -1,6 +1,7 @@
-package com.mpe85.grampa.rule
+package com.mpe85.grampa.context
 
 import com.mpe85.grampa.input.InputBuffer
+import com.mpe85.grampa.rule.Rule
 
 /**
  * A context for parsers.

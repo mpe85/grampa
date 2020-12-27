@@ -1,6 +1,6 @@
 package com.mpe85.grampa.parser
 
-import com.mpe85.grampa.rule.ParserContext
+import com.mpe85.grampa.context.ParserContext
 
 /**
  * A holder for the result of a parse run.

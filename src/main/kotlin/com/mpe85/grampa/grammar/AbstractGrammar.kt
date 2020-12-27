@@ -2,10 +2,10 @@ package com.mpe85.grampa.grammar
 
 import com.ibm.icu.lang.UCharacter
 import com.mpe85.grampa.builder.RepeatRuleBuilder
+import com.mpe85.grampa.context.RuleContext
 import com.mpe85.grampa.rule.Action
 import com.mpe85.grampa.rule.Command
 import com.mpe85.grampa.rule.Rule
-import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.rule.impl.ActionRule
 import com.mpe85.grampa.rule.impl.CharPredicateRule
 import com.mpe85.grampa.rule.impl.CodePointPredicateRule

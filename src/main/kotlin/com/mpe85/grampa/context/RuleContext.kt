@@ -1,4 +1,4 @@
-package com.mpe85.grampa.rule
+package com.mpe85.grampa.context
 
 import com.mpe85.grampa.input.InputPosition
 import com.mpe85.grampa.stack.RestorableStack

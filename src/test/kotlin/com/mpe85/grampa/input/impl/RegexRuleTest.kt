@@ -1,6 +1,6 @@
 package com.mpe85.grampa.input.impl
 
-import com.mpe85.grampa.rule.ParserContext
+import com.mpe85.grampa.context.ParserContext
 import com.mpe85.grampa.rule.impl.RegexRule
 import java.util.regex.Pattern
 import org.junit.jupiter.api.Assertions.assertEquals

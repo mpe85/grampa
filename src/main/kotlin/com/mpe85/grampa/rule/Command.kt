@@ -1,5 +1,7 @@
 package com.mpe85.grampa.rule
 
+import com.mpe85.grampa.context.RuleContext
+
 /**
  * A parser command. A command is a special [Action] that always succeeds (i.e. always returns true)
  *

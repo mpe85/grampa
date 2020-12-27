@@ -1,7 +1,7 @@
 package com.mpe85.grampa.rule.impl
 
 import com.ibm.icu.lang.UCharacter.toLowerCase
-import com.mpe85.grampa.rule.ParserContext
+import com.mpe85.grampa.context.ParserContext
 import com.mpe85.grampa.util.checkEquality
 import com.mpe85.grampa.util.stringify
 import java.util.Objects.hash

@@ -1,8 +1,8 @@
 package com.mpe85.grampa.rule.impl
 
-import com.mpe85.grampa.rule.ParserContext
+import com.mpe85.grampa.context.ParserContext
+import com.mpe85.grampa.context.RuleContext
 import com.mpe85.grampa.rule.Rule
-import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.util.checkEquality
 import com.mpe85.grampa.util.stringify
 import java.util.Objects.hash

@@ -1,5 +1,6 @@
 package com.mpe85.grampa.rule
 
+import com.mpe85.grampa.context.ParserContext
 import com.mpe85.grampa.visitor.RuleVisitor
 
 /**

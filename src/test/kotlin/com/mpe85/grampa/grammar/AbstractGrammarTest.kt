@@ -1,13 +1,13 @@
 package com.mpe85.grampa.grammar
 
+import com.mpe85.grampa.context.ParserContext
+import com.mpe85.grampa.context.RuleContext
 import com.mpe85.grampa.event.MatchSuccessEvent
 import com.mpe85.grampa.event.ParseEventListener
 import com.mpe85.grampa.event.PostParseEvent
 import com.mpe85.grampa.parser.Parser
 import com.mpe85.grampa.rule.Action
-import com.mpe85.grampa.rule.ParserContext
 import com.mpe85.grampa.rule.Rule
-import com.mpe85.grampa.rule.RuleContext
 import com.mpe85.grampa.rule.impl.ActionRule
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import java.util.concurrent.atomic.AtomicReference

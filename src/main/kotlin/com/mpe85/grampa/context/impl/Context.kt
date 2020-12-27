@@ -1,10 +1,10 @@
 package com.mpe85.grampa.rule.impl
 
+import com.mpe85.grampa.context.ParserContext
 import com.mpe85.grampa.event.MatchFailureEvent
 import com.mpe85.grampa.event.MatchSuccessEvent
 import com.mpe85.grampa.event.PreMatchEvent
 import com.mpe85.grampa.input.InputBuffer
-import com.mpe85.grampa.rule.ParserContext
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.stack.RestorableStack
 import org.greenrobot.eventbus.EventBus

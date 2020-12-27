@@ -6,7 +6,7 @@ import com.ibm.icu.util.BytesTrie.Result.INTERMEDIATE_VALUE
 import com.ibm.icu.util.BytesTrie.Result.NO_MATCH
 import com.ibm.icu.util.CharsTrieBuilder
 import com.ibm.icu.util.StringTrieBuilder.Option.FAST
-import com.mpe85.grampa.rule.ParserContext
+import com.mpe85.grampa.context.ParserContext
 import com.mpe85.grampa.util.checkEquality
 import com.mpe85.grampa.util.stringify
 import java.util.Objects.hash

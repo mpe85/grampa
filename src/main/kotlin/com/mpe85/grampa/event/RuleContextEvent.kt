@@ -1,7 +1,7 @@
 package com.mpe85.grampa.event
 
-import com.mpe85.grampa.rule.ParserContext
-import com.mpe85.grampa.rule.RuleContext
+import com.mpe85.grampa.context.ParserContext
+import com.mpe85.grampa.context.RuleContext
 
 /**
  * Abstract event posted in the context of a rule.

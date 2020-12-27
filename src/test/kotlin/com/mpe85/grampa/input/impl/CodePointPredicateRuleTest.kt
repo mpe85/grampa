@@ -1,6 +1,6 @@
 package com.mpe85.grampa.input.impl
 
-import com.mpe85.grampa.rule.ParserContext
+import com.mpe85.grampa.context.ParserContext
 import com.mpe85.grampa.rule.impl.CodePointPredicateRule
 import java.util.function.Predicate
 import org.junit.jupiter.api.Assertions.assertEquals

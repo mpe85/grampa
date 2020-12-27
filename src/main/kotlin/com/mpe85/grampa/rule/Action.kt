@@ -1,5 +1,7 @@
 package com.mpe85.grampa.rule
 
+import com.mpe85.grampa.context.RuleContext
+
 /**
  * A parser action.
  *
