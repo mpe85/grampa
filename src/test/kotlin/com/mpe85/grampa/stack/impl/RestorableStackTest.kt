@@ -51,8 +51,8 @@ class RestorableStackTest {
     stack.push(3.3f)
 
     assertEquals(3, stack.size)
-    assertEquals(3.3f, stack.peekAs(Float::class.javaObjectType).toFloat())
-    assertEquals(1, stack.peekAs(2, Int::class.javaObjectType).toInt())
+    assertEquals(3.3f, stack.peek().toFloat())
+    assertEquals(1, stack.peek(2).toInt())
     assertEquals(3, stack.size)
   }
 
@@ -82,9 +82,9 @@ class RestorableStackTest {
     stack.push(3)
 
     assertEquals(3, stack.size)
-    assertEquals(2.2, stack.popAs(1, Double::class.javaObjectType).toDouble())
+    assertEquals(2.2, stack.pop(1).toDouble())
     assertEquals(2, stack.size)
-    assertEquals(3, stack.popAs(Int::class.javaObjectType).toInt())
+    assertEquals(3, stack.pop().toInt())
   }
 
   @Test

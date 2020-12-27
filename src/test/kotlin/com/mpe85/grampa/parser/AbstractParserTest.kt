@@ -2327,7 +2327,7 @@ class AbstractParserTest {
         return sequence(
           push(4711),
           action { ctx: ActionContext<Number> ->
-            popAs(Int::class.javaObjectType, ctx) == 4711
+            pop(ctx) == 4711
           })
       }
     }
@@ -2344,7 +2344,7 @@ class AbstractParserTest {
           push(4711),
           push(4712),
           action { ctx: ActionContext<Number> ->
-            popAs(Int::class.javaObjectType, 1, ctx) == 4711
+            pop(1, ctx) == 4711
           })
       }
     }
@@ -2389,7 +2389,7 @@ class AbstractParserTest {
     class Parser : AbstractParser<Number>() {
       override fun root(): Rule<Number> {
         return sequence(push(4711), action { ctx: ActionContext<Number> ->
-          peekAs(Int::class.javaObjectType, ctx) == 4711
+          peek(ctx) == 4711
         })
       }
     }
@@ -2406,7 +2406,7 @@ class AbstractParserTest {
           push(4711),
           push(4712),
           action { ctx: ActionContext<Number> ->
-            peekAs(Int::class.javaObjectType, 1, ctx) == 4711
+            peek(1, ctx) == 4711
           })
       }
     }
@@ -2508,7 +2508,7 @@ class AbstractParserTest {
 
     val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    assertThrows(IllegalStateException::class.java) { runner.run("whatever") }
+    assertThrows(IndexOutOfBoundsException::class.java) { runner.run("whatever") }
   }
 
   @Test
@@ -2536,7 +2536,7 @@ class AbstractParserTest {
 
     val runner = DefaultParseRunner(Parser())
     runner.registerListener(IntegerTestListener())
-    assertThrows(IllegalStateException::class.java) { runner.run("whatever") }
+    assertThrows(IndexOutOfBoundsException::class.java) { runner.run("whatever") }
   }
 
   @Test

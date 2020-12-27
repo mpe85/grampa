@@ -701,29 +701,6 @@ abstract class AbstractParser<T> : Parser<T> {
   protected fun pop(down: Int, context: ActionContext<T>) = context.stack.pop(down)
 
   /**
-   * Pop the top level element from the stack and cast it to a given type.
-   * This method may be called by an action or command where the action context is available.
-   *
-   * @param[U] A subtype of [T]
-   * @param[clazz] The type to cast the element to
-   * @param[context] An action context
-   * @return The popped element
-   */
-  protected fun <U : T> popAs(clazz: Class<U>, context: ActionContext<T>) = context.stack.popAs(clazz)
-
-  /**
-   * Pop an element from the stack at a given position and cast it to a given type.
-   * This method may be called by an action or command where the action context is available.
-   *
-   * @param[U] A subtype of [T]
-   * @param[clazz] The type to cast the element to
-   * @param[down] The number of elements on the stack to skip
-   * @param[context] An action context
-   * @return The popped element
-   */
-  protected fun <U : T> popAs(clazz: Class<U>, down: Int, context: ActionContext<T>) = context.stack.popAs(down, clazz)
-
-  /**
    * Peek the top level element from the stack.
    * This method may be called by an action or command where the action context is available.
    *
@@ -741,29 +718,5 @@ abstract class AbstractParser<T> : Parser<T> {
    * @return The peeked element
    */
   protected fun peek(down: Int, context: ActionContext<T>) = context.stack.peek(down)
-
-  /**
-   * Peek the top level element from the stack and cast it to a given type.
-   * This method may be called by an action or command where the action context is available.
-   *
-   * @param[U] A subtype of [T]
-   * @param[clazz] The type to cast the element to
-   * @param[context] An action context
-   * @return the peeked element
-   */
-  protected fun <U : T> peekAs(clazz: Class<U>, context: ActionContext<T>) = context.stack.peekAs(clazz)
-
-  /**
-   * Peek an element from the stack at a given position and cast it to a given type.
-   * This method may be called by an action or command where the action context is available.
-   *
-   * @param[U] A subtype of T
-   * @param[clazz] The type to cast the element to
-   * @param[down] The number of elements on the stack to skip
-   * @param[context] An action context
-   * @return The peeked element
-   */
-  protected open fun <U : T> peekAs(clazz: Class<U>, down: Int, context: ActionContext<T>) =
-    context.stack.peekAs(down, clazz)
 
 }
