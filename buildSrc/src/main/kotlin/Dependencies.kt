@@ -8,6 +8,7 @@ object Versions {
   const val kotest = "4.3.2"
   const val kotlin = "1.4.21"
   const val mockk = "1.10.3-jdk8"
+  const val spotbugs = "4.2.0"
   const val versions = "0.36.0"
 }
 
@@ -15,8 +16,10 @@ object Plugins {
   const val bintray = "com.jfrog.bintray"
   const val detekt = "io.gitlab.arturbosch.detekt"
   const val dokka = "org.jetbrains.dokka"
+  const val jacoco = "org.gradle.jacoco"
   const val kotlinJvm = "jvm"
   const val mavenPublish = "org.gradle.maven-publish"
+  const val spotbugs = "com.github.spotbugs"
   const val versions = "com.github.ben-manes.versions"
 }
 
@@ -29,4 +32,5 @@ object Libs {
   const val kotlinReflect = "org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin}"
   const val kotlinStdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin}"
   const val mockk = "io.mockk:mockk:${Versions.mockk}"
+  const val spotbugsAnnotations = "com.github.spotbugs:spotbugs-annotations:${Versions.spotbugs}"
 }

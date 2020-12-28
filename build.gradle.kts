@@ -9,12 +9,11 @@ plugins {
   id(Plugins.bintray) version Versions.bintray
   id(Plugins.detekt) version Versions.detekt
   id(Plugins.dokka) version Versions.dokka
+  id(Plugins.jacoco)
   kotlin(Plugins.kotlinJvm) version Versions.kotlin
   id(Plugins.mavenPublish)
+  id(Plugins.spotbugs) version Versions.spotbugs
   id(Plugins.versions) version Versions.versions
-  jacoco
-
-  id("com.github.spotbugs") version "4.6.0"
 }
 
 group = "com.mpe85"
@@ -31,7 +30,6 @@ dependencies {
   implementation(Libs.icu4j)
   implementation(Libs.kotlinReflect)
   implementation(Libs.kotlinStdlib)
-  compileOnly("com.github.spotbugs:spotbugs-annotations:4.2.0")
   testImplementation(Libs.kotestAssertionsCore)
   testImplementation(Libs.kotestRunnerJunit5)
   testImplementation(Libs.mockk)
@@ -39,7 +37,7 @@ dependencies {
   testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.0")
   testImplementation("org.mockito:mockito-junit-jupiter:3.6.28")
   testImplementation(kotlin("test-junit5"))
-  testCompileOnly("com.github.spotbugs:spotbugs-annotations:4.2.0")
+  testCompileOnly(Libs.spotbugsAnnotations)
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
 }
 
