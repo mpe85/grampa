@@ -30,6 +30,7 @@ import kotlin.streams.toList
  * @author mpe85
  * @param[T] The type of the stack elements
  */
+@Suppress("Detekt.TooManyFunctions")
 abstract class AbstractGrammar<T> : Grammar<T> {
 
   private val emptyRule = EmptyRule<T>()
@@ -52,8 +53,8 @@ abstract class AbstractGrammar<T> : Grammar<T> {
   private val crlfRule = StringRule<T>("\r\n")
 
   /**
-   * A rule that matches an empty string. Or in other words, a rule that matches no input character and always
-   * succeeds.
+   * A rule that matches an empty string.
+   * Or in other words, a rule that matches no input character and always succeeds.
    *
    * @return A grammar rule
    */
@@ -282,7 +283,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
   }
 
   /**
-   * A rule that matches a regular expression
+   * A rule that matches a regular expression.
    *
    * @param[regex] A regular expression
    * @return A grammar rule
@@ -351,14 +352,14 @@ abstract class AbstractGrammar<T> : Grammar<T> {
   protected open fun digit() = digitRule
 
   /**
-   * A rule that matches a character which is valid to be the first character of a java identifier.
+   * A rule that matches a character which is valid to be the first character of a Java identifier.
    *
    * @return A grammar rule
    */
   protected open fun javaIdentifierStart() = javaIdentStartRule
 
   /**
-   * A rule that matches a character which is valid to be part character of a java identifier, other than the first
+   * A rule that matches a character which is valid to be part character of a Java identifier, other than the first
    * character.
    *
    * @return A grammar rule
@@ -422,7 +423,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
   protected open fun crlf() = crlfRule
 
   /**
-   * A rule that matches a sequence of rules.
+   * A rule that matches a sequence of other rules.
    *
    * @param[rules] A variable number of rules
    * @return A grammar rule
@@ -430,7 +431,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
   protected open fun sequence(vararg rules: Rule<T>) = sequence(rules.toList())
 
   /**
-   * A rule that matches a sequence of rules.
+   * A rule that matches a sequence of other rules.
    *
    * @param[rules] A list of rules
    * @return A grammar rule
@@ -442,7 +443,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
   }
 
   /**
-   * A rule that matches the first successful rule in a list of rules.
+   * A rule that matches the first successful rule in a list of other rules.
    *
    * @param[rules] A variable number of rules
    * @return A grammar rule
@@ -450,7 +451,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
   protected open fun firstOf(vararg rules: Rule<T>) = firstOf(rules.toList())
 
   /**
-   * A rule that matches the first successful rule in a list of rules.
+   * A rule that matches the first successful rule in a list of other rules.
    *
    * @param[rules] A list of rules
    * @return A grammar rule
@@ -462,25 +463,25 @@ abstract class AbstractGrammar<T> : Grammar<T> {
   }
 
   /**
-   * A rule that matches its sub rule optionally. In other words, a rule that repeats its sub rule zero or one time.
+   * A rule that matches its child rule optionally. In other words, a rule that repeats its child rule zero or one time.
    *
-   * @param[rule] The sub rule to match optionally
+   * @param[rule] The child rule to match optionally
    * @return A grammar rule
    */
   protected open fun optional(rule: Rule<T>) = repeat(rule).times(0, 1)
 
   /**
-   * A rule that matches its sub rule zero or more times.
+   * A rule that matches its child rule zero or more times.
    *
-   * @param[rule] The sub rule to repeat
+   * @param[rule] The child rule to repeat
    * @return A grammar rule
    */
   protected open fun zeroOrMore(rule: Rule<T>) = repeat(rule).min(0)
 
   /**
-   * A rule that matches its sub rule one or more times.
+   * A rule that matches its child rule one or more times.
    *
-   * @param[rule] The sub rule to repeat
+   * @param[rule] The child rule to repeat
    * @return A grammar rule
    */
   protected open fun oneOrMore(rule: Rule<T>) = repeat(rule).min(1)
@@ -488,29 +489,29 @@ abstract class AbstractGrammar<T> : Grammar<T> {
   /**
    * A rule builder for a repeat rule.
    *
-   * @param[rule] The sub rule to repeat
+   * @param[rule] The child rule to repeat
    * @return a repeat rule builder
    */
   protected open fun repeat(rule: Rule<T>) = RepeatRuleBuilder(rule)
 
   /**
-   * A predicate rule that tests if its sub rule matches.
+   * A test rule that tests if its child rule matches.
    *
-   * @param[rule] The sub rule to test
+   * @param[rule] The child rule to test
    * @return A grammar rule
    */
   protected open fun test(rule: Rule<T>) = TestRule(rule)
 
   /**
-   * A predicate rule that tests if its sub rule does not match.
+   * A test rule that tests if its child rule does not match.
    *
-   * @param[rule] The sub rule to test
+   * @param[rule] The child rule to test
    * @return A grammar rule
    */
   protected open fun testNot(rule: Rule<T>) = TestNotRule(rule)
 
   /**
-   * A conditional rule that runs one rule if a condition is true, otherwise it runs another rule.
+   * A conditional rule that runs a child rule if a condition is true, otherwise it runs another child rule.
    *
    * @param[condition] A condition
    * @param[thenRule] The rule to run if the condition is true
@@ -521,7 +522,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
     ConditionalRule(condition, thenRule, elseRule)
 
   /**
-   * A conditional rule that runs a rule if a condition is true, otherwise it runs no rule.
+   * A conditional rule that runs a child rule if a condition is true, otherwise it runs no rule.
    *
    * @param[condition] A condition
    * @param[thenRule] The rule to run if the condition is true
@@ -547,7 +548,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
   protected open fun command(command: Command<T>) = action(command.toAction())
 
   /**
-   * A rule that runs an action. The action is skipped if the rule is run inside a predicate rule.
+   * A rule that runs an action. The action is skipped if the rule is run inside a test rule.
    *
    * @param[action] The skippable action to run
    * @return A grammar rule
@@ -555,7 +556,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
   protected open fun skippableAction(action: Action<T>) = ActionRule(action::run, true)
 
   /**
-   * A rule that executes a command. The command is skipped if the rule is run inside a predicate rule.
+   * A rule that executes a command. The command is skipped if the rule is run inside a test rule.
    *
    * @param[command] The command to execute
    * @return A grammar rule
@@ -563,7 +564,8 @@ abstract class AbstractGrammar<T> : Grammar<T> {
   protected open fun skippableCommand(command: Command<T>) = skippableAction(command.toAction())
 
   /**
-   * Post an event to the parser's event bus. Note that the event object is constructed at grammar create time.
+   * Post a static event to the parser's event bus.
+   * Note that the event object is constructed at grammar create time (thus static).
    *
    * @param[event] The event to post
    * @return A grammar rule
@@ -571,8 +573,9 @@ abstract class AbstractGrammar<T> : Grammar<T> {
   protected open fun post(event: Any) = skippableCommand { ctx -> ctx.bus.post(event) }
 
   /**
-   * Post an event to the parser's event bus. Note that the event object is supplied by an event supplier at parser
-   * runtime which has access to the parser context.
+   * Post a dynamic event to the parser's event bus.
+   * Note that the event object is supplied by an event supplier at parser runtime
+   * which has access to the parser context (thus dynamic).
    *
    * @param[supplier] An event supplier that is called when the rule is run
    * @return A grammar rule
@@ -601,7 +604,8 @@ abstract class AbstractGrammar<T> : Grammar<T> {
   }
 
   /**
-   * Replace the element on top of the stack. Note that the value is constructed at grammar create time.
+   * Replace the element on top of the stack.
+   * Note that the replacement value is constructed at grammar create time.
    *
    * @param[value] A replacement value
    * @return A grammar rule
@@ -612,7 +616,8 @@ abstract class AbstractGrammar<T> : Grammar<T> {
   }
 
   /**
-   * Replace an element in the stack at a given position. Note that the value is constructed at grammar create time.
+   * Replace an element in the stack at a given position.
+   * Note that the replacement value is constructed at grammar create time.
    *
    * @param[down] The number of elements on the stack to skip
    * @param[value] A replacement value
@@ -624,8 +629,9 @@ abstract class AbstractGrammar<T> : Grammar<T> {
   }
 
   /**
-   * Replace an element in the stack. Note that the value is supplied by a value supplier at parser runtime which
-   * has access to the parser context.
+   * Replace an element in the stack.
+   * Note that the replacement value is supplied by a value supplier at parser runtime
+   * which has access to the parser context.
    *
    * @param[supplier] A replacement value supplier
    * @return A grammar rule
@@ -636,8 +642,9 @@ abstract class AbstractGrammar<T> : Grammar<T> {
   }
 
   /**
-   * Replace an element in the stack at a given position. Note that the value is supplied by a value supplier at
-   * parser runtime which has access to the parser context.
+   * Replace an element in the stack at a given position.
+   * Note that the replacement value is supplied by a value supplier at parser runtime
+   * which has access to the parser context.
    *
    * @param[down] The number of elements on the stack to skip
    * @param[supplier] A replacement value supplier
@@ -657,8 +664,8 @@ abstract class AbstractGrammar<T> : Grammar<T> {
   protected open fun push(value: T) = command { ctx -> ctx.stack.push(value) }
 
   /**
-   * Push a new element onto stack. Note that the value is supplied by a value supplier at parser runtime which has
-   * access to the parser context.
+   * Push a new element onto stack.
+   * Note that the value is supplied by a value supplier at parser runtime which has access to the parser context.
    *
    * @param[supplier] A value supplier
    * @return A grammar rule
@@ -680,8 +687,8 @@ abstract class AbstractGrammar<T> : Grammar<T> {
   protected open fun swap() = command { ctx -> ctx.stack.swap() }
 
   /**
-   * Pop the top level element from the stack. This method may be called by an action or command where the action
-   * context is available.
+   * Pop the top level element from the stack.
+   * This function may be called by an action or command where the action context is available.
    *
    * @param[context] An action context
    * @return The popped element
@@ -689,8 +696,8 @@ abstract class AbstractGrammar<T> : Grammar<T> {
   protected fun pop(context: RuleContext<T>): T = context.stack.pop()
 
   /**
-   * Pop an element from the stack at a given position. This method may be called by an action or command where the
-   * action
+   * Pop an element from the stack at a given position.
+   * This function may be called by an action or command where the action.
    *
    * @param[down] The number of elements on the stack to skip
    * @param[context] An action context
@@ -700,7 +707,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
 
   /**
    * Peek the top level element from the stack.
-   * This method may be called by an action or command where the action context is available.
+   * This function may be called by an action or command where the action context is available.
    *
    * @param[context] An action context
    * @return The peeked element
@@ -709,7 +716,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
 
   /**
    * Peek an element from the stack at a given position.
-   * This method may be called by an action or command where the action is available.
+   * This function may be called by an action or command where the action is available.
    *
    * @param[down] The number of elements on the stack to skip
    * @param[context] An action context

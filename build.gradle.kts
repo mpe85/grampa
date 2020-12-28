@@ -7,7 +7,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   id(Plugins.bintray) version Versions.bintray
-  //id(Plugins.detekt) version Versions.detekt
+  id(Plugins.detekt) version Versions.detekt
   id(Plugins.dokka) version Versions.dokka
   kotlin(Plugins.kotlinJvm) version Versions.kotlin
   id(Plugins.mavenPublish)
