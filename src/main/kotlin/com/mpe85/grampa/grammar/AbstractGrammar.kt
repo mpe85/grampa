@@ -22,7 +22,6 @@ import com.mpe85.grampa.rule.impl.TestRule
 import com.mpe85.grampa.rule.impl.TrieRule
 import com.mpe85.grampa.rule.toAction
 import kotlin.streams.toList
-import kotlin.text.Charsets.US_ASCII
 
 /**
  * An abstract grammar that defines a bunch of useful grammar rules and actions.
@@ -33,14 +32,12 @@ import kotlin.text.Charsets.US_ASCII
  */
 abstract class AbstractGrammar<T> : Grammar<T> {
 
-  private val asciiEncoder = US_ASCII.newEncoder()
-
   private val emptyRule = EmptyRule<T>()
   private val neverRule = NeverRule<T>()
   private val eoiRule = EndOfInputRule<T>()
   private val anyCharRule = CharPredicateRule<T> { true }
   private val anyCodePointRule = CodePointPredicateRule<T>(UCharacter::isLegal)
-  private val asciiRule = CharPredicateRule<T>(asciiEncoder::canEncode)
+  private val asciiRule = CharPredicateRule<T> { it in Char.MIN_VALUE..Byte.MAX_VALUE.toChar() }
   private val bmpRule = CodePointPredicateRule<T>(UCharacter::isBMP)
   private val digitRule = CodePointPredicateRule<T>(UCharacter::isDigit)
   private val javaIdentStartRule = CodePointPredicateRule<T>(Character::isJavaIdentifierStart)
@@ -116,6 +113,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
    * @return A grammar rule
    */
   protected open fun charRange(lowerBound: Char, upperBound: Char): Rule<T> {
+    Char.MIN_VALUE
     require(lowerBound <= upperBound) { "A 'lowerBound' must not be greater than an 'upperBound'." }
     return CharPredicateRule { it in lowerBound..upperBound }
   }
