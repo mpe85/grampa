@@ -75,7 +75,7 @@ private fun <U : Grammar<T>, T> KClass<U>.createGrammarSubClass(): KClass<out U>
   return ByteBuddy()
     .subclass(java)
     .method(returns(Rule::class.java))
-    .intercept(withDefaultConfiguration().to(RuleMethodInterceptor<Any>()))
+    .intercept(withDefaultConfiguration().to(RuleMethodInterceptor<T>()))
     .make()
     .load(java.classLoader)
     .loaded
