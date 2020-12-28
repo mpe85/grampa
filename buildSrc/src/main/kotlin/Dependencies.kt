@@ -9,6 +9,7 @@ object Versions {
   const val kotlin = "1.4.21"
   const val mockk = "1.10.3-jdk8"
   const val spotbugs = "4.2.0"
+  const val spotbugsPlugin = "4.6.0"
   const val versions = "0.36.0"
 }
 

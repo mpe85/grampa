@@ -12,7 +12,7 @@ plugins {
   id(Plugins.jacoco)
   kotlin(Plugins.kotlinJvm) version Versions.kotlin
   id(Plugins.mavenPublish)
-  id(Plugins.spotbugs) version Versions.spotbugs
+  id(Plugins.spotbugs) version Versions.spotbugsPlugin
   id(Plugins.versions) version Versions.versions
 }
 
