@@ -10,7 +10,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.SubscriberExceptionEvent
 
 class ParseEventListenerTests : StringSpec({
-  "Listens to event" {
+  "Listen to event" {
     val listener = object : ParseEventListener<String>() {
       var called = false
       override fun beforeParse(event: PreParseEvent<String>) {
@@ -25,7 +25,7 @@ class ParseEventListenerTests : StringSpec({
 
     listener.called shouldBe true
   }
-  "Handles subscriber exception" {
+  "Handle subscriber exception" {
     val ex = RuntimeException("failure")
 
     val listener = object : ParseEventListener<String>() {

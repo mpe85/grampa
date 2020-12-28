@@ -10,6 +10,8 @@ import com.mpe85.grampa.rule.Action
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.impl.ActionRule
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
+import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.shouldBe
 import java.util.concurrent.atomic.AtomicReference
 import org.greenrobot.eventbus.Subscribe
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -20,404 +22,313 @@ import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
+private class IntegerTestListener : ParseEventListener<Int>()
+private class CharSequenceTestListener : ParseEventListener<CharSequence>()
+
+class AbstractGrammarTests : StringSpec({
+  "Empty rule grammar" {
+    class Grammar : AbstractGrammar<Int>() {
+      override fun root() = empty()
+    }
+    Parser(Grammar()).apply {
+      registerListener(IntegerTestListener())
+      run("foo").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe ""
+        restOfInput shouldBe "foo"
+      }
+    }
+  }
+  "Never rule grammar" {
+    class Grammar : AbstractGrammar<Int>() {
+      override fun root() = never()
+    }
+    Parser(Grammar()).apply {
+      registerListener(IntegerTestListener())
+      run("foo").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "foo"
+      }
+    }
+  }
+  "EOI rule grammar" {
+    class Grammar : AbstractGrammar<Int>() {
+      override fun root() = sequence(string("foo"), eoi())
+    }
+    Parser(Grammar()).apply {
+      registerListener(IntegerTestListener())
+      run("foo").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "foo"
+        restOfInput shouldBe ""
+      }
+      run("foo ").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "foo "
+      }
+    }
+  }
+  "AnyChar rule grammar" {
+    class Grammar : AbstractGrammar<Int>() {
+      override fun root() = anyChar()
+    }
+    Parser(Grammar()).apply {
+      registerListener(IntegerTestListener())
+      run("f").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "f"
+        restOfInput shouldBe ""
+      }
+      run("").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe ""
+      }
+    }
+  }
+  "AnyCodePoint rule grammar" {
+    class Grammar : AbstractGrammar<Int>() {
+      override fun root() = anyCodePoint()
+    }
+    Parser(Grammar()).apply {
+      registerListener(IntegerTestListener())
+      run("\uD835\uDD38").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "\uD835\uDD38"
+        restOfInput shouldBe ""
+      }
+      run("").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe ""
+      }
+    }
+  }
+  "Character rule grammar" {
+    class Grammar : AbstractGrammar<Int>() {
+      override fun root() = character('f')
+    }
+    Parser(Grammar()).apply {
+      registerListener(IntegerTestListener())
+      run("f").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "f"
+        restOfInput shouldBe ""
+      }
+      run("g").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "g"
+      }
+    }
+  }
+  "CharacterIgnoreCase rule grammar" {
+    class Grammar : AbstractGrammar<Int>() {
+      override fun root() = ignoreCase('f')
+    }
+    Parser(Grammar()).apply {
+      registerListener(IntegerTestListener())
+      run("F").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "F"
+        restOfInput shouldBe ""
+      }
+      run("G").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "G"
+      }
+    }
+  }
+  "CharRange rule grammar" {
+    class Grammar : AbstractGrammar<Int>() {
+      override fun root() = charRange('a', 'f')
+    }
+    Parser(Grammar()).apply {
+      registerListener(IntegerTestListener())
+      run("c").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "c"
+        restOfInput shouldBe ""
+      }
+      run("h").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "h"
+      }
+    }
+  }
+  "AnyOfChars (vararg) rule grammar" {
+    class Grammar : AbstractGrammar<Int>() {
+      override fun root() = anyOfChars('a', 'f')
+    }
+    Parser(Grammar()).apply {
+      registerListener(IntegerTestListener())
+      run("a").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "a"
+        restOfInput shouldBe ""
+      }
+      run("c").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "c"
+      }
+    }
+  }
+  "AnyOfChars (set) rule grammar" {
+    class Grammar : AbstractGrammar<Int>() {
+      override fun root() = anyOfChars(setOf('a', 'f'))
+    }
+    Parser(Grammar()).apply {
+      registerListener(IntegerTestListener())
+      run("a").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "a"
+        restOfInput shouldBe ""
+      }
+      run("c").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "c"
+      }
+    }
+  }
+  "AnyOfChars (string) rule grammar" {
+    class Grammar : AbstractGrammar<Int>() {
+      override fun root() = anyOfChars("af")
+    }
+    Parser(Grammar()).apply {
+      registerListener(IntegerTestListener())
+      run("a").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "a"
+        restOfInput shouldBe ""
+      }
+      run("c").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "c"
+      }
+    }
+  }
+  "AnyOfChars (never) rule grammar" {
+    class Grammar : AbstractGrammar<Int>() {
+      override fun root() = anyOfChars()
+    }
+    Parser(Grammar()).apply {
+      registerListener(IntegerTestListener())
+      run("a").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "a"
+      }
+    }
+  }
+  "NoneOfChars (vararg) rule grammar" {
+    class Grammar : AbstractGrammar<Int>() {
+      override fun root() = noneOfChars('a', 'f')
+    }
+    Parser(Grammar()).apply {
+      registerListener(IntegerTestListener())
+      run("c").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "c"
+        restOfInput shouldBe ""
+      }
+      run("f").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "f"
+      }
+    }
+  }
+  "NoneOfChars (set) rule grammar" {
+    class Grammar : AbstractGrammar<Int>() {
+      override fun root() = noneOfChars(setOf('a', 'f'))
+    }
+    Parser(Grammar()).apply {
+      registerListener(IntegerTestListener())
+      run("c").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "c"
+        restOfInput shouldBe ""
+      }
+      run("f").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "f"
+      }
+    }
+  }
+  "NoneOfChars (string) rule grammar" {
+    class Grammar : AbstractGrammar<Int>() {
+      override fun root() = noneOfChars("af")
+    }
+    Parser(Grammar()).apply {
+      registerListener(IntegerTestListener())
+      run("c").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "c"
+        restOfInput shouldBe ""
+      }
+      run("f").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "f"
+      }
+    }
+  }
+  "NoneOfChars (any) rule grammar" {
+    class Grammar : AbstractGrammar<Int>() {
+      override fun root() = noneOfChars()
+    }
+    Parser(Grammar()).apply {
+      registerListener(IntegerTestListener())
+      run("c").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "c"
+        restOfInput shouldBe ""
+      }
+    }
+  }
+})
+
 @SuppressFBWarnings(
   value = ["SIC_INNER_SHOULD_BE_STATIC_ANON"],
   justification = "Performance is not of great importance in unit tests."
 )
 class AbstractGrammarTest {
-  private class IntegerTestListener : ParseEventListener<Int>()
-  private class CharSequenceTestListener : ParseEventListener<CharSequence>()
-
-  @Test
-  fun empty_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return empty()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("foo")
-    assertTrue(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertEquals("", result.matchedInput)
-    assertEquals("foo", result.restOfInput)
-  }
-
-  @Test
-  fun never_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return never()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("foo")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("foo", result.restOfInput)
-  }
-
-  @Test
-  fun eoi_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence(string("foo"), eoi())
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("foo")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("foo", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun eoi_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence(string("foo"), eoi())
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("foo ")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("foo ", result.restOfInput)
-  }
-
-  @Test
-  fun anyChar_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return anyChar()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("f")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("f", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun anyChar_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return anyChar()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun anyCodePoint_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return anyCodePoint()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("\uD835\uDD38")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("\uD835\uDD38", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun anyCodePoint_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return anyCodePoint()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun character_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return character('f')
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("f")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("f", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun character_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return character('f')
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("g")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("g", result.restOfInput)
-  }
-
-  @Test
-  fun ignoreCase_character_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return ignoreCase('f')
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("F")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("F", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun ignoreCase_character_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return ignoreCase('f')
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("G")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("G", result.restOfInput)
-  }
-
-  @Test
-  fun charRange_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return charRange('a', 'f')
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("c")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("c", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun charRange_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return charRange('a', 'f')
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("h")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("h", result.restOfInput)
-  }
-
-  @Test
-  fun anyOfChars_valid_vararg() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return anyOfChars('a', 'f')
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("a")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("a", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun anyOfChars_valid_set() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return anyOfChars(setOf('a', 'f'))
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("a")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("a", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun anyOfChars_valid_string() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return anyOfChars("a")
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("a")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("a", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun anyOfChars_invalid_wrongChar() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return anyOfChars('a', 'f')
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("c")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("c", result.restOfInput)
-  }
-
-  @Test
-  fun anyOfChars_invalid_never() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return anyOfChars("")
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("a")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("a", result.restOfInput)
-  }
-
-  @Test
-  fun noneOfChars_valid_vararg() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return noneOfChars('a', 'f')
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("c")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("c", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun noneOfChars_valid_set() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return noneOfChars(setOf('a', 'f'))
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("c")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("c", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun noneOfChars_valid_any() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return noneOfChars("")
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("c")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("c", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun noneOfChars_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return noneOfChars('a', 'f')
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("f")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("f", result.restOfInput)
-  }
 
   @Test
   fun codePoint_valid() {
