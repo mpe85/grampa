@@ -29,6 +29,7 @@ object Libs {
   const val eventBus = "org.greenrobot:eventbus:${Versions.eventBus}"
   const val icu4j = "com.ibm.icu:icu4j:${Versions.icu4j}"
   const val kotestAssertionsCore = "io.kotest:kotest-assertions-core:${Versions.kotest}"
+  const val kotestProperty = "io.kotest:kotest-property:${Versions.kotest}"
   const val kotestRunnerJunit5 = "io.kotest:kotest-runner-junit5:${Versions.kotest}"
   const val kotlinReflect = "org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin}"
   const val kotlinStdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin}"

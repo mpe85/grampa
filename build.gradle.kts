@@ -31,6 +31,7 @@ dependencies {
   implementation(Libs.kotlinReflect)
   implementation(Libs.kotlinStdlib)
   testImplementation(Libs.kotestAssertionsCore)
+  testImplementation(Libs.kotestProperty)
   testImplementation(Libs.kotestRunnerJunit5)
   testImplementation(Libs.mockk)
   testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")

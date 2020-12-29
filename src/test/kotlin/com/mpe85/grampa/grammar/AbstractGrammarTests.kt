@@ -13,6 +13,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
+import io.kotest.property.checkAll
 import java.util.concurrent.atomic.AtomicReference
 import org.greenrobot.eventbus.Subscribe
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -33,11 +34,13 @@ class AbstractGrammarTests : StringSpec({
     }
     Parser(Grammar()).apply {
       registerListener(IntegerTestListener())
-      run("foo").apply {
-        matched shouldBe true
-        matchedEntireInput shouldBe false
-        matchedInput shouldBe ""
-        restOfInput shouldBe "foo"
+      checkAll<String> { str ->
+        run(str).apply {
+          matched shouldBe true
+          matchedEntireInput shouldBe str.isEmpty()
+          matchedInput shouldBe ""
+          restOfInput shouldBe str
+        }
       }
     }
   }
@@ -47,31 +50,35 @@ class AbstractGrammarTests : StringSpec({
     }
     Parser(Grammar()).apply {
       registerListener(IntegerTestListener())
-      run("foo").apply {
-        matched shouldBe false
-        matchedEntireInput shouldBe false
-        matchedInput shouldBe null
-        restOfInput shouldBe "foo"
+      checkAll<String> { str ->
+        run(str).apply {
+          matched shouldBe false
+          matchedEntireInput shouldBe false
+          matchedInput shouldBe null
+          restOfInput shouldBe str
+        }
       }
     }
   }
   "EOI rule grammar" {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root() = sequence(string("foo"), eoi())
-    }
-    Parser(Grammar()).apply {
-      registerListener(IntegerTestListener())
-      run("foo").apply {
-        matched shouldBe true
-        matchedEntireInput shouldBe true
-        matchedInput shouldBe "foo"
-        restOfInput shouldBe ""
+    checkAll<String> { str ->
+      class Grammar : AbstractGrammar<Int>() {
+        override fun root() = sequence(string(str), eoi())
       }
-      run("foo ").apply {
-        matched shouldBe false
-        matchedEntireInput shouldBe false
-        matchedInput shouldBe null
-        restOfInput shouldBe "foo "
+      Parser(Grammar()).apply {
+        registerListener(IntegerTestListener())
+        run(str).apply {
+          matched shouldBe true
+          matchedEntireInput shouldBe true
+          matchedInput shouldBe str
+          restOfInput shouldBe ""
+        }
+        run("$str ").apply {
+          matched shouldBe false
+          matchedEntireInput shouldBe false
+          matchedInput shouldBe null
+          restOfInput shouldBe "$str "
+        }
       }
     }
   }
