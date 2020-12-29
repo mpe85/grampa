@@ -12,7 +12,10 @@ import com.mpe85.grampa.rule.impl.ActionRule
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.inspectors.forAll
 import io.kotest.matchers.shouldBe
+import io.kotest.property.Arb
+import io.kotest.property.arbitrary.string
 import io.kotest.property.checkAll
 import java.util.concurrent.atomic.AtomicReference
 import org.greenrobot.eventbus.Subscribe
@@ -29,10 +32,9 @@ private class CharSequenceTestListener : ParseEventListener<CharSequence>()
 
 class AbstractGrammarTests : StringSpec({
   "Empty rule grammar" {
-    class Grammar : AbstractGrammar<Int>() {
+    Parser(object : AbstractGrammar<Int>() {
       override fun root() = empty()
-    }
-    Parser(Grammar()).apply {
+    }).apply {
       registerListener(IntegerTestListener())
       checkAll<String> { str ->
         run(str).apply {
@@ -45,10 +47,9 @@ class AbstractGrammarTests : StringSpec({
     }
   }
   "Never rule grammar" {
-    class Grammar : AbstractGrammar<Int>() {
+    Parser(object : AbstractGrammar<Int>() {
       override fun root() = never()
-    }
-    Parser(Grammar()).apply {
+    }).apply {
       registerListener(IntegerTestListener())
       checkAll<String> { str ->
         run(str).apply {
@@ -62,10 +63,9 @@ class AbstractGrammarTests : StringSpec({
   }
   "EOI rule grammar" {
     checkAll<String> { str ->
-      class Grammar : AbstractGrammar<Int>() {
+      Parser(object : AbstractGrammar<Int>() {
         override fun root() = sequence(string(str), eoi())
-      }
-      Parser(Grammar()).apply {
+      }).apply {
         registerListener(IntegerTestListener())
         run(str).apply {
           matched shouldBe true
@@ -83,10 +83,9 @@ class AbstractGrammarTests : StringSpec({
     }
   }
   "AnyChar rule grammar" {
-    class Grammar : AbstractGrammar<Int>() {
+    Parser(object : AbstractGrammar<Int>() {
       override fun root() = anyChar()
-    }
-    Parser(Grammar()).apply {
+    }).apply {
       registerListener(IntegerTestListener())
       run("f").apply {
         matched shouldBe true
@@ -103,10 +102,9 @@ class AbstractGrammarTests : StringSpec({
     }
   }
   "AnyCodePoint rule grammar" {
-    class Grammar : AbstractGrammar<Int>() {
+    Parser(object : AbstractGrammar<Int>() {
       override fun root() = anyCodePoint()
-    }
-    Parser(Grammar()).apply {
+    }).apply {
       registerListener(IntegerTestListener())
       run("\uD835\uDD38").apply {
         matched shouldBe true
@@ -123,10 +121,9 @@ class AbstractGrammarTests : StringSpec({
     }
   }
   "Character rule grammar" {
-    class Grammar : AbstractGrammar<Int>() {
+    Parser(object : AbstractGrammar<Int>() {
       override fun root() = character('f')
-    }
-    Parser(Grammar()).apply {
+    }).apply {
       registerListener(IntegerTestListener())
       run("f").apply {
         matched shouldBe true
@@ -143,10 +140,9 @@ class AbstractGrammarTests : StringSpec({
     }
   }
   "CharacterIgnoreCase rule grammar" {
-    class Grammar : AbstractGrammar<Int>() {
+    Parser(object : AbstractGrammar<Int>() {
       override fun root() = ignoreCase('f')
-    }
-    Parser(Grammar()).apply {
+    }).apply {
       registerListener(IntegerTestListener())
       run("F").apply {
         matched shouldBe true
@@ -163,10 +159,9 @@ class AbstractGrammarTests : StringSpec({
     }
   }
   "CharRange rule grammar" {
-    class Grammar : AbstractGrammar<Int>() {
+    Parser(object : AbstractGrammar<Int>() {
       override fun root() = charRange('a', 'f')
-    }
-    Parser(Grammar()).apply {
+    }).apply {
       registerListener(IntegerTestListener())
       run("c").apply {
         matched shouldBe true
@@ -182,71 +177,37 @@ class AbstractGrammarTests : StringSpec({
       }
     }
   }
-  "AnyOfChars (vararg) rule grammar" {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root() = anyOfChars('a', 'f')
-    }
-    Parser(Grammar()).apply {
-      registerListener(IntegerTestListener())
-      run("a").apply {
-        matched shouldBe true
-        matchedEntireInput shouldBe true
-        matchedInput shouldBe "a"
-        restOfInput shouldBe ""
+  "AnyOfChars rule grammar" {
+    listOf(
+      object : AbstractGrammar<Int>() {
+        override fun root() = anyOfChars('a', 'f')
+      },
+      object : AbstractGrammar<Int>() {
+        override fun root() = anyOfChars(setOf('a', 'f'))
+      },
+      object : AbstractGrammar<Int>() {
+        override fun root() = anyOfChars("af")
       }
-      run("c").apply {
-        matched shouldBe false
-        matchedEntireInput shouldBe false
-        matchedInput shouldBe null
-        restOfInput shouldBe "c"
-      }
-    }
-  }
-  "AnyOfChars (set) rule grammar" {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root() = anyOfChars(setOf('a', 'f'))
-    }
-    Parser(Grammar()).apply {
-      registerListener(IntegerTestListener())
-      run("a").apply {
-        matched shouldBe true
-        matchedEntireInput shouldBe true
-        matchedInput shouldBe "a"
-        restOfInput shouldBe ""
-      }
-      run("c").apply {
-        matched shouldBe false
-        matchedEntireInput shouldBe false
-        matchedInput shouldBe null
-        restOfInput shouldBe "c"
+    ).forAll { grammar ->
+      Parser(grammar).apply {
+        registerListener(IntegerTestListener())
+        run("a").apply {
+          matched shouldBe true
+          matchedEntireInput shouldBe true
+          matchedInput shouldBe "a"
+          restOfInput shouldBe ""
+        }
+        run("c").apply {
+          matched shouldBe false
+          matchedEntireInput shouldBe false
+          matchedInput shouldBe null
+          restOfInput shouldBe "c"
+        }
       }
     }
-  }
-  "AnyOfChars (string) rule grammar" {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root() = anyOfChars("af")
-    }
-    Parser(Grammar()).apply {
-      registerListener(IntegerTestListener())
-      run("a").apply {
-        matched shouldBe true
-        matchedEntireInput shouldBe true
-        matchedInput shouldBe "a"
-        restOfInput shouldBe ""
-      }
-      run("c").apply {
-        matched shouldBe false
-        matchedEntireInput shouldBe false
-        matchedInput shouldBe null
-        restOfInput shouldBe "c"
-      }
-    }
-  }
-  "AnyOfChars (never) rule grammar" {
-    class Grammar : AbstractGrammar<Int>() {
+    Parser(object : AbstractGrammar<Int>() {
       override fun root() = anyOfChars()
-    }
-    Parser(Grammar()).apply {
+    }).apply {
       registerListener(IntegerTestListener())
       run("a").apply {
         matched shouldBe false
@@ -256,71 +217,37 @@ class AbstractGrammarTests : StringSpec({
       }
     }
   }
-  "NoneOfChars (vararg) rule grammar" {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root() = noneOfChars('a', 'f')
-    }
-    Parser(Grammar()).apply {
-      registerListener(IntegerTestListener())
-      run("c").apply {
-        matched shouldBe true
-        matchedEntireInput shouldBe true
-        matchedInput shouldBe "c"
-        restOfInput shouldBe ""
+  "NoneOfChars rule grammar" {
+    listOf(
+      object : AbstractGrammar<Int>() {
+        override fun root() = noneOfChars('a', 'f')
+      },
+      object : AbstractGrammar<Int>() {
+        override fun root() = noneOfChars(setOf('a', 'f'))
+      },
+      object : AbstractGrammar<Int>() {
+        override fun root() = noneOfChars("af")
       }
-      run("f").apply {
-        matched shouldBe false
-        matchedEntireInput shouldBe false
-        matchedInput shouldBe null
-        restOfInput shouldBe "f"
-      }
-    }
-  }
-  "NoneOfChars (set) rule grammar" {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root() = noneOfChars(setOf('a', 'f'))
-    }
-    Parser(Grammar()).apply {
-      registerListener(IntegerTestListener())
-      run("c").apply {
-        matched shouldBe true
-        matchedEntireInput shouldBe true
-        matchedInput shouldBe "c"
-        restOfInput shouldBe ""
-      }
-      run("f").apply {
-        matched shouldBe false
-        matchedEntireInput shouldBe false
-        matchedInput shouldBe null
-        restOfInput shouldBe "f"
+    ).forAll { grammar ->
+      Parser(grammar).apply {
+        registerListener(IntegerTestListener())
+        run("c").apply {
+          matched shouldBe true
+          matchedEntireInput shouldBe true
+          matchedInput shouldBe "c"
+          restOfInput shouldBe ""
+        }
+        run("f").apply {
+          matched shouldBe false
+          matchedEntireInput shouldBe false
+          matchedInput shouldBe null
+          restOfInput shouldBe "f"
+        }
       }
     }
-  }
-  "NoneOfChars (string) rule grammar" {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root() = noneOfChars("af")
-    }
-    Parser(Grammar()).apply {
-      registerListener(IntegerTestListener())
-      run("c").apply {
-        matched shouldBe true
-        matchedEntireInput shouldBe true
-        matchedInput shouldBe "c"
-        restOfInput shouldBe ""
-      }
-      run("f").apply {
-        matched shouldBe false
-        matchedEntireInput shouldBe false
-        matchedInput shouldBe null
-        restOfInput shouldBe "f"
-      }
-    }
-  }
-  "NoneOfChars (any) rule grammar" {
-    class Grammar : AbstractGrammar<Int>() {
+    Parser(object : AbstractGrammar<Int>() {
       override fun root() = noneOfChars()
-    }
-    Parser(Grammar()).apply {
+    }).apply {
       registerListener(IntegerTestListener())
       run("c").apply {
         matched shouldBe true
@@ -331,10 +258,9 @@ class AbstractGrammarTests : StringSpec({
     }
   }
   "CodePoint rule grammar" {
-    class Grammar : AbstractGrammar<Int>() {
+    Parser(object : AbstractGrammar<Int>() {
       override fun root() = codePoint("\uD835\uDD38".codePointAt(0))
-    }
-    Parser(Grammar()).apply {
+    }).apply {
       registerListener(IntegerTestListener())
       run("\uD835\uDD38").apply {
         matched shouldBe true
@@ -351,10 +277,9 @@ class AbstractGrammarTests : StringSpec({
     }
   }
   "CodePoint ignoreCase rule grammar" {
-    class Grammar : AbstractGrammar<Int>() {
+    Parser(object : AbstractGrammar<Int>() {
       override fun root() = ignoreCase('f'.toInt())
-    }
-    Parser(Grammar()).apply {
+    }).apply {
       registerListener(IntegerTestListener())
       run("F").apply {
         matched shouldBe true
@@ -371,10 +296,9 @@ class AbstractGrammarTests : StringSpec({
     }
   }
   "CodePointRange rule grammar" {
-    class Grammar : AbstractGrammar<Int>() {
+    Parser(object : AbstractGrammar<Int>() {
       override fun root() = codePointRange('Z'.toInt(), 'b'.toInt())
-    }
-    Parser(Grammar()).apply {
+    }).apply {
       registerListener(IntegerTestListener())
       run("a").apply {
         matched shouldBe true
@@ -389,11 +313,175 @@ class AbstractGrammarTests : StringSpec({
         restOfInput shouldBe "X"
       }
     }
-    class InvalidGrammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> = codePointRange('b'.toInt(), 'a'.toInt())
-    }
     shouldThrow<IllegalArgumentException> {
-      Parser(InvalidGrammar())
+      Parser(object : AbstractGrammar<Int>() {
+        override fun root(): Rule<Int> = codePointRange('b'.toInt(), 'a'.toInt())
+      })
+    }
+  }
+  "AnyOfCodePoints rule grammar" {
+    listOf(
+      object : AbstractGrammar<Int>() {
+        override fun root() = anyOfCodePoints('a'.toInt(), "\uD835\uDD38".codePointAt(0))
+      },
+      object : AbstractGrammar<Int>() {
+        override fun root() = anyOfCodePoints(setOf('a'.toInt(), "\uD835\uDD38".codePointAt(0)))
+      },
+      object : AbstractGrammar<Int>() {
+        override fun root() = anyOfCodePoints("\uD835\uDD38")
+      }
+    ).forAll { grammar ->
+      Parser(grammar).apply {
+        registerListener(IntegerTestListener())
+        run("\uD835\uDD38").apply {
+          matched shouldBe true
+          matchedEntireInput shouldBe true
+          matchedInput shouldBe "\uD835\uDD38"
+          restOfInput shouldBe ""
+        }
+        run("b").apply {
+          matched shouldBe false
+          matchedEntireInput shouldBe false
+          matchedInput shouldBe null
+          restOfInput shouldBe "b"
+        }
+      }
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = anyOfCodePoints("")
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("b").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "b"
+      }
+    }
+  }
+  "NoneOfCodePoints rule grammar" {
+    listOf(
+      object : AbstractGrammar<Int>() {
+        override fun root() = noneOfCodePoints('a'.toInt(), "\uD835\uDD38".codePointAt(0))
+      },
+      object : AbstractGrammar<Int>() {
+        override fun root() = noneOfCodePoints(setOf('a'.toInt(), "\uD835\uDD38".codePointAt(0)))
+      },
+      object : AbstractGrammar<Int>() {
+        override fun root() = noneOfCodePoints("a\uD835\uDD38")
+      }
+    ).forAll { grammar ->
+      Parser(grammar).apply {
+        registerListener(IntegerTestListener())
+        run("b").apply {
+          matched shouldBe true
+          matchedEntireInput shouldBe true
+          matchedInput shouldBe "b"
+          restOfInput shouldBe ""
+        }
+        run("\uD835\uDD38").apply {
+          matched shouldBe false
+          matchedEntireInput shouldBe false
+          matchedInput shouldBe null
+          restOfInput shouldBe "\uD835\uDD38"
+        }
+      }
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = noneOfCodePoints("")
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("b").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "b"
+        restOfInput shouldBe ""
+      }
+    }
+  }
+  "String rule grammar" {
+    checkAll(Arb.string(1..100), Arb.string(0..100)) { prefix, suffix ->
+      Parser(object : AbstractGrammar<Int>() {
+        override fun root() = string(prefix)
+      }).apply {
+        registerListener(IntegerTestListener())
+        run("$prefix$suffix").apply {
+          matched shouldBe true
+          matchedEntireInput shouldBe suffix.isEmpty()
+          matchedInput shouldBe prefix
+          restOfInput shouldBe suffix
+        }
+      }
+    }
+    Arb.string(1..100).checkAll { suffix ->
+      Parser(object : AbstractGrammar<Int>() {
+        override fun root() = string("")
+      }).apply {
+        registerListener(IntegerTestListener())
+        run(suffix).apply {
+          matched shouldBe true
+          matchedEntireInput shouldBe suffix.isEmpty()
+          matchedInput shouldBe ""
+          restOfInput shouldBe suffix
+        }
+      }
+    }
+    checkAll(Arb.string(1..100), Arb.string(0..100)) { str, input ->
+      Parser(object : AbstractGrammar<Int>() {
+        override fun root() = string(str)
+      }).apply {
+        registerListener(IntegerTestListener())
+        val equals = str == input
+        run(input).apply {
+          matched shouldBe equals
+          matchedEntireInput shouldBe equals
+          matchedInput shouldBe if (equals) input else null
+          restOfInput shouldBe if (equals) "" else input
+        }
+      }
+    }
+  }
+  "IgnoreCase rule grammar" {
+    checkAll(Arb.string(1..100), Arb.string(0..100)) { prefix, suffix ->
+      Parser(object : AbstractGrammar<Int>() {
+        override fun root() = ignoreCase(prefix)
+      }).apply {
+        registerListener(IntegerTestListener())
+        run("${prefix.toUpperCase()}$suffix").apply {
+          matched shouldBe true
+          matchedEntireInput shouldBe suffix.isEmpty()
+          matchedInput shouldBe prefix.toUpperCase()
+          restOfInput shouldBe suffix
+        }
+      }
+    }
+    Arb.string(1..100).checkAll { suffix ->
+      Parser(object : AbstractGrammar<Int>() {
+        override fun root() = ignoreCase("")
+      }).apply {
+        registerListener(IntegerTestListener())
+        run(suffix).apply {
+          matched shouldBe true
+          matchedEntireInput shouldBe suffix.isEmpty()
+          matchedInput shouldBe ""
+          restOfInput shouldBe suffix
+        }
+      }
+    }
+    checkAll(Arb.string(1..100), Arb.string(0..100)) { str, input ->
+      Parser(object : AbstractGrammar<Int>() {
+        override fun root() = ignoreCase(str)
+      }).apply {
+        registerListener(IntegerTestListener())
+        val equals = str.equals(input, true)
+        val upperCase = input.toUpperCase()
+        run(upperCase).apply {
+          matched shouldBe equals
+          matchedEntireInput shouldBe equals
+          matchedInput shouldBe if (equals) upperCase else null
+          restOfInput shouldBe if (equals) "" else upperCase
+        }
+      }
     }
   }
 })
@@ -403,295 +491,6 @@ class AbstractGrammarTests : StringSpec({
   justification = "Performance is not of great importance in unit tests."
 )
 class AbstractGrammarTest {
-
-  @Test
-  fun anyOfCodePoint_valid_vararg() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return anyOfCodePoints('a'.toInt(), "\uD835\uDD38".codePointAt(0))
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("\uD835\uDD38")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("\uD835\uDD38", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun anyOfCodePoint_valid_set() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return anyOfCodePoints(setOf('a'.toInt(), "\uD835\uDD38".codePointAt(0)))
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("\uD835\uDD38")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("\uD835\uDD38", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun anyOfCodePoint_valid_string() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return anyOfCodePoints("\uD835\uDD38")
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("\uD835\uDD38")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("\uD835\uDD38", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun anyOfCodePoints_invalid_wrongCp() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return anyOfCodePoints('a'.toInt(), "\uD835\uDD38".codePointAt(0))
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("b")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("b", result.restOfInput)
-  }
-
-  @Test
-  fun anyOfCodePoints_invalid_never() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return anyOfCodePoints("")
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("b")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("b", result.restOfInput)
-  }
-
-  @Test
-  fun noneOfCodePoints_valid_vararg() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return noneOfCodePoints('a'.toInt(), "\uD835\uDD38".codePointAt(0))
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("b")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("b", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun noneOfCodePoints_valid_string() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return noneOfCodePoints("a\uD835\uDD38")
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("b")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("b", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun noneOfCodePoints_valid_set() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return noneOfCodePoints(setOf('a'.toInt(), "\uD835\uDD38".codePointAt(0)))
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("b")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("b", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun noneOfCodePoints_valid_any() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return noneOfCodePoints()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("b")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("b", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun noneOfCodePoints_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return noneOfCodePoints('a'.toInt(), "\uD835\uDD38".codePointAt(0))
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("\uD835\uDD38")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("\uD835\uDD38", result.restOfInput)
-  }
-
-  @Test
-  fun string_valid_nonEmpty() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return string("foobar")
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("foobart")
-    assertTrue(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertEquals("foobar", result.matchedInput)
-    assertEquals("t", result.restOfInput)
-  }
-
-  @Test
-  fun string_valid_empty() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return string("")
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("abc")
-    assertTrue(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertEquals("", result.matchedInput)
-    assertEquals("abc", result.restOfInput)
-  }
-
-  @Test
-  fun string_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return string("foobar")
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("foobär")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("foobär", result.restOfInput)
-  }
-
-  @Test
-  fun ignoreCase_string_valid_nonEmpty() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return ignoreCase("foobar")
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("fOObAr")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("fOObAr", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun ignoreCase_string_valid_empty() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return ignoreCase("")
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("aBc")
-    assertTrue(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertEquals("", result.matchedInput)
-    assertEquals("aBc", result.restOfInput)
-  }
-
-  @Test
-  fun ignoreCase_string_valid_oneChar() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return ignoreCase("c")
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("c")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("c", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun ignoreCase_string_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return string("fOObAr")
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("fOObÄr")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("fOObÄr", result.restOfInput)
-  }
 
   @Test
   fun regex_valid() {
