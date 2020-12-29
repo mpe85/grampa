@@ -10,6 +10,7 @@ import com.mpe85.grampa.rule.Action
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.impl.ActionRule
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import java.util.concurrent.atomic.AtomicReference
@@ -322,6 +323,72 @@ class AbstractGrammarTests : StringSpec({
       }
     }
   }
+  "CodePoint rule grammar" {
+    class Grammar : AbstractGrammar<Int>() {
+      override fun root() = codePoint("\uD835\uDD38".codePointAt(0))
+    }
+    Parser(Grammar()).apply {
+      registerListener(IntegerTestListener())
+      run("\uD835\uDD38").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "\uD835\uDD38"
+        restOfInput shouldBe ""
+      }
+      run("\uD835\uDD39").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "\uD835\uDD39"
+      }
+    }
+  }
+  "CodePoint ignoreCase rule grammar" {
+    class Grammar : AbstractGrammar<Int>() {
+      override fun root() = ignoreCase('f'.toInt())
+    }
+    Parser(Grammar()).apply {
+      registerListener(IntegerTestListener())
+      run("F").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "F"
+        restOfInput shouldBe ""
+      }
+      run("G").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "G"
+      }
+    }
+  }
+  "CodePointRange rule grammar" {
+    class Grammar : AbstractGrammar<Int>() {
+      override fun root() = codePointRange('Z'.toInt(), 'b'.toInt())
+    }
+    Parser(Grammar()).apply {
+      registerListener(IntegerTestListener())
+      run("a").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "a"
+        restOfInput shouldBe ""
+      }
+      run("X").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "X"
+      }
+    }
+    class InvalidGrammar : AbstractGrammar<Int>() {
+      override fun root(): Rule<Int> = codePointRange('b'.toInt(), 'a'.toInt())
+    }
+    shouldThrow<IllegalArgumentException> {
+      Parser(InvalidGrammar())
+    }
+  }
 })
 
 @SuppressFBWarnings(
@@ -329,120 +396,6 @@ class AbstractGrammarTests : StringSpec({
   justification = "Performance is not of great importance in unit tests."
 )
 class AbstractGrammarTest {
-
-  @Test
-  fun codePoint_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return codePoint("\uD835\uDD38".codePointAt(0))
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("\uD835\uDD38")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("\uD835\uDD38", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun codePoint_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return codePoint("\uD835\uDD38".codePointAt(0))
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("\uD835\uDD39")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("\uD835\uDD39", result.restOfInput)
-  }
-
-  @Test
-  fun ignoreCase_codePoint_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return ignoreCase('f'.toInt())
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("F")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("F", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun ignoreCase_codePoint_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return ignoreCase('f'.toInt())
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("G")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("G", result.restOfInput)
-  }
-
-  @Test
-  fun codePointRange_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return codePointRange('Z'.toInt(), 'b'.toInt())
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("a")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("a", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun codePointRange_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return codePointRange('Z'.toInt(), 'b'.toInt())
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("X")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("X", result.restOfInput)
-  }
-
-  @Test
-  fun codePointRange_illegalArgument() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return codePointRange('b'.toInt(), 'a'.toInt())
-      }
-    }
-    assertThrows(IllegalArgumentException::class.java) {
-      Parser(Grammar()).run("a")
-    }
-  }
 
   @Test
   fun anyOfCodePoint_valid_vararg() {
