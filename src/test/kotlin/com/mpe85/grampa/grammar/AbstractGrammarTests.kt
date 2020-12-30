@@ -483,6 +483,25 @@ class AbstractGrammarTests : StringSpec({
       }
     }
   }
+  "Regex rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = regex("abc+")
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("abcccccd").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe "abccccc"
+        restOfInput shouldBe "d"
+      }
+      run("ab").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "ab"
+      }
+    }
+  }
 })
 
 @SuppressFBWarnings(
@@ -490,40 +509,6 @@ class AbstractGrammarTests : StringSpec({
   justification = "Performance is not of great importance in unit tests."
 )
 class AbstractGrammarTest {
-
-  @Test
-  fun regex_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return regex("abc+")
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("abcccccd")
-    assertTrue(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertEquals("abccccc", result.matchedInput)
-    assertEquals("d", result.restOfInput)
-  }
-
-  @Test
-  fun regex_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return string("abc+")
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("ab")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("ab", result.restOfInput)
-  }
 
   @Test
   fun strings_valid_vararg() {
