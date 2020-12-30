@@ -426,21 +426,19 @@ class AbstractGrammarTests : StringSpec({
         }
       }
     }
-    // TODO Requires refactoring (substring matches)
-    /*checkAll(Arb.string(1..100), Arb.string(0..100)) { str, input ->
+    checkAll(Arb.string(1..100), Arb.string(0..100)) { str, input ->
       Parser(object : AbstractGrammar<Int>() {
         override fun root() = string(str)
       }).apply {
         registerListener(IntegerTestListener())
-        val equals = str == input
         run(input).apply {
-          matched shouldBe equals
-          matchedEntireInput shouldBe equals
-          matchedInput shouldBe if (equals) input else null
-          restOfInput shouldBe if (equals) "" else input
+          matched shouldBe input.startsWith(str)
+          matchedEntireInput shouldBe (str == input)
+          matchedInput shouldBe if (input.startsWith(str)) str else null
+          restOfInput shouldBe if (input.startsWith(str)) input.removePrefix(str) else input
         }
       }
-    }*/
+    }
   }
   "IgnoreCase rule grammar" {
     checkAll(Arb.string(1..100), Arb.string(0..100)) { prefix, suffix ->
@@ -469,22 +467,21 @@ class AbstractGrammarTests : StringSpec({
         }
       }
     }
-    // TODO Requires refactoring (substring matches)
-    /*checkAll(Arb.string(1..100), Arb.string(0..100)) { str, input ->
+    checkAll(Arb.string(1..100), Arb.string(0..100)) { str, input ->
       Parser(object : AbstractGrammar<Int>() {
         override fun root() = ignoreCase(str)
       }).apply {
         registerListener(IntegerTestListener())
-        val equals = str.equals(input, true)
-        val upperCase = input.toUpperCase()
-        run(upperCase).apply {
-          matched shouldBe equals
-          matchedEntireInput shouldBe equals
-          matchedInput shouldBe if (equals) upperCase else null
-          restOfInput shouldBe if (equals) "" else upperCase
+        run(input).apply {
+          matched shouldBe input.toUpperCase().startsWith(str.toUpperCase())
+          matchedEntireInput shouldBe (str == input)
+          matchedInput?.toString()?.toUpperCase() shouldBe if (input.toUpperCase().startsWith(str.toUpperCase()))
+            str.toUpperCase() else null
+          restOfInput.toString().toUpperCase() shouldBe if (input.toUpperCase().startsWith(str.toUpperCase()))
+            input.toUpperCase().removePrefix(str.toUpperCase()) else input.toUpperCase()
         }
       }
-    }*/
+    }
   }
 })
 
