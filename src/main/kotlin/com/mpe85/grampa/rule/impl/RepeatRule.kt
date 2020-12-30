@@ -40,3 +40,19 @@ class RepeatRule<T>(private val rule: Rule<T>, private val min: Int, private val
   override fun toString() = stringify("rule" to rule, "min" to min, "max" to max)
 
 }
+
+/**
+ * Repeat a rule exactly n times.
+ *
+ * @param[rule] The rule to repeat
+ * @return A [RepeatRule]
+ */
+operator fun <T> Int.times(rule: Rule<T>) = RepeatRule(rule, this, this)
+
+/**
+ * Repeat a rule between n and m times.
+ *
+ * @param[rule] The rule to repeat
+ * @return A [RepeatRule]
+ */
+operator fun <T> IntRange.times(rule: Rule<T>) = RepeatRule(rule, this.first, this.last)
