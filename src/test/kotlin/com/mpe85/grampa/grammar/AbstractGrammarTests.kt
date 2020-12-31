@@ -17,7 +17,6 @@ import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
 import io.kotest.property.arbitrary.string
 import io.kotest.property.checkAll
-import java.util.concurrent.atomic.AtomicReference
 import org.greenrobot.eventbus.Subscribe
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -440,7 +439,7 @@ class AbstractGrammarTests : StringSpec({
       }
     }
   }
-  "IgnoreCase rule grammar" {
+  "StringIgnoreCase rule grammar" {
     checkAll(Arb.string(1..100), Arb.string(0..100)) { prefix, suffix ->
       Parser(object : AbstractGrammar<Int>() {
         override fun root() = ignoreCase(prefix)
@@ -502,6 +501,80 @@ class AbstractGrammarTests : StringSpec({
       }
     }
   }
+  "Strings rule grammar" {
+    listOf(
+      object : AbstractGrammar<Int>() {
+        override fun root() = strings("football", "foo", "foobar")
+      },
+      object : AbstractGrammar<Int>() {
+        override fun root() = strings(setOf("foo"))
+      }
+    ).forAll { grammar ->
+      Parser(grammar).apply {
+        registerListener(IntegerTestListener())
+        run("foobaz").apply {
+          matched shouldBe true
+          matchedEntireInput shouldBe false
+          matchedInput shouldBe "foo"
+          restOfInput shouldBe "baz"
+        }
+        run("fo").apply {
+          matched shouldBe false
+          matchedEntireInput shouldBe false
+          matchedInput shouldBe null
+          restOfInput shouldBe "fo"
+        }
+      }
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = strings(emptySet())
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("fO").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "fO"
+      }
+    }
+  }
+  "StringsIgnoreCase rule grammar" {
+    listOf(
+      object : AbstractGrammar<Int>() {
+        override fun root() = ignoreCase("football", "foo", "foobar")
+      },
+      object : AbstractGrammar<Int>() {
+        override fun root() = ignoreCase(setOf("foo"))
+      }
+    ).forAll { grammar ->
+      Parser(grammar).apply {
+        registerListener(IntegerTestListener())
+        run("fOObaz").apply {
+          matched shouldBe true
+          matchedEntireInput shouldBe false
+          matchedInput shouldBe "fOO"
+          restOfInput shouldBe "baz"
+        }
+        run("fO").apply {
+          matched shouldBe false
+          matchedEntireInput shouldBe false
+          matchedInput shouldBe null
+          restOfInput shouldBe "fO"
+        }
+      }
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = ignoreCase(emptySet())
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("fO").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "fO"
+      }
+    }
+  }
 })
 
 @SuppressFBWarnings(
@@ -509,170 +582,6 @@ class AbstractGrammarTests : StringSpec({
   justification = "Performance is not of great importance in unit tests."
 )
 class AbstractGrammarTest {
-
-  @Test
-  fun strings_valid_vararg() {
-    val stringsRuleMatch = AtomicReference<CharSequence?>()
-
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence(
-          strings("football", "foo", "foobar"),
-          command { ctx: RuleContext<Int> -> stringsRuleMatch.set(ctx.previousMatch) },
-          string("baz")
-        )
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("foobaz")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("foobaz", result.matchedInput)
-    assertEquals("", result.restOfInput)
-    assertEquals("foo", stringsRuleMatch.get())
-  }
-
-  @Test
-  fun strings_valid_set_oneString() {
-    val stringsRuleMatch = AtomicReference<CharSequence?>()
-
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence(
-          strings("foo"),
-          command { ctx: RuleContext<Int> -> stringsRuleMatch.set(ctx.previousMatch) },
-          string("baz")
-        )
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("foobaz")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("foobaz", result.matchedInput)
-    assertEquals("", result.restOfInput)
-    assertEquals("foo", stringsRuleMatch.get())
-  }
-
-  @Test
-  fun strings_invalid_vararg() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return strings("football", "foo", "foobar")
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("fo")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("fo", result.restOfInput)
-  }
-
-  @Test
-  fun strings_invalid_set_empty() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return strings(setOf())
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("fo")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("fo", result.restOfInput)
-  }
-
-  @Test
-  fun ignoreCase_strings_valid_vararg() {
-    val stringsRuleMatch = AtomicReference<CharSequence?>()
-
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence(
-          ignoreCase("football", "foo", "foobar"),
-          command { ctx: RuleContext<Int> -> stringsRuleMatch.set(ctx.previousMatch) },
-          string("baz")
-        )
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("fOObaz")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("fOObaz", result.matchedInput)
-    assertEquals("", result.restOfInput)
-    assertEquals("fOO", stringsRuleMatch.get())
-  }
-
-  @Test
-  fun ignoreCase_strings_valid_set_oneString() {
-    val stringsRuleMatch = AtomicReference<CharSequence?>()
-
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence(
-          ignoreCase(setOf("foo")),
-          command { ctx: RuleContext<Int> -> stringsRuleMatch.set(ctx.previousMatch) },
-          string("baz")
-        )
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("fOObaz")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("fOObaz", result.matchedInput)
-    assertEquals("", result.restOfInput)
-    assertEquals("fOO", stringsRuleMatch.get())
-  }
-
-  @Test
-  fun ignoreCase_strings_invalid_vararg() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return ignoreCase("football", "foo", "foobar")
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("fO")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("fO", result.restOfInput)
-  }
-
-  @Test
-  fun ignoreCase_strings_invalid_set_empty() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return ignoreCase(setOf())
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("fO")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("fO", result.restOfInput)
-  }
 
   @Test
   fun ascii_valid() {
