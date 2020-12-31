@@ -2,6 +2,7 @@ package com.mpe85.grampa.rule.impl
 
 import com.mpe85.grampa.context.ParserContext
 import com.mpe85.grampa.rule.Rule
+import com.mpe85.grampa.util.UnboundedRange
 import com.mpe85.grampa.util.checkEquality
 import com.mpe85.grampa.util.stringify
 import java.util.Objects.hash
@@ -55,4 +56,12 @@ operator fun <T> Int.times(rule: Rule<T>) = RepeatRule(rule, this, this)
  * @param[rule] The rule to repeat
  * @return A [RepeatRule]
  */
-operator fun <T> IntRange.times(rule: Rule<T>) = RepeatRule(rule, this.first, this.last)
+operator fun <T> IntRange.times(rule: Rule<T>) = RepeatRule(rule, first, last)
+
+/**
+ * Repeat a rule between n and m times where m may be unbounded.
+ *
+ * @param[rule] The rule to repeat
+ * @return A [RepeatRule]
+ */
+operator fun <T> UnboundedRange.times(rule: Rule<T>) = RepeatRule(rule, min, max)
