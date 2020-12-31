@@ -1,8 +1,6 @@
-package com.mpe85.grampa.input.impl
+package com.mpe85.grampa.rule.impl
 
 import com.mpe85.grampa.rule.Rule
-import com.mpe85.grampa.rule.impl.EmptyRule
-import com.mpe85.grampa.rule.impl.RepeatRule
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotEquals

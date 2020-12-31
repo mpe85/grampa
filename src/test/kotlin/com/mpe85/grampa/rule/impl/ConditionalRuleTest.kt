@@ -1,9 +1,6 @@
-package com.mpe85.grampa.input.impl
+package com.mpe85.grampa.rule.impl
 
 import com.mpe85.grampa.context.RuleContext
-import com.mpe85.grampa.rule.impl.ConditionalRule
-import com.mpe85.grampa.rule.impl.EmptyRule
-import com.mpe85.grampa.rule.impl.NeverRule
 import java.util.function.Predicate
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

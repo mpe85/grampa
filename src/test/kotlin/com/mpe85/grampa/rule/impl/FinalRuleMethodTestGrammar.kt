@@ -1,4 +1,4 @@
-package com.mpe85.grampa.input.impl
+package com.mpe85.grampa.rule.impl
 
 import com.mpe85.grampa.TestGrammar
 

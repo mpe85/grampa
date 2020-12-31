@@ -1,7 +1,5 @@
-package com.mpe85.grampa.input.impl
+package com.mpe85.grampa.context.impl
 
-import com.mpe85.grampa.context.impl.Context
-import com.mpe85.grampa.context.impl.ContextState
 import com.mpe85.grampa.input.InputBuffer
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.stack.RestorableStack
