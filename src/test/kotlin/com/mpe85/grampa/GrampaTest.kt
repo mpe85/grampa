@@ -3,7 +3,6 @@ package com.mpe85.grampa
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.impl.CharPredicateRule
 import com.mpe85.grampa.rule.impl.EmptyRule
-import com.mpe85.grampa.rule.impl.FinalRuleMethodTestGrammar
 import com.mpe85.grampa.rule.impl.FirstOfRule
 import com.mpe85.grampa.rule.impl.SequenceRule
 import org.junit.jupiter.api.Assertions.assertEquals

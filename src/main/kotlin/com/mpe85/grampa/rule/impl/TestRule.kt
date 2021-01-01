@@ -2,7 +2,9 @@ package com.mpe85.grampa.rule.impl
 
 import com.mpe85.grampa.context.ParserContext
 import com.mpe85.grampa.rule.Rule
+import com.mpe85.grampa.util.checkEquality
 import com.mpe85.grampa.util.stringify
+import java.util.Objects.hash
 
 /**
  * A predicate rule implementation that tests if its child rule matches.
@@ -27,6 +29,8 @@ class TestRule<T>(private var rule: Rule<T>) : AbstractRule<T>(rule) {
     return false
   }
 
+  override fun hashCode() = hash(super.hashCode())
+  override fun equals(other: Any?) = checkEquality(other, { super.equals(other) })
   override fun toString() = stringify("rule" to rule)
 
 }

@@ -1,6 +1,4 @@
-package com.mpe85.grampa.rule.impl
-
-import com.mpe85.grampa.TestGrammar
+package com.mpe85.grampa
 
 class FinalRuleMethodTestGrammar : TestGrammar() {
   override fun noop() = empty()
