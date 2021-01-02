@@ -1,72 +1,47 @@
 package com.mpe85.grampa.intercept
 
-import com.mpe85.grampa.context.ParserContext
 import com.mpe85.grampa.rule.ReferenceRule
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.impl.EmptyRule
+import io.kotest.assertions.throwables.shouldNotThrowAny
+import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.types.shouldBeInstanceOf
+import io.mockk.mockk
 import java.util.concurrent.Callable
-import org.junit.jupiter.api.Assertions.assertDoesNotThrow
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertNotEquals
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
-import org.junit.jupiter.api.extension.ExtendWith
-import org.junit.jupiter.api.function.ThrowingSupplier
-import org.mockito.Mock
-import org.mockito.junit.jupiter.MockitoExtension
 
-@TestInstance(PER_CLASS)
-@ExtendWith(MockitoExtension::class)
-class ReferenceRuleTest {
-
-  internal class RuleMethods : Callable<Rule<Int>> {
-    fun rule1(): Rule<Int> {
-      return EmptyRule()
-    }
-
-    fun rule2(): Rule<Int> {
-      return EmptyRule()
-    }
-
-    @Throws(Exception::class)
-    override fun call(): Rule<Int> {
-      return EmptyRule()
-    }
+class ReferenceRuleTests : StringSpec({
+  class RuleMethods : Callable<Rule<Int>> {
+    fun rule1() = EmptyRule<Int>()
+    fun rule2() = EmptyRule<Int>()
+    override fun call() = EmptyRule<Int>()
   }
 
-  @Test
-  fun equalsHashCodeToString() {
+  fun createReferenceRule(ruleMethod: String): ReferenceRule<Int> {
+    val intercept = RuleMethodInterceptor<Int>().let {
+      { it.intercept(RuleMethods::class.java.getDeclaredMethod(ruleMethod), RuleMethods()) }
+    }
+    shouldNotThrowAny { intercept() }
+    // The second intercept will cause the creation of a ReferenceRule
+    val rule = shouldNotThrowAny { intercept() }
+    rule.shouldBeInstanceOf<ReferenceRule<Int>>()
+    return rule
+  }
+  "equals/hashCode/ToString" {
     val rule1 = createReferenceRule("rule1")
     val rule2 = createReferenceRule("rule1")
     val rule3 = createReferenceRule("rule2")
-    assertEquals(rule1, rule2)
-    assertNotEquals(rule1, rule3)
-    assertNotEquals(rule1, Any())
-    assertEquals(rule1.hashCode(), rule2.hashCode())
-    assertNotEquals(rule1.hashCode(), rule3.hashCode())
-    assertEquals("ReferenceRuleImpl(referencedRuleHash=${rule1.referencedRuleHash})", rule1.toString())
-    assertEquals("ReferenceRuleImpl(referencedRuleHash=${rule2.referencedRuleHash})", rule2.toString())
-    assertEquals("ReferenceRuleImpl(referencedRuleHash=${rule3.referencedRuleHash})", rule3.toString())
+    rule1 shouldBe rule2
+    rule1 shouldNotBe rule3
+    rule1 shouldNotBe Any()
+    rule1.hashCode() shouldBe rule2.hashCode()
+    rule1.hashCode() shouldNotBe rule3.hashCode()
+    rule1.toString() shouldBe "ReferenceRuleImpl(referencedRuleHash=${rule1.referencedRuleHash})"
+    rule2.toString() shouldBe "ReferenceRuleImpl(referencedRuleHash=${rule2.referencedRuleHash})"
+    rule3.toString() shouldBe "ReferenceRuleImpl(referencedRuleHash=${rule3.referencedRuleHash})"
   }
-
-  @Test
-  fun match(@Mock ctx: ParserContext<Int>) {
-    val rule = createReferenceRule("rule1")
-    assertFalse(rule.match(ctx))
+  "Rule match" {
+    createReferenceRule("rule1").match(mockk()) shouldBe false
   }
-
-  private fun createReferenceRule(ruleMethod: String): ReferenceRule<Int> {
-    val interceptor = RuleMethodInterceptor<Int>()
-    val supplier = ThrowingSupplier {
-      interceptor.intercept(RuleMethods::class.java.getDeclaredMethod(ruleMethod), RuleMethods())
-    }
-    assertDoesNotThrow(supplier)
-    val rule = assertDoesNotThrow(supplier)
-    assertTrue(rule is ReferenceRule<*>)
-    return rule as ReferenceRule<Int>
-  }
-
-}
+})
