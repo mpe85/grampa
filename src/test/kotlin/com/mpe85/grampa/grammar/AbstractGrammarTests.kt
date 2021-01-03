@@ -2071,7 +2071,7 @@ class AbstractGrammarTest {
 
     val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
-    assertThrows(IndexOutOfBoundsException::class.java) { runner.run("whatever") }
+    assertThrows(NoSuchElementException::class.java) { runner.run("whatever") }
   }
 
   @Test
