@@ -28,7 +28,7 @@ open class LinkedListStack<E> : LinkedList<E>, Stack<E> {
 
   override fun pop(down: Int) = removeAt(down)
 
-  override fun peek() = get(0)
+  override fun peek(): E = first
 
   override fun peek(down: Int) = get(down)
 
@@ -36,7 +36,7 @@ open class LinkedListStack<E> : LinkedList<E>, Stack<E> {
 
   override fun poke(down: Int, element: E) = set(down, element)
 
-  override fun dup() = push(get(0))
+  override fun dup() = push(first)
 
   override fun swap() = swap(this, 0, 1)
 
