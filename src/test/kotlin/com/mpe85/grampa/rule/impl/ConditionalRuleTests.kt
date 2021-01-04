@@ -22,9 +22,9 @@ class ConditionalRuleTests : StringSpec({
     rule1 shouldNotBe Any()
     rule1.hashCode() shouldBe rule2.hashCode()
     rule1.hashCode() shouldNotBe rule3.hashCode()
-    rule1.toString() shouldBe "ConditionalRule(condition=fun java.util.function.Predicate<T>.test(T): kotlin.Boolean, thenRule=EmptyRule(), elseRule=NeverRule())"
-    rule2.toString() shouldBe "ConditionalRule(condition=fun java.util.function.Predicate<T>.test(T): kotlin.Boolean, thenRule=EmptyRule(), elseRule=NeverRule())"
-    rule3.toString() shouldBe "ConditionalRule(condition=fun java.util.function.Predicate<T>.test(T): kotlin.Boolean, thenRule=EmptyRule(), elseRule=null)"
+    rule1.toString() shouldBe "ConditionalRule(condition=fun java.util.function.Predicate<T>.test(T): kotlin.Boolean, thenRule=EmptyRule, elseRule=NeverRule)"
+    rule2.toString() shouldBe "ConditionalRule(condition=fun java.util.function.Predicate<T>.test(T): kotlin.Boolean, thenRule=EmptyRule, elseRule=NeverRule)"
+    rule3.toString() shouldBe "ConditionalRule(condition=fun java.util.function.Predicate<T>.test(T): kotlin.Boolean, thenRule=EmptyRule, elseRule=null)"
   }
   "Rule match" {
     val ctx = mockk<ParserContext<String>>().apply {
