@@ -19,7 +19,7 @@ class SequenceRule<T>(rules: List<Rule<T>>) : AbstractRule<T>(rules) {
 
   override fun hashCode() = hash(super.hashCode())
   override fun equals(other: Any?) = checkEquality(other, { super.equals(other) })
-  override fun toString() = stringify("children" to children)
+  override fun toString() = stringify("#children" to children.size)
 
 }
 
