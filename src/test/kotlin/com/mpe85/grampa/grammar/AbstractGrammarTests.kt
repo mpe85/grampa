@@ -9,6 +9,7 @@ import com.mpe85.grampa.parser.Parser
 import com.mpe85.grampa.rule.Action
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.impl.ActionRule
+import com.mpe85.grampa.rule.impl.plus
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
@@ -828,6 +829,25 @@ class AbstractGrammarTests : StringSpec({
       }
     }
   }
+  "Sequence rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = character('a') + character('b') + character('c')
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("abcd").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe "abc"
+        restOfInput shouldBe "d"
+      }
+      run("acdc").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "acdc"
+      }
+    }
+  }
 })
 
 @SuppressFBWarnings(
@@ -835,27 +855,6 @@ class AbstractGrammarTests : StringSpec({
   justification = "Performance is not of great importance in unit tests."
 )
 class AbstractGrammarTest {
-
-  @Test
-  fun sequence_valid_character() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence(
-          character('a'),
-          character('b'),
-          character('c')
-        )
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("abcd")
-    assertTrue(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertEquals("abc", result.matchedInput)
-    assertEquals("d", result.restOfInput)
-  }
 
   @Test
   fun sequence_valid_empty() {
@@ -901,27 +900,6 @@ class AbstractGrammarTest {
     assertEquals(2, result.stack.size)
     assertEquals(Integer.valueOf(9426), result.stack.peek())
     assertEquals(Integer.valueOf(4715), result.stack.peek(1))
-  }
-
-  @Test
-  fun sequence_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence(
-          character('a'),
-          character('b'),
-          character('c')
-        )
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("acdc")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("acdc", result.restOfInput)
   }
 
   @Test
