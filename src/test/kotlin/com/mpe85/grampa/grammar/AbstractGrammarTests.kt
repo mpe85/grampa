@@ -575,6 +575,259 @@ class AbstractGrammarTests : StringSpec({
       }
     }
   }
+  "ASCII rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = ascii()
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("#").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "#"
+        restOfInput shouldBe ""
+      }
+      run("ß").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "ß"
+      }
+    }
+  }
+  "BMP rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = bmp()
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("ß").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "ß"
+        restOfInput shouldBe ""
+      }
+      run("\uD835\uDD38").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "\uD835\uDD38"
+      }
+    }
+  }
+  "Digit rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = digit()
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("5").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "5"
+        restOfInput shouldBe ""
+      }
+      run("O").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "O"
+      }
+    }
+  }
+  "JavaIdentifierStart rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = javaIdentifierStart()
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("ä").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "ä"
+        restOfInput shouldBe ""
+      }
+      run("1").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "1"
+      }
+    }
+  }
+  "JavaIdentifierPart rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = javaIdentifierPart()
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("1").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "1"
+        restOfInput shouldBe ""
+      }
+      run("(").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "("
+      }
+    }
+  }
+  "Letter rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = letter()
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("Ü").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "Ü"
+        restOfInput shouldBe ""
+      }
+      run("$").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "$"
+      }
+    }
+  }
+  "LetterOrDigit rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = letterOrDigit()
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("x").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "x"
+        restOfInput shouldBe ""
+      }
+      run("9").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "9"
+        restOfInput shouldBe ""
+      }
+      run("%").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "%"
+      }
+    }
+  }
+  "Printable rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = printable()
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("n").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "n"
+        restOfInput shouldBe ""
+      }
+      run("\n").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "\n"
+      }
+    }
+  }
+  "SpaceChar rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = spaceChar()
+    }).apply {
+      registerListener(IntegerTestListener())
+      run(" ").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe " "
+        restOfInput shouldBe ""
+      }
+      run("\n").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "\n"
+      }
+    }
+  }
+  "Whitespace rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = whitespace()
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("\n").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "\n"
+        restOfInput shouldBe ""
+      }
+      run("_").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "_"
+      }
+    }
+  }
+  "CR rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = cr()
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("\r").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "\r"
+        restOfInput shouldBe ""
+      }
+      run("\n").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "\n"
+      }
+    }
+  }
+  "LF rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = lf()
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("\n").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "\n"
+        restOfInput shouldBe ""
+      }
+      run("\r").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "\r"
+      }
+    }
+  }
+  "CRLF rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = crlf()
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("\r\n").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "\r\n"
+        restOfInput shouldBe ""
+      }
+      run("\n\r").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "\n\r"
+      }
+    }
+  }
 })
 
 @SuppressFBWarnings(
@@ -582,465 +835,6 @@ class AbstractGrammarTests : StringSpec({
   justification = "Performance is not of great importance in unit tests."
 )
 class AbstractGrammarTest {
-
-  @Test
-  fun ascii_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return ascii()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("#")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("#", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun ascii_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return ascii()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("ß")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("ß", result.restOfInput)
-  }
-
-  @Test
-  fun bmp_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return bmp()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("ß")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("ß", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun bmp_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return bmp()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("\uD835\uDD38")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("\uD835\uDD38", result.restOfInput)
-  }
-
-  @Test
-  fun digit_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return digit()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("5")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("5", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun digit_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return digit()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("O")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("O", result.restOfInput)
-  }
-
-  @Test
-  fun javaIdentifierStart_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return javaIdentifierStart()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("ä")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("ä", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun javaIdentifierStart_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return javaIdentifierStart()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("1")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("1", result.restOfInput)
-  }
-
-  @Test
-  fun javaIdentifierPart_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return javaIdentifierPart()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("1")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("1", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun javaIdentifierPart_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return javaIdentifierPart()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("(")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("(", result.restOfInput)
-  }
-
-  @Test
-  fun letter_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return letter()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("Ü")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("Ü", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun letter_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return letter()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("$")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("$", result.restOfInput)
-  }
-
-  @Test
-  fun letterOrDigit_valid_letter() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return letterOrDigit()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("x")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("x", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun letterOrDigit_valid_digit() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return letterOrDigit()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("9")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("9", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun letterOrDigit_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return letter()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("%")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("%", result.restOfInput)
-  }
-
-  @Test
-  fun printable_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return printable()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("n")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("n", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun printable_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return printable()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("\n")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("\n", result.restOfInput)
-  }
-
-  @Test
-  fun spaceChar_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return spaceChar()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run(" ")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals(" ", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun spaceChar_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return spaceChar()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("\n")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("\n", result.restOfInput)
-  }
-
-  @Test
-  fun whitespace_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return whitespace()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("\n")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("\n", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun whitespace_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return whitespace()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("_")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("_", result.restOfInput)
-  }
-
-  @Test
-  fun cr_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return cr()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("\r")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("\r", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun cr_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return cr()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("\n")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("\n", result.restOfInput)
-  }
-
-  @Test
-  fun lf_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return lf()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("\n")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("\n", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun lf_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return lf()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("\r")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("\r", result.restOfInput)
-  }
-
-  @Test
-  fun crlf_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return crlf()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("\r\n")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("\r\n", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun crlf_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return crlf()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("\n\r")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("\n\r", result.restOfInput)
-  }
 
   @Test
   fun sequence_valid_character() {
