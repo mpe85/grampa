@@ -9,6 +9,7 @@ import com.mpe85.grampa.parser.Parser
 import com.mpe85.grampa.rule.Action
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.impl.ActionRule
+import com.mpe85.grampa.rule.impl.or
 import com.mpe85.grampa.rule.impl.plus
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import io.kotest.assertions.throwables.shouldThrow
@@ -847,6 +848,97 @@ class AbstractGrammarTests : StringSpec({
         restOfInput shouldBe "acdc"
       }
     }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = sequence()
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("abcd").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe ""
+        restOfInput shouldBe "abcd"
+      }
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = sequence(
+        push(4711),
+        push { peek(it) + 4 },
+        sequence(push { pop(1, it) + peek(it) }),
+        optional(action {
+          it.stack.push(0)
+          false
+        })
+      )
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("whatever").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe ""
+        restOfInput shouldBe "whatever"
+        stackTop shouldBe 9426
+        stack.size shouldBe 2
+        stack.peek() shouldBe 9426
+        stack.peek(1) shouldBe 4715
+      }
+    }
+  }
+  "FirstOf rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = firstOf(
+        string("foo") + string("bar"),
+        string("foo") + string("baz")
+      ) + string("xxx")
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("foobazxxx").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "foobazxxx"
+        restOfInput shouldBe ""
+      }
+      run("foobar").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "foobar"
+      }
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = firstOf()
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("foo").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe ""
+        restOfInput shouldBe "foo"
+      }
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = firstOf(string("foo"))
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("foo").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "foo"
+        restOfInput shouldBe ""
+      }
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = string("foo") or
+          string("bar") or
+          string("baz")
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("bamboo").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "bamboo"
+      }
+    }
   }
 })
 
@@ -855,130 +947,6 @@ class AbstractGrammarTests : StringSpec({
   justification = "Performance is not of great importance in unit tests."
 )
 class AbstractGrammarTest {
-
-  @Test
-  fun sequence_valid_empty() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("abcd")
-    assertTrue(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertEquals("", result.matchedInput)
-    assertEquals("abcd", result.restOfInput)
-  }
-
-  @Test
-  fun sequence_valid_push() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence(
-          push(4711),
-          push { ctx: RuleContext<Int> -> peek(ctx) + 4 },
-          sequence(push { ctx: RuleContext<Int> -> pop(1, ctx) + peek(ctx) }),
-          optional(action { ctx: RuleContext<Int> ->
-            ctx.stack.push(0)
-            false
-          })
-        )
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("whatever")
-    assertTrue(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertEquals("", result.matchedInput)
-    assertEquals("whatever", result.restOfInput)
-    assertEquals(Integer.valueOf(9426), result.stackTop)
-    assertEquals(2, result.stack.size)
-    assertEquals(Integer.valueOf(9426), result.stack.peek())
-    assertEquals(Integer.valueOf(4715), result.stack.peek(1))
-  }
-
-  @Test
-  fun firstOf_valid_sequence() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence(
-          firstOf(
-            sequence(string("foo"), string("bar")),
-            sequence(string("foo"), string("baz"))
-          ),
-          string("xxx")
-        )
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("foobazxxx")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("foobazxxx", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun firstOf_valid_empty() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return firstOf()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("foo")
-    assertTrue(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertEquals("", result.matchedInput)
-    assertEquals("foo", result.restOfInput)
-  }
-
-  @Test
-  fun firstOf_valid_oneRule() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return firstOf(string("foo"))
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("foo")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("foo", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun firstOf_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return firstOf(
-          string("foo"),
-          string("bar"),
-          string("baz")
-        )
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("babafoo")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("babafoo", result.restOfInput)
-  }
 
   @Test
   fun optional_valid_match() {
