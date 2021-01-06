@@ -940,6 +940,75 @@ class AbstractGrammarTests : StringSpec({
       }
     }
   }
+  "Optional rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = optional(character('a'))
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("a").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "a"
+        restOfInput shouldBe ""
+      }
+      run("b").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe ""
+        restOfInput shouldBe "b"
+      }
+    }
+  }
+  "ZeroOrMore rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = zeroOrMore(character('a'))
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("b").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe ""
+        restOfInput shouldBe "b"
+      }
+      run("ab").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe "a"
+        restOfInput shouldBe "b"
+      }
+      run("aaaaa").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "aaaaa"
+        restOfInput shouldBe ""
+      }
+    }
+  }
+  "OneOrMore rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = oneOrMore(character('a'))
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("b").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "b"
+      }
+      run("ab").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe "a"
+        restOfInput shouldBe "b"
+      }
+      run("aaaaa").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "aaaaa"
+        restOfInput shouldBe ""
+      }
+    }
+  }
 })
 
 @SuppressFBWarnings(
@@ -947,125 +1016,6 @@ class AbstractGrammarTests : StringSpec({
   justification = "Performance is not of great importance in unit tests."
 )
 class AbstractGrammarTest {
-
-  @Test
-  fun optional_valid_match() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return optional(character('a'))
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("a")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("a", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun optional_valid_noMatch() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return optional(character('a'))
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("b")
-    assertTrue(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertEquals("", result.matchedInput)
-    assertEquals("b", result.restOfInput)
-  }
-
-  @Test
-  fun zeroOrMore_valid_zero() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return zeroOrMore(character('a'))
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("b")
-    assertTrue(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertEquals("", result.matchedInput)
-    assertEquals("b", result.restOfInput)
-  }
-
-  @Test
-  fun zeroOrMore_valid_more() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return zeroOrMore(character('a'))
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("aaaaa")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("aaaaa", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun oneOrMore_valid_one() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return oneOrMore(character('a'))
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("a")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("a", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun oneOrMore_valid_more() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return oneOrMore(character('a'))
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("aaaaa")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("aaaaa", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun oneOrMore_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return oneOrMore(character('a'))
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("b")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("b", result.restOfInput)
-  }
 
   @Test
   fun repeat_valid_times() {
