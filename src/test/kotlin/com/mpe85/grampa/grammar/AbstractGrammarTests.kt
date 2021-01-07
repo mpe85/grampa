@@ -1009,6 +1009,88 @@ class AbstractGrammarTests : StringSpec({
       }
     }
   }
+  "Repeat rul grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = repeat(character('z')) * 4
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("zzzz").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "zzzz"
+        restOfInput shouldBe ""
+      }
+      run("zzzzz").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe "zzzz"
+        restOfInput shouldBe "z"
+      }
+      run("zzz").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "zzz"
+      }
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = repeat(character('z')).times(4, 7)
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("zzzzz").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "zzzzz"
+        restOfInput shouldBe ""
+      }
+      run("zzzzzzzz").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe "zzzzzzz"
+        restOfInput shouldBe "z"
+      }
+      run("zzz").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "zzz"
+      }
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = repeat(character('z')).max(3)
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("zz").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "zz"
+        restOfInput shouldBe ""
+      }
+      run("zzzz").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe "zzz"
+        restOfInput shouldBe "z"
+      }
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = repeat(character('z')).min(3)
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("zzzzz").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "zzzzz"
+        restOfInput shouldBe ""
+      }
+      run("z").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "z"
+      }
+    }
+  }
 })
 
 @SuppressFBWarnings(
@@ -1016,142 +1098,6 @@ class AbstractGrammarTests : StringSpec({
   justification = "Performance is not of great importance in unit tests."
 )
 class AbstractGrammarTest {
-
-  @Test
-  fun repeat_valid_times() {
-    class Grammar : AbstractGrammar<CharSequence>() {
-      override fun root(): Rule<CharSequence> {
-        return repeat(character('z')) * 4
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(CharSequenceTestListener())
-    val result = runner.run("zzzz")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("zzzz", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun repeat_invalid_times() {
-    class Grammar : AbstractGrammar<CharSequence>() {
-      override fun root(): Rule<CharSequence> {
-        return repeat(character('z')).times(6, 7)
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(CharSequenceTestListener())
-    val result = runner.run("zzzzz")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("zzzzz", result.restOfInput)
-  }
-
-  @Test
-  fun repeat_valid_range() {
-    class Grammar : AbstractGrammar<CharSequence>() {
-      override fun root(): Rule<CharSequence> {
-        return repeat(character('z')).times(4, 7)
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(CharSequenceTestListener())
-    val result = runner.run("zzzzz")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("zzzzz", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun repeat_invalid_range() {
-    class Grammar : AbstractGrammar<CharSequence>() {
-      override fun root(): Rule<CharSequence> {
-        return repeat(character('z')).times(2, 4)
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(CharSequenceTestListener())
-    val result = runner.run("z")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("z", result.restOfInput)
-  }
-
-  @Test
-  fun repeat_valid_max() {
-    class Grammar : AbstractGrammar<CharSequence>() {
-      override fun root(): Rule<CharSequence> {
-        return repeat(character('z')).max(3)
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(CharSequenceTestListener())
-    val result = runner.run("zz")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("zz", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun repeat_invalid_max() {
-    class Grammar : AbstractGrammar<CharSequence>() {
-      override fun root(): Rule<CharSequence> {
-        return sequence(repeat(character('z')).max(3), eoi())
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(CharSequenceTestListener())
-    val result = runner.run("zzzz")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("zzzz", result.restOfInput)
-  }
-
-  @Test
-  fun repeat_valid_min() {
-    class Grammar : AbstractGrammar<CharSequence>() {
-      override fun root(): Rule<CharSequence> {
-        return repeat(character('z')).min(3)
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(CharSequenceTestListener())
-    val result = runner.run("zzzzz")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("zzzzz", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun repeat_invalid_min() {
-    class Grammar : AbstractGrammar<CharSequence>() {
-      override fun root(): Rule<CharSequence> {
-        return repeat(character('z')).min(8)
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(CharSequenceTestListener())
-    val result = runner.run("zzzzz")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("zzzzz", result.restOfInput)
-  }
 
   @Test
   fun test_valid() {
