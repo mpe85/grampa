@@ -47,6 +47,14 @@ java {
   targetCompatibility = VERSION_1_8
 }
 
+jacoco {
+  toolVersion = Versions.jacoco
+}
+
+spotbugs {
+  toolVersion.set(Versions.spotbugs)
+}
+
 val javadocJar = tasks.create<Jar>("javadocJar") {
   dependsOn("javadoc")
   archiveClassifier.set("javadoc")
