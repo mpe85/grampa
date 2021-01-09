@@ -6,7 +6,6 @@ import com.mpe85.grampa.event.MatchSuccessEvent
 import com.mpe85.grampa.event.ParseEventListener
 import com.mpe85.grampa.event.PostParseEvent
 import com.mpe85.grampa.parser.Parser
-import com.mpe85.grampa.rule.Action
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.impl.ActionRule
 import com.mpe85.grampa.rule.impl.or
@@ -16,13 +15,13 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.inspectors.forAll
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.kotest.property.Arb
 import io.kotest.property.arbitrary.string
 import io.kotest.property.checkAll
 import org.greenrobot.eventbus.Subscribe
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -1185,6 +1184,122 @@ class AbstractGrammarTests : StringSpec({
       }
     }
   }
+  "Action rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = action {
+        it.stack.push(4711)
+        it.level shouldBe 0
+        it.position shouldNotBe null
+        true
+      }
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("whatever").stackTop shouldBe 4711
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = action {
+        it.stack.push(4711)
+        it.level shouldBe 0
+        it.position shouldNotBe null
+        false
+      }
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("whatever").stackTop shouldBe null
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = object : ActionRule<Int>({ true }) {
+        override fun match(context: ParserContext<Int>) = super.match(context) && context.advanceIndex(1000)
+      }
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("whatever").matched shouldBe false
+    }
+  }
+  "Command rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = command { it.stack.push(4711) }
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("whatever").stackTop shouldBe 4711
+    }
+  }
+  "SkippableAction rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = skippableAction {
+        it.stack.push(4711)
+        true
+      }
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("whatever").stackTop shouldBe 4711
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = test(skippableAction {
+        it.stack.push(4711)
+        true
+      })
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("whatever").stackTop shouldBe null
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = skippableAction {
+        it.stack.push(4711)
+        false
+      }
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("whatever").stackTop shouldBe null
+    }
+  }
+  "SkippableCommand rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = skippableCommand { it.stack.push(4711) }
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("whatever").stackTop shouldBe 4711
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = test(skippableCommand { it.stack.push(4711) })
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("whatever").stackTop shouldBe null
+    }
+  }
+  "Post rule grammar" {
+    class Listener : ParseEventListener<Int>() {
+      var string: String? = null
+        private set
+
+      @Subscribe
+      @SuppressFBWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS")
+      fun stringEvent(event: String) {
+        string = event
+      }
+
+      override fun afterMatchSuccess(event: MatchSuccessEvent<Int>) = event.context shouldNotBe null
+      override fun afterParse(event: PostParseEvent<Int>) = event.result shouldNotBe null
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = string("whatever") + post { it.previousMatch!! }
+    }).apply {
+      Listener().let { listener ->
+        registerListener(listener)
+        run("whatever")
+        listener.string shouldBe "whatever"
+      }
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = string("whatever") + post("someEvent")
+    }).apply {
+      Listener().let { listener ->
+        registerListener(listener)
+        run("whatever")
+        listener.string shouldBe "someEvent"
+      }
+    }
+  }
 })
 
 @SuppressFBWarnings(
@@ -1192,223 +1307,6 @@ class AbstractGrammarTests : StringSpec({
   justification = "Performance is not of great importance in unit tests."
 )
 class AbstractGrammarTest {
-
-  @Test
-  fun action_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return action { ctx: RuleContext<Int> ->
-          ctx.stack.push(4711)
-          assertEquals(0, ctx.level)
-          assertNotNull(ctx.position)
-          true
-        }
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
-  }
-
-  @Test
-  fun action_invalid_failingAction() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return action { ctx: RuleContext<Int> ->
-          ctx.stack.push(4711)
-          assertEquals(0, ctx.level)
-          assertNotNull(ctx.position)
-          false
-        }
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    assertNull(runner.run("whatever").stackTop)
-  }
-
-  @Test
-  fun action_invalid_illegalAdvanceIndex() {
-    class EvilActionRule(action: Action<Int>) : ActionRule<Int>(action::run) {
-      override fun match(context: ParserContext<Int>): Boolean {
-        return super.match(context) && context.advanceIndex(1000)
-      }
-    }
-
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return EvilActionRule { true }
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    assertFalse(runner.run("whatever").matched)
-  }
-
-  @Test
-  fun command_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return command { ctx: RuleContext<Int> -> ctx.stack.push(4711) }
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
-  }
-
-  @Test
-  fun skippableAction_valid_noSkip() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return skippableAction { ctx: RuleContext<Int> ->
-          ctx.stack.push(4711)
-          true
-        }
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
-  }
-
-  @Test
-  fun skippableAction_valid_skip() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return test(
-          skippableAction { ctx: RuleContext<Int> ->
-            ctx.stack.push(4711)
-            true
-          })
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    assertNull(runner.run("whatever").stackTop)
-  }
-
-  @Test
-  fun skippableAction_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return skippableAction { ctx: RuleContext<Int> ->
-          ctx.stack.push(4711)
-          false
-        }
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    assertNull(runner.run("whatever").stackTop)
-  }
-
-  @Test
-  fun skippableCommand_valid_noSkip() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return skippableCommand { ctx: RuleContext<Int> -> ctx.stack.push(4711) }
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
-  }
-
-  @Test
-  fun skippableCommand_valid_skip() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return test(
-          skippableCommand { ctx: RuleContext<Int> -> ctx.stack.push(4711) })
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    assertNull(runner.run("whatever").stackTop)
-  }
-
-  @Test
-  fun post_valid_suppliedEvent() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence(
-          string("whatever"),
-          post { ctx: RuleContext<Int> -> ctx.previousMatch!! })
-      }
-    }
-
-    class Listener : ParseEventListener<Int>() {
-      var string: String? = null
-        private set
-
-      @Subscribe
-      @SuppressFBWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS")
-      fun stringEvent(event: String) {
-        string = event
-      }
-
-      override fun afterMatchSuccess(event: MatchSuccessEvent<Int>) {
-        assertNotNull(event.context)
-      }
-
-      override fun afterParse(event: PostParseEvent<Int>) {
-        assertNotNull(event.result)
-      }
-    }
-
-    val runner = Parser(Grammar())
-    val listener = Listener()
-    runner.registerListener(listener)
-    runner.run("whatever")
-    assertEquals("whatever", listener.string)
-  }
-
-  @Test
-  fun post_valid_staticEvent() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence(
-          string("whatever"),
-          post("someEvent")
-        )
-      }
-    }
-
-    class Listener : ParseEventListener<Int>() {
-      var string: String? = null
-        private set
-
-      @Subscribe
-      @SuppressFBWarnings("UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS")
-      fun stringEvent(event: String) {
-        string = event
-      }
-
-      override fun afterMatchSuccess(event: MatchSuccessEvent<Int>) {
-        assertNotNull(event.context)
-      }
-
-      override fun afterParse(event: PostParseEvent<Int>) {
-        assertNotNull(event.result)
-      }
-    }
-
-    val runner = Parser(Grammar())
-    val listener = Listener()
-    runner.registerListener(listener)
-    runner.run("whatever")
-    assertEquals("someEvent", listener.string)
-  }
 
   @Test
   fun pop_valid_top() {
@@ -1451,7 +1349,7 @@ class AbstractGrammarTest {
   }
 
   @Test
-  fun pop_valid_action() {
+  fun pop_valid_action_top() {
     class Grammar : AbstractGrammar<Int>() {
       override fun root(): Rule<Int> {
         return sequence(
@@ -1466,29 +1364,13 @@ class AbstractGrammarTest {
   }
 
   @Test
-  fun popAs_valid_action_top() {
-    class Grammar : AbstractGrammar<Number>() {
-      override fun root(): Rule<Number> {
-        return sequence(
-          push(4711),
-          action { ctx: RuleContext<Number> ->
-            pop(ctx) == 4711
-          })
-      }
-    }
-
-    val runner = Parser(Grammar())
-    assertNull(runner.run("whatever").stackTop)
-  }
-
-  @Test
-  fun popAs_valid_action_down() {
-    class Grammar : AbstractGrammar<Number>() {
-      override fun root(): Rule<Number> {
+  fun pop_valid_action_down() {
+    class Grammar : AbstractGrammar<Int>() {
+      override fun root(): Rule<Int> {
         return sequence(
           push(4711),
           push(4712),
-          action { ctx: RuleContext<Number> ->
+          action { ctx: RuleContext<Int> ->
             pop(1, ctx) == 4711
           })
       }
@@ -1526,37 +1408,6 @@ class AbstractGrammarTest {
 
     val runner = Parser(Grammar())
     runner.registerListener(IntegerTestListener())
-    assertEquals(4712, runner.run("whatever").stackTop)
-  }
-
-  @Test
-  fun peekAs_valid_top() {
-    class Grammar : AbstractGrammar<Number>() {
-      override fun root(): Rule<Number> {
-        return sequence(push(4711), action { ctx: RuleContext<Number> ->
-          peek(ctx) == 4711
-        })
-      }
-    }
-
-    val runner = Parser(Grammar())
-    assertEquals(4711, runner.run("whatever").stackTop)
-  }
-
-  @Test
-  fun peekAs_valid_down() {
-    class Grammar : AbstractGrammar<Number>() {
-      override fun root(): Rule<Number> {
-        return sequence(
-          push(4711),
-          push(4712),
-          action { ctx: RuleContext<Number> ->
-            peek(1, ctx) == 4711
-          })
-      }
-    }
-
-    val runner = Parser(Grammar())
     assertEquals(4712, runner.run("whatever").stackTop)
   }
 
