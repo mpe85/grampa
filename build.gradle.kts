@@ -36,7 +36,6 @@ dependencies {
   testImplementation(Libs.mockk)
   testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
   testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.0")
-  testImplementation("org.mockito:mockito-junit-jupiter:3.6.28")
   testImplementation(kotlin("test-junit5"))
   testCompileOnly(Libs.spotbugsAnnotations)
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
