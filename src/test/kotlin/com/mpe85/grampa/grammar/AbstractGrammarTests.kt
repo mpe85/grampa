@@ -1139,6 +1139,52 @@ class AbstractGrammarTests : StringSpec({
       }
     }
   }
+  "Conditional rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = conditional({ it.startIndex == 0 }, letter(), digit())
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("z").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "z"
+        restOfInput shouldBe ""
+      }
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = conditional({ it.startIndex == 0 }, letter())
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("z").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "z"
+        restOfInput shouldBe ""
+      }
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = conditional({ it.startIndex != 0 }, letter(), digit())
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("1").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe true
+        matchedInput shouldBe "1"
+        restOfInput shouldBe ""
+      }
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = conditional({ it.startIndex == 0 }, never(), empty())
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("whatever").apply {
+        matched shouldBe false
+        matchedEntireInput shouldBe false
+        matchedInput shouldBe null
+        restOfInput shouldBe "whatever"
+      }
+    }
+  }
 })
 
 @SuppressFBWarnings(
@@ -1146,74 +1192,6 @@ class AbstractGrammarTests : StringSpec({
   justification = "Performance is not of great importance in unit tests."
 )
 class AbstractGrammarTest {
-
-  @Test
-  fun conditional_valid_then_withElse() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return conditional({ ctx: RuleContext<Int> -> ctx.startIndex == 0 }, letter(), digit())
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("z")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("z", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun conditional_valid_then_noElse() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return conditional({ ctx: RuleContext<Int> -> ctx.startIndex == 0 }, letter())
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("z")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("z", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun conditional_valid_else() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return conditional({ ctx: RuleContext<Int> -> ctx.startIndex != 0 }, letter(), digit())
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("1")
-    assertTrue(result.matched)
-    assertTrue(result.matchedEntireInput)
-    assertEquals("1", result.matchedInput)
-    assertEquals("", result.restOfInput)
-  }
-
-  @Test
-  fun conditional_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return conditional({ ctx: RuleContext<Int> -> ctx.startIndex == 0 }, never(), empty())
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    val result = runner.run("whatever")
-    assertFalse(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertNull(result.matchedInput)
-    assertEquals("whatever", result.restOfInput)
-  }
 
   @Test
   fun action_valid() {
