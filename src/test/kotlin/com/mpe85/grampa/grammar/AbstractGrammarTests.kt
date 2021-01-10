@@ -1,7 +1,6 @@
 package com.mpe85.grampa.grammar
 
 import com.mpe85.grampa.context.ParserContext
-import com.mpe85.grampa.context.RuleContext
 import com.mpe85.grampa.event.MatchSuccessEvent
 import com.mpe85.grampa.event.ParseEventListener
 import com.mpe85.grampa.event.PostParseEvent
@@ -20,12 +19,6 @@ import io.kotest.property.Arb
 import io.kotest.property.arbitrary.string
 import io.kotest.property.checkAll
 import org.greenrobot.eventbus.Subscribe
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertNull
-import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Test
 
 private class IntegerTestListener : ParseEventListener<Int>()
 private class CharSequenceTestListener : ParseEventListener<CharSequence>()
@@ -1300,273 +1293,156 @@ class AbstractGrammarTests : StringSpec({
       }
     }
   }
+  "Push rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = push(4711)
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("whatever").stackTop shouldBe 4711
+    }
+  }
+  "Pop rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = sequence(push(4711), pop())
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("whatever").stackTop shouldBe null
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = sequence(push(4711), push(4712), pop(1))
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("whatever").stackTop shouldBe 4712
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = push(4711) + action { pop(it) == 4711 }
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("whatever").stackTop shouldBe null
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = push(4711) + push(4712) + action { pop(1, it) == 4711 }
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("whatever").stackTop shouldBe 4712
+    }
+  }
+  "Poke rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = sequence(push(4711), poke { 4712 })
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("whatever").apply {
+        stackTop shouldBe 4712
+        stack.size shouldBe 1
+      }
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = push(4711) + push(4712) + poke(1) { 4713 }
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("whatever").apply {
+        stackTop shouldBe 4712
+        stack.size shouldBe 2
+      }
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = push(4711) + poke(4712)
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("whatever").apply {
+        stackTop shouldBe 4712
+        stack.size shouldBe 1
+      }
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = push(4711) + push(4712) + poke(1, 4713)
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("whatever").apply {
+        stackTop shouldBe 4712
+        stack.size shouldBe 2
+      }
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = poke(4712)
+    }).apply {
+      registerListener(IntegerTestListener())
+      shouldThrow<IndexOutOfBoundsException> { run("whatever") }
+    }
+  }
+  "Peek rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = push(4711) + action { peek(it) == 4711 }
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("whatever").stackTop shouldBe 4711
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = push(4711) + push(4712) + action { peek(1, it) == 4711 }
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("whatever").stackTop shouldBe 4712
+    }
+  }
+  "Dup rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = push(4711) + dup()
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("whatever").apply {
+        stack.size shouldBe 2
+        stackTop shouldBe 4711
+        stack.peek(1) shouldBe 4711
+      }
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = dup()
+    }).apply {
+      registerListener(IntegerTestListener())
+      shouldThrow<NoSuchElementException> { run("whatever") }
+    }
+  }
+  "Swap rule grammar" {
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = push(4711) + push(4712) + swap()
+    }).apply {
+      registerListener(IntegerTestListener())
+      run("whatever").apply {
+        stack.size shouldBe 2
+        stackTop shouldBe 4711
+        stack.peek(1) shouldBe 4712
+      }
+    }
+    Parser(object : AbstractGrammar<Int>() {
+      override fun root() = push(4711) + swap()
+    }).apply {
+      registerListener(IntegerTestListener())
+      shouldThrow<IndexOutOfBoundsException> { run("whatever") }
+    }
+  }
+  "Previous match" {
+    Parser(object : AbstractGrammar<CharSequence>() {
+      override fun root() = sequence(
+        string("hello"),
+        string("world"),
+        push { it.parent?.previousMatch!! },
+        string("foo") + string("bar"),
+        push { it.parent?.previousMatch!! },
+        test(string("baz")),
+        push { it.parent?.previousMatch!! },
+        test(string("ba")) + string("b") + test(string("az")),
+        push { it.parent?.previousMatch!! })
+    }).apply {
+      registerListener(CharSequenceTestListener())
+      run("helloworldfoobarbaz").apply {
+        matched shouldBe true
+        matchedEntireInput shouldBe false
+        stack.pop() shouldBe "b"
+        stack.pop() shouldBe "foobar"
+        stack.pop() shouldBe "foobar"
+        stackTop shouldBe "world"
+      }
+    }
+  }
 })
-
-@SuppressFBWarnings(
-  value = ["SIC_INNER_SHOULD_BE_STATIC_ANON"],
-  justification = "Performance is not of great importance in unit tests."
-)
-class AbstractGrammarTest {
-
-  @Test
-  fun pop_valid_top() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence(push(4711), pop())
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    assertNull(runner.run("whatever").stackTop)
-  }
-
-  @Test
-  fun pop_valid_down() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence(push(4711), push(4712), pop(1))
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    assertEquals(4712, runner.run("whatever").stackTop)
-  }
-
-  @Test
-  fun poke_valid_staticValue_top() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence(push(4711), poke { 4712 })
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    assertEquals(Integer.valueOf(4712), runner.run("whatever").stackTop)
-    assertEquals(1, runner.run("whatever").stack.size)
-  }
-
-  @Test
-  fun pop_valid_action_top() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence(
-          push(4711),
-          action { ctx: RuleContext<Int> -> pop(ctx) == 4711 })
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    assertNull(runner.run("whatever").stackTop)
-  }
-
-  @Test
-  fun pop_valid_action_down() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence(
-          push(4711),
-          push(4712),
-          action { ctx: RuleContext<Int> ->
-            pop(1, ctx) == 4711
-          })
-      }
-    }
-
-    val runner = Parser(Grammar())
-    assertEquals(4712, runner.run("whatever").stackTop)
-  }
-
-  @Test
-  fun peek_valid_top() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence(push(4711), action { ctx: RuleContext<Int> ->
-          peek(ctx) == 4711
-        })
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    assertEquals(4711, runner.run("whatever").stackTop)
-  }
-
-  @Test
-  fun peek_valid_down() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence(
-          push(4711),
-          push(4712),
-          action { ctx: RuleContext<Int> -> peek(1, ctx) == 4711 })
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    assertEquals(4712, runner.run("whatever").stackTop)
-  }
-
-  @Test
-  fun poke_valid_staticValue_down() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence(push(4711), push(4712), poke(1) { 4713 })
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    assertEquals(Integer.valueOf(4712), runner.run("whatever").stackTop)
-    assertEquals(2, runner.run("whatever").stack.size)
-  }
-
-  @Test
-  fun poke_valid_suppliedValue_top() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence(push(4711), poke(4712))
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    assertEquals(Integer.valueOf(4712), runner.run("whatever").stackTop)
-    assertEquals(1, runner.run("whatever").stack.size)
-  }
-
-  @Test
-  fun poke_valid_suppliedValue_down() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence(push(4711), push(4712), poke(1, 4713))
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    assertEquals(Integer.valueOf(4712), runner.run("whatever").stackTop)
-    assertEquals(2, runner.run("whatever").stack.size)
-  }
-
-  @Test
-  fun poke_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return poke(4712)
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    assertThrows(IndexOutOfBoundsException::class.java) { runner.run("whatever") }
-  }
-
-  @Test
-  fun push_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return push(4711)
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
-  }
-
-  @Test
-  fun dup_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence(push(4711), dup())
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    assertEquals(2, runner.run("whatever").stack.size)
-    assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
-    assertEquals(Integer.valueOf(4711), runner.run("whatever").stack.peek(1))
-  }
-
-  @Test
-  fun dup_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return dup()
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    assertThrows(NoSuchElementException::class.java) { runner.run("whatever") }
-  }
-
-  @Test
-  fun swap_valid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence(push(4711), push(4712), swap())
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    assertEquals(2, runner.run("whatever").stack.size)
-    assertEquals(Integer.valueOf(4711), runner.run("whatever").stackTop)
-    assertEquals(Integer.valueOf(4712), runner.run("whatever").stack.peek(1))
-  }
-
-  @Test
-  fun swap_invalid() {
-    class Grammar : AbstractGrammar<Int>() {
-      override fun root(): Rule<Int> {
-        return sequence(push(4711), swap())
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(IntegerTestListener())
-    assertThrows(IndexOutOfBoundsException::class.java) { runner.run("whatever") }
-  }
-
-  @Test
-  fun previousMatch_valid() {
-    class Grammar : AbstractGrammar<CharSequence>() {
-      override fun root(): Rule<CharSequence> {
-        return sequence(
-          string("hello"),
-          string("world"),
-          push { ctx: RuleContext<CharSequence> -> ctx.parent?.previousMatch!! },
-          sequence(
-            string("foo"),
-            string("bar")
-          ),
-          push { ctx: RuleContext<CharSequence> -> ctx.parent?.previousMatch!! },
-          test(string("baz")),
-          push { ctx: RuleContext<CharSequence> -> ctx.parent?.previousMatch!! },
-          sequence(
-            test(string("ba")),
-            string("b"),
-            test(string("az"))
-          ),
-          push { ctx: RuleContext<CharSequence> -> ctx.parent?.previousMatch!! })
-      }
-    }
-
-    val runner = Parser(Grammar())
-    runner.registerListener(CharSequenceTestListener())
-    val result = runner.run("helloworldfoobarbaz")
-    assertTrue(result.matched)
-    assertFalse(result.matchedEntireInput)
-    assertEquals("b", result.stack.pop())
-    assertEquals("foobar", result.stack.pop())
-    assertEquals("foobar", result.stack.pop())
-    assertEquals("world", result.stackTop)
-  }
-}
