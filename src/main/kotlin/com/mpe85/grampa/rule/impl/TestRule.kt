@@ -15,22 +15,22 @@ import java.util.Objects.hash
  */
 class TestRule<T>(private var rule: Rule<T>) : AbstractRule<T>(rule) {
 
-  override val testRule get() = true
+    override val testRule get() = true
 
-  override fun match(context: ParserContext<T>): Boolean {
-    val currentIndex = context.currentIndex
-    context.stack.takeSnapshot()
-    if (context.createChildContext(rule).run()) {
-      // reset current index and stack
-      context.currentIndex = currentIndex
-      context.stack.restoreSnapshot()
-      return true
+    override fun match(context: ParserContext<T>): Boolean {
+        val currentIndex = context.currentIndex
+        context.stack.takeSnapshot()
+        if (context.createChildContext(rule).run()) {
+            // reset current index and stack
+            context.currentIndex = currentIndex
+            context.stack.restoreSnapshot()
+            return true
+        }
+        return false
     }
-    return false
-  }
 
-  override fun hashCode() = hash(super.hashCode())
-  override fun equals(other: Any?) = checkEquality(other, { super.equals(other) })
-  override fun toString() = stringify("rule" to rule::class.simpleName)
+    override fun hashCode() = hash(super.hashCode())
+    override fun equals(other: Any?) = checkEquality(other, { super.equals(other) })
+    override fun toString() = stringify("rule" to rule::class.simpleName)
 
 }

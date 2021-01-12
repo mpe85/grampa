@@ -13,10 +13,10 @@ import java.util.Objects.hash
  */
 class EndOfInputRule<T> : AbstractRule<T>() {
 
-  override fun match(context: ParserContext<T>) = context.atEndOfInput
+    override fun match(context: ParserContext<T>) = context.atEndOfInput
 
-  override fun hashCode() = hash(super.hashCode())
-  override fun equals(other: Any?) = checkEquality(other, { super.equals(other) })
-  override fun toString() = stringify()
+    override fun hashCode() = hash(super.hashCode())
+    override fun equals(other: Any?) = checkEquality(other, { super.equals(other) })
+    override fun toString() = stringify()
 
 }

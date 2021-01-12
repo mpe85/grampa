@@ -12,11 +12,11 @@ import com.mpe85.grampa.rule.impl.AbstractRule
  */
 interface RuleVisitor<T> {
 
-  /**
-   * Visit an abstract rule.
-   *
-   * @param[rule] The rule to visit
-   */
-  fun visit(rule: AbstractRule<T>)
+    /**
+     * Visit an abstract rule.
+     *
+     * @param[rule] The rule to visit
+     */
+    fun visit(rule: AbstractRule<T>)
 
 }

@@ -16,10 +16,10 @@ import com.mpe85.grampa.visitor.RuleVisitor
  */
 class ReferenceRuleReplaceVisitor<T>(private val replacementRules: Map<Int, Rule<T>?>) : RuleVisitor<T> {
 
-  override fun visit(rule: AbstractRule<T>) = rule.children.forEachIndexed { index, childRule ->
-    (childRule as? ReferenceRule<T>)?.let { refRule ->
-      replacementRules[refRule.referencedRuleHash]?.let { rule.replaceReferenceRule(index, it) }
-    } ?: childRule.accept(this)
-  }
+    override fun visit(rule: AbstractRule<T>) = rule.children.forEachIndexed { index, childRule ->
+        (childRule as? ReferenceRule<T>)?.let { refRule ->
+            replacementRules[refRule.referencedRuleHash]?.let { rule.replaceReferenceRule(index, it) }
+        } ?: childRule.accept(this)
+    }
 
 }

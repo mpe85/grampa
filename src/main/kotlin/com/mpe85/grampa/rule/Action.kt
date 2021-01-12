@@ -11,12 +11,12 @@ import com.mpe85.grampa.context.RuleContext
 @FunctionalInterface
 fun interface Action<T> {
 
-  /**
-   * Run the action.
-   *
-   * @param [context] an action context
-   * @return true if the action was successfully run
-   */
-  fun run(context: RuleContext<T>): Boolean
+    /**
+     * Run the action.
+     *
+     * @param [context] an action context
+     * @return true if the action was successfully run
+     */
+    fun run(context: RuleContext<T>): Boolean
 
 }

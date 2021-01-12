@@ -10,6 +10,6 @@ import com.mpe85.grampa.input.InputBuffer
  */
 class StringBufferInputBuffer(private val stringBuffer: StringBuffer) : CharSequenceInputBuffer(stringBuffer) {
 
-  override fun getCodePoint(index: Int) = stringBuffer.codePointAt(index)
+    override fun getCodePoint(index: Int) = stringBuffer.codePointAt(index)
 
 }

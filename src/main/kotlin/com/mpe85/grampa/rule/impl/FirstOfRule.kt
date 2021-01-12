@@ -15,11 +15,11 @@ import java.util.Objects.hash
  */
 class FirstOfRule<T>(rules: List<Rule<T>>) : AbstractRule<T>(rules) {
 
-  override fun match(context: ParserContext<T>) = children.any { c -> context.createChildContext(c).run() }
+    override fun match(context: ParserContext<T>) = children.any { c -> context.createChildContext(c).run() }
 
-  override fun hashCode() = hash(super.hashCode())
-  override fun equals(other: Any?) = checkEquality(other, { super.equals(other) })
-  override fun toString() = stringify("#children" to children.size)
+    override fun hashCode() = hash(super.hashCode())
+    override fun equals(other: Any?) = checkEquality(other, { super.equals(other) })
+    override fun toString() = stringify("#children" to children.size)
 
 }
 

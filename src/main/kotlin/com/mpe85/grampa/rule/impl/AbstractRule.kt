@@ -15,29 +15,29 @@ import java.util.Objects.hash
  */
 abstract class AbstractRule<T>(children: List<Rule<T>> = emptyList()) : Rule<T> {
 
-  private val internalChildren = children.toMutableList()
+    private val internalChildren = children.toMutableList()
 
-  /**
-   * Construct an abstract rule with one child rule.
-   *
-   * @param[child] A child rule
-   */
-  protected constructor(child: Rule<T>) : this(listOf(child))
+    /**
+     * Construct an abstract rule with one child rule.
+     *
+     * @param[child] A child rule
+     */
+    protected constructor(child: Rule<T>) : this(listOf(child))
 
-  override val children: List<Rule<T>> get() = internalChildren
+    override val children: List<Rule<T>> get() = internalChildren
 
-  override val child: Rule<T>? get() = internalChildren.getOrNull(0)
+    override val child: Rule<T>? get() = internalChildren.getOrNull(0)
 
-  override val testRule get() = false
+    override val testRule get() = false
 
-  override fun replaceReferenceRule(index: Int, replacementRule: Rule<T>): Rule<T> {
-    require(index in children.indices) { "An 'index' must not be out of bounds." }
-    require(children[index] is ReferenceRule<*>) { "Only reference rules can be replaced." }
-    return internalChildren.set(index, replacementRule)
-  }
+    override fun replaceReferenceRule(index: Int, replacementRule: Rule<T>): Rule<T> {
+        require(index in children.indices) { "An 'index' must not be out of bounds." }
+        require(children[index] is ReferenceRule<*>) { "Only reference rules can be replaced." }
+        return internalChildren.set(index, replacementRule)
+    }
 
-  override fun accept(visitor: RuleVisitor<T>) = visitor.visit(this)
-  override fun hashCode() = hash(children, testRule)
-  override fun equals(other: Any?) = checkEquality(other, properties = arrayOf({ it.children }, { it.testRule }))
+    override fun accept(visitor: RuleVisitor<T>) = visitor.visit(this)
+    override fun hashCode() = hash(children, testRule)
+    override fun equals(other: Any?) = checkEquality(other, properties = arrayOf({ it.children }, { it.testRule }))
 
 }

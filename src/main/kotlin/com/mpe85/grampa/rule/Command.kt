@@ -11,12 +11,12 @@ import com.mpe85.grampa.context.RuleContext
 @FunctionalInterface
 fun interface Command<T> {
 
-  /**
-   * Execute the parser command.
-   *
-   * @param[context] An action context
-   */
-  fun execute(context: RuleContext<T>)
+    /**
+     * Execute the parser command.
+     *
+     * @param[context] An action context
+     */
+    fun execute(context: RuleContext<T>)
 
 }
 
@@ -26,6 +26,6 @@ fun interface Command<T> {
  * @return A parser action
  */
 fun <T> Command<T>.toAction() = Action<T> { ctx ->
-  execute(ctx)
-  true
+    execute(ctx)
+    true
 }

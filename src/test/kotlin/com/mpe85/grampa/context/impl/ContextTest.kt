@@ -5,10 +5,10 @@ import io.kotest.core.spec.style.StringSpec
 import io.mockk.mockk
 
 class ContextTests : StringSpec({
-  "Advance index" {
-    Context<String>(ContextState(mockk(), 0, mockk(), 0, mockk(), mockk())).apply {
-      shouldThrow<IllegalArgumentException> { advanceIndex(-1) }
+    "Advance index" {
+        Context<String>(ContextState(mockk(), 0, mockk(), 0, mockk(), mockk())).apply {
+            shouldThrow<IllegalArgumentException> { advanceIndex(-1) }
+        }
     }
-  }
 })
 

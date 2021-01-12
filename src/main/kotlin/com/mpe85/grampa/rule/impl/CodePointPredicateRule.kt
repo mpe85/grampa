@@ -15,26 +15,26 @@ import java.util.Objects.hash
  */
 class CodePointPredicateRule<T>(private val predicate: (Int) -> Boolean) : AbstractRule<T>() {
 
-  /**
-   * Construct a code point predicate rule that exactly matches a specific code point.
-   *
-   * @param[codePoint] A code point
-   */
-  constructor(codePoint: Int) : this({ cp -> cp == codePoint })
+    /**
+     * Construct a code point predicate rule that exactly matches a specific code point.
+     *
+     * @param[codePoint] A code point
+     */
+    constructor(codePoint: Int) : this({ cp -> cp == codePoint })
 
-  /**
-   * Construct a code point predicate rule that exactly matches a specific character.
-   *
-   * @param[char] A character
-   */
-  constructor(char: Char) : this({ cp -> cp == char.toInt() })
+    /**
+     * Construct a code point predicate rule that exactly matches a specific character.
+     *
+     * @param[char] A character
+     */
+    constructor(char: Char) : this({ cp -> cp == char.toInt() })
 
-  override fun match(context: ParserContext<T>) = !context.atEndOfInput
-      && predicate(context.currentCodePoint)
-      && context.advanceIndex(charCount(context.currentCodePoint))
+    override fun match(context: ParserContext<T>) = !context.atEndOfInput
+            && predicate(context.currentCodePoint)
+            && context.advanceIndex(charCount(context.currentCodePoint))
 
-  override fun hashCode() = hash(super.hashCode(), predicate)
-  override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.predicate })
-  override fun toString() = stringify("predicate" to predicate)
+    override fun hashCode() = hash(super.hashCode(), predicate)
+    override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.predicate })
+    override fun toString() = stringify("predicate" to predicate)
 
 }

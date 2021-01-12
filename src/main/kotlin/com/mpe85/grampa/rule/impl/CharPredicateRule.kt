@@ -14,19 +14,19 @@ import java.util.Objects.hash
  */
 class CharPredicateRule<T>(private val predicate: (Char) -> Boolean) : AbstractRule<T>() {
 
-  /**
-   * Construct a character predicate rule that exactly matches a specific character.
-   *
-   * @param[character] A character
-   */
-  constructor(character: Char) : this({ c -> c == character })
+    /**
+     * Construct a character predicate rule that exactly matches a specific character.
+     *
+     * @param[character] A character
+     */
+    constructor(character: Char) : this({ c -> c == character })
 
-  override fun match(context: ParserContext<T>) = !context.atEndOfInput
-      && predicate(context.currentChar)
-      && context.advanceIndex(1)
+    override fun match(context: ParserContext<T>) = !context.atEndOfInput
+            && predicate(context.currentChar)
+            && context.advanceIndex(1)
 
-  override fun hashCode() = hash(super.hashCode(), predicate)
-  override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.predicate })
-  override fun toString() = stringify("predicate" to predicate)
+    override fun hashCode() = hash(super.hashCode(), predicate)
+    override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.predicate })
+    override fun toString() = stringify("predicate" to predicate)
 
 }

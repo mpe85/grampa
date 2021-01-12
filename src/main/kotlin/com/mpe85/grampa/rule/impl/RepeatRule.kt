@@ -18,27 +18,27 @@ import java.util.Objects.hash
  */
 class RepeatRule<T>(private val rule: Rule<T>, private val min: Int, private val max: Int?) : AbstractRule<T>(rule) {
 
-  init {
-    require(min >= 0) { "A 'min' number must not be negative" }
-    if (max != null) {
-      require(max >= min) { "A 'max' number must not be lower than the 'min' number." }
+    init {
+        require(min >= 0) { "A 'min' number must not be negative" }
+        if (max != null) {
+            require(max >= min) { "A 'max' number must not be lower than the 'min' number." }
+        }
     }
-  }
 
-  override fun match(context: ParserContext<T>): Boolean {
-    var iterations = 0
-    while (max == null || iterations < max) {
-      if (!context.createChildContext(rule).run()) {
-        break
-      }
-      iterations++
+    override fun match(context: ParserContext<T>): Boolean {
+        var iterations = 0
+        while (max == null || iterations < max) {
+            if (!context.createChildContext(rule).run()) {
+                break
+            }
+            iterations++
+        }
+        return iterations >= min
     }
-    return iterations >= min
-  }
 
-  override fun hashCode() = hash(super.hashCode(), min, max)
-  override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.min }, { it.max })
-  override fun toString() = stringify("rule" to rule, "min" to min, "max" to max)
+    override fun hashCode() = hash(super.hashCode(), min, max)
+    override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.min }, { it.max })
+    override fun toString() = stringify("rule" to rule, "min" to min, "max" to max)
 
 }
 

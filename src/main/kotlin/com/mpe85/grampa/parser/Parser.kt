@@ -24,54 +24,54 @@ import org.greenrobot.eventbus.EventBus
  */
 class Parser<T>(grammar: Grammar<T>) {
 
-  private val rootRule: Rule<T> = grammar.root()
-  private val bus = EventBus.builder().logNoSubscriberMessages(false).build()
-  private var stack = LinkedListRestorableStack<T>()
+    private val rootRule: Rule<T> = grammar.root()
+    private val bus = EventBus.builder().logNoSubscriberMessages(false).build()
+    private var stack = LinkedListRestorableStack<T>()
 
-  /**
-   * Register a listener to the parser event bus.
-   *
-   * @param[listener] A parse event listener
-   */
-  fun registerListener(listener: ParseEventListener<T>) = bus.register(listener)
+    /**
+     * Register a listener to the parser event bus.
+     *
+     * @param[listener] A parse event listener
+     */
+    fun registerListener(listener: ParseEventListener<T>) = bus.register(listener)
 
-  /**
-   * Unregister a listener from the parser event bus.
-   *
-   * @param[listener] A parse event listener
-   */
-  fun unregisterListener(listener: ParseEventListener<T>) = bus.unregister(listener)
+    /**
+     * Unregister a listener from the parser event bus.
+     *
+     * @param[listener] A parse event listener
+     */
+    fun unregisterListener(listener: ParseEventListener<T>) = bus.unregister(listener)
 
-  /**
-   * Run the parser against a character sequence.
-   *
-   * @param[charSequence] A character sequence
-   * @return The parse result
-   */
-  fun run(charSequence: CharSequence) = run(CharSequenceInputBuffer(charSequence))
+    /**
+     * Run the parser against a character sequence.
+     *
+     * @param[charSequence] A character sequence
+     * @return The parse result
+     */
+    fun run(charSequence: CharSequence) = run(CharSequenceInputBuffer(charSequence))
 
-  /**
-   * Run the parser against an input buffer. This function must only be called once.
-   *
-   * @param[inputBuffer] An input buffer
-   * @return The parse result
-   */
-  fun run(inputBuffer: InputBuffer) = createRootContext(inputBuffer).let { ctx ->
-    bus.post(PreParseEvent(ctx))
-    ParseResult(ctx.run(), ctx).also { res ->
-      bus.post(PostParseEvent(res))
+    /**
+     * Run the parser against an input buffer. This function must only be called once.
+     *
+     * @param[inputBuffer] An input buffer
+     * @return The parse result
+     */
+    fun run(inputBuffer: InputBuffer) = createRootContext(inputBuffer).let { ctx ->
+        bus.post(PreParseEvent(ctx))
+        ParseResult(ctx.run(), ctx).also { res ->
+            bus.post(PostParseEvent(res))
+        }
     }
-  }
 
-  /**
-   * Create the initial root context for the parser's root rule.
-   *
-   * @param[inputBuffer] An input buffer
-   * @return A rule context
-   */
-  private fun createRootContext(inputBuffer: InputBuffer) = stack.run {
-    reset()
-    Context(ContextState(inputBuffer, 0, rootRule, 0, this, bus))
-  }
+    /**
+     * Create the initial root context for the parser's root rule.
+     *
+     * @param[inputBuffer] An input buffer
+     * @return A rule context
+     */
+    private fun createRootContext(inputBuffer: InputBuffer) = stack.run {
+        reset()
+        Context(ContextState(inputBuffer, 0, rootRule, 0, this, bus))
+    }
 
 }

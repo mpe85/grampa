@@ -12,14 +12,14 @@ import java.util.Objects.equals
  * @return true if this object equals the other object
  */
 internal inline fun <reified T : Any> T.checkEquality(
-  other: Any?,
-  superEquals: () -> Boolean = { true },
-  vararg properties: (T) -> Any? = emptyArray()
+        other: Any?,
+        superEquals: () -> Boolean = { true },
+        vararg properties: (T) -> Any? = emptyArray()
 ) = when {
-  other === this -> true
-  other !is T -> false
-  !superEquals() -> false
-  else -> properties.all { equals(it(this), it(other)) }
+    other === this -> true
+    other !is T -> false
+    !superEquals() -> false
+    else -> properties.all { equals(it(this), it(other)) }
 }
 
 /**
@@ -29,7 +29,7 @@ internal inline fun <reified T : Any> T.checkEquality(
  * @return The string representation of the object
  */
 internal fun Any.stringify(vararg properties: Pair<String, Any?> = emptyArray()) = buildString {
-  append("${this@stringify::class.simpleName}(")
-  append(properties.joinToString(", ") { "${it.first}=${it.second}" })
-  append(")")
+    append("${this@stringify::class.simpleName}(")
+    append(properties.joinToString(", ") { "${it.first}=${it.second}" })
+    append(")")
 }

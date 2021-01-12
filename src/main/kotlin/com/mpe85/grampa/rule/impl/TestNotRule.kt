@@ -15,12 +15,12 @@ import java.util.Objects.hash
  */
 class TestNotRule<T>(private val rule: Rule<T>) : AbstractRule<T>(rule) {
 
-  override val testRule get() = true
+    override val testRule get() = true
 
-  override fun match(context: ParserContext<T>) = !context.createChildContext(rule).run()
+    override fun match(context: ParserContext<T>) = !context.createChildContext(rule).run()
 
-  override fun hashCode() = hash(super.hashCode())
-  override fun equals(other: Any?) = checkEquality(other, { super.equals(other) })
-  override fun toString() = stringify("rule" to rule::class.simpleName)
+    override fun hashCode() = hash(super.hashCode())
+    override fun equals(other: Any?) = checkEquality(other, { super.equals(other) })
+    override fun toString() = stringify("rule" to rule::class.simpleName)
 
 }

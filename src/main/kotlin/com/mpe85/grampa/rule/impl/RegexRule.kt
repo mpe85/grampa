@@ -16,19 +16,19 @@ import java.util.regex.Pattern.compile
  */
 class RegexRule<T>(private val pattern: Pattern) : AbstractRule<T>() {
 
-  /**
-   * Construct a regex rule using a regex string.
-   *
-   * @param[regex] A string containing a regular expression
-   */
-  constructor(regex: String) : this(compile(regex))
+    /**
+     * Construct a regex rule using a regex string.
+     *
+     * @param[regex] A string containing a regular expression
+     */
+    constructor(regex: String) : this(compile(regex))
 
-  override fun match(context: ParserContext<T>) = pattern.matcher(context.restOfInput).let { matcher ->
-    matcher.lookingAt() && context.advanceIndex(matcher.end())
-  }
+    override fun match(context: ParserContext<T>) = pattern.matcher(context.restOfInput).let { matcher ->
+        matcher.lookingAt() && context.advanceIndex(matcher.end())
+    }
 
-  override fun hashCode() = hash(super.hashCode(), pattern)
-  override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.pattern })
-  override fun toString() = stringify("pattern" to pattern)
+    override fun hashCode() = hash(super.hashCode(), pattern)
+    override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.pattern })
+    override fun toString() = stringify("pattern" to pattern)
 
 }

@@ -8,14 +8,14 @@ import com.mpe85.grampa.rule.impl.AbstractRule
 import com.mpe85.grampa.util.checkEquality
 import com.mpe85.grampa.util.stringify
 import com.mpe85.grampa.visitor.impl.ReferenceRuleReplaceVisitor
-import java.lang.reflect.Method
-import java.util.HashMap
-import java.util.Objects.hash
-import java.util.concurrent.Callable
-import kotlin.reflect.jvm.javaMethod
 import net.bytebuddy.implementation.bind.annotation.AllArguments
 import net.bytebuddy.implementation.bind.annotation.Origin
 import net.bytebuddy.implementation.bind.annotation.SuperCall
+import java.lang.reflect.Method
+import java.util.*
+import java.util.Objects.hash
+import java.util.concurrent.Callable
+import kotlin.reflect.jvm.javaMethod
 
 /**
  * An interceptor for the rule methods of a grammar.
@@ -29,39 +29,39 @@ import net.bytebuddy.implementation.bind.annotation.SuperCall
  */
 internal class RuleMethodInterceptor<T> {
 
-  private val rules: MutableMap<Int, Rule<T>?> = HashMap()
-  private val rootRuleMethod = requireNotNull(Grammar<T>::root.javaMethod)
+    private val rules: MutableMap<Int, Rule<T>?> = HashMap()
+    private val rootRuleMethod = requireNotNull(Grammar<T>::root.javaMethod)
 
-  /**
-   * Intercept rule methods.
-   *
-   * @param[method] A rule method
-   * @param[superCall] The method body wrapped inside a callable
-   * @param[args] The arguments with which the method was called
-   * @return A grammar rule
-   */
-  fun intercept(
-    @Origin method: Method,
-    @SuperCall superCall: Callable<Rule<T>>,
-    @AllArguments vararg args: Any?
-  ): Rule<T> = hash(method.name, args.contentHashCode()).let { hash ->
-    if (rules.containsKey(hash)) ReferenceRuleImpl(hash) else {
-      rules[hash] = null
-      superCall.call().also { rule ->
-        rules[hash] = rule
-        if (method.isRoot()) {
-          rule.accept(ReferenceRuleReplaceVisitor(rules))
+    /**
+     * Intercept rule methods.
+     *
+     * @param[method] A rule method
+     * @param[superCall] The method body wrapped inside a callable
+     * @param[args] The arguments with which the method was called
+     * @return A grammar rule
+     */
+    fun intercept(
+            @Origin method: Method,
+            @SuperCall superCall: Callable<Rule<T>>,
+            @AllArguments vararg args: Any?
+    ): Rule<T> = hash(method.name, args.contentHashCode()).let { hash ->
+        if (rules.containsKey(hash)) ReferenceRuleImpl(hash) else {
+            rules[hash] = null
+            superCall.call().also { rule ->
+                rules[hash] = rule
+                if (method.isRoot()) {
+                    rule.accept(ReferenceRuleReplaceVisitor(rules))
+                }
+            }
         }
-      }
     }
-  }
 
-  /**
-   * Check if a rule method is the root rule method.
-   *
-   * @return true if it is the root rule method
-   */
-  private fun Method.isRoot() = rootRuleMethod.name == name && rootRuleMethod.parameterCount == parameterCount
+    /**
+     * Check if a rule method is the root rule method.
+     *
+     * @return true if it is the root rule method
+     */
+    private fun Method.isRoot() = rootRuleMethod.name == name && rootRuleMethod.parameterCount == parameterCount
 
 }
 
@@ -75,10 +75,10 @@ internal class RuleMethodInterceptor<T> {
  */
 private class ReferenceRuleImpl<T>(override val referencedRuleHash: Int) : ReferenceRule<T>, AbstractRule<T>() {
 
-  override fun match(context: ParserContext<T>) = false
+    override fun match(context: ParserContext<T>) = false
 
-  override fun hashCode() = hash(super.hashCode(), referencedRuleHash)
-  override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.referencedRuleHash })
-  override fun toString() = stringify("referencedRuleHash" to referencedRuleHash)
+    override fun hashCode() = hash(super.hashCode(), referencedRuleHash)
+    override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.referencedRuleHash })
+    override fun toString() = stringify("referencedRuleHash" to referencedRuleHash)
 
 }

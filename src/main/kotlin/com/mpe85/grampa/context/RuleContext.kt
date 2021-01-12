@@ -28,21 +28,21 @@ import org.greenrobot.eventbus.EventBus
  */
 interface RuleContext<T> {
 
-  val level: Int
-  val startIndex: Int
-  val currentIndex: Int
-  val atEndOfInput: Boolean
-  val currentChar: Char
-  val currentCodePoint: Int
-  val numberOfCharsLeft: Int
-  val input: CharSequence
-  val matchedInput: CharSequence
-  val restOfInput: CharSequence
-  val previousMatch: CharSequence?
-  val position: InputPosition
-  val inTestRule: Boolean
-  val stack: RestorableStack<T>
-  val bus: EventBus
-  val parent: RuleContext<T>?
+    val level: Int
+    val startIndex: Int
+    val currentIndex: Int
+    val atEndOfInput: Boolean
+    val currentChar: Char
+    val currentCodePoint: Int
+    val numberOfCharsLeft: Int
+    val input: CharSequence
+    val matchedInput: CharSequence
+    val restOfInput: CharSequence
+    val previousMatch: CharSequence?
+    val position: InputPosition
+    val inTestRule: Boolean
+    val stack: RestorableStack<T>
+    val bus: EventBus
+    val parent: RuleContext<T>?
 
 }

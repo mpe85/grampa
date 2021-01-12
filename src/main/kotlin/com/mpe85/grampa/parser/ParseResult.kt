@@ -17,10 +17,10 @@ import com.mpe85.grampa.context.ParserContext
  */
 class ParseResult<T>(val matched: Boolean, context: ParserContext<T>) {
 
-  val matchedEntireInput = matched && context.atEndOfInput
-  val matchedInput = if (matched) context.matchedInput else null
-  val restOfInput: CharSequence = if (matched) context.restOfInput else context.input
-  val stack = context.stack.copy()
-  val stackTop get() = if (stack.size > 0) stack.peek() else null
+    val matchedEntireInput = matched && context.atEndOfInput
+    val matchedInput = if (matched) context.matchedInput else null
+    val restOfInput: CharSequence = if (matched) context.restOfInput else context.input
+    val stack = context.stack.copy()
+    val stackTop get() = if (stack.size > 0) stack.peek() else null
 
 }

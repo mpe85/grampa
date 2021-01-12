@@ -13,10 +13,10 @@ import java.util.Objects.hash
  */
 class EmptyRule<T> : AbstractRule<T>() {
 
-  override fun match(context: ParserContext<T>) = true
+    override fun match(context: ParserContext<T>) = true
 
-  override fun hashCode() = hash(super.hashCode())
-  override fun equals(other: Any?) = checkEquality(other, { super.equals(other) })
-  override fun toString() = stringify()
+    override fun hashCode() = hash(super.hashCode())
+    override fun equals(other: Any?) = checkEquality(other, { super.equals(other) })
+    override fun toString() = stringify()
 
 }
