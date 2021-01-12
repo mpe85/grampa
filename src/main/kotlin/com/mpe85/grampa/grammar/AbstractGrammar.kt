@@ -1,7 +1,6 @@
 package com.mpe85.grampa.grammar
 
 import com.ibm.icu.lang.UCharacter
-import com.mpe85.grampa.builder.RepeatRuleBuilder
 import com.mpe85.grampa.context.RuleContext
 import com.mpe85.grampa.rule.Action
 import com.mpe85.grampa.rule.Command
@@ -20,7 +19,11 @@ import com.mpe85.grampa.rule.impl.StringRule
 import com.mpe85.grampa.rule.impl.TestNotRule
 import com.mpe85.grampa.rule.impl.TestRule
 import com.mpe85.grampa.rule.impl.TrieRule
+import com.mpe85.grampa.rule.impl.times
 import com.mpe85.grampa.rule.toAction
+import com.mpe85.grampa.util.max
+import com.mpe85.grampa.util.min
+import com.mpe85.grampa.util.range
 import kotlin.streams.toList
 
 /**
@@ -468,7 +471,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
    * @param[rule] The child rule to match optionally
    * @return A grammar rule
    */
-  protected open fun optional(rule: Rule<T>) = repeat(rule).times(0, 1)
+  protected open fun optional(rule: Rule<T>) = max(1) * rule
 
   /**
    * A rule that matches its child rule zero or more times.
@@ -476,7 +479,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
    * @param[rule] The child rule to repeat
    * @return A grammar rule
    */
-  protected open fun zeroOrMore(rule: Rule<T>) = repeat(rule).min(0)
+  protected open fun zeroOrMore(rule: Rule<T>) = min(0) * rule
 
   /**
    * A rule that matches its child rule one or more times.
@@ -484,15 +487,26 @@ abstract class AbstractGrammar<T> : Grammar<T> {
    * @param[rule] The child rule to repeat
    * @return A grammar rule
    */
-  protected open fun oneOrMore(rule: Rule<T>) = repeat(rule).min(1)
+  protected open fun oneOrMore(rule: Rule<T>) = min(1) * rule
 
   /**
-   * A rule builder for a repeat rule.
+   * Repeat a rule exactly n times.
    *
    * @param[rule] The child rule to repeat
-   * @return a repeat rule builder
+   * @param[n] The number of repetitions
+   * @return A grammar rule
    */
-  protected open fun repeat(rule: Rule<T>) = RepeatRuleBuilder(rule)
+  protected open fun repeat(rule: Rule<T>, n: Int) = n * rule
+
+  /**
+   * Repeat a rule between min and max times.
+   *
+   * @param[rule] The child rule to repeat
+   * @param[min] The minimum number of repetitions
+   * @param[max] The maximum number of repetitions, may be null (unbounded)
+   * @return A grammar rule
+   */
+  protected open fun repeat(rule: Rule<T>, min: Int = 0, max: Int? = null) = range(min, max) * rule
 
   /**
    * A test rule that tests if its child rule matches.

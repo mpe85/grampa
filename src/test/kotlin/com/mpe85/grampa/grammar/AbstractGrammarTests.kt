@@ -1003,7 +1003,7 @@ class AbstractGrammarTests : StringSpec({
   }
   "Repeat rul grammar" {
     Parser(object : AbstractGrammar<Int>() {
-      override fun root() = repeat(character('z')) * 4
+      override fun root() = repeat(character('z'), 4)
     }).apply {
       registerListener(IntegerTestListener())
       run("zzzz").apply {
@@ -1026,7 +1026,7 @@ class AbstractGrammarTests : StringSpec({
       }
     }
     Parser(object : AbstractGrammar<Int>() {
-      override fun root() = repeat(character('z')).times(4, 7)
+      override fun root() = repeat(character('z'), 4, 7)
     }).apply {
       registerListener(IntegerTestListener())
       run("zzzzz").apply {
@@ -1049,7 +1049,7 @@ class AbstractGrammarTests : StringSpec({
       }
     }
     Parser(object : AbstractGrammar<Int>() {
-      override fun root() = repeat(character('z')).max(3)
+      override fun root() = repeat(character('z'), max = 3)
     }).apply {
       registerListener(IntegerTestListener())
       run("zz").apply {
@@ -1066,7 +1066,7 @@ class AbstractGrammarTests : StringSpec({
       }
     }
     Parser(object : AbstractGrammar<Int>() {
-      override fun root() = repeat(character('z')).min(3)
+      override fun root() = repeat(character('z'), min = 3)
     }).apply {
       registerListener(IntegerTestListener())
       run("zzzzz").apply {
