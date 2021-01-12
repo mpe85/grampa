@@ -14,6 +14,7 @@ plugins {
     id(Plugins.mavenPublish)
     id(Plugins.spotbugs) version Versions.spotbugsPlugin
     id(Plugins.versions) version Versions.versions
+    //id("org.jmailen.kotlinter") version "3.3.0"
 }
 
 group = "com.mpe85"

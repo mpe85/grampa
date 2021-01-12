@@ -8,14 +8,13 @@ import com.mpe85.grampa.rule.impl.AbstractRule
 import com.mpe85.grampa.util.checkEquality
 import com.mpe85.grampa.util.stringify
 import com.mpe85.grampa.visitor.impl.ReferenceRuleReplaceVisitor
-import net.bytebuddy.implementation.bind.annotation.AllArguments
-import net.bytebuddy.implementation.bind.annotation.Origin
-import net.bytebuddy.implementation.bind.annotation.SuperCall
 import java.lang.reflect.Method
-import java.util.*
 import java.util.Objects.hash
 import java.util.concurrent.Callable
 import kotlin.reflect.jvm.javaMethod
+import net.bytebuddy.implementation.bind.annotation.AllArguments
+import net.bytebuddy.implementation.bind.annotation.Origin
+import net.bytebuddy.implementation.bind.annotation.SuperCall
 
 /**
  * An interceptor for the rule methods of a grammar.
@@ -41,9 +40,9 @@ internal class RuleMethodInterceptor<T> {
      * @return A grammar rule
      */
     fun intercept(
-            @Origin method: Method,
-            @SuperCall superCall: Callable<Rule<T>>,
-            @AllArguments vararg args: Any?
+        @Origin method: Method,
+        @SuperCall superCall: Callable<Rule<T>>,
+        @AllArguments vararg args: Any?
     ): Rule<T> = hash(method.name, args.contentHashCode()).let { hash ->
         if (rules.containsKey(hash)) ReferenceRuleImpl(hash) else {
             rules[hash] = null
@@ -62,7 +61,6 @@ internal class RuleMethodInterceptor<T> {
      * @return true if it is the root rule method
      */
     private fun Method.isRoot() = rootRuleMethod.name == name && rootRuleMethod.parameterCount == parameterCount
-
 }
 
 /**
@@ -80,5 +78,4 @@ private class ReferenceRuleImpl<T>(override val referencedRuleHash: Int) : Refer
     override fun hashCode() = hash(super.hashCode(), referencedRuleHash)
     override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.referencedRuleHash })
     override fun toString() = stringify("referencedRuleHash" to referencedRuleHash)
-
 }

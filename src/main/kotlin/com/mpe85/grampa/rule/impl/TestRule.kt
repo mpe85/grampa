@@ -32,5 +32,4 @@ class TestRule<T>(private var rule: Rule<T>) : AbstractRule<T>(rule) {
     override fun hashCode() = hash(super.hashCode())
     override fun equals(other: Any?) = checkEquality(other, { super.equals(other) })
     override fun toString() = stringify("rule" to rule::class.simpleName)
-
 }

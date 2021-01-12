@@ -1,7 +1,8 @@
 package com.mpe85.grampa.stack.impl
 
 import com.mpe85.grampa.stack.RestorableStack
-import java.util.*
+import java.util.ArrayDeque
+import java.util.Deque
 
 /**
  * A linked list implementation of a restorable stack.
@@ -54,5 +55,4 @@ class LinkedListRestorableStack<E> : LinkedListStack<E>, RestorableStack<E> {
     companion object {
         private const val serialVersionUID = 3875323652049358971L
     }
-
 }

@@ -24,5 +24,4 @@ open class ActionRule<T> @JvmOverloads constructor(
     override fun hashCode() = hash(super.hashCode(), action, skippable)
     override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.action }, { it.skippable })
     override fun toString() = stringify("action" to action, "skippable" to skippable)
-
 }

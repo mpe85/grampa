@@ -2,7 +2,8 @@ package com.mpe85.grampa.input.impl
 
 import com.mpe85.grampa.input.InputPosition
 import com.mpe85.grampa.input.LineCounter
-import java.util.*
+import java.util.NavigableMap
+import java.util.TreeMap
 import kotlin.streams.asSequence
 
 /**
@@ -15,7 +16,6 @@ class CharSequenceLineCounter(private val input: CharSequence) : LineCounter {
 
     override val lineCount get() = lines.size
     private val lines = getLines(input)
-
 
     private fun getLines(input: CharSequence): NavigableMap<Int, Int> {
         val map = TreeMap<Int, Int>()
@@ -41,5 +41,4 @@ class CharSequenceLineCounter(private val input: CharSequence) : LineCounter {
     companion object {
         private const val LF: Int = '\n'.toInt()
     }
-
 }

@@ -29,12 +29,11 @@ class CodePointPredicateRule<T>(private val predicate: (Int) -> Boolean) : Abstr
      */
     constructor(char: Char) : this({ cp -> cp == char.toInt() })
 
-    override fun match(context: ParserContext<T>) = !context.atEndOfInput
-            && predicate(context.currentCodePoint)
-            && context.advanceIndex(charCount(context.currentCodePoint))
+    override fun match(context: ParserContext<T>) = !context.atEndOfInput &&
+            predicate(context.currentCodePoint) &&
+            context.advanceIndex(charCount(context.currentCodePoint))
 
     override fun hashCode() = hash(super.hashCode(), predicate)
     override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.predicate })
     override fun toString() = stringify("predicate" to predicate)
-
 }

@@ -17,5 +17,4 @@ interface LineCounter {
      * @return The input position at the given index
      */
     fun getPosition(index: Int): InputPosition
-
 }

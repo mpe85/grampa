@@ -22,8 +22,8 @@ class StringRule<T> @JvmOverloads constructor(string: String, private val ignore
     override fun match(context: ParserContext<T>): Boolean {
         if (context.numberOfCharsLeft >= string.length) {
             val nextChars = context.inputBuffer.subSequence(context.currentIndex, context.currentIndex + string.length)
-            return string == (if (ignoreCase) toLowerCase(nextChars.toString()) else nextChars.toString())
-                    && context.advanceIndex(string.length)
+            return string == (if (ignoreCase) toLowerCase(nextChars.toString()) else nextChars.toString()) &&
+                    context.advanceIndex(string.length)
         }
         return false
     }
@@ -31,5 +31,4 @@ class StringRule<T> @JvmOverloads constructor(string: String, private val ignore
     override fun hashCode() = hash(super.hashCode(), string, ignoreCase)
     override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.string }, { it.ignoreCase })
     override fun toString() = stringify("string" to string, "ignoreCase" to ignoreCase)
-
 }

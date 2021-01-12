@@ -22,5 +22,4 @@ class ParseResult<T>(val matched: Boolean, context: ParserContext<T>) {
     val restOfInput: CharSequence = if (matched) context.restOfInput else context.input
     val stack = context.stack.copy()
     val stackTop get() = if (stack.size > 0) stack.peek() else null
-
 }

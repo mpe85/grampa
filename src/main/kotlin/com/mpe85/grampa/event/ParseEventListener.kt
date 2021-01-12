@@ -49,5 +49,4 @@ open class ParseEventListener<T> {
      */
     @Subscribe
     open fun afterParse(event: PostParseEvent<T>) = Unit
-
 }

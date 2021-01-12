@@ -20,5 +20,4 @@ open class CharSequenceInputBuffer(private val charSequence: CharSequence) : Inp
     override fun subSequence(startIndex: Int, endIndex: Int) = charSequence.subSequence(startIndex, endIndex)
 
     override fun getPosition(index: Int) = lineCounter.getPosition(index)
-
 }

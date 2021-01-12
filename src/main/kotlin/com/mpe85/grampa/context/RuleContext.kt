@@ -44,5 +44,4 @@ interface RuleContext<T> {
     val stack: RestorableStack<T>
     val bus: EventBus
     val parent: RuleContext<T>?
-
 }

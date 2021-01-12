@@ -16,5 +16,4 @@ interface Grammar<T> {
      * @return A grammar rule
      */
     fun root(): Rule<T>
-
 }

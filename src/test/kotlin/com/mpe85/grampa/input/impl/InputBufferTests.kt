@@ -8,10 +8,10 @@ import io.kotest.matchers.shouldBe
 
 class InputBufferTests : StringSpec({
     val buffers = listOf(
-            StringBufferInputBuffer(StringBuffer("foobar")),
-            StringBuilderInputBuffer(StringBuilder("foobar")),
-            StringSegmentInputBuffer(StringSegment("foobar", false)),
-            StringInputBuffer("foobar")
+        StringBufferInputBuffer(StringBuffer("foobar")),
+        StringBuilderInputBuffer(StringBuilder("foobar")),
+        StringSegmentInputBuffer(StringSegment("foobar", false)),
+        StringInputBuffer("foobar")
     )
     "Get character" {
         buffers.forAll { buffer ->

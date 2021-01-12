@@ -18,5 +18,4 @@ class NeverRule<T> : AbstractRule<T>() {
     override fun hashCode() = hash(super.hashCode())
     override fun equals(other: Any?) = checkEquality(other, { super.equals(other) })
     override fun toString() = stringify()
-
 }

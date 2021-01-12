@@ -21,5 +21,4 @@ class ReferenceRuleReplaceVisitor<T>(private val replacementRules: Map<Int, Rule
             replacementRules[refRule.referencedRuleHash]?.let { rule.replaceReferenceRule(index, it) }
         } ?: childRule.accept(this)
     }
-
 }

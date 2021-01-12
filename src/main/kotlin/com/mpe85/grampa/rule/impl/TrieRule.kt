@@ -69,5 +69,4 @@ class TrieRule<T> @JvmOverloads constructor(strings: Collection<String>, private
     override fun hashCode() = hash(super.hashCode(), strings, ignoreCase)
     override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.strings }, { it.ignoreCase })
     override fun toString() = stringify("strings" to strings, "ignoreCase" to ignoreCase)
-
 }

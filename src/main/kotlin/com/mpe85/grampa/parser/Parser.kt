@@ -73,5 +73,4 @@ class Parser<T>(grammar: Grammar<T>) {
         reset()
         Context(ContextState(inputBuffer, 0, rootRule, 0, this, bus))
     }
-
 }

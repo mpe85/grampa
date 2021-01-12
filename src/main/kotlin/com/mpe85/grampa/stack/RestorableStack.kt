@@ -49,5 +49,4 @@ interface RestorableStack<E> : Stack<E> {
     fun reset()
 
     override fun copy(): RestorableStack<E>
-
 }

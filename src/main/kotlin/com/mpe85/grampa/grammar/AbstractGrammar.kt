@@ -108,7 +108,6 @@ abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun ignoreCase(character: Char) =
             CharPredicateRule<T> { Character.toLowerCase(it) == Character.toLowerCase(character) }
 
-
     /**
      * A rule that matches a character within a range of characters.
      *
@@ -738,5 +737,4 @@ abstract class AbstractGrammar<T> : Grammar<T> {
      * @return The peeked element
      */
     protected fun peek(down: Int, context: RuleContext<T>) = context.stack.peek(down)
-
 }

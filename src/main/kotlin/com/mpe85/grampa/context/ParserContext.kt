@@ -40,5 +40,4 @@ interface ParserContext<T> : RuleContext<T> {
      * @return A new parser context
      */
     fun createChildContext(rule: Rule<T>): ParserContext<T>
-
 }

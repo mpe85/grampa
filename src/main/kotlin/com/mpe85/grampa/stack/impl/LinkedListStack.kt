@@ -1,8 +1,8 @@
 package com.mpe85.grampa.stack.impl
 
 import com.mpe85.grampa.stack.Stack
-import java.util.*
 import java.util.Collections.swap
+import java.util.LinkedList
 
 /**
  * A linked list implementation of a restorable stack.
@@ -45,5 +45,4 @@ open class LinkedListStack<E> : LinkedList<E>, Stack<E> {
     companion object {
         private const val serialVersionUID = -8417124164036326875L
     }
-
 }

@@ -18,5 +18,4 @@ fun interface Action<T> {
      * @return true if the action was successfully run
      */
     fun run(context: RuleContext<T>): Boolean
-
 }

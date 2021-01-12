@@ -18,5 +18,4 @@ interface RuleVisitor<T> {
      * @param[rule] The rule to visit
      */
     fun visit(rule: AbstractRule<T>)
-
 }

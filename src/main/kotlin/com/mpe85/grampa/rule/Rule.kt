@@ -35,12 +35,10 @@ interface Rule<T> {
      */
     fun match(context: ParserContext<T>): Boolean
 
-
     /**
      * Accept a [RuleVisitor].
      *
      * @param visitor A rule visitor
      */
     fun accept(visitor: RuleVisitor<T>)
-
 }

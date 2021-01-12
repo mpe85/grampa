@@ -34,5 +34,4 @@ class ConditionalRule<T> @JvmOverloads constructor(
             "thenRule" to thenRule::class.simpleName,
             "elseRule" to elseRule?.let { it::class.simpleName }
     )
-
 }

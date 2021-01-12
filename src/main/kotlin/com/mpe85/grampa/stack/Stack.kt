@@ -1,6 +1,6 @@
 package com.mpe85.grampa.stack
 
-import java.util.*
+import java.util.Deque
 
 /**
  * A stack data structure based on [Deque].
@@ -72,5 +72,4 @@ interface Stack<E> : Deque<E> {
      * @return The stack copy
      */
     fun copy(): Stack<E>
-
 }
