@@ -8,7 +8,7 @@ object Versions {
     const val icu4j = "68.2"
     const val kotest = "4.3.2"
     const val kotlin = "1.4.21"
-    const val mockk = "1.10.4"
+    const val mockk = "1.10.5"
     const val spotbugs = "4.2.0"
     const val spotbugsPlugin = "4.6.0"
     const val versions = "0.36.0"
