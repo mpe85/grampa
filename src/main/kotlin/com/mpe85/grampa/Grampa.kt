@@ -6,6 +6,9 @@ import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.util.isFinal
 import com.mpe85.grampa.util.isPublicOrProtected
 import com.mpe85.grampa.util.isStatic
+import net.bytebuddy.ByteBuddy
+import net.bytebuddy.implementation.MethodDelegation.withDefaultConfiguration
+import net.bytebuddy.matcher.ElementMatchers.returns
 import java.lang.reflect.Method
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
@@ -15,9 +18,6 @@ import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.superclasses
 import kotlin.reflect.jvm.javaMethod
 import kotlin.reflect.jvm.jvmErasure
-import net.bytebuddy.ByteBuddy
-import net.bytebuddy.implementation.MethodDelegation.withDefaultConfiguration
-import net.bytebuddy.matcher.ElementMatchers.returns
 
 /**
  * Create a new grammar instance using the given grammar [KClass].
@@ -73,13 +73,13 @@ fun <U : Grammar<T>, T> Class<U>.createGrammar(vararg args: Any?) = kotlin.creat
 private fun <U : Grammar<T>, T> KClass<U>.createGrammarSubClass(): KClass<out U> {
     validate()
     return ByteBuddy()
-        .subclass(java)
-        .method(returns(Rule::class.java))
-        .intercept(withDefaultConfiguration().to(RuleMethodInterceptor<T>()))
-        .make()
-        .load(java.classLoader)
-        .loaded
-        .kotlin
+            .subclass(java)
+            .method(returns(Rule::class.java))
+            .intercept(withDefaultConfiguration().to(RuleMethodInterceptor<T>()))
+            .make()
+            .load(java.classLoader)
+            .loaded
+            .kotlin
 }
 
 private fun KClass<*>.validate() {

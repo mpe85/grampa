@@ -10,13 +10,13 @@ import com.mpe85.grampa.stack.RestorableStack
 import org.greenrobot.eventbus.EventBus
 
 internal data class ContextState<T>(
-    val inputBuffer: InputBuffer,
-    val level: Int,
-    val rule: Rule<T>,
-    val startIndex: Int,
-    val stack: RestorableStack<T>,
-    val bus: EventBus,
-    val parentContext: ParserContext<T>? = null
+        val inputBuffer: InputBuffer,
+        val level: Int,
+        val rule: Rule<T>,
+        val startIndex: Int,
+        val stack: RestorableStack<T>,
+        val bus: EventBus,
+        val parentContext: ParserContext<T>? = null
 )
 
 internal class Context<T>(state: ContextState<T>) : ParserContext<T> {
@@ -98,7 +98,7 @@ internal class Context<T>(state: ContextState<T>) : ParserContext<T> {
     }
 
     override fun createChildContext(rule: Rule<T>) =
-        Context(ContextState(inputBuffer, level + 1, rule, currentIndex, stack, bus, this))
+            Context(ContextState(inputBuffer, level + 1, rule, currentIndex, stack, bus, this))
 
     private fun invalidateCache() {
         cachedCurrentChar = null

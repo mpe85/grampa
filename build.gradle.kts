@@ -3,7 +3,7 @@ import com.github.spotbugs.snom.SpotBugsExtension
 import com.github.spotbugs.snom.SpotBugsTask
 import org.gradle.api.JavaVersion.VERSION_1_8
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import java.util.*
+import java.util.Date
 
 plugins {
     id(Plugins.bintray) version Versions.bintray

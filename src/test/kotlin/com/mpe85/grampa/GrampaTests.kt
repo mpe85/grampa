@@ -19,15 +19,15 @@ open class TestGrammar(val dummy: String?) : AbstractGrammar<String>() {
 
     override fun root() = expr('a')
     protected open fun expr(c: Char): Rule<String> = firstOf(
-        character(c),
-        sequence(
-            empty(),
-            root(66),
-            noop(),
-            character('('),
-            root(),
-            character(')')
-        )
+            character(c),
+            sequence(
+                    empty(),
+                    root(66),
+                    noop(),
+                    character('('),
+                    root(),
+                    character(')')
+            )
     )
 
     protected open fun root(i: Int) = i * empty()
