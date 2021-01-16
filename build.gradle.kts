@@ -1,7 +1,8 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.github.spotbugs.snom.SpotBugsExtension
 import com.github.spotbugs.snom.SpotBugsTask
-import org.gradle.api.JavaVersion.VERSION_1_8
+import org.gradle.api.plugins.BasePlugin.BUILD_GROUP
+import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.Date
 
@@ -15,6 +16,7 @@ plugins {
     id(Plugins.spotbugs) version Versions.spotbugsPlugin
     id(Plugins.versions) version Versions.versions
     //id("org.jmailen.kotlinter") version "3.3.0"
+    //id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
 }
 
 group = "com.mpe85"
@@ -38,11 +40,6 @@ dependencies {
     testCompileOnly(Libs.spotbugsAnnotations)
 }
 
-java {
-    sourceCompatibility = VERSION_1_8
-    targetCompatibility = VERSION_1_8
-}
-
 jacoco {
     toolVersion = Versions.jacoco
 }
@@ -52,25 +49,21 @@ spotbugs {
 }
 
 val javadocJar = tasks.create<Jar>("javadocJar") {
-    dependsOn("javadoc")
+    group = BUILD_GROUP
+    dependsOn("dokkaHtml")
     archiveClassifier.set("javadoc")
-    from(tasks.getByName<Javadoc>("javadoc").destinationDir)
+    from(tasks.getByName<DokkaTask>("dokkaHtml").outputDirectory)
 }
 val sourcesJar = tasks.create<Jar>("sourcesJar") {
+    group = BUILD_GROUP
     dependsOn("classes")
     archiveClassifier.set("sources")
     from(sourceSets.main.get().allSource)
 }
 
 tasks {
-    withType<JavaCompile> {
-        options.encoding = "UTF-8"
-    }
     withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = VERSION_1_8.toString()
-    }
-    withType<Javadoc> {
-        (options as? StandardJavadocDocletOptions)?.links("https://docs.oracle.com/en/java/javase/11/docs/api/")
+        kotlinOptions.jvmTarget = Versions.jvmTarget
     }
     withType<Jar> {
         manifest {
