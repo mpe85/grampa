@@ -15,8 +15,8 @@ import java.util.Objects.hash
  * @property[skippable] Indicates if the action is skippable inside test rules
  */
 open class ActionRule<T> @JvmOverloads constructor(
-        private val action: (RuleContext<T>) -> Boolean,
-        private val skippable: Boolean = false
+    private val action: (RuleContext<T>) -> Boolean,
+    private val skippable: Boolean = false
 ) : AbstractRule<T>() {
 
     override fun match(context: ParserContext<T>) = context.inTestRule && skippable || action(context)

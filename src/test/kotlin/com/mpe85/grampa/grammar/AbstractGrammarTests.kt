@@ -172,15 +172,15 @@ class AbstractGrammarTests : StringSpec({
     }
     "AnyOfChars rule grammar" {
         listOf(
-                object : AbstractGrammar<Int>() {
-                    override fun root() = anyOfChars('a', 'f')
-                },
-                object : AbstractGrammar<Int>() {
-                    override fun root() = anyOfChars(setOf('a', 'f'))
-                },
-                object : AbstractGrammar<Int>() {
-                    override fun root() = anyOfChars("af")
-                }
+            object : AbstractGrammar<Int>() {
+                override fun root() = anyOfChars('a', 'f')
+            },
+            object : AbstractGrammar<Int>() {
+                override fun root() = anyOfChars(setOf('a', 'f'))
+            },
+            object : AbstractGrammar<Int>() {
+                override fun root() = anyOfChars("af")
+            }
         ).forAll { grammar ->
             Parser(grammar).apply {
                 registerListener(IntegerTestListener())
@@ -212,15 +212,15 @@ class AbstractGrammarTests : StringSpec({
     }
     "NoneOfChars rule grammar" {
         listOf(
-                object : AbstractGrammar<Int>() {
-                    override fun root() = noneOfChars('a', 'f')
-                },
-                object : AbstractGrammar<Int>() {
-                    override fun root() = noneOfChars(setOf('a', 'f'))
-                },
-                object : AbstractGrammar<Int>() {
-                    override fun root() = noneOfChars("af")
-                }
+            object : AbstractGrammar<Int>() {
+                override fun root() = noneOfChars('a', 'f')
+            },
+            object : AbstractGrammar<Int>() {
+                override fun root() = noneOfChars(setOf('a', 'f'))
+            },
+            object : AbstractGrammar<Int>() {
+                override fun root() = noneOfChars("af")
+            }
         ).forAll { grammar ->
             Parser(grammar).apply {
                 registerListener(IntegerTestListener())
@@ -314,15 +314,15 @@ class AbstractGrammarTests : StringSpec({
     }
     "AnyOfCodePoints rule grammar" {
         listOf(
-                object : AbstractGrammar<Int>() {
-                    override fun root() = anyOfCodePoints('a'.toInt(), "\uD835\uDD38".codePointAt(0))
-                },
-                object : AbstractGrammar<Int>() {
-                    override fun root() = anyOfCodePoints(setOf('a'.toInt(), "\uD835\uDD38".codePointAt(0)))
-                },
-                object : AbstractGrammar<Int>() {
-                    override fun root() = anyOfCodePoints("\uD835\uDD38")
-                }
+            object : AbstractGrammar<Int>() {
+                override fun root() = anyOfCodePoints('a'.toInt(), "\uD835\uDD38".codePointAt(0))
+            },
+            object : AbstractGrammar<Int>() {
+                override fun root() = anyOfCodePoints(setOf('a'.toInt(), "\uD835\uDD38".codePointAt(0)))
+            },
+            object : AbstractGrammar<Int>() {
+                override fun root() = anyOfCodePoints("\uD835\uDD38")
+            }
         ).forAll { grammar ->
             Parser(grammar).apply {
                 registerListener(IntegerTestListener())
@@ -354,15 +354,15 @@ class AbstractGrammarTests : StringSpec({
     }
     "NoneOfCodePoints rule grammar" {
         listOf(
-                object : AbstractGrammar<Int>() {
-                    override fun root() = noneOfCodePoints('a'.toInt(), "\uD835\uDD38".codePointAt(0))
-                },
-                object : AbstractGrammar<Int>() {
-                    override fun root() = noneOfCodePoints(setOf('a'.toInt(), "\uD835\uDD38".codePointAt(0)))
-                },
-                object : AbstractGrammar<Int>() {
-                    override fun root() = noneOfCodePoints("a\uD835\uDD38")
-                }
+            object : AbstractGrammar<Int>() {
+                override fun root() = noneOfCodePoints('a'.toInt(), "\uD835\uDD38".codePointAt(0))
+            },
+            object : AbstractGrammar<Int>() {
+                override fun root() = noneOfCodePoints(setOf('a'.toInt(), "\uD835\uDD38".codePointAt(0)))
+            },
+            object : AbstractGrammar<Int>() {
+                override fun root() = noneOfCodePoints("a\uD835\uDD38")
+            }
         ).forAll { grammar ->
             Parser(grammar).apply {
                 registerListener(IntegerTestListener())
@@ -468,7 +468,9 @@ class AbstractGrammarTests : StringSpec({
                 run(input).apply {
                     matched shouldBe input.toUpperCase().startsWith(str.toUpperCase())
                     matchedEntireInput shouldBe (str == input)
-                    matchedInput?.toString()?.toUpperCase() shouldBe if (input.toUpperCase().startsWith(str.toUpperCase()))
+                    matchedInput?.toString()?.toUpperCase() shouldBe if (input.toUpperCase()
+                            .startsWith(str.toUpperCase())
+                    )
                         str.toUpperCase() else null
                     restOfInput.toString().toUpperCase() shouldBe if (input.toUpperCase().startsWith(str.toUpperCase()))
                         input.toUpperCase().removePrefix(str.toUpperCase()) else input.toUpperCase()
@@ -497,12 +499,12 @@ class AbstractGrammarTests : StringSpec({
     }
     "Strings rule grammar" {
         listOf(
-                object : AbstractGrammar<Int>() {
-                    override fun root() = strings("football", "foo", "foobar")
-                },
-                object : AbstractGrammar<Int>() {
-                    override fun root() = strings(setOf("foo"))
-                }
+            object : AbstractGrammar<Int>() {
+                override fun root() = strings("football", "foo", "foobar")
+            },
+            object : AbstractGrammar<Int>() {
+                override fun root() = strings(setOf("foo"))
+            }
         ).forAll { grammar ->
             Parser(grammar).apply {
                 registerListener(IntegerTestListener())
@@ -534,12 +536,12 @@ class AbstractGrammarTests : StringSpec({
     }
     "StringsIgnoreCase rule grammar" {
         listOf(
-                object : AbstractGrammar<Int>() {
-                    override fun root() = ignoreCase("football", "foo", "foobar")
-                },
-                object : AbstractGrammar<Int>() {
-                    override fun root() = ignoreCase(setOf("foo"))
-                }
+            object : AbstractGrammar<Int>() {
+                override fun root() = ignoreCase("football", "foo", "foobar")
+            },
+            object : AbstractGrammar<Int>() {
+                override fun root() = ignoreCase(setOf("foo"))
+            }
         ).forAll { grammar ->
             Parser(grammar).apply {
                 registerListener(IntegerTestListener())
@@ -853,13 +855,13 @@ class AbstractGrammarTests : StringSpec({
         }
         Parser(object : AbstractGrammar<Int>() {
             override fun root() = sequence(
-                    push(4711),
-                    push { peek(it) + 4 },
-                    sequence(push { pop(1, it) + peek(it) }),
-                    optional(action {
-                        it.stack.push(0)
-                        false
-                    })
+                push(4711),
+                push { peek(it) + 4 },
+                sequence(push { pop(1, it) + peek(it) }),
+                optional(action {
+                    it.stack.push(0)
+                    false
+                })
             )
         }).apply {
             registerListener(IntegerTestListener())
@@ -878,8 +880,8 @@ class AbstractGrammarTests : StringSpec({
     "FirstOf rule grammar" {
         Parser(object : AbstractGrammar<Int>() {
             override fun root() = firstOf(
-                    string("foo") + string("bar"),
-                    string("foo") + string("baz")
+                string("foo") + string("bar"),
+                string("foo") + string("baz")
             ) + string("xxx")
         }).apply {
             registerListener(IntegerTestListener())
@@ -1424,15 +1426,15 @@ class AbstractGrammarTests : StringSpec({
     "Previous match" {
         Parser(object : AbstractGrammar<CharSequence>() {
             override fun root() = sequence(
-                    string("hello"),
-                    string("world"),
-                    push { it.parent?.previousMatch!! },
-                    string("foo") + string("bar"),
-                    push { it.parent?.previousMatch!! },
-                    test(string("baz")),
-                    push { it.parent?.previousMatch!! },
-                    test(string("ba")) + string("b") + test(string("az")),
-                    push { it.parent?.previousMatch!! })
+                string("hello"),
+                string("world"),
+                push { it.parent?.previousMatch!! },
+                string("foo") + string("bar"),
+                push { it.parent?.previousMatch!! },
+                test(string("baz")),
+                push { it.parent?.previousMatch!! },
+                test(string("ba")) + string("b") + test(string("az")),
+                push { it.parent?.previousMatch!! })
         }).apply {
             registerListener(CharSequenceTestListener())
             run("helloworldfoobarbaz").apply {

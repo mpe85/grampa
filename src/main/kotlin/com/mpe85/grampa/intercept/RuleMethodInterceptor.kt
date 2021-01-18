@@ -40,9 +40,9 @@ internal class RuleMethodInterceptor<T> {
      * @return A grammar rule
      */
     fun intercept(
-            @Origin method: Method,
-            @SuperCall superCall: Callable<Rule<T>>,
-            @AllArguments vararg args: Any?
+        @Origin method: Method,
+        @SuperCall superCall: Callable<Rule<T>>,
+        @AllArguments vararg args: Any?
     ): Rule<T> = hash(method.name, args.contentHashCode()).let { hash ->
         if (rules.containsKey(hash)) ReferenceRuleImpl(hash) else {
             rules[hash] = null

@@ -106,7 +106,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
      * @return A grammar rule
      */
     protected open fun ignoreCase(character: Char) =
-            CharPredicateRule<T> { Character.toLowerCase(it) == Character.toLowerCase(character) }
+        CharPredicateRule<T> { Character.toLowerCase(it) == Character.toLowerCase(character) }
 
     /**
      * A rule that matches a character within a range of characters.
@@ -191,7 +191,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
      * @return A grammar rule
      */
     protected open fun ignoreCase(codePoint: Int) =
-            CodePointPredicateRule<T> { UCharacter.toLowerCase(it) == UCharacter.toLowerCase(codePoint) }
+        CodePointPredicateRule<T> { UCharacter.toLowerCase(it) == UCharacter.toLowerCase(codePoint) }
 
     /**
      * A rule that matches a code point within a range of code points.
@@ -533,7 +533,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
      * @return A grammar rule
      */
     protected open fun conditional(condition: (RuleContext<T>) -> Boolean, thenRule: Rule<T>, elseRule: Rule<T>) =
-            ConditionalRule(condition, thenRule, elseRule)
+        ConditionalRule(condition, thenRule, elseRule)
 
     /**
      * A conditional rule that runs a child rule if a condition is true, otherwise it runs no rule.
@@ -543,7 +543,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
      * @return A grammar rule
      */
     protected open fun conditional(condition: (RuleContext<T>) -> Boolean, thenRule: Rule<T>) =
-            ConditionalRule(condition, thenRule)
+        ConditionalRule(condition, thenRule)
 
     /**
      * A rule that runs an action.

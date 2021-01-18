@@ -12,9 +12,9 @@ import java.util.Objects.equals
  * @return true if this object equals the other object
  */
 internal inline fun <reified T : Any> T.checkEquality(
-        other: Any?,
-        superEquals: () -> Boolean = { true },
-        vararg properties: (T) -> Any? = emptyArray()
+    other: Any?,
+    superEquals: () -> Boolean = { true },
+    vararg properties: (T) -> Any? = emptyArray()
 ) = when {
     other === this -> true
     other !is T -> false

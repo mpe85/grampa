@@ -15,7 +15,7 @@ import java.util.Objects.hash
  * @property[ignoreCase] Indicates if the case should be ignored
  */
 class StringRule<T> @JvmOverloads constructor(string: String, private val ignoreCase: Boolean = false) :
-        AbstractRule<T>() {
+    AbstractRule<T>() {
 
     private val string: String = if (ignoreCase) toLowerCase(string) else string
 

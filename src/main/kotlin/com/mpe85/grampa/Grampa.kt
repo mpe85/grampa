@@ -73,13 +73,13 @@ fun <U : Grammar<T>, T> Class<U>.createGrammar(vararg args: Any?) = kotlin.creat
 private fun <U : Grammar<T>, T> KClass<U>.createGrammarSubClass(): KClass<out U> {
     validate()
     return ByteBuddy()
-            .subclass(java)
-            .method(returns(Rule::class.java))
-            .intercept(withDefaultConfiguration().to(RuleMethodInterceptor<T>()))
-            .make()
-            .load(java.classLoader)
-            .loaded
-            .kotlin
+        .subclass(java)
+        .method(returns(Rule::class.java))
+        .intercept(withDefaultConfiguration().to(RuleMethodInterceptor<T>()))
+        .make()
+        .load(java.classLoader)
+        .loaded
+        .kotlin
 }
 
 private fun KClass<*>.validate() {

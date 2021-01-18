@@ -21,7 +21,7 @@ import java.util.Objects.hash
  * @property[strings] A set containing all strings inside the trie
  */
 class TrieRule<T> @JvmOverloads constructor(strings: Collection<String>, private val ignoreCase: Boolean = false) :
-        AbstractRule<T>() {
+    AbstractRule<T>() {
 
     private val trie = CharsTrieBuilder().run {
         strings.forEach { s ->
@@ -47,8 +47,8 @@ class TrieRule<T> @JvmOverloads constructor(strings: Collection<String>, private
 
     private val strings: Set<String>
         get() = trie.iterator().asSequence()
-                .map { entry -> entry.chars.toString() }
-                .toSet()
+            .map { entry -> entry.chars.toString() }
+            .toSet()
 
     override fun match(context: ParserContext<T>): Boolean {
         var longestMatch = 0
