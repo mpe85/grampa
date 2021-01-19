@@ -1,3 +1,5 @@
+@file:JvmName("Grampa")
+
 package com.mpe85.grampa
 
 import com.mpe85.grampa.grammar.Grammar
