@@ -37,3 +37,10 @@ class CodePointPredicateRule<T>(private val predicate: (Int) -> Boolean) : Abstr
     override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.predicate })
     override fun toString() = stringify("predicate" to predicate)
 }
+
+/**
+ * Create a rule from this code point.
+ *
+ * @return A [CodePointPredicateRule]
+ */
+fun <T> Int.toRule() = CodePointPredicateRule<T>(this)

@@ -25,3 +25,10 @@ open class ActionRule<T> @JvmOverloads constructor(
     override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.action }, { it.skippable })
     override fun toString() = stringify("action" to action, "skippable" to skippable)
 }
+
+/**
+ * Create a rule from this action.
+ *
+ * @return A [ActionRule]
+ */
+fun <T> ((RuleContext<T>) -> Boolean).toRule(skippable: Boolean = false) = ActionRule<T>(this, skippable)

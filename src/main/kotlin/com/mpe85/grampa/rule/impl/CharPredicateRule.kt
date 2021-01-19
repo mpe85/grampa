@@ -29,3 +29,10 @@ class CharPredicateRule<T>(private val predicate: (Char) -> Boolean) : AbstractR
     override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.predicate })
     override fun toString() = stringify("predicate" to predicate)
 }
+
+/**
+ * Create a rule from this character.
+ *
+ * @return A [CharPredicateRule]
+ */
+fun <T> Char.toRule() = CharPredicateRule<T>(this)

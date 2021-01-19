@@ -32,3 +32,10 @@ class StringRule<T> @JvmOverloads constructor(string: String, private val ignore
     override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.string }, { it.ignoreCase })
     override fun toString() = stringify("string" to string, "ignoreCase" to ignoreCase)
 }
+
+/**
+ * Create a rule from this string.
+ *
+ * @return A [StringRule]
+ */
+fun <T> String.toRule() = StringRule<T>(this)
