@@ -584,7 +584,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[event] The event to post
      * @return A grammar rule
      */
-    protected open fun post(event: Any) = skippableCommand { ctx -> ctx.bus.post(event) }
+    protected open fun post(event: Any) = skippableCommand { it.bus.post(event) }
 
     /**
      * Post a dynamic event to the parser's event bus.
@@ -594,17 +594,14 @@ abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[supplier] An event supplier that is called when the rule is run
      * @return A grammar rule
      */
-    protected open fun post(supplier: (RuleContext<T>) -> Any) = skippableCommand { ctx -> ctx.bus.post(supplier(ctx)) }
+    protected open fun post(supplier: (RuleContext<T>) -> Any) = skippableCommand { it.bus.post(supplier(it)) }
 
     /**
      * Pop the top level element from the stack.
      *
      * @return A grammar rule
      */
-    protected open fun pop() = action { ctx ->
-        ctx.stack.pop()
-        true
-    }
+    protected open fun pop() = command { it.stack.pop() }
 
     /**
      * Pop an element from the stack at a given position.
@@ -612,10 +609,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[down] The number of elements on the stack to skip
      * @return A grammar rule
      */
-    protected open fun pop(down: Int) = action { ctx ->
-        ctx.stack.pop(down)
-        true
-    }
+    protected open fun pop(down: Int) = command { it.stack.pop(down) }
 
     /**
      * Replace the element on top of the stack.
@@ -624,10 +618,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[value] A replacement value
      * @return A grammar rule
      */
-    protected open fun poke(value: T) = action { ctx ->
-        ctx.stack.poke(value)
-        true
-    }
+    protected open fun poke(value: T) = command { it.stack.poke(value) }
 
     /**
      * Replace an element in the stack at a given position.
@@ -637,10 +628,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[value] A replacement value
      * @return A grammar rule
      */
-    protected open fun poke(down: Int, value: T) = action { ctx ->
-        ctx.stack.poke(down, value)
-        true
-    }
+    protected open fun poke(down: Int, value: T) = command { it.stack.poke(down, value) }
 
     /**
      * Replace an element in the stack.
@@ -650,10 +638,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[supplier] A replacement value supplier
      * @return A grammar rule
      */
-    protected open fun poke(supplier: (RuleContext<T>) -> T) = action { ctx ->
-        ctx.stack.poke(supplier(ctx))
-        true
-    }
+    protected open fun poke(supplier: (RuleContext<T>) -> T) = command { it.stack.poke(supplier(it)) }
 
     /**
      * Replace an element in the stack at a given position.
@@ -664,10 +649,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[supplier] A replacement value supplier
      * @return A grammar rule
      */
-    protected open fun poke(down: Int, supplier: (RuleContext<T>) -> T) = action { ctx ->
-        ctx.stack.poke(down, supplier(ctx))
-        true
-    }
+    protected open fun poke(down: Int, supplier: (RuleContext<T>) -> T) = command { it.stack.poke(down, supplier(it)) }
 
     /**
      * Push a new element onto stack. Note that the value is constructed at grammar create time.
@@ -675,7 +657,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[value] A value
      * @return A grammar rule
      */
-    protected open fun push(value: T) = command { ctx -> ctx.stack.push(value) }
+    protected open fun push(value: T) = command { it.stack.push(value) }
 
     /**
      * Push a new element onto stack.
@@ -684,21 +666,21 @@ abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[supplier] A value supplier
      * @return A grammar rule
      */
-    protected open fun push(supplier: (RuleContext<T>) -> T) = command { ctx -> ctx.stack.push(supplier(ctx)) }
+    protected open fun push(supplier: (RuleContext<T>) -> T) = command { it.stack.push(supplier(it)) }
 
     /**
      * Duplicate the top stack element.
      *
      * @return A grammar rule
      */
-    protected open fun dup() = command { ctx -> ctx.stack.dup() }
+    protected open fun dup() = command { it.stack.dup() }
 
     /**
      * Swap the two top stack elements.
      *
      * @return A grammar rule
      */
-    protected open fun swap() = command { ctx -> ctx.stack.swap() }
+    protected open fun swap() = command { it.stack.swap() }
 
     /**
      * Pop the top level element from the stack.
