@@ -36,24 +36,24 @@ import kotlin.streams.toList
 @Suppress("Detekt.TooManyFunctions")
 abstract class AbstractGrammar<T> : Grammar<T> {
 
-    private val emptyRule = EmptyRule<T>()
-    private val neverRule = NeverRule<T>()
-    private val eoiRule = EndOfInputRule<T>()
-    private val anyCharRule = CharPredicateRule<T> { true }
-    private val anyCodePointRule = CodePointPredicateRule<T>(UCharacter::isLegal)
-    private val asciiRule = CharPredicateRule<T> { it in Char.MIN_VALUE..Byte.MAX_VALUE.toChar() }
-    private val bmpRule = CodePointPredicateRule<T>(UCharacter::isBMP)
-    private val digitRule = CodePointPredicateRule<T>(UCharacter::isDigit)
-    private val javaIdentStartRule = CodePointPredicateRule<T>(Character::isJavaIdentifierStart)
-    private val javaIdentPartRule = CodePointPredicateRule<T>(Character::isJavaIdentifierPart)
-    private val letterRule = CodePointPredicateRule<T>(UCharacter::isLetter)
-    private val letterOrDigitRule = CodePointPredicateRule<T>(UCharacter::isLetterOrDigit)
-    private val printableRule = CodePointPredicateRule<T>(UCharacter::isPrintable)
-    private val spaceCharRule = CodePointPredicateRule<T>(UCharacter::isSpaceChar)
-    private val whitespaceRule = CodePointPredicateRule<T>(UCharacter::isWhitespace)
-    private val crRule = CharPredicateRule<T>('\r')
-    private val lfRule = CharPredicateRule<T>('\n')
-    private val crlfRule = StringRule<T>("\r\n")
+    private val emptyRule by lazy { EmptyRule<T>() }
+    private val neverRule by lazy { NeverRule<T>() }
+    private val eoiRule by lazy { EndOfInputRule<T>() }
+    private val anyCharRule by lazy { CharPredicateRule<T> { true } }
+    private val anyCodePointRule by lazy { CodePointPredicateRule<T>(UCharacter::isLegal) }
+    private val asciiRule by lazy { CharPredicateRule<T> { it in Char.MIN_VALUE..Byte.MAX_VALUE.toChar() } }
+    private val bmpRule by lazy { CodePointPredicateRule<T>(UCharacter::isBMP) }
+    private val digitRule by lazy { CodePointPredicateRule<T>(UCharacter::isDigit) }
+    private val javaIdentStartRule by lazy { CodePointPredicateRule<T>(Character::isJavaIdentifierStart) }
+    private val javaIdentPartRule by lazy { CodePointPredicateRule<T>(Character::isJavaIdentifierPart) }
+    private val letterRule by lazy { CodePointPredicateRule<T>(UCharacter::isLetter) }
+    private val letterOrDigitRule by lazy { CodePointPredicateRule<T>(UCharacter::isLetterOrDigit) }
+    private val printableRule by lazy { CodePointPredicateRule<T>(UCharacter::isPrintable) }
+    private val spaceCharRule by lazy { CodePointPredicateRule<T>(UCharacter::isSpaceChar) }
+    private val whitespaceRule by lazy { CodePointPredicateRule<T>(UCharacter::isWhitespace) }
+    private val crRule by lazy { CharPredicateRule<T>('\r') }
+    private val lfRule by lazy { CharPredicateRule<T>('\n') }
+    private val crlfRule by lazy { StringRule<T>("\r\n") }
 
     /**
      * A rule that matches an empty string.
