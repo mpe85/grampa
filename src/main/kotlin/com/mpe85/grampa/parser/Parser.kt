@@ -8,7 +8,6 @@ import com.mpe85.grampa.event.PreParseEvent
 import com.mpe85.grampa.grammar.Grammar
 import com.mpe85.grampa.input.InputBuffer
 import com.mpe85.grampa.input.impl.CharSequenceInputBuffer
-import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.stack.impl.LinkedListRestorableStack
 import org.greenrobot.eventbus.EventBus
 
@@ -24,7 +23,7 @@ import org.greenrobot.eventbus.EventBus
  */
 class Parser<T>(grammar: Grammar<T>) {
 
-    private val rootRule: Rule<T> = grammar.root()
+    private val rootRule = grammar.root()
     private val bus = EventBus.builder().logNoSubscriberMessages(false).build()
     private var stack = LinkedListRestorableStack<T>()
 
@@ -58,9 +57,7 @@ class Parser<T>(grammar: Grammar<T>) {
      */
     fun run(inputBuffer: InputBuffer) = createRootContext(inputBuffer).let { ctx ->
         bus.post(PreParseEvent(ctx))
-        ParseResult(ctx.run(), ctx).also { res ->
-            bus.post(PostParseEvent(res))
-        }
+        ParseResult(ctx.run(), ctx).also { bus.post(PostParseEvent(it)) }
     }
 
     /**

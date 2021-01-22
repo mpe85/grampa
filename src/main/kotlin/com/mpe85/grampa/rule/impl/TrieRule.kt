@@ -24,9 +24,7 @@ class TrieRule<T> @JvmOverloads constructor(strings: Collection<String>, private
     AbstractRule<T>() {
 
     private val trie = CharsTrieBuilder().run {
-        strings.forEach { s ->
-            add(if (ignoreCase) toLowerCase(s) else s, 0)
-        }
+        strings.forEach { add(if (ignoreCase) toLowerCase(it) else it, 0) }
         build(FAST)
     }
 
@@ -45,12 +43,9 @@ class TrieRule<T> @JvmOverloads constructor(strings: Collection<String>, private
      */
     constructor(ignoreCase: Boolean, vararg strings: String) : this(strings.toSet(), ignoreCase)
 
-    private val strings: Set<String>
-        get() = trie.iterator().asSequence()
-            .map { entry -> entry.chars.toString() }
-            .toSet()
+    private val strings get() = trie.iterator().asSequence().map { it.chars.toString() }.toSet()
 
-    override fun match(context: ParserContext<T>): Boolean {
+    override fun match(context: ParserContext<T>) = try {
         var longestMatch = 0
         val codePoints = context.restOfInput.codePoints().toArray()
         for (i in codePoints.indices) {
@@ -62,8 +57,9 @@ class TrieRule<T> @JvmOverloads constructor(strings: Collection<String>, private
                 break
             }
         }
+        longestMatch > 0 && context.advanceIndex(longestMatch)
+    } finally {
         trie.reset()
-        return longestMatch > 0 && context.advanceIndex(longestMatch)
     }
 
     override fun hashCode() = hash(super.hashCode(), strings, ignoreCase)

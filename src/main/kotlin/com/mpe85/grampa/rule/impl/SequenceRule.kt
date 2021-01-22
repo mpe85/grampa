@@ -15,7 +15,7 @@ import java.util.Objects.hash
  */
 class SequenceRule<T>(rules: List<Rule<T>>) : AbstractRule<T>(rules) {
 
-    override fun match(context: ParserContext<T>) = children.all { c -> context.createChildContext(c).run() }
+    override fun match(context: ParserContext<T>) = children.all { context.createChildContext(it).run() }
 
     override fun hashCode() = hash(super.hashCode())
     override fun equals(other: Any?) = checkEquality(other, { super.equals(other) })

@@ -17,13 +17,13 @@ import java.util.Objects.hash
 class StringRule<T> @JvmOverloads constructor(string: String, private val ignoreCase: Boolean = false) :
     AbstractRule<T>() {
 
-    private val string: String = if (ignoreCase) toLowerCase(string) else string
+    private val string = if (ignoreCase) toLowerCase(string) else string
 
     override fun match(context: ParserContext<T>): Boolean {
         if (context.numberOfCharsLeft >= string.length) {
             val nextChars = context.inputBuffer.subSequence(context.currentIndex, context.currentIndex + string.length)
-            return string == (if (ignoreCase) toLowerCase(nextChars.toString()) else nextChars.toString()) &&
-                    context.advanceIndex(string.length)
+            return string == (if (ignoreCase) toLowerCase(nextChars.toString()) else nextChars.toString())
+                    && context.advanceIndex(string.length)
         }
         return false
     }

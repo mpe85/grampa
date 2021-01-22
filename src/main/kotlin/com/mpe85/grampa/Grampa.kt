@@ -89,9 +89,7 @@ private fun KClass<*>.validate() {
         it.requireOverridable()
         it.javaMethod?.requireOverridable()
     }
-    superclasses.forEach {
-        it.validate()
-    }
+    superclasses.forEach { it.validate() }
 }
 
 private fun KFunction<*>.requireOverridable() = require(isPublicOrProtected() && !isFinal) {

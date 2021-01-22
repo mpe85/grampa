@@ -4,7 +4,7 @@ import com.mpe85.grampa.context.ParserContext
 import com.mpe85.grampa.visitor.RuleVisitor
 
 /**
- * The parser rule interface.
+ * The grammar rule interface.
  *
  * @author mpe85
  * @param[T] The type of the stack elements
@@ -28,7 +28,7 @@ interface Rule<T> {
     fun replaceReferenceRule(index: Int, replacementRule: Rule<T>): Rule<T>
 
     /**
-     * Try to match the rule
+     * Try to match the rule against the input.
      *
      * @param[context] A rule context
      * @return true if the rule matched successfully

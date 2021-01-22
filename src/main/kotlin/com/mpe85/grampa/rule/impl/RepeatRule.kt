@@ -20,8 +20,8 @@ class RepeatRule<T>(private val rule: Rule<T>, private val min: Int, private val
 
     init {
         require(min >= 0) { "A 'min' number must not be negative" }
-        if (max != null) {
-            require(max >= min) { "A 'max' number must not be lower than the 'min' number." }
+        max?.let {
+            require(it >= min) { "A 'max' number must not be lower than the 'min' number." }
         }
     }
 

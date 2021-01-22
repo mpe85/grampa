@@ -20,7 +20,7 @@ class ConditionalRule<T> @JvmOverloads constructor(
     private val condition: (RuleContext<T>) -> Boolean,
     private val thenRule: Rule<T>,
     private val elseRule: Rule<T>? = null
-) : AbstractRule<T>(sequenceOf(thenRule, elseRule).filterNotNull().toList()) {
+) : AbstractRule<T>(elseRule?.let { listOf(thenRule, it) } ?: listOf(thenRule)) {
 
     override fun match(context: ParserContext<T>) =
         if (condition(context)) thenRule.match(context) else elseRule?.match(context) ?: true

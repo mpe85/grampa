@@ -14,10 +14,7 @@ open class CharSequenceInputBuffer(private val charSequence: CharSequence) : Inp
     private val lineCounter = CharSequenceLineCounter(charSequence)
 
     override fun getChar(index: Int) = charSequence[index]
-
     override fun getCodePoint(index: Int) = charSequence.toString().codePointAt(index)
-
     override fun subSequence(startIndex: Int, endIndex: Int) = charSequence.subSequence(startIndex, endIndex)
-
     override fun getPosition(index: Int) = lineCounter.getPosition(index)
 }

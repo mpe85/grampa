@@ -3,7 +3,7 @@ package com.mpe85.grampa.rule
 import com.mpe85.grampa.context.RuleContext
 
 /**
- * A parser command. A command is a special [Action] that always succeeds (i.e. always returns true)
+ * A parser command. A command is a special [Action] that always succeeds (i.e. always returns true).
  *
  * @author mpe85
  * @param[T] The type of the stack elements
@@ -14,7 +14,7 @@ fun interface Command<T> {
     /**
      * Execute the parser command.
      *
-     * @param[context] An action context
+     * @param[context] A rule context
      */
     fun execute(context: RuleContext<T>)
 }
@@ -24,7 +24,4 @@ fun interface Command<T> {
  *
  * @return A parser action
  */
-fun <T> Command<T>.toAction() = Action<T> { ctx ->
-    execute(ctx)
-    true
-}
+fun <T> Command<T>.toAction() = Action<T> { execute(it); true }

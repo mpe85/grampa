@@ -28,7 +28,7 @@ import kotlin.reflect.jvm.javaMethod
  */
 internal class RuleMethodInterceptor<T> {
 
-    private val rules: MutableMap<Int, Rule<T>?> = HashMap()
+    private val rules = mutableMapOf<Int, Rule<T>?>()
     private val rootRuleMethod = requireNotNull(Grammar<T>::root.javaMethod)
 
     /**
