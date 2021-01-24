@@ -1,4 +1,5 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+import com.github.benmanes.gradle.versions.updates.gradle.GradleReleaseChannel.CURRENT
 import com.github.spotbugs.snom.SpotBugsExtension
 import com.github.spotbugs.snom.SpotBugsTask
 import org.gradle.api.plugins.BasePlugin.BUILD_GROUP
@@ -105,14 +106,9 @@ tasks {
 
 tasks.withType<DependencyUpdatesTask> {
     revision = "release"
-    resolutionStrategy {
-        componentSelection {
-            all {
-                rejectVersionIf {
-                    candidate.version.isNonStable() && !currentVersion.isNonStable()
-                }
-            }
-        }
+    gradleReleaseChannel = CURRENT.id
+    rejectVersionIf {
+        candidate.version.isNonStable()
     }
 }
 
@@ -189,7 +185,7 @@ bintray {
 
 fun String.isNonStable(): Boolean {
     val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { toUpperCase().contains(it) }
-    val regex = "^[0-9,.v-]+$".toRegex()
+    val regex = "^[0-9,.v-]+(-r)?$".toRegex()
     val isStable = stableKeyword || regex.matches(this)
     return isStable.not()
 }
