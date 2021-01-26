@@ -26,21 +26,6 @@ private class IntegerTestListener : ParseEventListener<Int>()
 private class CharSequenceTestListener : ParseEventListener<CharSequence>()
 
 class AbstractGrammarTests : StringSpec({
-    "Empty rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = empty()
-        }).apply {
-            registerListener(IntegerTestListener())
-            checkAll<String> { str ->
-                run(str).apply {
-                    matched shouldBe true
-                    matchedEntireInput shouldBe str.isEmpty()
-                    matchedInput shouldBe ""
-                    restOfInput shouldBe str
-                }
-            }
-        }
-    }
     "Never rule grammar" {
         Parser(object : AbstractGrammar<Int>() {
             override fun root() = never()
