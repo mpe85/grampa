@@ -16,6 +16,8 @@ import io.kotest.inspectors.forAll
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.property.Arb
+import io.kotest.property.arbitrary.char
+import io.kotest.property.arbitrary.filter
 import io.kotest.property.arbitrary.string
 import io.kotest.property.checkAll
 import org.greenrobot.eventbus.Subscribe
@@ -80,11 +82,13 @@ class AbstractGrammarTests : StringSpec({
             override fun root() = anyChar()
         }).apply {
             registerListener(IntegerTestListener())
-            run("f").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "f"
-                restOfInput shouldBe ""
+            checkAll<Char> { ch ->
+                run("$ch").apply {
+                    matched shouldBe true
+                    matchedEntireInput shouldBe true
+                    matchedInput shouldBe "$ch"
+                    restOfInput shouldBe ""
+                }
             }
             run("").apply {
                 matched shouldBe false
@@ -114,21 +118,25 @@ class AbstractGrammarTests : StringSpec({
         }
     }
     "Character rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = character('f')
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("f").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "f"
-                restOfInput shouldBe ""
-            }
-            run("g").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "g"
+        checkAll<Char> { ch ->
+            Parser(object : AbstractGrammar<Int>() {
+                override fun root() = character(ch)
+            }).apply {
+                registerListener(IntegerTestListener())
+                run("$ch").apply {
+                    matched shouldBe true
+                    matchedEntireInput shouldBe true
+                    matchedInput shouldBe "$ch"
+                    restOfInput shouldBe ""
+                }
+                checkAll(Arb.char().filter { it != ch }) { cp ->
+                    run("$cp").apply {
+                        matched shouldBe false
+                        matchedEntireInput shouldBe false
+                        matchedInput shouldBe null
+                        restOfInput shouldBe "$cp"
+                    }
+                }
             }
         }
     }
