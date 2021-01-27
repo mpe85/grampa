@@ -8,30 +8,18 @@ import io.kotest.property.Arb
 import io.kotest.property.arbitrary.string
 import io.kotest.property.checkAll
 
-class EmptyRuleTests : StringSpec({
-    "Empty rule matches non-empty input" {
+class NeverRuleTests : StringSpec({
+    "Never rule matches no input" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = empty()
+            override fun root() = never()
         }).apply {
             checkAll(Arb.string(1, 10, legalCodePoints())) { str ->
                 run(str).apply {
-                    matched shouldBe true
+                    matched shouldBe false
                     matchedEntireInput shouldBe false
-                    matchedInput shouldBe ""
+                    matchedInput shouldBe null
                     restOfInput shouldBe str
                 }
-            }
-        }
-    }
-    "Empty rule matches empty input" {
-        Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = empty()
-        }).apply {
-            run("").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe ""
-                restOfInput shouldBe ""
             }
         }
     }

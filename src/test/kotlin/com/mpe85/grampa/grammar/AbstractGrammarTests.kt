@@ -26,42 +26,6 @@ private class IntegerTestListener : ParseEventListener<Int>()
 private class CharSequenceTestListener : ParseEventListener<CharSequence>()
 
 class AbstractGrammarTests : StringSpec({
-    "Never rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = never()
-        }).apply {
-            registerListener(IntegerTestListener())
-            checkAll<String> { str ->
-                run(str).apply {
-                    matched shouldBe false
-                    matchedEntireInput shouldBe false
-                    matchedInput shouldBe null
-                    restOfInput shouldBe str
-                }
-            }
-        }
-    }
-    "EOI rule grammar" {
-        checkAll<String> { str ->
-            Parser(object : AbstractGrammar<Int>() {
-                override fun root() = sequence(string(str), eoi())
-            }).apply {
-                registerListener(IntegerTestListener())
-                run(str).apply {
-                    matched shouldBe true
-                    matchedEntireInput shouldBe true
-                    matchedInput shouldBe str
-                    restOfInput shouldBe ""
-                }
-                run("$str ").apply {
-                    matched shouldBe false
-                    matchedEntireInput shouldBe false
-                    matchedInput shouldBe null
-                    restOfInput shouldBe "$str "
-                }
-            }
-        }
-    }
     "AnyChar rule grammar" {
         Parser(object : AbstractGrammar<Int>() {
             override fun root() = anyChar()
