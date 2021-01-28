@@ -23,4 +23,18 @@ class EoiRuleTests : StringSpec({
             }
         }
     }
+    "EOI rule does not match before end of input" {
+        Parser(object : AbstractGrammar<Unit>() {
+            override fun root() = eoi()
+        }).apply {
+            checkAll(Arb.string(1, 10, legalCodePoints())) { str ->
+                run(str).apply {
+                    matched shouldBe false
+                    matchedEntireInput shouldBe false
+                    matchedInput shouldBe null
+                    restOfInput shouldBe str
+                }
+            }
+        }
+    }
 })
