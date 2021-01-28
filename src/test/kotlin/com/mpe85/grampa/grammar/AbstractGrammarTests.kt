@@ -26,46 +26,6 @@ private class IntegerTestListener : ParseEventListener<Int>()
 private class CharSequenceTestListener : ParseEventListener<CharSequence>()
 
 class AbstractGrammarTests : StringSpec({
-    "AnyChar rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = anyChar()
-        }).apply {
-            registerListener(IntegerTestListener())
-            checkAll<Char> { ch ->
-                run("$ch").apply {
-                    matched shouldBe true
-                    matchedEntireInput shouldBe true
-                    matchedInput shouldBe "$ch"
-                    restOfInput shouldBe ""
-                }
-            }
-            run("").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe ""
-            }
-        }
-    }
-    "AnyCodePoint rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = anyCodePoint()
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("\uD835\uDD38").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "\uD835\uDD38"
-                restOfInput shouldBe ""
-            }
-            run("").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe ""
-            }
-        }
-    }
     "Character rule grammar" {
         checkAll<Char> { ch ->
             Parser(object : AbstractGrammar<Int>() {
