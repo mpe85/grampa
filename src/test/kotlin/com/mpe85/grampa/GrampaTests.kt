@@ -19,14 +19,14 @@ open class TestGrammar(val dummy: String?) : AbstractGrammar<String>() {
 
     override fun root() = expr('a')
     protected open fun expr(c: Char): Rule<String> = firstOf(
-        character(c),
+        char(c),
         sequence(
             empty(),
             root(66),
             noop(),
-            character('('),
+            char('('),
             root(),
-            character(')')
+            char(')')
         )
     )
 
@@ -66,7 +66,7 @@ class GrampaTests : StringSpec({
             override fun root() = expr('a')
 
             @SuppressFBWarnings("IL_INFINITE_RECURSIVE_LOOP")
-            private fun expr(c: Char) = character(c)
+            private fun expr(c: Char) = char(c)
         }
         shouldThrow<IllegalArgumentException> { InvalidGrammar::class.createGrammar() }
     }
@@ -83,7 +83,7 @@ class GrampaTests : StringSpec({
     "Grammar inheritance" {
         open class SuperGrammar : TestGrammar() {
             @SuppressFBWarnings("IL_INFINITE_RECURSIVE_LOOP")
-            override fun root(): Rule<String> = sequence(character('a'), root())
+            override fun root(): Rule<String> = sequence(char('a'), root())
             override fun verifyRules() = root().apply {
                 shouldBeInstanceOf<SequenceRule<String>>()
                 children.size shouldBe 2

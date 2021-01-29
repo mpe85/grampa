@@ -16,8 +16,6 @@ import io.kotest.inspectors.forAll
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.property.Arb
-import io.kotest.property.arbitrary.char
-import io.kotest.property.arbitrary.filter
 import io.kotest.property.arbitrary.string
 import io.kotest.property.checkAll
 import org.greenrobot.eventbus.Subscribe
@@ -26,48 +24,6 @@ private class IntegerTestListener : ParseEventListener<Int>()
 private class CharSequenceTestListener : ParseEventListener<CharSequence>()
 
 class AbstractGrammarTests : StringSpec({
-    "Character rule grammar" {
-        checkAll<Char> { ch ->
-            Parser(object : AbstractGrammar<Int>() {
-                override fun root() = character(ch)
-            }).apply {
-                registerListener(IntegerTestListener())
-                run("$ch").apply {
-                    matched shouldBe true
-                    matchedEntireInput shouldBe true
-                    matchedInput shouldBe "$ch"
-                    restOfInput shouldBe ""
-                }
-                checkAll(Arb.char().filter { it != ch }) { cp ->
-                    run("$cp").apply {
-                        matched shouldBe false
-                        matchedEntireInput shouldBe false
-                        matchedInput shouldBe null
-                        restOfInput shouldBe "$cp"
-                    }
-                }
-            }
-        }
-    }
-    "CharacterIgnoreCase rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = ignoreCase('f')
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("F").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "F"
-                restOfInput shouldBe ""
-            }
-            run("G").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "G"
-            }
-        }
-    }
     "CharRange rule grammar" {
         Parser(object : AbstractGrammar<Int>() {
             override fun root() = charRange('a', 'f')
@@ -743,7 +699,7 @@ class AbstractGrammarTests : StringSpec({
     }
     "Sequence rule grammar" {
         Parser(object : AbstractGrammar<Int>() {
-            override fun root() = character('a') + character('b') + character('c')
+            override fun root() = char('a') + char('b') + char('c')
         }).apply {
             registerListener(IntegerTestListener())
             run("abcd").apply {
@@ -853,7 +809,7 @@ class AbstractGrammarTests : StringSpec({
     }
     "Optional rule grammar" {
         Parser(object : AbstractGrammar<Int>() {
-            override fun root() = optional(character('a'))
+            override fun root() = optional(char('a'))
         }).apply {
             registerListener(IntegerTestListener())
             run("a").apply {
@@ -872,7 +828,7 @@ class AbstractGrammarTests : StringSpec({
     }
     "ZeroOrMore rule grammar" {
         Parser(object : AbstractGrammar<Int>() {
-            override fun root() = zeroOrMore(character('a'))
+            override fun root() = zeroOrMore(char('a'))
         }).apply {
             registerListener(IntegerTestListener())
             run("b").apply {
@@ -897,7 +853,7 @@ class AbstractGrammarTests : StringSpec({
     }
     "OneOrMore rule grammar" {
         Parser(object : AbstractGrammar<Int>() {
-            override fun root() = oneOrMore(character('a'))
+            override fun root() = oneOrMore(char('a'))
         }).apply {
             registerListener(IntegerTestListener())
             run("b").apply {
@@ -922,7 +878,7 @@ class AbstractGrammarTests : StringSpec({
     }
     "Repeat rul grammar" {
         Parser(object : AbstractGrammar<Int>() {
-            override fun root() = repeat(character('z'), 4)
+            override fun root() = repeat(char('z'), 4)
         }).apply {
             registerListener(IntegerTestListener())
             run("zzzz").apply {
@@ -945,7 +901,7 @@ class AbstractGrammarTests : StringSpec({
             }
         }
         Parser(object : AbstractGrammar<Int>() {
-            override fun root() = repeat(character('z'), 4, 7)
+            override fun root() = repeat(char('z'), 4, 7)
         }).apply {
             registerListener(IntegerTestListener())
             run("zzzzz").apply {
@@ -968,7 +924,7 @@ class AbstractGrammarTests : StringSpec({
             }
         }
         Parser(object : AbstractGrammar<Int>() {
-            override fun root() = repeat(character('z'), max = 3)
+            override fun root() = repeat(char('z'), max = 3)
         }).apply {
             registerListener(IntegerTestListener())
             run("zz").apply {
@@ -985,7 +941,7 @@ class AbstractGrammarTests : StringSpec({
             }
         }
         Parser(object : AbstractGrammar<Int>() {
-            override fun root() = repeat(character('z'), min = 3)
+            override fun root() = repeat(char('z'), min = 3)
         }).apply {
             registerListener(IntegerTestListener())
             run("zzzzz").apply {

@@ -97,7 +97,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[character] The character to match
      * @return A grammar rule
      */
-    protected open fun character(character: Char) = CharPredicateRule<T> { it == character }
+    protected open fun char(character: Char) = CharPredicateRule<T> { it == character }
 
     /**
      * A rule that matches a specific character, ignoring the case of the character (case-insensitive).
@@ -129,7 +129,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
      */
     protected open fun anyOfChars(characters: Collection<Char>) = when {
         characters.isEmpty() -> neverRule
-        characters.size == 1 -> character(characters.first())
+        characters.size == 1 -> char(characters.first())
         else -> CharPredicateRule { characters.sorted().binarySearch(it) >= 0 }
     }
 
@@ -268,7 +268,7 @@ abstract class AbstractGrammar<T> : Grammar<T> {
      */
     protected open fun string(string: String) = when {
         string.isEmpty() -> emptyRule
-        string.length == 1 -> character(string.first())
+        string.length == 1 -> char(string.first())
         else -> StringRule(string)
     }
 
