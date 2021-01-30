@@ -13,13 +13,13 @@ import java.util.Objects.hash
  * @param[T] The type of the stack elements
  * @param[rules] A list of child rules
  */
-class SequenceRule<T>(rules: List<Rule<T>>) : AbstractRule<T>(rules) {
+public class SequenceRule<T>(rules: List<Rule<T>>) : AbstractRule<T>(rules) {
 
-    override fun match(context: ParserContext<T>) = children.all { context.createChildContext(it).run() }
+    override fun match(context: ParserContext<T>): Boolean = children.all { context.createChildContext(it).run() }
 
-    override fun hashCode() = hash(super.hashCode())
-    override fun equals(other: Any?) = checkEquality(other, { super.equals(other) })
-    override fun toString() = stringify("#children" to children.size)
+    override fun hashCode(): Int = hash(super.hashCode())
+    override fun equals(other: Any?): Boolean = checkEquality(other, { super.equals(other) })
+    override fun toString(): String = stringify("#children" to children.size)
 }
 
 /**
@@ -28,7 +28,7 @@ class SequenceRule<T>(rules: List<Rule<T>>) : AbstractRule<T>(rules) {
  * @param[other] Another rule
  * @return A [SequenceRule] with [this] and [other] as its child rules
  */
-infix fun <T> Rule<T>.and(other: Rule<T>) = SequenceRule(listOf(this, other))
+public infix fun <T> Rule<T>.and(other: Rule<T>): Rule<T> = SequenceRule(listOf(this, other))
 
 /**
  * Create a [SequenceRule] out of this and another rule.
@@ -36,4 +36,4 @@ infix fun <T> Rule<T>.and(other: Rule<T>) = SequenceRule(listOf(this, other))
  * @param[other] Another rule
  * @return A [SequenceRule] with [this] and [other] as its child rules
  */
-operator fun <T> Rule<T>.plus(other: Rule<T>) = this and other
+public operator fun <T> Rule<T>.plus(other: Rule<T>): Rule<T> = this and other

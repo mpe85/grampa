@@ -13,7 +13,7 @@ import java.util.Objects.hash
  * @param[T] The type of the stack elements
  * @param[children] A list of child rules
  */
-abstract class AbstractRule<T>(children: List<Rule<T>> = emptyList()) : Rule<T> {
+public abstract class AbstractRule<T>(children: List<Rule<T>> = emptyList()) : Rule<T> {
 
     private val internalChildren = children.toMutableList()
 
@@ -28,7 +28,7 @@ abstract class AbstractRule<T>(children: List<Rule<T>> = emptyList()) : Rule<T> 
 
     override val child: Rule<T>? get() = internalChildren.getOrNull(0)
 
-    override val testRule get() = false
+    override val testRule: Boolean = false
 
     override fun replaceReferenceRule(index: Int, replacementRule: Rule<T>): Rule<T> {
         require(index in children.indices) { "An 'index' must not be out of bounds." }
@@ -36,7 +36,8 @@ abstract class AbstractRule<T>(children: List<Rule<T>> = emptyList()) : Rule<T> 
         return internalChildren.set(index, replacementRule)
     }
 
-    override fun accept(visitor: RuleVisitor<T>) = visitor.visit(this)
-    override fun hashCode() = hash(children, testRule)
-    override fun equals(other: Any?) = checkEquality(other, properties = arrayOf({ it.children }, { it.testRule }))
+    override fun accept(visitor: RuleVisitor<T>): Unit = visitor.visit(this)
+    override fun hashCode(): Int = hash(children, testRule)
+    override fun equals(other: Any?): Boolean =
+        checkEquality(other, properties = arrayOf({ it.children }, { it.testRule }))
 }

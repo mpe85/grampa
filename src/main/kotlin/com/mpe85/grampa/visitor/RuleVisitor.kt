@@ -10,12 +10,12 @@ import com.mpe85.grampa.rule.impl.AbstractRule
  *
  * @param[T] The type of the parser stack values
  */
-interface RuleVisitor<T> {
+public interface RuleVisitor<T> {
 
     /**
      * Visit an abstract rule.
      *
      * @param[rule] The rule to visit
      */
-    fun visit(rule: AbstractRule<T>)
+    public fun visit(rule: AbstractRule<T>)
 }

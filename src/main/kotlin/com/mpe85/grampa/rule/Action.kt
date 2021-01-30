@@ -9,7 +9,7 @@ import com.mpe85.grampa.context.RuleContext
  * @param[T] the type of the stack elements
  */
 @FunctionalInterface
-fun interface Action<T> {
+public fun interface Action<T> {
 
     /**
      * Run the action.
@@ -17,5 +17,5 @@ fun interface Action<T> {
      * @param [context] an action context
      * @return true if the action was successfully run
      */
-    fun run(context: RuleContext<T>): Boolean
+    public fun run(context: RuleContext<T>): Boolean
 }

@@ -16,7 +16,8 @@ import java.util.Objects.hash
  * @property[min] The minimum number of cycles
  * @property[max] An optional maximum number of cycles
  */
-class RepeatRule<T>(private val rule: Rule<T>, private val min: Int, private val max: Int?) : AbstractRule<T>(rule) {
+public class RepeatRule<T>(private val rule: Rule<T>, private val min: Int, private val max: Int?) :
+    AbstractRule<T>(rule) {
 
     init {
         require(min >= 0) { "A 'min' number must not be negative" }
@@ -36,9 +37,9 @@ class RepeatRule<T>(private val rule: Rule<T>, private val min: Int, private val
         return iterations >= min
     }
 
-    override fun hashCode() = hash(super.hashCode(), min, max)
-    override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.min }, { it.max })
-    override fun toString() = stringify("rule" to rule, "min" to min, "max" to max)
+    override fun hashCode(): Int = hash(super.hashCode(), min, max)
+    override fun equals(other: Any?): Boolean = checkEquality(other, { super.equals(other) }, { it.min }, { it.max })
+    override fun toString(): String = stringify("rule" to rule, "min" to min, "max" to max)
 }
 
 /**
@@ -47,7 +48,7 @@ class RepeatRule<T>(private val rule: Rule<T>, private val min: Int, private val
  * @param[rule] The rule to repeat
  * @return A [RepeatRule]
  */
-operator fun <T> Int.times(rule: Rule<T>) = RepeatRule(rule, this, this)
+public operator fun <T> Int.times(rule: Rule<T>): Rule<T> = RepeatRule(rule, this, this)
 
 /**
  * Repeat a rule between n and m times.
@@ -55,7 +56,7 @@ operator fun <T> Int.times(rule: Rule<T>) = RepeatRule(rule, this, this)
  * @param[rule] The rule to repeat
  * @return A [RepeatRule]
  */
-operator fun <T> IntRange.times(rule: Rule<T>) = RepeatRule(rule, first, last)
+public operator fun <T> IntRange.times(rule: Rule<T>): Rule<T> = RepeatRule(rule, first, last)
 
 /**
  * Repeat a rule between n and m times where m may be unbounded.
@@ -63,4 +64,4 @@ operator fun <T> IntRange.times(rule: Rule<T>) = RepeatRule(rule, first, last)
  * @param[rule] The rule to repeat
  * @return A [RepeatRule]
  */
-operator fun <T> UnboundedRange.times(rule: Rule<T>) = RepeatRule(rule, min, max)
+public operator fun <T> UnboundedRange.times(rule: Rule<T>): Rule<T> = RepeatRule(rule, min, max)

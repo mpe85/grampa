@@ -12,9 +12,9 @@ import com.mpe85.grampa.rule.Rule
  * @property[currentIndex] The current index inside the parser input
  * @property[parent] The parent context of the context
  */
-interface ParserContext<T> : RuleContext<T> {
+public interface ParserContext<T> : RuleContext<T> {
 
-    val inputBuffer: InputBuffer
+    public val inputBuffer: InputBuffer
     override var currentIndex: Int
     override val parent: ParserContext<T>?
 
@@ -24,14 +24,14 @@ interface ParserContext<T> : RuleContext<T> {
      * @param[delta] The number of characters to advance
      * @return true if the advancing was possible
      */
-    fun advanceIndex(delta: Int): Boolean
+    public fun advanceIndex(delta: Int): Boolean
 
     /**
      * Run the parser against the input.
      *
      * @return true if the parser successfully matched the input
      */
-    fun run(): Boolean
+    public fun run(): Boolean
 
     /**
      * Create a child context out of the context that is used to run child rules.
@@ -39,5 +39,5 @@ interface ParserContext<T> : RuleContext<T> {
      * @param[rule] A child rule for which the child context should be created for
      * @return A new parser context
      */
-    fun createChildContext(rule: Rule<T>): ParserContext<T>
+    public fun createChildContext(rule: Rule<T>): ParserContext<T>
 }

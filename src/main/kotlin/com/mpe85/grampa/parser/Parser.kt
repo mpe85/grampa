@@ -21,7 +21,7 @@ import org.greenrobot.eventbus.EventBus
  * @property[bus] The parser's event bus
  * @property[stack] The parser's value stack
  */
-class Parser<T>(grammar: Grammar<T>) {
+public class Parser<T>(grammar: Grammar<T>) {
 
     private val rootRule = grammar.root()
     private val bus = EventBus.builder().logNoSubscriberMessages(false).build()
@@ -32,14 +32,14 @@ class Parser<T>(grammar: Grammar<T>) {
      *
      * @param[listener] A parse event listener
      */
-    fun registerListener(listener: ParseEventListener<T>) = bus.register(listener)
+    public fun registerListener(listener: ParseEventListener<T>): Unit = bus.register(listener)
 
     /**
      * Unregister a listener from the parser event bus.
      *
      * @param[listener] A parse event listener
      */
-    fun unregisterListener(listener: ParseEventListener<T>) = bus.unregister(listener)
+    public fun unregisterListener(listener: ParseEventListener<T>): Unit = bus.unregister(listener)
 
     /**
      * Run the parser against a character sequence.
@@ -47,7 +47,7 @@ class Parser<T>(grammar: Grammar<T>) {
      * @param[charSequence] A character sequence
      * @return The parse result
      */
-    fun run(charSequence: CharSequence) = run(CharSequenceInputBuffer(charSequence))
+    public fun run(charSequence: CharSequence): ParseResult<T> = run(CharSequenceInputBuffer(charSequence))
 
     /**
      * Run the parser against an input buffer. This function must only be called once.
@@ -55,7 +55,7 @@ class Parser<T>(grammar: Grammar<T>) {
      * @param[inputBuffer] An input buffer
      * @return The parse result
      */
-    fun run(inputBuffer: InputBuffer) = createRootContext(inputBuffer).let { ctx ->
+    public fun run(inputBuffer: InputBuffer): ParseResult<T> = createRootContext(inputBuffer).let { ctx ->
         bus.post(PreParseEvent(ctx))
         ParseResult(ctx.run(), ctx).also { bus.post(PostParseEvent(it)) }
     }

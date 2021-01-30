@@ -9,4 +9,4 @@ import com.mpe85.grampa.parser.ParseResult
  * @param[T] The type of the stack elements
  * @property[result] The parse result
  */
-class PostParseEvent<T>(val result: ParseResult<T>)
+public class PostParseEvent<T>(public val result: ParseResult<T>)

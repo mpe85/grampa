@@ -8,7 +8,7 @@ import org.greenrobot.eventbus.Subscribe
  * @author mpe85
  * @param[T] The type of the stack elements
  */
-open class ParseEventListener<T> {
+public open class ParseEventListener<T> {
 
     /**
      * Called on a [PreParseEvent].
@@ -16,7 +16,7 @@ open class ParseEventListener<T> {
      * @param[event] The posted event
      */
     @Subscribe
-    open fun beforeParse(event: PreParseEvent<T>) = Unit
+    public open fun beforeParse(event: PreParseEvent<T>): Unit = Unit
 
     /**
      * Called on a [PreMatchEvent].
@@ -24,7 +24,7 @@ open class ParseEventListener<T> {
      * @param[event] The posted event
      */
     @Subscribe
-    open fun beforeMatch(event: PreMatchEvent<T>) = Unit
+    public open fun beforeMatch(event: PreMatchEvent<T>): Unit = Unit
 
     /**
      * Called on a [MatchSuccessEvent].
@@ -32,7 +32,7 @@ open class ParseEventListener<T> {
      * @param[event] The posted event
      */
     @Subscribe
-    open fun afterMatchSuccess(event: MatchSuccessEvent<T>) = Unit
+    public open fun afterMatchSuccess(event: MatchSuccessEvent<T>): Unit = Unit
 
     /**
      * Called on a [MatchFailureEvent].
@@ -40,7 +40,7 @@ open class ParseEventListener<T> {
      * @param[event] The posted event
      */
     @Subscribe
-    fun afterMatchFailure(event: MatchFailureEvent<T>) = Unit
+    public fun afterMatchFailure(event: MatchFailureEvent<T>): Unit = Unit
 
     /**
      * Called on a [PostParseEvent].
@@ -48,5 +48,5 @@ open class ParseEventListener<T> {
      * @param[event] The posted event
      */
     @Subscribe
-    open fun afterParse(event: PostParseEvent<T>) = Unit
+    public open fun afterParse(event: PostParseEvent<T>): Unit = Unit
 }

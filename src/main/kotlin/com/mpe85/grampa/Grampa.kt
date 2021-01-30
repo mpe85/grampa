@@ -29,7 +29,7 @@ import kotlin.reflect.jvm.jvmErasure
  * @param[T] The type of the stack elements
  * @return A grammar instance
  */
-fun <U : Grammar<T>, T> KClass<U>.createGrammar() = createGrammarSubClass().createInstance()
+public fun <U : Grammar<T>, T> KClass<U>.createGrammar(): U = createGrammarSubClass().createInstance()
 
 /**
  * Create a new grammar instance using the given grammar [Class].
@@ -39,7 +39,7 @@ fun <U : Grammar<T>, T> KClass<U>.createGrammar() = createGrammarSubClass().crea
  * @param[T] The type of the stack elements
  * @return A grammar instance
  */
-fun <U : Grammar<T>, T> Class<U>.createGrammar() = kotlin.createGrammar()
+public fun <U : Grammar<T>, T> Class<U>.createGrammar(): U = kotlin.createGrammar()
 
 /**
  * Create a new grammar instance using the given grammar [KClass] and constructor arguments.
@@ -50,7 +50,7 @@ fun <U : Grammar<T>, T> Class<U>.createGrammar() = kotlin.createGrammar()
  * @param[args] The constructor arguments
  * @return A grammar instance
  */
-fun <U : Grammar<T>, T> KClass<U>.createGrammar(vararg args: Any?): U {
+public fun <U : Grammar<T>, T> KClass<U>.createGrammar(vararg args: Any?): U {
     for (constructor in createGrammarSubClass().constructors) {
         try {
             return constructor.call(*args)
@@ -70,7 +70,7 @@ fun <U : Grammar<T>, T> KClass<U>.createGrammar(vararg args: Any?): U {
  * @param[args] The constructor arguments
  * @return A grammar instance
  */
-fun <U : Grammar<T>, T> Class<U>.createGrammar(vararg args: Any?) = kotlin.createGrammar(args)
+public fun <U : Grammar<T>, T> Class<U>.createGrammar(vararg args: Any?): U = kotlin.createGrammar(args)
 
 private fun <U : Grammar<T>, T> KClass<U>.createGrammarSubClass(): KClass<out U> {
     validate()

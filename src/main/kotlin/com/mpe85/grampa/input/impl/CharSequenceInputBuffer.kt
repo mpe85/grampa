@@ -1,6 +1,7 @@
 package com.mpe85.grampa.input.impl
 
 import com.mpe85.grampa.input.InputBuffer
+import com.mpe85.grampa.input.InputPosition
 
 /**
  * An [InputBuffer] implementation using a [CharSequence].
@@ -8,13 +9,13 @@ import com.mpe85.grampa.input.InputBuffer
  * @author mpe85
  * @property[charSequence] A character sequence backing the input buffer
  */
-open class CharSequenceInputBuffer(private val charSequence: CharSequence) : InputBuffer {
+public open class CharSequenceInputBuffer(private val charSequence: CharSequence) : InputBuffer {
 
-    override val length get() = charSequence.length
+    override val length: Int get() = charSequence.length
     private val lineCounter = CharSequenceLineCounter(charSequence)
 
-    override fun getChar(index: Int) = charSequence[index]
-    override fun getCodePoint(index: Int) = charSequence.toString().codePointAt(index)
-    override fun subSequence(startIndex: Int, endIndex: Int) = charSequence.subSequence(startIndex, endIndex)
-    override fun getPosition(index: Int) = lineCounter.getPosition(index)
+    override fun getChar(index: Int): Char = charSequence[index]
+    override fun getCodePoint(index: Int): Int = charSequence.toString().codePointAt(index)
+    override fun subSequence(start: Int, end: Int): CharSequence = charSequence.subSequence(start, end)
+    override fun getPosition(index: Int): InputPosition = lineCounter.getPosition(index)
 }

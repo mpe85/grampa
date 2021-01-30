@@ -9,14 +9,14 @@ import com.mpe85.grampa.context.RuleContext
  * @param[T] The type of the stack elements
  */
 @FunctionalInterface
-fun interface Command<T> {
+public fun interface Command<T> {
 
     /**
      * Execute the parser command.
      *
      * @param[context] A rule context
      */
-    fun execute(context: RuleContext<T>)
+    public fun execute(context: RuleContext<T>)
 }
 
 /**
@@ -24,4 +24,4 @@ fun interface Command<T> {
  *
  * @return A parser action
  */
-fun <T> Command<T>.toAction() = Action<T> { execute(it); true }
+public fun <T> Command<T>.toAction(): Action<T> = Action<T> { execute(it); true }

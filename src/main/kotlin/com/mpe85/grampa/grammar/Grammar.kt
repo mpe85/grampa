@@ -8,12 +8,12 @@ import com.mpe85.grampa.rule.Rule
  * @author mpe85
  * @param[T] The type of the stack elements
  */
-interface Grammar<T> {
+public interface Grammar<T> {
 
     /**
      * Get the root rule of the grammar.
      *
      * @return A grammar rule
      */
-    fun root(): Rule<T>
+    public fun root(): Rule<T>
 }

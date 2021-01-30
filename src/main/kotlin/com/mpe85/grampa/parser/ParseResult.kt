@@ -1,6 +1,7 @@
 package com.mpe85.grampa.parser
 
 import com.mpe85.grampa.context.ParserContext
+import com.mpe85.grampa.stack.RestorableStack
 
 /**
  * A holder for the result of a parse run.
@@ -15,11 +16,11 @@ import com.mpe85.grampa.context.ParserContext
  * @property[stack] The parser's stack
  * @property[stackTop] The top element of the parser's stack, or null if the stack is empty
  */
-class ParseResult<T>(val matched: Boolean, context: ParserContext<T>) {
+public class ParseResult<T>(public val matched: Boolean, context: ParserContext<T>) {
 
-    val matchedEntireInput = matched && context.atEndOfInput
-    val matchedInput = if (matched) context.matchedInput else null
-    val restOfInput = if (matched) context.restOfInput else context.input
-    val stack = context.stack.copy()
-    val stackTop get() = if (stack.size > 0) stack.peek() else null
+    public val matchedEntireInput: Boolean = matched && context.atEndOfInput
+    public val matchedInput: CharSequence? = if (matched) context.matchedInput else null
+    public val restOfInput: CharSequence = if (matched) context.restOfInput else context.input
+    public val stack: RestorableStack<T> = context.stack.copy()
+    public val stackTop: T? get() = if (stack.size > 0) stack.peek() else null
 }

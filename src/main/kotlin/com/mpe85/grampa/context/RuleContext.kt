@@ -26,22 +26,21 @@ import org.greenrobot.eventbus.EventBus
  * @property[bus] The parser event bus
  * @property[parent] The parent context of the context
  */
-interface RuleContext<T> {
-
-    val level: Int
-    val startIndex: Int
-    val currentIndex: Int
-    val atEndOfInput: Boolean
-    val currentChar: Char
-    val currentCodePoint: Int
-    val numberOfCharsLeft: Int
-    val input: CharSequence
-    val matchedInput: CharSequence
-    val restOfInput: CharSequence
-    val previousMatch: CharSequence?
-    val position: InputPosition
-    val inTestRule: Boolean
-    val stack: RestorableStack<T>
-    val bus: EventBus
-    val parent: RuleContext<T>?
+public interface RuleContext<T> {
+    public val level: Int
+    public val startIndex: Int
+    public val currentIndex: Int
+    public val atEndOfInput: Boolean
+    public val currentChar: Char
+    public val currentCodePoint: Int
+    public val numberOfCharsLeft: Int
+    public val input: CharSequence
+    public val matchedInput: CharSequence
+    public val restOfInput: CharSequence
+    public val previousMatch: CharSequence?
+    public val position: InputPosition
+    public val inTestRule: Boolean
+    public val stack: RestorableStack<T>
+    public val bus: EventBus
+    public val parent: RuleContext<T>?
 }

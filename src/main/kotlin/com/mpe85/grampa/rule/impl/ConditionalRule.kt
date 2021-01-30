@@ -16,20 +16,20 @@ import java.util.Objects.hash
  * @property[thenRule] A rule to run if the condition evaluates to true
  * @property[elseRule] An optional rule to run if the condition evaluates to false
  */
-class ConditionalRule<T> @JvmOverloads constructor(
+public class ConditionalRule<T> @JvmOverloads constructor(
     private val condition: (RuleContext<T>) -> Boolean,
     private val thenRule: Rule<T>,
     private val elseRule: Rule<T>? = null
 ) : AbstractRule<T>(elseRule?.let { listOf(thenRule, it) } ?: listOf(thenRule)) {
 
-    override fun match(context: ParserContext<T>) =
+    override fun match(context: ParserContext<T>): Boolean =
         if (condition(context)) thenRule.match(context) else elseRule?.match(context) ?: true
 
-    override fun hashCode() = hash(super.hashCode(), condition, thenRule, elseRule)
-    override fun equals(other: Any?) =
+    override fun hashCode(): Int = hash(super.hashCode(), condition, thenRule, elseRule)
+    override fun equals(other: Any?): Boolean =
         checkEquality(other, { super.equals(other) }, { it.condition }, { it.thenRule }, { it.elseRule })
 
-    override fun toString() = stringify(
+    override fun toString(): String = stringify(
         "condition" to condition,
         "thenRule" to thenRule::class.simpleName,
         "elseRule" to elseRule?.let { it::class.simpleName }

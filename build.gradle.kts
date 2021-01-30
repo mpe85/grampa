@@ -41,6 +41,10 @@ dependencies {
     testCompileOnly(Libs.spotbugsAnnotations)
 }
 
+kotlin {
+    explicitApi()
+}
+
 jacoco {
     toolVersion = Versions.jacoco
 }

@@ -9,7 +9,7 @@ import java.util.Deque
  *
  * @param[E] The type of the stack elements
  */
-interface Stack<E> : Deque<E> {
+public interface Stack<E> : Deque<E> {
 
     /**
      * Insert an element onto the stack at a given position.
@@ -18,7 +18,7 @@ interface Stack<E> : Deque<E> {
      *              (i.e. the number of elements on the stack to skip).
      * @param[element] An element
      */
-    fun push(down: Int, element: E)
+    public fun push(down: Int, element: E)
 
     /**
      * Retrieve and remove an element from the stack at a given position.
@@ -27,7 +27,7 @@ interface Stack<E> : Deque<E> {
      *              (i.e. the number of elements on the stack to skip).
      * @return The popped element
      */
-    fun pop(down: Int): E
+    public fun pop(down: Int): E
 
     /**
      * Retrieve an element from the stack at a given position without removing it.
@@ -36,7 +36,7 @@ interface Stack<E> : Deque<E> {
      *              (i.e. the number of elements on the stack to skip).
      * @return The peeked element
      */
-    fun peek(down: Int): E
+    public fun peek(down: Int): E
 
     /**
      * Replace the element on top of the stack.
@@ -44,7 +44,7 @@ interface Stack<E> : Deque<E> {
      * @param[element] A replacement element
      * @return The replaced element
      */
-    fun poke(element: E): E
+    public fun poke(element: E): E
 
     /**
      * Replace an element in the stack at a given position.
@@ -54,22 +54,22 @@ interface Stack<E> : Deque<E> {
      * @param[element] A replacement element
      * @return The replaced element
      */
-    fun poke(down: Int, element: E): E
+    public fun poke(down: Int, element: E): E
 
     /**
      * Duplicate the element on top of the stack, i.e. the top stack element gets pushed again.
      */
-    fun dup()
+    public fun dup()
 
     /**
      * Swap the two top stack elements on the stack.
      */
-    fun swap()
+    public fun swap()
 
     /**
      * Copy the stack. Only the references to the elements are copied, not the elements themselves.
      *
      * @return The stack copy
      */
-    fun copy(): Stack<E>
+    public fun copy(): Stack<E>
 }

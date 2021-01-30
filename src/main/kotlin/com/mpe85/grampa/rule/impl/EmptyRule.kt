@@ -11,11 +11,11 @@ import java.util.Objects.hash
  * @author mpe85
  * @param[T] The type of the stack elements
  */
-class EmptyRule<T> : AbstractRule<T>() {
+public class EmptyRule<T> : AbstractRule<T>() {
 
-    override fun match(context: ParserContext<T>) = true
+    override fun match(context: ParserContext<T>): Boolean = true
 
-    override fun hashCode() = hash(super.hashCode())
-    override fun equals(other: Any?) = checkEquality(other, { super.equals(other) })
-    override fun toString() = stringify()
+    override fun hashCode(): Int = hash(super.hashCode())
+    override fun equals(other: Any?): Boolean = checkEquality(other, { super.equals(other) })
+    override fun toString(): String = stringify()
 }

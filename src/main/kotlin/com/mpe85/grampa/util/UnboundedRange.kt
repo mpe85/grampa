@@ -6,7 +6,7 @@ package com.mpe85.grampa.util
  * @property[min] The lower bound
  * @property[max] The upper bound, may be null i.e. unbounded
  */
-data class UnboundedRange(val min: Int = 0, val max: Int? = null)
+public data class UnboundedRange(val min: Int = 0, val max: Int? = null)
 
 /**
  * Create an [UnboundedRange] with a given lower and upper bound.
@@ -15,7 +15,7 @@ data class UnboundedRange(val min: Int = 0, val max: Int? = null)
  * @param[max] The max value, may be unbounded (null)
  * @return An [UnboundedRange]
  */
-fun range(min: Int = 0, max: Int? = null) = UnboundedRange(min, max)
+public fun range(min: Int = 0, max: Int? = null): UnboundedRange = UnboundedRange(min, max)
 
 /**
  * Create an [UnboundedRange] with a given lower bound and no upper bound.
@@ -23,7 +23,7 @@ fun range(min: Int = 0, max: Int? = null) = UnboundedRange(min, max)
  * @param[n] The min value
  * @return An [UnboundedRange]
  */
-fun min(n: Int) = UnboundedRange(min = n)
+public fun min(n: Int): UnboundedRange = UnboundedRange(min = n)
 
 /**
  * Create an [UnboundedRange] with a given upper bound and a zero lower bound.
@@ -31,4 +31,4 @@ fun min(n: Int) = UnboundedRange(min = n)
  * @param[n] The max value
  * @return An [UnboundedRange]
  */
-fun max(n: Int) = UnboundedRange(max = n)
+public fun max(n: Int): UnboundedRange = UnboundedRange(max = n)

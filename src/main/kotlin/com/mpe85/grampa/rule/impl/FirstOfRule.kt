@@ -13,13 +13,13 @@ import java.util.Objects.hash
  * @param[T] The type of the stack elements
  * @param[rules] A list of child rules
  */
-class FirstOfRule<T>(rules: List<Rule<T>>) : AbstractRule<T>(rules) {
+public class FirstOfRule<T>(rules: List<Rule<T>>) : AbstractRule<T>(rules) {
 
-    override fun match(context: ParserContext<T>) = children.any { context.createChildContext(it).run() }
+    override fun match(context: ParserContext<T>): Boolean = children.any { context.createChildContext(it).run() }
 
-    override fun hashCode() = hash(super.hashCode())
-    override fun equals(other: Any?) = checkEquality(other, { super.equals(other) })
-    override fun toString() = stringify("#children" to children.size)
+    override fun hashCode(): Int = hash(super.hashCode())
+    override fun equals(other: Any?): Boolean = checkEquality(other, { super.equals(other) })
+    override fun toString(): String = stringify("#children" to children.size)
 }
 
 /**
@@ -28,4 +28,4 @@ class FirstOfRule<T>(rules: List<Rule<T>>) : AbstractRule<T>(rules) {
  * @param[other] Another rule
  * @return A [FirstOfRule] with [this] and [other] as its child rules
  */
-infix fun <T> Rule<T>.or(other: Rule<T>) = FirstOfRule(listOf(this, other))
+public infix fun <T> Rule<T>.or(other: Rule<T>): Rule<T> = FirstOfRule(listOf(this, other))

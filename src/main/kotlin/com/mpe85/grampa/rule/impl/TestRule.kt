@@ -13,9 +13,9 @@ import java.util.Objects.hash
  * @param[T] The type of the stack elements
  * @property[rule] The child rule to test
  */
-class TestRule<T>(private var rule: Rule<T>) : AbstractRule<T>(rule) {
+public class TestRule<T>(private var rule: Rule<T>) : AbstractRule<T>(rule) {
 
-    override val testRule get() = true
+    override val testRule: Boolean = true
 
     override fun match(context: ParserContext<T>): Boolean {
         val currentIndex = context.currentIndex
@@ -29,7 +29,7 @@ class TestRule<T>(private var rule: Rule<T>) : AbstractRule<T>(rule) {
         return false
     }
 
-    override fun hashCode() = hash(super.hashCode())
-    override fun equals(other: Any?) = checkEquality(other, { super.equals(other) })
-    override fun toString() = stringify("rule" to rule::class.simpleName)
+    override fun hashCode(): Int = hash(super.hashCode())
+    override fun equals(other: Any?): Boolean = checkEquality(other, { super.equals(other) })
+    override fun toString(): String = stringify("rule" to rule::class.simpleName)
 }

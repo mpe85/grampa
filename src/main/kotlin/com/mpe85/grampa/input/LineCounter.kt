@@ -6,9 +6,9 @@ package com.mpe85.grampa.input
  * @author mpe85
  * @property[lineCount] The line count
  */
-interface LineCounter {
+public interface LineCounter {
 
-    val lineCount: Int
+    public val lineCount: Int
 
     /**
      * Get the position of a character at a given index.
@@ -16,5 +16,5 @@ interface LineCounter {
      * @param[index] A valid index
      * @return The input position at the given index
      */
-    fun getPosition(index: Int): InputPosition
+    public fun getPosition(index: Int): InputPosition
 }

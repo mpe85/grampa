@@ -2,6 +2,7 @@ package com.mpe85.grampa.rule.impl
 
 import com.ibm.icu.lang.UCharacter.toLowerCase
 import com.mpe85.grampa.context.ParserContext
+import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.util.checkEquality
 import com.mpe85.grampa.util.stringify
 import java.util.Objects.hash
@@ -14,7 +15,7 @@ import java.util.Objects.hash
  * @param[string] A string
  * @property[ignoreCase] Indicates if the case should be ignored
  */
-class StringRule<T> @JvmOverloads constructor(string: String, private val ignoreCase: Boolean = false) :
+public class StringRule<T> @JvmOverloads constructor(string: String, private val ignoreCase: Boolean = false) :
     AbstractRule<T>() {
 
     private val string = if (ignoreCase) toLowerCase(string) else string
@@ -28,9 +29,11 @@ class StringRule<T> @JvmOverloads constructor(string: String, private val ignore
         return false
     }
 
-    override fun hashCode() = hash(super.hashCode(), string, ignoreCase)
-    override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.string }, { it.ignoreCase })
-    override fun toString() = stringify("string" to string, "ignoreCase" to ignoreCase)
+    override fun hashCode(): Int = hash(super.hashCode(), string, ignoreCase)
+    override fun equals(other: Any?): Boolean =
+        checkEquality(other, { super.equals(other) }, { it.string }, { it.ignoreCase })
+
+    override fun toString(): String = stringify("string" to string, "ignoreCase" to ignoreCase)
 }
 
 /**
@@ -38,4 +41,4 @@ class StringRule<T> @JvmOverloads constructor(string: String, private val ignore
  *
  * @return A [StringRule]
  */
-fun <T> String.toRule() = StringRule<T>(this)
+public fun <T> String.toRule(): Rule<T> = StringRule(this)

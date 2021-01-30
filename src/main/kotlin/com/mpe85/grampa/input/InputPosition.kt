@@ -8,4 +8,4 @@ package com.mpe85.grampa.input
  * @property[line] The line number
  * @property[column] The column number
  */
-data class InputPosition(val line: Int, val column: Int)
+public data class InputPosition(val line: Int, val column: Int)

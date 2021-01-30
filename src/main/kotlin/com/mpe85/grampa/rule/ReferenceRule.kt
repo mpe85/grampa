@@ -6,7 +6,7 @@ package com.mpe85.grampa.rule
  * @author mpe85
  * @property[referencedRuleHash] The hash value of the referenced rule
  */
-interface ReferenceRule<T> : Rule<T> {
+public interface ReferenceRule<T> : Rule<T> {
 
-    val referencedRuleHash: Int
+    public val referencedRuleHash: Int
 }

@@ -14,7 +14,7 @@ import com.mpe85.grampa.visitor.RuleVisitor
  * @param[replacementRules] The replacement rules, hashed by the hash code of the rule methods they were created by,
  *   see [RuleMethodInterceptor].
  */
-class ReferenceRuleReplaceVisitor<T>(private val replacementRules: Map<Int, Rule<T>?>) : RuleVisitor<T> {
+internal class ReferenceRuleReplaceVisitor<T>(private val replacementRules: Map<Int, Rule<T>?>) : RuleVisitor<T> {
 
     override fun visit(rule: AbstractRule<T>) = rule.children.forEachIndexed { index, childRule ->
         (childRule as? ReferenceRule<T>)?.let { refRule ->

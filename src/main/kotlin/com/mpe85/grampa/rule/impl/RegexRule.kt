@@ -14,20 +14,20 @@ import java.util.regex.Pattern.compile
  * @param[T] The type of the stack elements
  * @property[pattern] A compiled regular expression
  */
-class RegexRule<T>(private val pattern: Pattern) : AbstractRule<T>() {
+public class RegexRule<T>(private val pattern: Pattern) : AbstractRule<T>() {
 
     /**
      * Construct a regex rule using a regex string.
      *
      * @param[regex] A string containing a regular expression
      */
-    constructor(regex: String) : this(compile(regex))
+    public constructor(regex: String) : this(compile(regex))
 
-    override fun match(context: ParserContext<T>) = pattern.matcher(context.restOfInput).let { matcher ->
+    override fun match(context: ParserContext<T>): Boolean = pattern.matcher(context.restOfInput).let { matcher ->
         matcher.lookingAt() && context.advanceIndex(matcher.end())
     }
 
-    override fun hashCode() = hash(super.hashCode(), pattern)
-    override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.pattern })
-    override fun toString() = stringify("pattern" to pattern)
+    override fun hashCode(): Int = hash(super.hashCode(), pattern)
+    override fun equals(other: Any?): Boolean = checkEquality(other, { super.equals(other) }, { it.pattern })
+    override fun toString(): String = stringify("pattern" to pattern)
 }

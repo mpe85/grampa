@@ -8,7 +8,8 @@ import com.mpe85.grampa.input.InputBuffer
  * @author mpe85
  * @param[stringBuilder] A string builder backing the input buffer
  */
-class StringBuilderInputBuffer(private val stringBuilder: StringBuilder) : CharSequenceInputBuffer(stringBuilder) {
+public class StringBuilderInputBuffer(private val stringBuilder: StringBuilder) :
+    CharSequenceInputBuffer(stringBuilder) {
 
-    override fun getCodePoint(index: Int) = stringBuilder.codePointAt(index)
+    override fun getCodePoint(index: Int): Int = stringBuilder.codePointAt(index)
 }

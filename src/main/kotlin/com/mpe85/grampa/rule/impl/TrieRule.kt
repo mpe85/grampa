@@ -20,7 +20,10 @@ import java.util.Objects.hash
  * @property[ignoreCase] Indicates if the case of the strings should be ignored
  * @property[strings] A set containing all strings inside the trie
  */
-class TrieRule<T> @JvmOverloads constructor(strings: Collection<String>, private val ignoreCase: Boolean = false) :
+public class TrieRule<T> @JvmOverloads constructor(
+    strings: Collection<String>,
+    private val ignoreCase: Boolean = false
+) :
     AbstractRule<T>() {
 
     private val trie = CharsTrieBuilder().run {
@@ -33,7 +36,7 @@ class TrieRule<T> @JvmOverloads constructor(strings: Collection<String>, private
      *
      * @param[strings] A variable number of strings
      */
-    constructor(vararg strings: String) : this(strings.toList())
+    public constructor(vararg strings: String) : this(strings.toList())
 
     /**
      * Construct a case-sensitive or case-insensitive trie.
@@ -41,11 +44,11 @@ class TrieRule<T> @JvmOverloads constructor(strings: Collection<String>, private
      * @param[ignoreCase] Indicates if the case of the strings should be ignored
      * @param[strings] A variable number of strings
      */
-    constructor(ignoreCase: Boolean, vararg strings: String) : this(strings.toSet(), ignoreCase)
+    public constructor(ignoreCase: Boolean, vararg strings: String) : this(strings.toSet(), ignoreCase)
 
     private val strings get() = trie.iterator().asSequence().map { it.chars.toString() }.toSet()
 
-    override fun match(context: ParserContext<T>) = try {
+    override fun match(context: ParserContext<T>): Boolean = try {
         var longestMatch = 0
         val codePoints = context.restOfInput.codePoints().toArray()
         for (i in codePoints.indices) {
@@ -62,7 +65,9 @@ class TrieRule<T> @JvmOverloads constructor(strings: Collection<String>, private
         trie.reset()
     }
 
-    override fun hashCode() = hash(super.hashCode(), strings, ignoreCase)
-    override fun equals(other: Any?) = checkEquality(other, { super.equals(other) }, { it.strings }, { it.ignoreCase })
-    override fun toString() = stringify("strings" to strings, "ignoreCase" to ignoreCase)
+    override fun hashCode(): Int = hash(super.hashCode(), strings, ignoreCase)
+    override fun equals(other: Any?): Boolean =
+        checkEquality(other, { super.equals(other) }, { it.strings }, { it.ignoreCase })
+
+    override fun toString(): String = stringify("strings" to strings, "ignoreCase" to ignoreCase)
 }
