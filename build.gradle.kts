@@ -67,6 +67,9 @@ val sourcesJar = tasks.create<Jar>("sourcesJar") {
 }
 
 tasks {
+    named<SpotBugsTask>("spotbugsTest") {
+        enabled = false
+    }
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = Versions.jvmTarget
     }
