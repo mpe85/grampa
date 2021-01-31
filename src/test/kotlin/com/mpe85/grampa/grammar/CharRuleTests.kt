@@ -1,13 +1,11 @@
 package com.mpe85.grampa.grammar
 
-import com.mpe85.grampa.legalCodePoints
 import com.mpe85.grampa.parser.Parser
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
 import io.kotest.property.arbitrary.char
 import io.kotest.property.arbitrary.filter
-import io.kotest.property.arbitrary.string
 import io.kotest.property.checkAll
 
 class CharRuleTests : StringSpec({
@@ -66,22 +64,6 @@ class CharRuleTests : StringSpec({
                         matchedEntireInput shouldBe false
                         matchedInput shouldBe null
                         restOfInput shouldBe "$c"
-                    }
-                }
-            }
-        }
-    }
-    "Char rule does not match wrong code point" {
-        checkAll<Char> { ch ->
-            Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = char(ch)
-            }).apply {
-                checkAll(Arb.string(1, legalCodePoints().filter { it.value != ch.toInt() })) { str ->
-                    run(str).apply {
-                        matched shouldBe false
-                        matchedEntireInput shouldBe false
-                        matchedInput shouldBe null
-                        restOfInput shouldBe str
                     }
                 }
             }

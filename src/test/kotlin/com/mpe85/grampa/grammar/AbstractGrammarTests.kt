@@ -24,65 +24,6 @@ private class IntegerTestListener : ParseEventListener<Int>()
 private class CharSequenceTestListener : ParseEventListener<CharSequence>()
 
 class AbstractGrammarTests : StringSpec({
-    "CharRange rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = charRange('a', 'f')
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("c").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "c"
-                restOfInput shouldBe ""
-            }
-            run("h").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "h"
-            }
-        }
-    }
-    "AnyOfChars rule grammar" {
-        listOf(
-            object : AbstractGrammar<Int>() {
-                override fun root() = anyOfChars('a', 'f')
-            },
-            object : AbstractGrammar<Int>() {
-                override fun root() = anyOfChars(setOf('a', 'f'))
-            },
-            object : AbstractGrammar<Int>() {
-                override fun root() = anyOfChars("af")
-            }
-        ).forAll { grammar ->
-            Parser(grammar).apply {
-                registerListener(IntegerTestListener())
-                run("a").apply {
-                    matched shouldBe true
-                    matchedEntireInput shouldBe true
-                    matchedInput shouldBe "a"
-                    restOfInput shouldBe ""
-                }
-                run("c").apply {
-                    matched shouldBe false
-                    matchedEntireInput shouldBe false
-                    matchedInput shouldBe null
-                    restOfInput shouldBe "c"
-                }
-            }
-        }
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = anyOfChars()
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("a").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "a"
-            }
-        }
-    }
     "NoneOfChars rule grammar" {
         listOf(
             object : AbstractGrammar<Int>() {
