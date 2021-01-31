@@ -13,13 +13,11 @@ class CharRuleTests : StringSpec({
         checkAll<Char> { ch ->
             Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = char(ch)
-            }).apply {
-                run("$ch").apply {
-                    matched shouldBe true
-                    matchedEntireInput shouldBe true
-                    matchedInput shouldBe "$ch"
-                    restOfInput shouldBe ""
-                }
+            }).run("$ch").apply {
+                matched shouldBe true
+                matchedEntireInput shouldBe true
+                matchedInput shouldBe "$ch"
+                restOfInput shouldBe ""
             }
         }
     }
@@ -73,13 +71,11 @@ class CharRuleTests : StringSpec({
         checkAll<Char> { ch ->
             Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = char(ch)
-            }).apply {
-                run("").apply {
-                    matched shouldBe false
-                    matchedEntireInput shouldBe false
-                    matchedInput shouldBe null
-                    restOfInput shouldBe ""
-                }
+            }).run("").apply {
+                matched shouldBe false
+                matchedEntireInput shouldBe false
+                matchedInput shouldBe null
+                restOfInput shouldBe ""
             }
         }
     }

@@ -26,13 +26,11 @@ class EmptyRuleTests : StringSpec({
     "Empty rule matches empty input" {
         Parser(object : AbstractGrammar<Unit>() {
             override fun root() = empty()
-        }).apply {
-            run("").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe ""
-                restOfInput shouldBe ""
-            }
+        }).run("").apply {
+            matched shouldBe true
+            matchedEntireInput shouldBe true
+            matchedInput shouldBe ""
+            restOfInput shouldBe ""
         }
     }
 })

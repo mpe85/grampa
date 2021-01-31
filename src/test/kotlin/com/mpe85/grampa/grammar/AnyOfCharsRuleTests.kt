@@ -25,13 +25,11 @@ class AnyOfCharsRuleTests : StringSpec({
         checkAll(Arb.list(Arb.char(), 1..10)) { chars ->
             grammars(chars).forEach { grammar ->
                 checkAll(Arb.element(chars)) { ch ->
-                    Parser(grammar).apply {
-                        run("$ch").apply {
-                            matched shouldBe true
-                            matchedEntireInput shouldBe true
-                            matchedInput shouldBe "$ch"
-                            restOfInput shouldBe ""
-                        }
+                    Parser(grammar).run("$ch").apply {
+                        matched shouldBe true
+                        matchedEntireInput shouldBe true
+                        matchedInput shouldBe "$ch"
+                        restOfInput shouldBe ""
                     }
                 }
             }
