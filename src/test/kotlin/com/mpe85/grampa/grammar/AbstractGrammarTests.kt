@@ -24,46 +24,6 @@ private class IntegerTestListener : ParseEventListener<Int>()
 private class CharSequenceTestListener : ParseEventListener<CharSequence>()
 
 class AbstractGrammarTests : StringSpec({
-    "NoneOfChars rule grammar" {
-        listOf(
-            object : AbstractGrammar<Int>() {
-                override fun root() = noneOfChars('a', 'f')
-            },
-            object : AbstractGrammar<Int>() {
-                override fun root() = noneOfChars(setOf('a', 'f'))
-            },
-            object : AbstractGrammar<Int>() {
-                override fun root() = noneOfChars("af")
-            }
-        ).forAll { grammar ->
-            Parser(grammar).apply {
-                registerListener(IntegerTestListener())
-                run("c").apply {
-                    matched shouldBe true
-                    matchedEntireInput shouldBe true
-                    matchedInput shouldBe "c"
-                    restOfInput shouldBe ""
-                }
-                run("f").apply {
-                    matched shouldBe false
-                    matchedEntireInput shouldBe false
-                    matchedInput shouldBe null
-                    restOfInput shouldBe "f"
-                }
-            }
-        }
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = noneOfChars()
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("c").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "c"
-                restOfInput shouldBe ""
-            }
-        }
-    }
     "CodePoint rule grammar" {
         Parser(object : AbstractGrammar<Int>() {
             override fun root() = codePoint("\uD835\uDD38".codePointAt(0))

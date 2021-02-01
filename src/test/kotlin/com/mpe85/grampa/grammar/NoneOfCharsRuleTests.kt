@@ -8,59 +8,58 @@ import io.kotest.property.arbitrary.char
 import io.kotest.property.arbitrary.set
 import io.kotest.property.checkAll
 
-class AnyOfCharsRuleTests : StringSpec({
+class NoneOfCharsRuleTests : StringSpec({
     fun grammars(chars: Collection<Char>) = listOf(
         object : AbstractGrammar<Unit>() {
-            override fun root() = anyOfChars(*chars.toCharArray())
+            override fun root() = noneOfChars(*chars.toCharArray())
         },
         object : AbstractGrammar<Unit>() {
-            override fun root() = anyOfChars(chars)
+            override fun root() = noneOfChars(chars)
         },
         object : AbstractGrammar<Unit>() {
-            override fun root() = anyOfChars(chars.joinToString(""))
+            override fun root() = noneOfChars(chars.joinToString(""))
         }
     )
-    "AnyOfChars rule matches character in collection" {
+    "NoneOfChars rule does not match character in collection" {
         checkAll(Arb.set(Arb.char(), 1..10)) { chars ->
             grammars(chars).forEach { grammar ->
                 Parser(grammar).apply {
                     chars.forEach { ch ->
                         run("$ch").apply {
-                            matched shouldBe true
-                            matchedEntireInput shouldBe true
-                            matchedInput shouldBe "$ch"
-                            restOfInput shouldBe ""
+                            matched shouldBe false
+                            matchedEntireInput shouldBe false
+                            matchedInput shouldBe null
+                            restOfInput shouldBe "$ch"
                         }
                     }
                 }
             }
         }
     }
-    "AnyOfChars rule does not match character not in collection" {
+    "NoneOfChars rule matches character not in collection" {
         checkAll(Arb.set(Arb.char(), 2..10)) { chars ->
             grammars(chars.drop(1)).forEach { grammar ->
                 Parser(grammar).run("${chars.first()}").apply {
-                    matched shouldBe false
-                    matchedEntireInput shouldBe false
-                    matchedInput shouldBe null
-                    restOfInput shouldBe "${chars.first()}"
+                    matched shouldBe true
+                    matchedEntireInput shouldBe true
+                    matchedInput shouldBe "${chars.first()}"
+                    restOfInput shouldBe ""
                 }
             }
         }
     }
-    "Empty AnyOfChars rule matches no character" {
+    "Empty NoneOfChars rule matches any character" {
         grammars(emptySet()).forEach { grammar ->
             Parser(grammar).apply {
                 checkAll<Char> { ch ->
                     run("$ch").apply {
-                        matched shouldBe false
-                        matchedEntireInput shouldBe false
-                        matchedInput shouldBe null
-                        restOfInput shouldBe "$ch"
+                        matched shouldBe true
+                        matchedEntireInput shouldBe true
+                        matchedInput shouldBe "$ch"
+                        restOfInput shouldBe ""
                     }
                 }
             }
         }
     }
 })
-
