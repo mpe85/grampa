@@ -64,7 +64,7 @@ Adding a dependency using Ivy:
 Create a grammar class by extending the `AbstractGrammar` class:
 
 ```kotlin
-class LetterGrammar : AbstractGrammar<Unit>() {
+open class LetterGrammar : AbstractGrammar<Unit>() {
     override fun root() = oneOrMore(letter()) + eoi()
 }
 ```
