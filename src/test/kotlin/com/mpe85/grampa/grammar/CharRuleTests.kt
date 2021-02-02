@@ -1,11 +1,13 @@
 package com.mpe85.grampa.grammar
 
+import com.mpe85.grampa.lowerCaseChars
 import com.mpe85.grampa.parser.Parser
+import com.mpe85.grampa.upperCaseChars
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
 import io.kotest.property.arbitrary.char
-import io.kotest.property.arbitrary.filter
+import io.kotest.property.arbitrary.set
 import io.kotest.property.checkAll
 
 class CharRuleTests : StringSpec({
@@ -22,7 +24,7 @@ class CharRuleTests : StringSpec({
         }
     }
     "Lowercase Char rule does not match uppercase character" {
-        checkAll(Arb.char(CharRange('a', 'z'))) { ch ->
+        checkAll(lowerCaseChars()) { ch ->
             Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = char(ch)
             }).apply {
@@ -37,7 +39,7 @@ class CharRuleTests : StringSpec({
         }
     }
     "Uppercase Char rule does not match lowercase character" {
-        checkAll(Arb.char(CharRange('A', 'Z'))) { ch ->
+        checkAll(upperCaseChars()) { ch ->
             Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = char(ch)
             }).apply {
@@ -52,18 +54,14 @@ class CharRuleTests : StringSpec({
         }
     }
     "Char rule does not match wrong character" {
-        checkAll<Char> { ch ->
+        checkAll(Arb.set(Arb.char(), 2..2)) { chars ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = char(ch)
-            }).apply {
-                checkAll(Arb.char().filter { it != ch }) { c ->
-                    run("$c").apply {
-                        matched shouldBe false
-                        matchedEntireInput shouldBe false
-                        matchedInput shouldBe null
-                        restOfInput shouldBe "$c"
-                    }
-                }
+                override fun root() = char(chars.first())
+            }).run("${chars.last()}").apply {
+                matched shouldBe false
+                matchedEntireInput shouldBe false
+                matchedInput shouldBe null
+                restOfInput shouldBe "${chars.last()}"
             }
         }
     }
