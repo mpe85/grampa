@@ -1,6 +1,6 @@
 object Versions {
     const val bintray = "1.8.5"
-    const val byteBuddy = "1.10.19"
+    const val byteBuddy = "1.10.20"
     const val detekt = "1.15.0"
     const val dokka = "1.4.20"
     const val eventBus = "3.2.0"
@@ -8,7 +8,7 @@ object Versions {
     const val jvmTarget = "1.8"
     const val icu4j = "68.2"
     const val kotest = "4.4.0"
-    const val kotlin = "1.4.21-2"
+    const val kotlin = "1.4.30"
     const val mockk = "1.10.5"
     const val spotbugs = "4.2.0"
     const val spotbugsPlugin = "4.6.0"
