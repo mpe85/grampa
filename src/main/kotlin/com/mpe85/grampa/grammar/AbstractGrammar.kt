@@ -97,7 +97,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[character] The character to match
      * @return A grammar rule
      */
-    protected open fun char(character: Char): Rule<T> = CharPredicateRule<T> { it == character }
+    protected open fun char(character: Char): Rule<T> = CharPredicateRule { it == character }
 
     /**
      * A rule that matches a specific character, ignoring the case of the character (case-insensitive).
@@ -182,7 +182,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[codePoint] The code point to match
      * @return A grammar rule
      */
-    protected open fun codePoint(codePoint: Int): Rule<T> = CodePointPredicateRule<T> { it == codePoint }
+    protected open fun codePoint(codePoint: Int): Rule<T> = CodePointPredicateRule { it == codePoint }
 
     /**
      * A rule that matches a specific code point, ignoring the case of the code point (case-insensitive).
@@ -191,7 +191,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @return A grammar rule
      */
     protected open fun ignoreCase(codePoint: Int): Rule<T> =
-        CodePointPredicateRule<T> { UCharacter.toLowerCase(it) == UCharacter.toLowerCase(codePoint) }
+        CodePointPredicateRule { UCharacter.toLowerCase(it) == UCharacter.toLowerCase(codePoint) }
 
     /**
      * A rule that matches a code point within a range of code points.
@@ -291,7 +291,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[regex] A regular expression
      * @return A grammar rule
      */
-    protected open fun regex(regex: String): Rule<T> = RegexRule<T>(regex)
+    protected open fun regex(regex: String): Rule<T> = RegexRule(regex)
 
     /**
      * A rule that matches a string within a set of strings.
