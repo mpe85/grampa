@@ -11,11 +11,11 @@ import io.kotest.property.Arb
 import io.kotest.property.arbitrary.set
 import io.kotest.property.checkAll
 
-class CodePointRuleTests : StringSpec({
-    "CodePoint rule matches correct codepoint" {
+class CodePointIgnoreCaseRuleTests : StringSpec({
+    "CodePointIgnoreCase rule matches correct codepoint" {
         checkAll(legalCodePoints()) { cp ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = codePoint(cp.value)
+                override fun root() = ignoreCase(cp.value)
             }).run(String.format("%c", cp.value)).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
@@ -24,40 +24,40 @@ class CodePointRuleTests : StringSpec({
             }
         }
     }
-    "Lowercase CodePoint rule does not match uppercase codepoint" {
+    "Lowercase CodePointIgnoreCase rule matches uppercase codepoint" {
         checkAll(lowerCaseCodePoints()) { cp ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = codePoint(cp.value)
+                override fun root() = ignoreCase(cp.value)
             }).apply {
                 val upperCase = UCharacter.toUpperCase(cp.value)
                 run(String.format("%c", upperCase)).apply {
-                    matched shouldBe false
-                    matchedEntireInput shouldBe false
-                    matchedInput shouldBe null
-                    restOfInput shouldBe String.format("%c", upperCase)
+                    matched shouldBe true
+                    matchedEntireInput shouldBe true
+                    matchedInput shouldBe String.format("%c", upperCase)
+                    restOfInput shouldBe ""
                 }
             }
         }
     }
-    "Uppercase CodePoint rule does not match lowercase codepoint" {
+    "Uppercase CodePointIgnoreCase rule matches lowercase codepoint" {
         checkAll(upperCaseCodePoints()) { cp ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = codePoint(cp.value)
+                override fun root() = ignoreCase(cp.value)
             }).apply {
                 val lowerCase = UCharacter.toLowerCase(cp.value)
                 run(String.format("%c", lowerCase)).apply {
-                    matched shouldBe false
-                    matchedEntireInput shouldBe false
-                    matchedInput shouldBe null
-                    restOfInput shouldBe String.format("%c", lowerCase)
+                    matched shouldBe true
+                    matchedEntireInput shouldBe true
+                    matchedInput shouldBe String.format("%c", lowerCase)
+                    restOfInput shouldBe ""
                 }
             }
         }
     }
-    "CodePoint rule does not match wrong codepoint" {
+    "CodePointIgnoreCase rule does not match wrong codepoint" {
         checkAll(Arb.set(legalCodePoints(), 2..2)) { codePoints ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = codePoint(codePoints.first().value)
+                override fun root() = ignoreCase(codePoints.first().value)
             }).run(String.format("%c", codePoints.last().value)).apply {
                 matched shouldBe false
                 matchedEntireInput shouldBe false
@@ -66,10 +66,10 @@ class CodePointRuleTests : StringSpec({
             }
         }
     }
-    "CodePoint rule does not match empty input" {
+    "CodePointIgnoreCase rule does not match empty input" {
         checkAll(legalCodePoints()) { cp ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = codePoint(cp.value)
+                override fun root() = ignoreCase(cp.value)
             }).run("").apply {
                 matched shouldBe false
                 matchedEntireInput shouldBe false

@@ -24,44 +24,6 @@ private class IntegerTestListener : ParseEventListener<Int>()
 private class CharSequenceTestListener : ParseEventListener<CharSequence>()
 
 class AbstractGrammarTests : StringSpec({
-    "CodePoint rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = codePoint("\uD835\uDD38".codePointAt(0))
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("\uD835\uDD38").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "\uD835\uDD38"
-                restOfInput shouldBe ""
-            }
-            run("\uD835\uDD39").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "\uD835\uDD39"
-            }
-        }
-    }
-    "CodePoint ignoreCase rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = ignoreCase('f'.toInt())
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("F").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "F"
-                restOfInput shouldBe ""
-            }
-            run("G").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "G"
-            }
-        }
-    }
     "CodePointRange rule grammar" {
         Parser(object : AbstractGrammar<Int>() {
             override fun root() = codePointRange('Z'.toInt(), 'b'.toInt())
