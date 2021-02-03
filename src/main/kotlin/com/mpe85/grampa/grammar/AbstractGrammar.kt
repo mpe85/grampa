@@ -190,8 +190,10 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[codePoint] The code point to match
      * @return A grammar rule
      */
-    protected open fun ignoreCase(codePoint: Int): Rule<T> =
-        CodePointPredicateRule { UCharacter.toLowerCase(it) == UCharacter.toLowerCase(codePoint) }
+    protected open fun ignoreCase(codePoint: Int): Rule<T> = CodePointPredicateRule {
+        UCharacter.toLowerCase(it) == UCharacter.toLowerCase(codePoint)
+                || UCharacter.toUpperCase(it) == UCharacter.toUpperCase(codePoint)
+    }
 
     /**
      * A rule that matches a code point within a range of code points.
