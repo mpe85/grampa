@@ -1,6 +1,7 @@
 package com.mpe85.grampa.grammar
 
 import com.mpe85.grampa.parser.Parser
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
@@ -58,6 +59,16 @@ class CharRangeRuleTests : StringSpec({
                 matchedEntireInput shouldBe false
                 matchedInput shouldBe null
                 restOfInput shouldBe ""
+            }
+        }
+    }
+    "CharRange rule throws exception when lower bound is higher than higher bound" {
+        checkAll(Arb.set(Arb.char(), 2..2)) { chars ->
+            val (low, high) = chars.sorted().let { it[0] to it[1] }
+            shouldThrow<IllegalArgumentException> {
+                Parser(object : AbstractGrammar<Unit>() {
+                    override fun root() = charRange(high, low)
+                })
             }
         }
     }

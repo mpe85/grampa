@@ -2,6 +2,7 @@ package com.mpe85.grampa.grammar
 
 import com.mpe85.grampa.legalCodePoints
 import com.mpe85.grampa.parser.Parser
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
@@ -60,6 +61,16 @@ class CodePointRangeRuleTests : StringSpec({
                 matchedEntireInput shouldBe false
                 matchedInput shouldBe null
                 restOfInput shouldBe ""
+            }
+        }
+    }
+    "CodePointRange rule throws exception when lower bound is higher than higher bound" {
+        checkAll(Arb.set(legalCodePoints(), 2..2)) { codePoints ->
+            val (low, high) = codePoints.toList().map { it.value }.sorted().let { it[0] to it[1] }
+            shouldThrow<IllegalArgumentException> {
+                Parser(object : AbstractGrammar<Unit>() {
+                    override fun root() = codePointRange(high, low)
+                })
             }
         }
     }
