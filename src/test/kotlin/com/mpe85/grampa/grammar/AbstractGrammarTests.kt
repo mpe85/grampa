@@ -5,7 +5,6 @@ import com.mpe85.grampa.event.MatchSuccessEvent
 import com.mpe85.grampa.event.ParseEventListener
 import com.mpe85.grampa.event.PostParseEvent
 import com.mpe85.grampa.parser.Parser
-import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.impl.ActionRule
 import com.mpe85.grampa.rule.impl.or
 import com.mpe85.grampa.rule.impl.plus
@@ -24,110 +23,6 @@ private class IntegerTestListener : ParseEventListener<Int>()
 private class CharSequenceTestListener : ParseEventListener<CharSequence>()
 
 class AbstractGrammarTests : StringSpec({
-    "CodePointRange rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = codePointRange('Z'.toInt(), 'b'.toInt())
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("a").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "a"
-                restOfInput shouldBe ""
-            }
-            run("X").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "X"
-            }
-        }
-        shouldThrow<IllegalArgumentException> {
-            Parser(object : AbstractGrammar<Int>() {
-                override fun root(): Rule<Int> = codePointRange('b'.toInt(), 'a'.toInt())
-            })
-        }
-    }
-    "AnyOfCodePoints rule grammar" {
-        listOf(
-            object : AbstractGrammar<Int>() {
-                override fun root() = anyOfCodePoints('a'.toInt(), "\uD835\uDD38".codePointAt(0))
-            },
-            object : AbstractGrammar<Int>() {
-                override fun root() = anyOfCodePoints(setOf('a'.toInt(), "\uD835\uDD38".codePointAt(0)))
-            },
-            object : AbstractGrammar<Int>() {
-                override fun root() = anyOfCodePoints("\uD835\uDD38")
-            }
-        ).forAll { grammar ->
-            Parser(grammar).apply {
-                registerListener(IntegerTestListener())
-                run("\uD835\uDD38").apply {
-                    matched shouldBe true
-                    matchedEntireInput shouldBe true
-                    matchedInput shouldBe "\uD835\uDD38"
-                    restOfInput shouldBe ""
-                }
-                run("b").apply {
-                    matched shouldBe false
-                    matchedEntireInput shouldBe false
-                    matchedInput shouldBe null
-                    restOfInput shouldBe "b"
-                }
-            }
-        }
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = anyOfCodePoints("")
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("b").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "b"
-            }
-        }
-    }
-    "NoneOfCodePoints rule grammar" {
-        listOf(
-            object : AbstractGrammar<Int>() {
-                override fun root() = noneOfCodePoints('a'.toInt(), "\uD835\uDD38".codePointAt(0))
-            },
-            object : AbstractGrammar<Int>() {
-                override fun root() = noneOfCodePoints(setOf('a'.toInt(), "\uD835\uDD38".codePointAt(0)))
-            },
-            object : AbstractGrammar<Int>() {
-                override fun root() = noneOfCodePoints("a\uD835\uDD38")
-            }
-        ).forAll { grammar ->
-            Parser(grammar).apply {
-                registerListener(IntegerTestListener())
-                run("b").apply {
-                    matched shouldBe true
-                    matchedEntireInput shouldBe true
-                    matchedInput shouldBe "b"
-                    restOfInput shouldBe ""
-                }
-                run("\uD835\uDD38").apply {
-                    matched shouldBe false
-                    matchedEntireInput shouldBe false
-                    matchedInput shouldBe null
-                    restOfInput shouldBe "\uD835\uDD38"
-                }
-            }
-        }
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = noneOfCodePoints("")
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("b").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "b"
-                restOfInput shouldBe ""
-            }
-        }
-    }
     "String rule grammar" {
         checkAll(Arb.string(1..100), Arb.string(0..100)) { prefix, suffix ->
             Parser(object : AbstractGrammar<Int>() {
