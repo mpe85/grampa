@@ -12,7 +12,7 @@ class CharRangeRuleTests : StringSpec({
     "CharRange rule matches character in range" {
         checkAll<Char, Char, Char> { ch1, ch2, ch3 ->
             val chars = listOf(ch1, ch2, ch3).sorted()
-            Parser(object : AbstractGrammar<Int>() {
+            Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = charRange(chars[0], chars[2])
             }).run("${chars[1]}").apply {
                 matched shouldBe true
@@ -25,7 +25,7 @@ class CharRangeRuleTests : StringSpec({
     "CharRange rule does not match character below of range" {
         checkAll(Arb.set(Arb.char(), 3..3)) { chars ->
             val (below, lower, upper) = chars.toList().sorted().let { Triple(it[0], it[1], it[2]) }
-            Parser(object : AbstractGrammar<Int>() {
+            Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = charRange(lower, upper)
             }).run("$below").apply {
                 matched shouldBe false
@@ -38,7 +38,7 @@ class CharRangeRuleTests : StringSpec({
     "CharRange rule does not match character above of range" {
         checkAll(Arb.set(Arb.char(), 3..3)) { chars ->
             val (lower, upper, above) = chars.toList().sorted().let { Triple(it[0], it[1], it[2]) }
-            Parser(object : AbstractGrammar<Int>() {
+            Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = charRange(lower, upper)
             }).run("$above").apply {
                 matched shouldBe false
@@ -51,7 +51,7 @@ class CharRangeRuleTests : StringSpec({
     "CharRange rule does not match empty input" {
         checkAll<Char, Char> { ch1, ch2 ->
             val chars = listOf(ch1, ch2).sorted()
-            Parser(object : AbstractGrammar<Int>() {
+            Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = charRange(chars[0], chars[1])
             }).run("").apply {
                 matched shouldBe false
