@@ -1,5 +1,7 @@
 package com.mpe85.grampa.grammar
 
+import com.ibm.icu.lang.UCharacter.toLowerCase
+import com.ibm.icu.lang.UCharacter.toUpperCase
 import com.mpe85.grampa.legalCodePoints
 import com.mpe85.grampa.parser.Parser
 import io.kotest.core.spec.style.StringSpec
@@ -25,14 +27,14 @@ class StringIgnoreCaseRuleTests : StringSpec({
         checkAll(Arb.string(1..10, legalCodePoints())) { str ->
             Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = ignoreCase(str)
-            }).run(str.toLowerCase()).apply {
+            }).run(toLowerCase(str)).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
-                matchedInput shouldBe str.toLowerCase()
+                matchedInput shouldBe toLowerCase(str)
                 restOfInput shouldBe ""
             }
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = ignoreCase(str.toLowerCase())
+                override fun root() = ignoreCase(toLowerCase(str))
             }).run(str).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
@@ -45,14 +47,14 @@ class StringIgnoreCaseRuleTests : StringSpec({
         checkAll(Arb.string(1..10, legalCodePoints())) { str ->
             Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = ignoreCase(str)
-            }).run(str.toUpperCase()).apply {
+            }).run(toUpperCase(str)).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
-                matchedInput shouldBe str.toUpperCase()
+                matchedInput shouldBe toUpperCase(str)
                 restOfInput shouldBe ""
             }
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = ignoreCase(str.toUpperCase())
+                override fun root() = ignoreCase(toUpperCase(str))
             }).run(str).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
