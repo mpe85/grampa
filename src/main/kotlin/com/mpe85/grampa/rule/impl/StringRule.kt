@@ -25,7 +25,8 @@ public class StringRule<T> @JvmOverloads constructor(
         if (context.numberOfCharsLeft >= string.length) {
             val nextChars = context.inputBuffer.subSequence(context.currentIndex, context.currentIndex + string.length)
             return if (ignoreCase) {
-                toLowerCase(string) == toLowerCase(nextChars.toString()) || toUpperCase(string) == toUpperCase(nextChars.toString())
+                toLowerCase(string) == toLowerCase(nextChars.toString())
+                        || toUpperCase(string) == toUpperCase(nextChars.toString())
             } else {
                 string == nextChars.toString()
             } && context.advanceIndex(string.length)
