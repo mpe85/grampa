@@ -14,101 +14,12 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.inspectors.forAll
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.kotest.property.Arb
-import io.kotest.property.arbitrary.string
-import io.kotest.property.checkAll
 import org.greenrobot.eventbus.Subscribe
 
 private class IntegerTestListener : ParseEventListener<Int>()
 private class CharSequenceTestListener : ParseEventListener<CharSequence>()
 
 class AbstractGrammarTests : StringSpec({
-    "String rule grammar" {
-        checkAll(Arb.string(1..100), Arb.string(0..100)) { prefix, suffix ->
-            Parser(object : AbstractGrammar<Int>() {
-                override fun root() = string(prefix)
-            }).apply {
-                registerListener(IntegerTestListener())
-                run("$prefix$suffix").apply {
-                    matched shouldBe true
-                    matchedEntireInput shouldBe suffix.isEmpty()
-                    matchedInput shouldBe prefix
-                    restOfInput shouldBe suffix
-                }
-            }
-        }
-        Arb.string(1..100).checkAll { suffix ->
-            Parser(object : AbstractGrammar<Int>() {
-                override fun root() = string("")
-            }).apply {
-                registerListener(IntegerTestListener())
-                run(suffix).apply {
-                    matched shouldBe true
-                    matchedEntireInput shouldBe suffix.isEmpty()
-                    matchedInput shouldBe ""
-                    restOfInput shouldBe suffix
-                }
-            }
-        }
-        checkAll(Arb.string(1..100), Arb.string(0..100)) { str, input ->
-            Parser(object : AbstractGrammar<Int>() {
-                override fun root() = string(str)
-            }).apply {
-                registerListener(IntegerTestListener())
-                run(input).apply {
-                    matched shouldBe input.startsWith(str)
-                    matchedEntireInput shouldBe (str == input)
-                    matchedInput shouldBe if (input.startsWith(str)) str else null
-                    restOfInput shouldBe if (input.startsWith(str)) input.removePrefix(str) else input
-                }
-            }
-        }
-    }
-    "StringIgnoreCase rule grammar" {
-        checkAll(Arb.string(1..100), Arb.string(0..100)) { prefix, suffix ->
-            Parser(object : AbstractGrammar<Int>() {
-                override fun root() = ignoreCase(prefix)
-            }).apply {
-                registerListener(IntegerTestListener())
-                run("${prefix.toUpperCase()}$suffix").apply {
-                    matched shouldBe true
-                    matchedEntireInput shouldBe suffix.isEmpty()
-                    matchedInput shouldBe prefix.toUpperCase()
-                    restOfInput shouldBe suffix
-                }
-            }
-        }
-        Arb.string(1..100).checkAll { suffix ->
-            Parser(object : AbstractGrammar<Int>() {
-                override fun root() = ignoreCase("")
-            }).apply {
-                registerListener(IntegerTestListener())
-                run(suffix).apply {
-                    matched shouldBe true
-                    matchedEntireInput shouldBe suffix.isEmpty()
-                    matchedInput shouldBe ""
-                    restOfInput shouldBe suffix
-                }
-            }
-        }
-        checkAll(Arb.string(1..100), Arb.string(0..100)) { str, input ->
-            Parser(object : AbstractGrammar<Int>() {
-                override fun root() = ignoreCase(str)
-            }).apply {
-                registerListener(IntegerTestListener())
-                run(input).apply {
-                    matched shouldBe input.toUpperCase().startsWith(str.toUpperCase())
-                    matchedEntireInput shouldBe (str == input)
-                    matchedInput?.toString()?.toUpperCase() shouldBe if (input.toUpperCase()
-                            .startsWith(str.toUpperCase())
-                    )
-                        str.toUpperCase() else null
-                    restOfInput.toString().toUpperCase() shouldBe if (input.toUpperCase().startsWith(str.toUpperCase()))
-                        input.toUpperCase().removePrefix(str.toUpperCase()) else input.toUpperCase()
-                }
-            }
-        }
-    }
     "Regex rule grammar" {
         Parser(object : AbstractGrammar<Int>() {
             override fun root() = regex("abc+")
