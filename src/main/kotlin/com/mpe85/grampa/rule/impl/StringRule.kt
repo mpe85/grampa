@@ -1,12 +1,13 @@
 package com.mpe85.grampa.rule.impl
 
-import com.ibm.icu.lang.UCharacter.toLowerCase
-import com.ibm.icu.lang.UCharacter.toUpperCase
+import com.ibm.icu.text.UTF16.StringComparator
+import com.ibm.icu.text.UTF16.StringComparator.FOLD_CASE_DEFAULT
 import com.mpe85.grampa.context.ParserContext
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.util.checkEquality
 import com.mpe85.grampa.util.stringify
 import java.util.Objects.hash
+import kotlin.streams.asSequence
 
 /**
  * A string rule implementation.
@@ -21,15 +22,14 @@ public class StringRule<T> @JvmOverloads constructor(
     private val ignoreCase: Boolean = false
 ) : AbstractRule<T>() {
 
+    private val comparator = StringComparator(true, ignoreCase, FOLD_CASE_DEFAULT)
+    private val codePointCount = string.codePoints().count().toInt()
+
     override fun match(context: ParserContext<T>): Boolean {
         if (context.numberOfCharsLeft >= string.length) {
-            val nextChars = context.inputBuffer.subSequence(context.currentIndex, context.currentIndex + string.length)
-            return if (ignoreCase) {
-                toLowerCase(string) == toLowerCase(nextChars.toString())
-                        || toUpperCase(string) == toUpperCase(nextChars.toString())
-            } else {
-                string == nextChars.toString()
-            } && context.advanceIndex(string.length)
+            val input = context.restOfInput.codePoints().asSequence().take(codePointCount)
+                .fold(StringBuilder(), StringBuilder::appendCodePoint).toString()
+            return comparator.compare(string, input) == 0 && context.advanceIndex(input.length)
         }
         return false
     }
