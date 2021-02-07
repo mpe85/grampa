@@ -1,6 +1,6 @@
 package com.mpe85.grampa.rule.impl
 
-import com.ibm.icu.lang.UCharacter.toLowerCase
+import com.ibm.icu.lang.UCharacter.toUpperCase
 import com.ibm.icu.util.BytesTrie.Result.FINAL_VALUE
 import com.ibm.icu.util.BytesTrie.Result.INTERMEDIATE_VALUE
 import com.ibm.icu.util.BytesTrie.Result.NO_MATCH
@@ -27,7 +27,7 @@ public class TrieRule<T> @JvmOverloads constructor(
     AbstractRule<T>() {
 
     private val trie = CharsTrieBuilder().run {
-        strings.forEach { add(if (ignoreCase) toLowerCase(it) else it, 0) }
+        strings.forEach { add(if (ignoreCase) toUpperCase(it) else it, 0) }
         build(FAST)
     }
 
@@ -52,7 +52,7 @@ public class TrieRule<T> @JvmOverloads constructor(
         var longestMatch = 0
         val codePoints = context.restOfInput.codePoints().toArray()
         for (i in codePoints.indices) {
-            val result = trie.next(if (ignoreCase) toLowerCase(codePoints[i]) else codePoints[i])
+            val result = trie.next(if (ignoreCase) toUpperCase(codePoints[i]) else codePoints[i])
             if (result in setOf(FINAL_VALUE, INTERMEDIATE_VALUE)) {
                 longestMatch = i + 1
             }
