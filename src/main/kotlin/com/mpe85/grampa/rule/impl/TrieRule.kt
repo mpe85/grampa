@@ -50,20 +50,16 @@ public class TrieRule<T> @JvmOverloads constructor(
 
     override fun match(context: ParserContext<T>): Boolean = try {
         var longestMatch = 0
-        loop@ for ((idx, codePoint) in context.restOfInput.codePoints().asSequence().withIndex()) {
+        for ((idx, codePoint) in context.restOfInput.codePoints().asSequence().withIndex()) {
             val foldedCodePoints =
                 if (ignoreCase) foldCase(toString(codePoint), true).codePoints().toList() else listOf(codePoint)
-            for (foldedCodePoint in foldedCodePoints.dropLast(1)) {
-                if (trie.nextForCodePoint(foldedCodePoint) in setOf(FINAL_VALUE, NO_MATCH)) {
-                    break@loop
-                }
-            }
+            foldedCodePoints.dropLast(1).forEach { trie.nextForCodePoint(it) }
             val result = trie.nextForCodePoint(foldedCodePoints.last())
             if (result in setOf(FINAL_VALUE, INTERMEDIATE_VALUE)) {
                 longestMatch = idx + 1
             }
             if (result in setOf(FINAL_VALUE, NO_MATCH)) {
-                break@loop
+                break
             }
         }
         val charCount = context.restOfInput.codePoints().asSequence().take(longestMatch).sumBy { charCount(it) }
