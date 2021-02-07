@@ -1,6 +1,8 @@
 package com.mpe85.grampa.rule.impl
 
-import com.ibm.icu.lang.UCharacter.toUpperCase
+import com.ibm.icu.lang.UCharacter.charCount
+import com.ibm.icu.lang.UCharacter.foldCase
+import com.ibm.icu.lang.UCharacter.toString
 import com.ibm.icu.util.BytesTrie.Result.FINAL_VALUE
 import com.ibm.icu.util.BytesTrie.Result.INTERMEDIATE_VALUE
 import com.ibm.icu.util.BytesTrie.Result.NO_MATCH
@@ -10,6 +12,8 @@ import com.mpe85.grampa.context.ParserContext
 import com.mpe85.grampa.util.checkEquality
 import com.mpe85.grampa.util.stringify
 import java.util.Objects.hash
+import kotlin.streams.asSequence
+import kotlin.streams.toList
 
 /**
  * A trie (prefix tree) rule implementation that matches the input against a dictionary.
@@ -18,16 +22,14 @@ import java.util.Objects.hash
  * @param[T] The type of the stack elements
  * @param[strings] A collection of strings from which the trie is built up
  * @property[ignoreCase] Indicates if the case of the strings should be ignored
- * @property[strings] A set containing all strings inside the trie
  */
 public class TrieRule<T> @JvmOverloads constructor(
-    strings: Collection<String>,
+    private val strings: Collection<String>,
     private val ignoreCase: Boolean = false
-) :
-    AbstractRule<T>() {
+) : AbstractRule<T>() {
 
     private val trie = CharsTrieBuilder().run {
-        strings.forEach { add(if (ignoreCase) toUpperCase(it) else it, 0) }
+        strings.forEach { add(if (ignoreCase) foldCase(it, true) else it, 0) }
         build(FAST)
     }
 
@@ -46,21 +48,26 @@ public class TrieRule<T> @JvmOverloads constructor(
      */
     public constructor(ignoreCase: Boolean, vararg strings: String) : this(strings.toSet(), ignoreCase)
 
-    private val strings get() = trie.iterator().asSequence().map { it.chars.toString() }.toSet()
-
     override fun match(context: ParserContext<T>): Boolean = try {
         var longestMatch = 0
-        val codePoints = context.restOfInput.codePoints().toArray()
-        for (i in codePoints.indices) {
-            val result = trie.next(if (ignoreCase) toUpperCase(codePoints[i]) else codePoints[i])
+        loop@ for ((idx, codePoint) in context.restOfInput.codePoints().asSequence().withIndex()) {
+            val foldedCodePoints =
+                if (ignoreCase) foldCase(toString(codePoint), true).codePoints().toList() else listOf(codePoint)
+            for (foldedCodePoint in foldedCodePoints.dropLast(1)) {
+                if (trie.nextForCodePoint(foldedCodePoint) in setOf(FINAL_VALUE, NO_MATCH)) {
+                    break@loop
+                }
+            }
+            val result = trie.nextForCodePoint(foldedCodePoints.last())
             if (result in setOf(FINAL_VALUE, INTERMEDIATE_VALUE)) {
-                longestMatch = i + 1
+                longestMatch = idx + 1
             }
             if (result in setOf(FINAL_VALUE, NO_MATCH)) {
-                break
+                break@loop
             }
         }
-        longestMatch > 0 && context.advanceIndex(longestMatch)
+        val charCount = context.restOfInput.codePoints().asSequence().take(longestMatch).sumBy { charCount(it) }
+        longestMatch > 0 && context.advanceIndex(charCount)
     } finally {
         trie.reset()
     }
