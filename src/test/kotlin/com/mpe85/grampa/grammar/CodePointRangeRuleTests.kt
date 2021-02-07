@@ -1,5 +1,6 @@
 package com.mpe85.grampa.grammar
 
+import com.ibm.icu.lang.UCharacter.toString
 import com.mpe85.grampa.legalCodePoints
 import com.mpe85.grampa.parser.Parser
 import io.kotest.assertions.throwables.shouldThrow
@@ -15,10 +16,10 @@ class CodePointRangeRuleTests : StringSpec({
             val codePoints = listOf(cp1.value, cp2.value, cp3.value).sorted()
             Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = codePointRange(codePoints[0], codePoints[2])
-            }).run(String.format("%c", codePoints[1])).apply {
+            }).run(toString(codePoints[1])).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
-                matchedInput shouldBe String.format("%c", codePoints[1])
+                matchedInput shouldBe toString(codePoints[1])
                 restOfInput shouldBe ""
             }
         }
@@ -29,11 +30,11 @@ class CodePointRangeRuleTests : StringSpec({
                 .let { Triple(it[0], it[1], it[2]) }
             Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = codePointRange(lower, upper)
-            }).run(String.format("%c", below)).apply {
+            }).run(toString(below)).apply {
                 matched shouldBe false
                 matchedEntireInput shouldBe false
                 matchedInput shouldBe null
-                restOfInput shouldBe String.format("%c", below)
+                restOfInput shouldBe toString(below)
             }
         }
     }
@@ -43,11 +44,11 @@ class CodePointRangeRuleTests : StringSpec({
                 .let { Triple(it[0], it[1], it[2]) }
             Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = codePointRange(lower, upper)
-            }).run(String.format("%c", above)).apply {
+            }).run(toString(above)).apply {
                 matched shouldBe false
                 matchedEntireInput shouldBe false
                 matchedInput shouldBe null
-                restOfInput shouldBe String.format("%c", above)
+                restOfInput shouldBe toString(above)
             }
         }
     }

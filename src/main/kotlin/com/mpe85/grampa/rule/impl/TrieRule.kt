@@ -1,7 +1,7 @@
 package com.mpe85.grampa.rule.impl
 
+import com.ibm.icu.lang.UCharacter
 import com.ibm.icu.lang.UCharacter.charCount
-import com.ibm.icu.lang.UCharacter.foldCase
 import com.ibm.icu.lang.UCharacter.toString
 import com.ibm.icu.util.BytesTrie.Result.FINAL_VALUE
 import com.ibm.icu.util.BytesTrie.Result.INTERMEDIATE_VALUE
@@ -16,22 +16,20 @@ import kotlin.streams.asSequence
 import kotlin.streams.toList
 
 /**
- * A trie (prefix tree) rule implementation that matches the input against a dictionary.
+ * A case-sensitive trie (prefix tree) rule implementation that matches the input against a dictionary.
  *
  * @author mpe85
  * @param[T] The type of the stack elements
  * @param[strings] A collection of strings from which the trie is built up
- * @property[ignoreCase] Indicates if the case of the strings should be ignored
  */
-public class TrieRule<T> @JvmOverloads constructor(
-    private val strings: Collection<String>,
-    private val ignoreCase: Boolean = false
-) : AbstractRule<T>() {
+public open class TrieRule<T> constructor(private val strings: Collection<String>) : AbstractRule<T>() {
 
     private val trie = CharsTrieBuilder().run {
-        strings.forEach { add(if (ignoreCase) foldCase(it, true) else it, 0) }
+        strings.forEach { add(map(it), 0) }
         build(FAST)
     }
+
+    protected open fun map(string: String): String = string
 
     /**
      * Construct a case-sensitive trie.
@@ -40,19 +38,10 @@ public class TrieRule<T> @JvmOverloads constructor(
      */
     public constructor(vararg strings: String) : this(strings.toList())
 
-    /**
-     * Construct a case-sensitive or case-insensitive trie.
-     *
-     * @param[ignoreCase] Indicates if the case of the strings should be ignored
-     * @param[strings] A variable number of strings
-     */
-    public constructor(ignoreCase: Boolean, vararg strings: String) : this(strings.toSet(), ignoreCase)
-
     override fun match(context: ParserContext<T>): Boolean = try {
         var longestMatch = 0
         for ((idx, codePoint) in context.restOfInput.codePoints().asSequence().withIndex()) {
-            val foldedCodePoints =
-                if (ignoreCase) foldCase(toString(codePoint), true).codePoints().toList() else listOf(codePoint)
+            val foldedCodePoints = map(toString(codePoint)).codePoints().toList()
             foldedCodePoints.dropLast(1).forEach { trie.nextForCodePoint(it) }
             val result = trie.nextForCodePoint(foldedCodePoints.last())
             if (result in setOf(FINAL_VALUE, INTERMEDIATE_VALUE)) {
@@ -68,9 +57,28 @@ public class TrieRule<T> @JvmOverloads constructor(
         trie.reset()
     }
 
-    override fun hashCode(): Int = hash(super.hashCode(), strings, ignoreCase)
-    override fun equals(other: Any?): Boolean =
-        checkEquality(other, { super.equals(other) }, { it.strings }, { it.ignoreCase })
-
-    override fun toString(): String = stringify("strings" to strings, "ignoreCase" to ignoreCase)
+    override fun hashCode(): Int = hash(super.hashCode(), strings)
+    override fun equals(other: Any?): Boolean = checkEquality(other, { super.equals(other) }, { it.strings })
+    override fun toString(): String = stringify("strings" to strings)
 }
+
+/**
+ * A case-insensitive trie (prefix tree) rule implementation that matches the input against a dictionary.
+ *
+ * @author mpe85
+ * @param[T] The type of the stack elements
+ * @param[strings] A collection of strings from which the trie is built up
+ */
+public class IgnoreCaseTrieRule<T>(strings: Collection<String>) : TrieRule<T>(strings) {
+
+    /**
+     * Construct a case-insensitive trie.
+     *
+     * @param[strings] A variable number of strings
+     */
+    public constructor(vararg strings: String) : this(strings.toList())
+
+    override fun map(string: String): String = UCharacter.foldCase(string, true)
+
+}
+

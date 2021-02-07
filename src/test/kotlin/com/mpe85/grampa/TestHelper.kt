@@ -8,6 +8,11 @@ import io.kotest.property.arbitrary.codepoints
 import io.kotest.property.arbitrary.filter
 
 /**
+ * Special dotted I and dottless i code points with a different fold case handling (İ and ı).
+ */
+private val foldCaseSpecialI = listOf(0x130, 0x131)
+
+/**
  * Create an [Arb] of legal [Codepoint] according to [UCharacter.isLegal].
  *
  * @return An [Arb] of [Codepoint]s
@@ -20,7 +25,7 @@ internal fun legalCodePoints() = Arb.codepoints().filter { UCharacter.isLegal(it
  * @return An [Arb] of [Codepoint]s
  */
 internal fun lowerCaseCodePoints() = legalCodePoints().filter {
-    UCharacter.isLowerCase(it.value) && it.value != UCharacter.toUpperCase(it.value)
+    UCharacter.isLowerCase(it.value) && it.value != UCharacter.toUpperCase(it.value) && it.value !in foldCaseSpecialI
 }
 
 /**
@@ -29,7 +34,7 @@ internal fun lowerCaseCodePoints() = legalCodePoints().filter {
  * @return An [Arb] of [Codepoint]s
  */
 internal fun upperCaseCodePoints() = legalCodePoints().filter {
-    UCharacter.isUpperCase(it.value) && it.value != UCharacter.toLowerCase(it.value)
+    UCharacter.isUpperCase(it.value) && it.value != UCharacter.toLowerCase(it.value) && it.value !in foldCaseSpecialI
 }
 
 /**

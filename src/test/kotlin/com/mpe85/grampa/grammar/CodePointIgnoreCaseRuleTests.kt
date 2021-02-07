@@ -1,6 +1,8 @@
 package com.mpe85.grampa.grammar
 
-import com.ibm.icu.lang.UCharacter
+import com.ibm.icu.lang.UCharacter.toLowerCase
+import com.ibm.icu.lang.UCharacter.toString
+import com.ibm.icu.lang.UCharacter.toUpperCase
 import com.mpe85.grampa.legalCodePoints
 import com.mpe85.grampa.lowerCaseCodePoints
 import com.mpe85.grampa.parser.Parser
@@ -16,10 +18,10 @@ class CodePointIgnoreCaseRuleTests : StringSpec({
         checkAll(legalCodePoints()) { cp ->
             Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = ignoreCase(cp.value)
-            }).run(String.format("%c", cp.value)).apply {
+            }).run(toString(cp.value)).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
-                matchedInput shouldBe String.format("%c", cp.value)
+                matchedInput shouldBe toString(cp.value)
                 restOfInput shouldBe ""
             }
         }
@@ -29,11 +31,11 @@ class CodePointIgnoreCaseRuleTests : StringSpec({
             Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = ignoreCase(cp.value)
             }).apply {
-                val upperCase = UCharacter.toUpperCase(cp.value)
-                run(String.format("%c", upperCase)).apply {
+                val upperCase = toUpperCase(cp.value)
+                run(toString(upperCase)).apply {
                     matched shouldBe true
                     matchedEntireInput shouldBe true
-                    matchedInput shouldBe String.format("%c", upperCase)
+                    matchedInput shouldBe toString(upperCase)
                     restOfInput shouldBe ""
                 }
             }
@@ -44,11 +46,11 @@ class CodePointIgnoreCaseRuleTests : StringSpec({
             Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = ignoreCase(cp.value)
             }).apply {
-                val lowerCase = UCharacter.toLowerCase(cp.value)
-                run(String.format("%c", lowerCase)).apply {
+                val lowerCase = toLowerCase(cp.value)
+                run(toString(lowerCase)).apply {
                     matched shouldBe true
                     matchedEntireInput shouldBe true
-                    matchedInput shouldBe String.format("%c", lowerCase)
+                    matchedInput shouldBe toString(lowerCase)
                     restOfInput shouldBe ""
                 }
             }
@@ -58,11 +60,11 @@ class CodePointIgnoreCaseRuleTests : StringSpec({
         checkAll(Arb.set(legalCodePoints(), 2..2)) { codePoints ->
             Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = ignoreCase(codePoints.first().value)
-            }).run(String.format("%c", codePoints.last().value)).apply {
+            }).run(toString(codePoints.last().value)).apply {
                 matched shouldBe false
                 matchedEntireInput shouldBe false
                 matchedInput shouldBe null
-                restOfInput shouldBe String.format("%c", codePoints.last().value)
+                restOfInput shouldBe toString(codePoints.last().value)
             }
         }
     }

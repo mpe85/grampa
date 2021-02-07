@@ -12,6 +12,7 @@ import com.mpe85.grampa.rule.impl.ConditionalRule
 import com.mpe85.grampa.rule.impl.EmptyRule
 import com.mpe85.grampa.rule.impl.EndOfInputRule
 import com.mpe85.grampa.rule.impl.FirstOfRule
+import com.mpe85.grampa.rule.impl.IgnoreCaseTrieRule
 import com.mpe85.grampa.rule.impl.NeverRule
 import com.mpe85.grampa.rule.impl.RegexRule
 import com.mpe85.grampa.rule.impl.SequenceRule
@@ -20,6 +21,8 @@ import com.mpe85.grampa.rule.impl.TestNotRule
 import com.mpe85.grampa.rule.impl.TestRule
 import com.mpe85.grampa.rule.impl.TrieRule
 import com.mpe85.grampa.rule.impl.times
+import com.mpe85.grampa.rule.impl.toIgnoreCaseRule
+import com.mpe85.grampa.rule.impl.toRule
 import com.mpe85.grampa.rule.toAction
 import com.mpe85.grampa.util.max
 import com.mpe85.grampa.util.min
@@ -97,7 +100,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[character] The character to match
      * @return A grammar rule
      */
-    protected open fun char(character: Char): Rule<T> = CharPredicateRule { it == character }
+    protected open fun char(character: Char): Rule<T> = character.toRule()
 
     /**
      * A rule that matches a specific character, ignoring the case of the character (case-insensitive).
@@ -105,8 +108,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[character] The character to match
      * @return A grammar rule
      */
-    protected open fun ignoreCase(character: Char): Rule<T> =
-        CharPredicateRule<T> { Character.toLowerCase(it) == Character.toLowerCase(character) }
+    protected open fun ignoreCase(character: Char): Rule<T> = character.toIgnoreCaseRule()
 
     /**
      * A rule that matches a character within a range of characters.
@@ -129,7 +131,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      */
     protected open fun anyOfChars(characters: Collection<Char>): Rule<T> = when {
         characters.isEmpty() -> neverRule
-        characters.size == 1 -> char(characters.first())
+        characters.size == 1 -> characters.first().toRule()
         else -> CharPredicateRule { characters.sorted().binarySearch(it) >= 0 }
     }
 
@@ -182,7 +184,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[codePoint] The code point to match
      * @return A grammar rule
      */
-    protected open fun codePoint(codePoint: Int): Rule<T> = CodePointPredicateRule { it == codePoint }
+    protected open fun codePoint(codePoint: Int): Rule<T> = codePoint.toRule()
 
     /**
      * A rule that matches a specific code point, ignoring the case of the code point (case-insensitive).
@@ -190,10 +192,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[codePoint] The code point to match
      * @return A grammar rule
      */
-    protected open fun ignoreCase(codePoint: Int): Rule<T> = CodePointPredicateRule {
-        UCharacter.toLowerCase(it) == UCharacter.toLowerCase(codePoint)
-                || UCharacter.toUpperCase(it) == UCharacter.toUpperCase(codePoint)
-    }
+    protected open fun ignoreCase(codePoint: Int): Rule<T> = codePoint.toIgnoreCaseRule()
 
     /**
      * A rule that matches a code point within a range of code points.
@@ -215,7 +214,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      */
     protected open fun anyOfCodePoints(codePoints: Collection<Int>): Rule<T> = when {
         codePoints.isEmpty() -> neverRule
-        codePoints.size == 1 -> codePoint(codePoints.first())
+        codePoints.size == 1 -> codePoints.first().toRule()
         else -> CodePointPredicateRule { codePoints.sorted().binarySearch(it) >= 0 }
     }
 
@@ -271,7 +270,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      */
     protected open fun string(string: String): Rule<T> = when {
         string.isEmpty() -> emptyRule
-        string.length == 1 -> char(string.first())
+        string.length == 1 -> string.first().toRule()
         else -> StringRule(string)
     }
 
@@ -283,8 +282,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      */
     protected open fun ignoreCase(string: String): Rule<T> = when {
         string.isEmpty() -> emptyRule
-        string.length == 1 -> ignoreCase(string.first())
-        else -> StringRule(string, true)
+        string.length == 1 -> string.first().toIgnoreCaseRule()
+        else -> IgnoreCaseTrieRule(string)//StringRule(string, true)
     }
 
     /**
@@ -303,7 +302,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      */
     protected open fun strings(strings: Collection<String>): Rule<T> = when {
         strings.isEmpty() -> neverRule
-        strings.size == 1 -> string(strings.first())
+        strings.size == 1 -> strings.first().toRule()
         else -> TrieRule(strings)
     }
 
@@ -324,7 +323,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun ignoreCase(strings: Collection<String>): Rule<T> = when {
         strings.isEmpty() -> neverRule
         strings.size == 1 -> ignoreCase(strings.first())
-        else -> TrieRule(strings, true)
+        else -> IgnoreCaseTrieRule(strings)
     }
 
     /**
@@ -539,8 +538,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
         condition: (RuleContext<T>) -> Boolean,
         thenRule: Rule<T>,
         elseRule: Rule<T>
-    ): Rule<T> =
-        ConditionalRule(condition, thenRule, elseRule)
+    ): Rule<T> = ConditionalRule(condition, thenRule, elseRule)
 
     /**
      * A conditional rule that runs a child rule if a condition is true, otherwise it runs no rule.

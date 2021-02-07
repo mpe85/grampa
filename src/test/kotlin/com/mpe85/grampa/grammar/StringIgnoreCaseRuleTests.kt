@@ -47,19 +47,19 @@ class StringIgnoreCaseRuleTests : StringSpec({
         checkAll(Arb.string(1..10, legalCodePoints())) { str ->
             Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = ignoreCase(str)
-            }).run(toUpperCase(str)).apply {
+            }).run(toUpperCase(str) + "a").apply {
                 matched shouldBe true
-                matchedEntireInput shouldBe true
+                matchedEntireInput shouldBe false
                 matchedInput shouldBe toUpperCase(str)
-                restOfInput shouldBe ""
+                restOfInput shouldBe "a"
             }
             Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = ignoreCase(toUpperCase(str))
-            }).run(str).apply {
+            }).run(str + "a").apply {
                 matched shouldBe true
-                matchedEntireInput shouldBe true
+                matchedEntireInput shouldBe false
                 matchedInput shouldBe str
-                restOfInput shouldBe ""
+                restOfInput shouldBe "a"
             }
         }
     }

@@ -13,7 +13,7 @@ class CodePointPredicateRuleTests : StringSpec({
         val predicate = Predicate { cp: Int -> cp == 'a'.toInt() }
         val rule1 = CodePointPredicateRule<String>(predicate::test)
         val rule2 = CodePointPredicateRule<String>(predicate::test)
-        val rule3 = CodePointPredicateRule<String>('a')
+        val rule3 = CodePointPredicateRule<String>('a'.toInt())
         rule1 shouldBe rule2
         rule1 shouldNotBe rule3
         rule1 shouldNotBe Any()
@@ -29,7 +29,7 @@ class CodePointPredicateRuleTests : StringSpec({
             every { currentCodePoint } returns 'a'.toInt()
             every { advanceIndex(1) } returns true
         }
-        CodePointPredicateRule<String>('a').match(ctx) shouldBe true
-        CodePointPredicateRule<String>('b').match(ctx) shouldBe false
+        CodePointPredicateRule<String>('a'.toInt()).match(ctx) shouldBe true
+        CodePointPredicateRule<String>('b'.toInt()).match(ctx) shouldBe false
     }
 })
