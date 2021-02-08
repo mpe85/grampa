@@ -3,7 +3,9 @@ package com.mpe85.grampa.grammar
 import com.ibm.icu.lang.UCharacter.toLowerCase
 import com.ibm.icu.lang.UCharacter.toUpperCase
 import com.mpe85.grampa.legalCodePoints
+import com.mpe85.grampa.lowerCaseCodePoints
 import com.mpe85.grampa.parser.Parser
+import com.mpe85.grampa.upperCaseCodePoints
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
@@ -24,7 +26,7 @@ class StringIgnoreCaseRuleTests : StringSpec({
         }
     }
     "StringIgnoreCase rule matches correct lowercase string" {
-        checkAll(Arb.string(1..10, legalCodePoints())) { str ->
+        checkAll(Arb.string(1..10, upperCaseCodePoints())) { str ->
             Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = ignoreCase(str)
             }).run(toLowerCase(str)).apply {
@@ -44,22 +46,22 @@ class StringIgnoreCaseRuleTests : StringSpec({
         }
     }
     "StringIgnoreCase rule matches correct uppercase string" {
-        checkAll(Arb.string(1..10, legalCodePoints())) { str ->
+        checkAll(Arb.string(1..10, lowerCaseCodePoints())) { str ->
             Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = ignoreCase(str)
-            }).run(toUpperCase(str) + "a").apply {
+            }).run(toUpperCase(str)).apply {
                 matched shouldBe true
-                matchedEntireInput shouldBe false
+                matchedEntireInput shouldBe true
                 matchedInput shouldBe toUpperCase(str)
-                restOfInput shouldBe "a"
+                restOfInput shouldBe ""
             }
             Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = ignoreCase(toUpperCase(str))
-            }).run(str + "a").apply {
+            }).run(str).apply {
                 matched shouldBe true
-                matchedEntireInput shouldBe false
+                matchedEntireInput shouldBe true
                 matchedInput shouldBe str
-                restOfInput shouldBe "a"
+                restOfInput shouldBe ""
             }
         }
     }

@@ -2,6 +2,7 @@ package com.mpe85.grampa.rule.impl
 
 import com.ibm.icu.lang.UCharacter.charCount
 import com.ibm.icu.lang.UCharacter.foldCase
+import com.ibm.icu.lang.UCharacter.toString
 import com.mpe85.grampa.context.ParserContext
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.util.checkEquality
@@ -41,7 +42,7 @@ public open class CodePointPredicateRule<T>(private val predicate: (Int) -> Bool
  * @param[codePoint] A code point
  */
 public class IgnoreCaseCodePointRule<T>(codePoint: Int) :
-    CodePointPredicateRule<T>({ foldCase(it, true) == foldCase(codePoint, true) })
+    CodePointPredicateRule<T>({ foldCase(toString(it), true) == foldCase(toString(codePoint), true) })
 
 /**
  * Create a rule from this code point.
