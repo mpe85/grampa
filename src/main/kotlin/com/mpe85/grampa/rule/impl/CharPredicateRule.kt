@@ -52,6 +52,6 @@ public fun <T> Char.toRule(): Rule<T> = CharPredicateRule(this)
 /**
  * Create an ignore-case rule from this character.
  *
- * @return A [CharPredicateRule]
+ * @return A [IgnoreCaseCharRule]
  */
 public fun <T> Char.toIgnoreCaseRule(): Rule<T> = IgnoreCaseCharRule(this)

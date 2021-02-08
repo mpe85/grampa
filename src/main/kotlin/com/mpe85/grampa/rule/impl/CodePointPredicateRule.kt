@@ -53,6 +53,6 @@ public fun <T> Int.toRule(): Rule<T> = CodePointPredicateRule(this)
 /**
  * Create an ignore-case rule from this code point.
  *
- * @return A [CodePointPredicateRule]
+ * @return A [IgnoreCaseCodePointRule]
  */
 public fun <T> Int.toIgnoreCaseRule(): Rule<T> = IgnoreCaseCodePointRule(this)

@@ -283,7 +283,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun ignoreCase(string: String): Rule<T> = when {
         string.isEmpty() -> emptyRule
         string.length == 1 -> string.first().toIgnoreCaseRule()
-        else -> IgnoreCaseTrieRule(string)//StringRule(string, true)
+        else -> IgnoreCaseTrieRule(string)
     }
 
     /**
