@@ -39,43 +39,6 @@ class AbstractGrammarTests : StringSpec({
             }
         }
     }
-    "Strings rule grammar" {
-        listOf(
-            object : AbstractGrammar<Int>() {
-                override fun root() = strings("football", "foo", "foobar")
-            },
-            object : AbstractGrammar<Int>() {
-                override fun root() = strings(setOf("foo"))
-            }
-        ).forAll { grammar ->
-            Parser(grammar).apply {
-                registerListener(IntegerTestListener())
-                run("foobaz").apply {
-                    matched shouldBe true
-                    matchedEntireInput shouldBe false
-                    matchedInput shouldBe "foo"
-                    restOfInput shouldBe "baz"
-                }
-                run("fo").apply {
-                    matched shouldBe false
-                    matchedEntireInput shouldBe false
-                    matchedInput shouldBe null
-                    restOfInput shouldBe "fo"
-                }
-            }
-        }
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = strings(emptySet())
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("fO").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "fO"
-            }
-        }
-    }
     "StringsIgnoreCase rule grammar" {
         listOf(
             object : AbstractGrammar<Int>() {
