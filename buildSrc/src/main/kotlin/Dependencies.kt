@@ -7,7 +7,7 @@ object Versions {
     const val jacoco = "0.8.6"
     const val jvmTarget = "1.8"
     const val icu4j = "68.2"
-    const val kotest = "4.4.0"
+    const val kotest = "4.4.1"
     const val kotlin = "1.4.30"
     const val mockk = "1.10.5"
     const val spotbugs = "4.2.1"
