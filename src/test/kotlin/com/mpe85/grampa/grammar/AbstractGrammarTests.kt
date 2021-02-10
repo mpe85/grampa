@@ -11,7 +11,6 @@ import com.mpe85.grampa.rule.impl.plus
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
-import io.kotest.inspectors.forAll
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.greenrobot.eventbus.Subscribe
@@ -36,43 +35,6 @@ class AbstractGrammarTests : StringSpec({
                 matchedEntireInput shouldBe false
                 matchedInput shouldBe null
                 restOfInput shouldBe "ab"
-            }
-        }
-    }
-    "StringsIgnoreCase rule grammar" {
-        listOf(
-            object : AbstractGrammar<Int>() {
-                override fun root() = ignoreCase("football", "foo", "foobar")
-            },
-            object : AbstractGrammar<Int>() {
-                override fun root() = ignoreCase(setOf("foo"))
-            }
-        ).forAll { grammar ->
-            Parser(grammar).apply {
-                registerListener(IntegerTestListener())
-                run("fOObaz").apply {
-                    matched shouldBe true
-                    matchedEntireInput shouldBe false
-                    matchedInput shouldBe "fOO"
-                    restOfInput shouldBe "baz"
-                }
-                run("fO").apply {
-                    matched shouldBe false
-                    matchedEntireInput shouldBe false
-                    matchedInput shouldBe null
-                    restOfInput shouldBe "fO"
-                }
-            }
-        }
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = ignoreCase(emptySet())
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("fO").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "fO"
             }
         }
     }

@@ -25,7 +25,7 @@ import kotlin.streams.toList
 public open class TrieRule<T> constructor(private val strings: Collection<String>) : AbstractRule<T>() {
 
     private val trie = CharsTrieBuilder().run {
-        strings.forEach { add(map(it), 0) }
+        strings.distinct().forEach { add(map(it), 0) }
         build(FAST)
     }
 
