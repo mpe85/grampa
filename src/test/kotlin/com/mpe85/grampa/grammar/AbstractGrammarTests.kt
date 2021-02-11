@@ -19,25 +19,6 @@ private class IntegerTestListener : ParseEventListener<Int>()
 private class CharSequenceTestListener : ParseEventListener<CharSequence>()
 
 class AbstractGrammarTests : StringSpec({
-    "Regex rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = regex("abc+")
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("abcccccd").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe "abccccc"
-                restOfInput shouldBe "d"
-            }
-            run("ab").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "ab"
-            }
-        }
-    }
     "ASCII rule grammar" {
         Parser(object : AbstractGrammar<Int>() {
             override fun root() = ascii()
