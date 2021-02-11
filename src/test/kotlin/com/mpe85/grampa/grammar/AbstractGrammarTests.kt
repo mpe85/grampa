@@ -19,63 +19,6 @@ private class IntegerTestListener : ParseEventListener<Int>()
 private class CharSequenceTestListener : ParseEventListener<CharSequence>()
 
 class AbstractGrammarTests : StringSpec({
-    "ASCII rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = ascii()
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("#").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "#"
-                restOfInput shouldBe ""
-            }
-            run("ß").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "ß"
-            }
-        }
-    }
-    "BMP rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = bmp()
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("ß").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "ß"
-                restOfInput shouldBe ""
-            }
-            run("\uD835\uDD38").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "\uD835\uDD38"
-            }
-        }
-    }
-    "Digit rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = digit()
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("5").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "5"
-                restOfInput shouldBe ""
-            }
-            run("O").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "O"
-            }
-        }
-    }
     "JavaIdentifierStart rule grammar" {
         Parser(object : AbstractGrammar<Int>() {
             override fun root() = javaIdentifierStart()
