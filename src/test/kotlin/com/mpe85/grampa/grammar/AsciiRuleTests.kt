@@ -25,7 +25,7 @@ class AsciiRuleTests : StringSpec({
             }
         }
     }
-    "Ascii rule does not match non-ASCII characters" {
+    "Ascii rule does not match non-ASCII codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
             override fun root() = ascii()
         }).apply {

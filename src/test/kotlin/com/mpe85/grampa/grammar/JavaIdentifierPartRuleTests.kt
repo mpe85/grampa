@@ -1,6 +1,5 @@
 package com.mpe85.grampa.grammar
 
-import com.ibm.icu.lang.UCharacter
 import com.ibm.icu.lang.UCharacter.toString
 import com.mpe85.grampa.legalCodePoints
 import com.mpe85.grampa.parser.Parser
@@ -11,13 +10,14 @@ import io.kotest.property.arbitrary.char
 import io.kotest.property.arbitrary.filter
 import io.kotest.property.arbitrary.filterNot
 import io.kotest.property.checkAll
+import java.lang.Character.isJavaIdentifierPart
 
-class DigitRuleTests : StringSpec({
-    "Digit rule matches all digit characters" {
+class JavaIdentifierPartRuleTests : StringSpec({
+    "JavaIdentifierPart rule matches all java identifier part characters" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = digit()
+            override fun root() = javaIdentifierPart()
         }).apply {
-            checkAll(Arb.char().filter { Character.isDigit(it) }) { ch ->
+            checkAll(Arb.char().filter { isJavaIdentifierPart(it) }) { ch ->
                 run(ch.toString()).apply {
                     matched shouldBe true
                     matchedEntireInput shouldBe true
@@ -27,11 +27,11 @@ class DigitRuleTests : StringSpec({
             }
         }
     }
-    "Digit rule matches all digit codepoints" {
+    "JavaIdentifierPart rule matches all java identifier part codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = digit()
+            override fun root() = javaIdentifierPart()
         }).apply {
-            checkAll(legalCodePoints().filter { UCharacter.isDigit(it.value) }) { cp ->
+            checkAll(legalCodePoints().filter { isJavaIdentifierPart(it.value) }) { cp ->
                 run(toString(cp.value)).apply {
                     matched shouldBe true
                     matchedEntireInput shouldBe true
@@ -41,11 +41,11 @@ class DigitRuleTests : StringSpec({
             }
         }
     }
-    "Digit rule does not match non-digit characters" {
+    "JavaIdentifierPart rule does not match non java identifier part characters" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = digit()
+            override fun root() = javaIdentifierPart()
         }).apply {
-            checkAll(Arb.char().filterNot { Character.isDigit(it) }) { ch ->
+            checkAll(Arb.char().filterNot { isJavaIdentifierPart(it) }) { ch ->
                 run(ch.toString()).apply {
                     matched shouldBe false
                     matchedEntireInput shouldBe false
@@ -55,11 +55,11 @@ class DigitRuleTests : StringSpec({
             }
         }
     }
-    "Digit rule does not match non-digit codepoints" {
+    "JavaIdentifierPart rule does not match non java identifier part codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = digit()
+            override fun root() = javaIdentifierPart()
         }).apply {
-            checkAll(legalCodePoints().filterNot { UCharacter.isDigit(it.value) }) { cp ->
+            checkAll(legalCodePoints().filterNot { isJavaIdentifierPart(it.value) }) { cp ->
                 run(toString(cp.value)).apply {
                     matched shouldBe false
                     matchedEntireInput shouldBe false
@@ -69,9 +69,9 @@ class DigitRuleTests : StringSpec({
             }
         }
     }
-    "Digit rule does not match empty input" {
+    "JavaIdentifierPart rule does not match empty input" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = digit()
+            override fun root() = javaIdentifierPart()
         }).apply {
             run("").apply {
                 matched shouldBe false

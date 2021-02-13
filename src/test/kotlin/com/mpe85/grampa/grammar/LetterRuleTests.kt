@@ -12,12 +12,12 @@ import io.kotest.property.arbitrary.filter
 import io.kotest.property.arbitrary.filterNot
 import io.kotest.property.checkAll
 
-class DigitRuleTests : StringSpec({
-    "Digit rule matches all digit characters" {
+class LetterRuleTests : StringSpec({
+    "Letter rule matches all letter characters" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = digit()
+            override fun root() = letter()
         }).apply {
-            checkAll(Arb.char().filter { Character.isDigit(it) }) { ch ->
+            checkAll(Arb.char().filter { Character.isLetter(it) }) { ch ->
                 run(ch.toString()).apply {
                     matched shouldBe true
                     matchedEntireInput shouldBe true
@@ -27,11 +27,11 @@ class DigitRuleTests : StringSpec({
             }
         }
     }
-    "Digit rule matches all digit codepoints" {
+    "Letter rule matches all letter codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = digit()
+            override fun root() = letter()
         }).apply {
-            checkAll(legalCodePoints().filter { UCharacter.isDigit(it.value) }) { cp ->
+            checkAll(legalCodePoints().filter { UCharacter.isLetter(it.value) }) { cp ->
                 run(toString(cp.value)).apply {
                     matched shouldBe true
                     matchedEntireInput shouldBe true
@@ -41,11 +41,11 @@ class DigitRuleTests : StringSpec({
             }
         }
     }
-    "Digit rule does not match non-digit characters" {
+    "Letter rule does not match non-letter characters" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = digit()
+            override fun root() = letter()
         }).apply {
-            checkAll(Arb.char().filterNot { Character.isDigit(it) }) { ch ->
+            checkAll(Arb.char().filterNot { Character.isLetter(it) }) { ch ->
                 run(ch.toString()).apply {
                     matched shouldBe false
                     matchedEntireInput shouldBe false
@@ -55,11 +55,11 @@ class DigitRuleTests : StringSpec({
             }
         }
     }
-    "Digit rule does not match non-digit codepoints" {
+    "Letter rule does not match non-letter codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = digit()
+            override fun root() = letter()
         }).apply {
-            checkAll(legalCodePoints().filterNot { UCharacter.isDigit(it.value) }) { cp ->
+            checkAll(legalCodePoints().filterNot { UCharacter.isLetter(it.value) }) { cp ->
                 run(toString(cp.value)).apply {
                     matched shouldBe false
                     matchedEntireInput shouldBe false
@@ -69,9 +69,9 @@ class DigitRuleTests : StringSpec({
             }
         }
     }
-    "Digit rule does not match empty input" {
+    "Letter rule does not match empty input" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = digit()
+            override fun root() = letter()
         }).apply {
             run("").apply {
                 matched shouldBe false

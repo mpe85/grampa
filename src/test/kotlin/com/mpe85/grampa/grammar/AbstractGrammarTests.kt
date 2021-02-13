@@ -19,63 +19,6 @@ private class IntegerTestListener : ParseEventListener<Int>()
 private class CharSequenceTestListener : ParseEventListener<CharSequence>()
 
 class AbstractGrammarTests : StringSpec({
-    "JavaIdentifierStart rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = javaIdentifierStart()
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("ä").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "ä"
-                restOfInput shouldBe ""
-            }
-            run("1").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "1"
-            }
-        }
-    }
-    "JavaIdentifierPart rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = javaIdentifierPart()
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("1").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "1"
-                restOfInput shouldBe ""
-            }
-            run("(").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "("
-            }
-        }
-    }
-    "Letter rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = letter()
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("Ü").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "Ü"
-                restOfInput shouldBe ""
-            }
-            run("$").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "$"
-            }
-        }
-    }
     "LetterOrDigit rule grammar" {
         Parser(object : AbstractGrammar<Int>() {
             override fun root() = letterOrDigit()

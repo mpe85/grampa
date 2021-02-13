@@ -1,6 +1,5 @@
 package com.mpe85.grampa.grammar
 
-import com.ibm.icu.lang.UCharacter
 import com.ibm.icu.lang.UCharacter.toString
 import com.mpe85.grampa.legalCodePoints
 import com.mpe85.grampa.parser.Parser
@@ -11,13 +10,14 @@ import io.kotest.property.arbitrary.char
 import io.kotest.property.arbitrary.filter
 import io.kotest.property.arbitrary.filterNot
 import io.kotest.property.checkAll
+import java.lang.Character.isJavaIdentifierStart
 
-class DigitRuleTests : StringSpec({
-    "Digit rule matches all digit characters" {
+class JavaIdentifierStartRuleTests : StringSpec({
+    "JavaIdentifierStart rule matches all java identifier start characters" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = digit()
+            override fun root() = javaIdentifierStart()
         }).apply {
-            checkAll(Arb.char().filter { Character.isDigit(it) }) { ch ->
+            checkAll(Arb.char().filter { isJavaIdentifierStart(it) }) { ch ->
                 run(ch.toString()).apply {
                     matched shouldBe true
                     matchedEntireInput shouldBe true
@@ -27,11 +27,11 @@ class DigitRuleTests : StringSpec({
             }
         }
     }
-    "Digit rule matches all digit codepoints" {
+    "JavaIdentifierStart rule matches all java identifier start codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = digit()
+            override fun root() = javaIdentifierStart()
         }).apply {
-            checkAll(legalCodePoints().filter { UCharacter.isDigit(it.value) }) { cp ->
+            checkAll(legalCodePoints().filter { isJavaIdentifierStart(it.value) }) { cp ->
                 run(toString(cp.value)).apply {
                     matched shouldBe true
                     matchedEntireInput shouldBe true
@@ -41,11 +41,11 @@ class DigitRuleTests : StringSpec({
             }
         }
     }
-    "Digit rule does not match non-digit characters" {
+    "JavaIdentifierStart rule does not match non java identifier start characters" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = digit()
+            override fun root() = javaIdentifierStart()
         }).apply {
-            checkAll(Arb.char().filterNot { Character.isDigit(it) }) { ch ->
+            checkAll(Arb.char().filterNot { isJavaIdentifierStart(it) }) { ch ->
                 run(ch.toString()).apply {
                     matched shouldBe false
                     matchedEntireInput shouldBe false
@@ -55,11 +55,11 @@ class DigitRuleTests : StringSpec({
             }
         }
     }
-    "Digit rule does not match non-digit codepoints" {
+    "JavaIdentifierStart rule does not match non java identifier start codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = digit()
+            override fun root() = javaIdentifierStart()
         }).apply {
-            checkAll(legalCodePoints().filterNot { UCharacter.isDigit(it.value) }) { cp ->
+            checkAll(legalCodePoints().filterNot { isJavaIdentifierStart(it.value) }) { cp ->
                 run(toString(cp.value)).apply {
                     matched shouldBe false
                     matchedEntireInput shouldBe false
@@ -69,9 +69,9 @@ class DigitRuleTests : StringSpec({
             }
         }
     }
-    "Digit rule does not match empty input" {
+    "JavaIdentifierStart rule does not match empty input" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = digit()
+            override fun root() = javaIdentifierStart()
         }).apply {
             run("").apply {
                 matched shouldBe false

@@ -1,6 +1,6 @@
 package com.mpe85.grampa.grammar
 
-import com.ibm.icu.lang.UCharacter
+import com.ibm.icu.lang.UCharacter.isBMP
 import com.ibm.icu.lang.UCharacter.toString
 import com.mpe85.grampa.legalCodePoints
 import com.mpe85.grampa.parser.Parser
@@ -11,11 +11,11 @@ import io.kotest.property.arbitrary.filterNot
 import io.kotest.property.checkAll
 
 class BmpRuleTests : StringSpec({
-    "Bmp rule matches all BMP characters" {
+    "Bmp rule matches all BMP codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
             override fun root() = bmp()
         }).apply {
-            checkAll(legalCodePoints().filter { UCharacter.isBMP(it.value) }) { cp ->
+            checkAll(legalCodePoints().filter { isBMP(it.value) }) { cp ->
                 run(toString(cp.value)).apply {
                     matched shouldBe true
                     matchedEntireInput shouldBe true
@@ -25,11 +25,11 @@ class BmpRuleTests : StringSpec({
             }
         }
     }
-    "Bmp rule does not match non-BMP characters" {
+    "Bmp rule does not match non-BMP codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
             override fun root() = bmp()
         }).apply {
-            checkAll(legalCodePoints().filterNot { UCharacter.isBMP(it.value) }) { cp ->
+            checkAll(legalCodePoints().filterNot { isBMP(it.value) }) { cp ->
                 run(toString(cp.value)).apply {
                     matched shouldBe false
                     matchedEntireInput shouldBe false
