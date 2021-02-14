@@ -19,59 +19,6 @@ private class IntegerTestListener : ParseEventListener<Int>()
 private class CharSequenceTestListener : ParseEventListener<CharSequence>()
 
 class AbstractGrammarTests : StringSpec({
-    "Sequence rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = char('a') + char('b') + char('c')
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("abcd").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe "abc"
-                restOfInput shouldBe "d"
-            }
-            run("acdc").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "acdc"
-            }
-        }
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = sequence()
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("abcd").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe ""
-                restOfInput shouldBe "abcd"
-            }
-        }
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = sequence(
-                push(4711),
-                push { peek(it) + 4 },
-                sequence(push { pop(1, it) + peek(it) }),
-                optional(action {
-                    it.stack.push(0)
-                    false
-                })
-            )
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("whatever").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe ""
-                restOfInput shouldBe "whatever"
-                stackTop shouldBe 9426
-                stack.size shouldBe 2
-                stack.peek() shouldBe 9426
-                stack.peek(1) shouldBe 4715
-            }
-        }
-    }
     "FirstOf rule grammar" {
         Parser(object : AbstractGrammar<Int>() {
             override fun root() = firstOf(
