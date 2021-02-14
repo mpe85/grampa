@@ -38,11 +38,18 @@ internal fun upperCaseCodePoints() = legalCodePoints().filter {
 }
 
 /**
+ * Create an [Arb] of legal [Char]s. The null character is excluded.
+ *
+ * @return An [Arb] of [Char]s
+ */
+internal fun legalChars() = Arb.char(Char.MIN_VALUE + 1..Char.MAX_VALUE)
+
+/**
  * Create an [Arb] of lower case [Char]s that differ from the [Char] returned by [Char.toUpperCase].
  *
  * @return An [Arb] of [Char]s
  */
-internal fun lowerCaseChars() = Arb.char().filter {
+internal fun lowerCaseChars() = legalChars().filter {
     it.isLowerCase() && it != it.toUpperCase()
 }
 
@@ -51,6 +58,6 @@ internal fun lowerCaseChars() = Arb.char().filter {
  *
  * @return An [Arb] of [Char]s
  */
-internal fun upperCaseChars() = Arb.char().filter {
+internal fun upperCaseChars() = legalChars().filter {
     it.isUpperCase() && it != it.toLowerCase()
 }

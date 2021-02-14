@@ -1,21 +1,21 @@
 package com.mpe85.grampa.grammar
 
+import com.ibm.icu.lang.UCharacter
 import com.ibm.icu.lang.UCharacter.toString
 import com.mpe85.grampa.legalCodePoints
 import com.mpe85.grampa.parser.Parser
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
-import io.kotest.property.Arb
-import io.kotest.property.arbitrary.ascii
+import io.kotest.property.arbitrary.filter
 import io.kotest.property.arbitrary.filterNot
 import io.kotest.property.checkAll
 
-class AsciiRuleTests : StringSpec({
-    "Ascii rule matches all ASCII codepoints" {
+class WhitespaceRuleTests : StringSpec({
+    "Whitespace rule matches all whitespace codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = ascii()
+            override fun root() = whitespace()
         }).apply {
-            checkAll(Arb.ascii()) { cp ->
+            checkAll(legalCodePoints().filter { UCharacter.isWhitespace(it.value) }) { cp ->
                 run(toString(cp.value)).apply {
                     matched shouldBe true
                     matchedEntireInput shouldBe true
@@ -25,11 +25,11 @@ class AsciiRuleTests : StringSpec({
             }
         }
     }
-    "Ascii rule does not match non-ASCII codepoints" {
+    "Whitespace rule does not match non-whitespace codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = ascii()
+            override fun root() = whitespace()
         }).apply {
-            checkAll(legalCodePoints().filterNot { it.value in Char.MIN_VALUE.toInt()..Byte.MAX_VALUE.toInt() }) { cp ->
+            checkAll(legalCodePoints().filterNot { UCharacter.isWhitespace(it.value) }) { cp ->
                 run(toString(cp.value)).apply {
                     matched shouldBe false
                     matchedEntireInput shouldBe false
@@ -39,9 +39,9 @@ class AsciiRuleTests : StringSpec({
             }
         }
     }
-    "Ascii rule does not match empty input" {
+    "Whitespace rule does not match empty input" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = ascii()
+            override fun root() = whitespace()
         }).apply {
             run("").apply {
                 matched shouldBe false
