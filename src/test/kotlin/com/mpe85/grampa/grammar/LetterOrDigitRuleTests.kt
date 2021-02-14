@@ -72,13 +72,11 @@ class LetterOrDigitRuleTests : StringSpec({
     "LetterOrDigit rule does not match empty input" {
         Parser(object : AbstractGrammar<Unit>() {
             override fun root() = letterOrDigit()
-        }).apply {
-            run("").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe ""
-            }
+        }).run("").apply {
+            matched shouldBe false
+            matchedEntireInput shouldBe false
+            matchedInput shouldBe null
+            restOfInput shouldBe ""
         }
     }
 })

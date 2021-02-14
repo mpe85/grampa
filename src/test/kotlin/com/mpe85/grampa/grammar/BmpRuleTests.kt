@@ -42,13 +42,11 @@ class BmpRuleTests : StringSpec({
     "Bmp rule does not match empty input" {
         Parser(object : AbstractGrammar<Unit>() {
             override fun root() = bmp()
-        }).apply {
-            run("").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe ""
-            }
+        }).run("").apply {
+            matched shouldBe false
+            matchedEntireInput shouldBe false
+            matchedInput shouldBe null
+            restOfInput shouldBe ""
         }
     }
 })

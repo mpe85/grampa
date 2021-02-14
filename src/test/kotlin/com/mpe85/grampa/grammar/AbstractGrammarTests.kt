@@ -19,63 +19,6 @@ private class IntegerTestListener : ParseEventListener<Int>()
 private class CharSequenceTestListener : ParseEventListener<CharSequence>()
 
 class AbstractGrammarTests : StringSpec({
-    "CR rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = cr()
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("\r").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "\r"
-                restOfInput shouldBe ""
-            }
-            run("\n").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "\n"
-            }
-        }
-    }
-    "LF rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = lf()
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("\n").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "\n"
-                restOfInput shouldBe ""
-            }
-            run("\r").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "\r"
-            }
-        }
-    }
-    "CRLF rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = crlf()
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("\r\n").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "\r\n"
-                restOfInput shouldBe ""
-            }
-            run("\n\r").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "\n\r"
-            }
-        }
-    }
     "Sequence rule grammar" {
         Parser(object : AbstractGrammar<Int>() {
             override fun root() = char('a') + char('b') + char('c')

@@ -26,13 +26,11 @@ class AnyCodePointRuleTests : StringSpec({
     "AnyCodePoint rule does not match empty input" {
         Parser(object : AbstractGrammar<Unit>() {
             override fun root() = anyCodePoint()
-        }).apply {
-            run("").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe ""
-            }
+        }).run("").apply {
+            matched shouldBe false
+            matchedEntireInput shouldBe false
+            matchedInput shouldBe null
+            restOfInput shouldBe ""
         }
     }
 })
