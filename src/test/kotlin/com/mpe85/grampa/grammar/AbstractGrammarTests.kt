@@ -6,7 +6,6 @@ import com.mpe85.grampa.event.ParseEventListener
 import com.mpe85.grampa.event.PostParseEvent
 import com.mpe85.grampa.parser.Parser
 import com.mpe85.grampa.rule.impl.ActionRule
-import com.mpe85.grampa.rule.impl.or
 import com.mpe85.grampa.rule.impl.plus
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import io.kotest.assertions.throwables.shouldThrow
@@ -19,63 +18,6 @@ private class IntegerTestListener : ParseEventListener<Int>()
 private class CharSequenceTestListener : ParseEventListener<CharSequence>()
 
 class AbstractGrammarTests : StringSpec({
-    "FirstOf rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = firstOf(
-                string("foo") + string("bar"),
-                string("foo") + string("baz")
-            ) + string("xxx")
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("foobazxxx").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "foobazxxx"
-                restOfInput shouldBe ""
-            }
-            run("foobar").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "foobar"
-            }
-        }
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = firstOf()
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("foo").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe ""
-                restOfInput shouldBe "foo"
-            }
-        }
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = firstOf(string("foo"))
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("foo").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "foo"
-                restOfInput shouldBe ""
-            }
-        }
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = string("foo") or
-                    string("bar") or
-                    string("baz")
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("bamboo").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "bamboo"
-            }
-        }
-    }
     "Optional rule grammar" {
         Parser(object : AbstractGrammar<Int>() {
             override fun root() = optional(char('a'))
