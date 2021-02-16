@@ -1,6 +1,7 @@
 package com.mpe85.grampa.grammar
 
 import com.ibm.icu.lang.UCharacter.toString
+import com.mpe85.grampa.legalCodePoints
 import com.mpe85.grampa.lowerCaseCodePoints
 import com.mpe85.grampa.parser.Parser
 import com.mpe85.grampa.rule.impl.toRule
@@ -11,7 +12,7 @@ import io.kotest.property.checkAll
 
 class OptionalRuleTests : StringSpec({
     "Optional rule matches if child rule matches" {
-        checkAll(lowerCaseCodePoints()) { cp ->
+        checkAll(legalCodePoints()) { cp ->
             Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = optional(cp.value.toRule())
             }).run(toString(cp.value)).apply {

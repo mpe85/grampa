@@ -1,6 +1,7 @@
 package com.mpe85.grampa.grammar
 
 import com.ibm.icu.lang.UCharacter.toString
+import com.mpe85.grampa.legalCodePoints
 import com.mpe85.grampa.lowerCaseCodePoints
 import com.mpe85.grampa.parser.Parser
 import com.mpe85.grampa.rule.impl.toRule
@@ -13,7 +14,7 @@ import io.kotest.property.checkAll
 
 class ZeroOrMoreRuleTests : StringSpec({
     "ZeroOrMore rule matches if child rule matches once" {
-        checkAll(lowerCaseCodePoints()) { cp ->
+        checkAll(legalCodePoints()) { cp ->
             Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = zeroOrMore(cp.value.toRule())
             }).run(toString(cp.value)).apply {
@@ -25,7 +26,7 @@ class ZeroOrMoreRuleTests : StringSpec({
         }
     }
     "ZeroOrMore rule matches if child rule matches multiple times" {
-        checkAll(lowerCaseCodePoints(), Arb.positiveInts(10)) { cp, n ->
+        checkAll(legalCodePoints(), Arb.positiveInts(10)) { cp, n ->
             Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = zeroOrMore(cp.value.toRule())
             }).apply {
