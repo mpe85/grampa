@@ -20,29 +20,6 @@ private class CharSequenceTestListener : ParseEventListener<CharSequence>()
 class AbstractGrammarTests : StringSpec({
     "Repeat rul grammar" {
         Parser(object : AbstractGrammar<Int>() {
-            override fun root() = repeat(char('z'), 4, 7)
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("zzzzz").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "zzzzz"
-                restOfInput shouldBe ""
-            }
-            run("zzzzzzzz").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe "zzzzzzz"
-                restOfInput shouldBe "z"
-            }
-            run("zzz").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "zzz"
-            }
-        }
-        Parser(object : AbstractGrammar<Int>() {
             override fun root() = repeat(char('z'), max = 3)
         }).apply {
             registerListener(IntegerTestListener())
