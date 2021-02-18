@@ -18,42 +18,6 @@ private class IntegerTestListener : ParseEventListener<Int>()
 private class CharSequenceTestListener : ParseEventListener<CharSequence>()
 
 class AbstractGrammarTests : StringSpec({
-    "Repeat rul grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = repeat(char('z'), max = 3)
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("zz").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "zz"
-                restOfInput shouldBe ""
-            }
-            run("zzzz").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe "zzz"
-                restOfInput shouldBe "z"
-            }
-        }
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = repeat(char('z'), min = 3)
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("zzzzz").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "zzzzz"
-                restOfInput shouldBe ""
-            }
-            run("z").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "z"
-            }
-        }
-    }
     "Test rule grammar" {
         Parser(object : AbstractGrammar<Int>() {
             override fun root() = test(string("what")) + string("whatever")

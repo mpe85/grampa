@@ -121,4 +121,94 @@ class RepeatRuleTests : StringSpec({
             }
         }
     }
+    "Repeat(max) rule matches if child rule matches exactly max times" {
+        checkAll(legalCodePoints(), Arb.int(2..10)) { cp, max ->
+            Parser(object : AbstractGrammar<Unit>() {
+                override fun root() = repeat(cp.value.toRule(), max = max)
+            }).apply {
+                val repeated = toString(cp.value).repeat(max)
+                run(repeated).apply {
+                    matched shouldBe true
+                    matchedEntireInput shouldBe true
+                    matchedInput shouldBe repeated
+                    restOfInput shouldBe ""
+                }
+            }
+        }
+    }
+    "Repeat(max) rule matches if child rule matches less than max times" {
+        checkAll(legalCodePoints(), Arb.int(2..10)) { cp, max ->
+            Parser(object : AbstractGrammar<Unit>() {
+                override fun root() = repeat(cp.value.toRule(), max = max)
+            }).apply {
+                val repeated = toString(cp.value).repeat(max - 1)
+                run(repeated).apply {
+                    matched shouldBe true
+                    matchedEntireInput shouldBe true
+                    matchedInput shouldBe repeated
+                    restOfInput shouldBe ""
+                }
+            }
+        }
+    }
+    "Repeat(max) rule matches if child rule matches more than max times" {
+        checkAll(legalCodePoints(), Arb.int(2..10)) { cp, max ->
+            Parser(object : AbstractGrammar<Unit>() {
+                override fun root() = repeat(cp.value.toRule(), max = max)
+            }).apply {
+                val repeated = toString(cp.value).repeat(max + 1)
+                run(repeated).apply {
+                    matched shouldBe true
+                    matchedEntireInput shouldBe false
+                    matchedInput shouldBe repeated.removeSuffix(toString(cp.value))
+                    restOfInput shouldBe toString(cp.value)
+                }
+            }
+        }
+    }
+    "Repeat(min) rule matches if child rule matches exactly min times" {
+        checkAll(legalCodePoints(), Arb.int(2..10)) { cp, min ->
+            Parser(object : AbstractGrammar<Unit>() {
+                override fun root() = repeat(cp.value.toRule(), min = min)
+            }).apply {
+                val repeated = toString(cp.value).repeat(min)
+                run(repeated).apply {
+                    matched shouldBe true
+                    matchedEntireInput shouldBe true
+                    matchedInput shouldBe repeated
+                    restOfInput shouldBe ""
+                }
+            }
+        }
+    }
+    "Repeat(min) rule does not match if child rule matches less than min times" {
+        checkAll(legalCodePoints(), Arb.int(2..10)) { cp, min ->
+            Parser(object : AbstractGrammar<Unit>() {
+                override fun root() = repeat(cp.value.toRule(), min = min)
+            }).apply {
+                val repeated = toString(cp.value).repeat(min - 1)
+                run(repeated).apply {
+                    matched shouldBe false
+                    matchedEntireInput shouldBe false
+                    matchedInput shouldBe null
+                    restOfInput shouldBe repeated
+                }
+            }
+        }
+    }
+    "Repeat(min) rule matches if child rule matches more than min times" {
+        checkAll(legalCodePoints(), Arb.int(2..10)) { cp, min ->
+            Parser(object : AbstractGrammar<Unit>() {
+                override fun root() = repeat(cp.value.toRule(), min = min)
+            }).apply {
+                val repeated = toString(cp.value).repeat(min + 1)
+                run(repeated).apply {
+                    matched shouldBe true
+                    matchedEntireInput shouldBe true
+                    matchedInput shouldBe repeated
+                    restOfInput shouldBe ""
+                }
+            }
+        }
+    }
 })
