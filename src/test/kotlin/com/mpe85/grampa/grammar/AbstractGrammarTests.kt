@@ -18,54 +18,6 @@ private class IntegerTestListener : ParseEventListener<Int>()
 private class CharSequenceTestListener : ParseEventListener<CharSequence>()
 
 class AbstractGrammarTests : StringSpec({
-    "Test rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = test(string("what")) + string("whatever")
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("whatever").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "whatever"
-                restOfInput shouldBe ""
-            }
-        }
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = test(string("ever")) + string("whatever")
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("whatever").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "whatever"
-            }
-        }
-    }
-    "TestNot rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = testNot(string("foo")) + string("whatever")
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("whatever").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "whatever"
-                restOfInput shouldBe ""
-            }
-        }
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = testNot(string("what")) + string("whatever")
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("whatever").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "whatever"
-            }
-        }
-    }
     "Conditional rule grammar" {
         Parser(object : AbstractGrammar<Int>() {
             override fun root() = conditional({ it.startIndex == 0 }, letter(), digit())
