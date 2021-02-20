@@ -18,52 +18,6 @@ private class IntegerTestListener : ParseEventListener<Int>()
 private class CharSequenceTestListener : ParseEventListener<CharSequence>()
 
 class AbstractGrammarTests : StringSpec({
-    "Conditional rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = conditional({ it.startIndex == 0 }, letter(), digit())
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("z").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "z"
-                restOfInput shouldBe ""
-            }
-        }
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = conditional({ it.startIndex == 0 }, letter())
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("z").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "z"
-                restOfInput shouldBe ""
-            }
-        }
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = conditional({ it.startIndex != 0 }, letter(), digit())
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("1").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "1"
-                restOfInput shouldBe ""
-            }
-        }
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = conditional({ it.startIndex == 0 }, never(), empty())
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("whatever").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe "whatever"
-            }
-        }
-    }
     "Action rule grammar" {
         Parser(object : AbstractGrammar<Int>() {
             override fun root() = action {
@@ -178,14 +132,6 @@ class AbstractGrammarTests : StringSpec({
                 run("whatever")
                 listener.string shouldBe "someEvent"
             }
-        }
-    }
-    "Push rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = push(4711)
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("whatever").stackTop shouldBe 4711
         }
     }
     "Pop rule grammar" {
