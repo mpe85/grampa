@@ -1,11 +1,9 @@
 package com.mpe85.grampa.grammar
 
-import com.mpe85.grampa.context.ParserContext
 import com.mpe85.grampa.event.MatchSuccessEvent
 import com.mpe85.grampa.event.ParseEventListener
 import com.mpe85.grampa.event.PostParseEvent
 import com.mpe85.grampa.parser.Parser
-import com.mpe85.grampa.rule.impl.ActionRule
 import com.mpe85.grampa.rule.impl.plus
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import io.kotest.assertions.throwables.shouldThrow
@@ -18,89 +16,6 @@ private class IntegerTestListener : ParseEventListener<Int>()
 private class CharSequenceTestListener : ParseEventListener<CharSequence>()
 
 class AbstractGrammarTests : StringSpec({
-    "Action rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = action {
-                it.stack.push(4711)
-                it.level shouldBe 0
-                it.position shouldNotBe null
-                true
-            }
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("whatever").stackTop shouldBe 4711
-        }
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = action {
-                it.stack.push(4711)
-                it.level shouldBe 0
-                it.position shouldNotBe null
-                false
-            }
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("whatever").stackTop shouldBe null
-        }
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = object : ActionRule<Int>({ true }) {
-                override fun match(context: ParserContext<Int>) = super.match(context) && context.advanceIndex(1000)
-            }
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("whatever").matched shouldBe false
-        }
-    }
-    "Command rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = command { it.stack.push(4711) }
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("whatever").stackTop shouldBe 4711
-        }
-    }
-    "SkippableAction rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = skippableAction {
-                it.stack.push(4711)
-                true
-            }
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("whatever").stackTop shouldBe 4711
-        }
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = test(skippableAction {
-                it.stack.push(4711)
-                true
-            })
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("whatever").stackTop shouldBe null
-        }
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = skippableAction {
-                it.stack.push(4711)
-                false
-            }
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("whatever").stackTop shouldBe null
-        }
-    }
-    "SkippableCommand rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = skippableCommand { it.stack.push(4711) }
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("whatever").stackTop shouldBe 4711
-        }
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = test(skippableCommand { it.stack.push(4711) })
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("whatever").stackTop shouldBe null
-        }
-    }
     "Post rule grammar" {
         class Listener : ParseEventListener<Int>() {
             var string: String? = null
