@@ -32,7 +32,9 @@ public class CharSequenceLineCounter(private val input: CharSequence) : LineCoun
         return map
     }
 
-    override fun getPosition(index: Int): InputPosition = lines.floorEntry(checkBounds(index)).let {
+    override fun getPosition(index: Int): InputPosition = if (index == 0 && input.isEmpty())
+        InputPosition(0, 0)
+    else lines.floorEntry(checkBounds(index)).let {
         InputPosition(it.value, index - it.key + 1)
     }
 
