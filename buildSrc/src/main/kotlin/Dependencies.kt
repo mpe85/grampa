@@ -1,6 +1,6 @@
 object Versions {
     const val bintray = "1.8.5"
-    const val byteBuddy = "1.10.20"
+    const val byteBuddy = "1.10.21"
     const val detekt = "1.15.0"
     const val dokka = "1.4.20"
     const val eventBus = "3.2.0"
