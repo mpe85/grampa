@@ -6,7 +6,6 @@ import com.mpe85.grampa.event.PostParseEvent
 import com.mpe85.grampa.parser.Parser
 import com.mpe85.grampa.rule.impl.plus
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
-import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -47,42 +46,6 @@ class AbstractGrammarTests : StringSpec({
                 run("whatever")
                 listener.string shouldBe "someEvent"
             }
-        }
-    }
-    "Dup rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = push(4711) + dup()
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("whatever").apply {
-                stack.size shouldBe 2
-                stackTop shouldBe 4711
-                stack.peek(1) shouldBe 4711
-            }
-        }
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = dup()
-        }).apply {
-            registerListener(IntegerTestListener())
-            shouldThrow<NoSuchElementException> { run("whatever") }
-        }
-    }
-    "Swap rule grammar" {
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = push(4711) + push(4712) + swap()
-        }).apply {
-            registerListener(IntegerTestListener())
-            run("whatever").apply {
-                stack.size shouldBe 2
-                stackTop shouldBe 4711
-                stack.peek(1) shouldBe 4712
-            }
-        }
-        Parser(object : AbstractGrammar<Int>() {
-            override fun root() = push(4711) + swap()
-        }).apply {
-            registerListener(IntegerTestListener())
-            shouldThrow<IndexOutOfBoundsException> { run("whatever") }
         }
     }
     "Previous match" {
