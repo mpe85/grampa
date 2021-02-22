@@ -690,7 +690,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
 
     /**
      * Pop the top level element from the stack.
-     * This function may be called by an action or command where the action context is available.
+     * This function may be called by an action or command where the rule context is available.
      *
      * @param[context] An action context
      * @return The popped element
@@ -699,7 +699,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
 
     /**
      * Pop an element from the stack at a given position.
-     * This function may be called by an action or command where the action.
+     * This function may be called by an action or command where the rule context is available.
      *
      * @param[down] The number of elements on the stack to skip
      * @param[context] An action context
@@ -708,8 +708,27 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected fun pop(down: Int, context: RuleContext<T>): T = context.stack.pop(down)
 
     /**
+     * Replace the element on top of the stack.
+     * This function may be called by an action or command where the rule context is available.
+     *
+     * @param[value] A replacement value
+     * @return The replaced element
+     */
+    protected fun poke(context: RuleContext<T>, value: T): T = context.stack.poke(value)
+
+    /**
+     * Replace an element on the stack at a given position.
+     * This function may be called by an action or command where the rule context is available.
+     *
+     * @param[down] The number of elements on the stack to skip
+     * @param[value] A replacement value
+     * @return The replaced element
+     */
+    protected fun poke(down: Int, context: RuleContext<T>, value: T): T = context.stack.poke(down, value)
+
+    /**
      * Peek the top level element from the stack.
-     * This function may be called by an action or command where the action context is available.
+     * This function may be called by an action or command where the rule context is available.
      *
      * @param[context] An action context
      * @return The peeked element
@@ -718,7 +737,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
 
     /**
      * Peek an element from the stack at a given position.
-     * This function may be called by an action or command where the action is available.
+     * This function may be called by an action or command where the rule is available.
      *
      * @param[down] The number of elements on the stack to skip
      * @param[context] An action context
