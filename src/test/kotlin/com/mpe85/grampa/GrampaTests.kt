@@ -1,6 +1,6 @@
 package com.mpe85.grampa
 
-import com.mpe85.grampa.grammar.AbstractGrammar
+import com.mpe85.grampa.grammar.impl.AbstractGrammar
 import com.mpe85.grampa.rule.Rule
 import com.mpe85.grampa.rule.impl.CharPredicateRule
 import com.mpe85.grampa.rule.impl.EmptyRule

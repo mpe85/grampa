@@ -2,7 +2,7 @@ package com.mpe85.grampa.parser
 
 import com.mpe85.grampa.event.ParseEventListener
 import com.mpe85.grampa.event.PreMatchEvent
-import com.mpe85.grampa.grammar.AbstractGrammar
+import com.mpe85.grampa.grammar.impl.AbstractGrammar
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.core.spec.style.StringSpec
 
