@@ -24,4 +24,4 @@ public fun interface Command<T> {
  *
  * @return A parser action
  */
-public fun <T> Command<T>.toAction(): Action<T> = Action<T> { execute(it); true }
+public fun <T> Command<T>.toAction(): Action<T> = Action { execute(it); true }

@@ -2,7 +2,10 @@ package com.mpe85.grampa.rule.impl
 
 import com.mpe85.grampa.context.ParserContext
 import com.mpe85.grampa.context.RuleContext
+import com.mpe85.grampa.rule.Action
+import com.mpe85.grampa.rule.Command
 import com.mpe85.grampa.rule.Rule
+import com.mpe85.grampa.rule.toAction
 import com.mpe85.grampa.util.checkEquality
 import com.mpe85.grampa.util.stringify
 import java.util.Objects.hash
@@ -30,8 +33,22 @@ public open class ActionRule<T> @JvmOverloads constructor(
 }
 
 /**
- * Create a rule from this action.
+ * Create a rule from this action function.
  *
  * @return A [ActionRule]
  */
 public fun <T> ((RuleContext<T>) -> Boolean).toRule(skippable: Boolean = false): Rule<T> = ActionRule(this, skippable)
+
+/**
+ * Create a rule from this action.
+ *
+ * @return A [ActionRule]
+ */
+public fun <T> Action<T>.toRule(skippable: Boolean = false): Rule<T> = ActionRule(this::run, skippable)
+
+/**
+ * Create a rule from this command.
+ *
+ * @return A [ActionRule]
+ */
+public fun <T> Command<T>.toRule(skippable: Boolean = false): Rule<T> = toAction().toRule(skippable)
