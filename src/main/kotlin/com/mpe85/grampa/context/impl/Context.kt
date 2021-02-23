@@ -32,7 +32,7 @@ internal class Context<T>(state: ContextState<T>) : ParserContext<T> {
     override var currentIndex = startIndex
         set(currentIndex) {
             require(currentIndex in 0..inputBuffer.length) { "A 'currentIndex' must not be out of bounds." }
-            if (currentIndex > this.currentIndex) {
+            if (currentIndex >= this.currentIndex) {
                 previousMatch = inputBuffer.subSequence(this.currentIndex, currentIndex)
             }
             invalidateCache()
