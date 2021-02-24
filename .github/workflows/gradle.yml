@@ -18,4 +18,6 @@ jobs:
           java-package: jdk
           architecture: x64
       - uses: codecov/codecov-action@v1
+        with:
+          directory: ./build/reports/jacoco
       - run: ./gradlew build
