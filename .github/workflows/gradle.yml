@@ -18,6 +18,7 @@ jobs:
           java-package: jdk
           architecture: x64
       - uses: codecov/codecov-action@v1
+        if: matrix.jdk == 11
         with:
           directory: ./build/reports/jacoco
       - run: ./gradlew build
