@@ -16,7 +16,7 @@ import java.util.Objects.hash
  * @property[min] The minimum number of cycles
  * @property[max] An optional maximum number of cycles
  */
-public class RepeatRule<T>(private val rule: Rule<T>, private val min: Int, private val max: Int?) :
+public class RepeatRule<T>(private val rule: Rule<T>, private val min: Int, private val max: Int? = null) :
     AbstractRule<T>(rule) {
 
     init {
