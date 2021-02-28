@@ -23,7 +23,7 @@ repositories {
     jcenter()
 }
 dependencies {
-    implementation 'com.mpe85:grampa:0.9.2'
+    implementation 'com.github.mpe85:grampa:0.9.2'
 }
 ```
 
@@ -34,7 +34,7 @@ repositories {
     jcenter()
 }
 dependencies {
-    implementation("com.mpe85:grampa:0.9.2")
+    implementation("com.github.mpe85:grampa:0.9.2")
 }
 ```
 
@@ -43,7 +43,7 @@ Adding a dependency using Maven:
 ```xml
 
 <dependency>
-    <groupId>com.mpe85</groupId>
+    <groupId>com.github.mpe85</groupId>
     <artifactId>grampa</artifactId>
     <version>0.9.2</version>
     <type>pom</type>
@@ -54,7 +54,7 @@ Adding a dependency using Ivy:
 
 ```xml
 
-<dependency org='com.mpe85' name='grampa' rev='0.9.2'>
+<dependency org='com.github.mpe85' name='grampa' rev='0.9.2'>
     <artifact name='grampa' ext='pom'></artifact>
 </dependency>
 ```

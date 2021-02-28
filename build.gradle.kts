@@ -20,7 +20,7 @@ plugins {
     //id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
 }
 
-group = "com.mpe85"
+group = "com.github.mpe85"
 version = "0.9.3-SNAPSHOT"
 
 repositories {
