@@ -41,7 +41,7 @@ class ReferenceRuleTests : StringSpec({
         rule2.toString() shouldBe "ReferenceRuleImpl(referencedRuleHash=${rule2.referencedRuleHash})"
         rule3.toString() shouldBe "ReferenceRuleImpl(referencedRuleHash=${rule3.referencedRuleHash})"
     }
-    "Rule match" {
+    "ReferenceRule does not match" {
         createReferenceRule("rule1").match(mockk()) shouldBe false
     }
 })
