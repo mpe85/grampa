@@ -12,7 +12,7 @@ object Versions {
     const val mockk = "1.10.6"
     const val spotbugs = "4.2.1"
     const val spotbugsPlugin = "4.6.2"
-    const val versions = "0.36.0"
+    const val versions = "0.38.0"
 }
 
 object Plugins {
