@@ -40,7 +40,7 @@ public open class ParseEventListener<T> {
      * @param[event] The posted event
      */
     @Subscribe
-    public fun afterMatchFailure(event: MatchFailureEvent<T>): Unit = Unit
+    public open fun afterMatchFailure(event: MatchFailureEvent<T>): Unit = Unit
 
     /**
      * Called on a [PostParseEvent].
