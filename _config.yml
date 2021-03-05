@@ -1,1 +1,3 @@
 theme: jekyll-theme-cayman
+title: Grampa
+description: A grammar parser library for Kotlin
