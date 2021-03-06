@@ -10,7 +10,7 @@ object Versions {
     const val kotest = "4.4.1"
     const val kotlin = "1.4.31"
     const val mockk = "1.10.6"
-    const val spotbugs = "4.2.1"
+    const val spotbugs = "4.2.2"
     const val spotbugsPlugin = "4.6.2"
     const val versions = "0.38.0"
 }
