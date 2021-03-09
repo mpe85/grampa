@@ -61,10 +61,12 @@ class SequenceRuleTests : StringSpec({
                     push(i1),
                     push { peek(it) + i2 },
                     sequence(push { pop(1, it) + peek(it) }),
-                    optional(action {
-                        it.stack.push(0)
-                        false
-                    })
+                    optional(
+                        action {
+                            it.stack.push(0)
+                            false
+                        }
+                    )
                 )
             }).run(str).apply {
                 matched shouldBe true

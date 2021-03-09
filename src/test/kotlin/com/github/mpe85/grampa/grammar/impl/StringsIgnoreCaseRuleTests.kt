@@ -1,11 +1,11 @@
 package com.github.mpe85.grampa.grammar.impl
 
-import com.ibm.icu.lang.UCharacter.toLowerCase
-import com.ibm.icu.lang.UCharacter.toUpperCase
 import com.github.mpe85.grampa.legalCodePoints
 import com.github.mpe85.grampa.lowerCaseCodePoints
 import com.github.mpe85.grampa.parser.Parser
 import com.github.mpe85.grampa.upperCaseCodePoints
+import com.ibm.icu.lang.UCharacter.toLowerCase
+import com.ibm.icu.lang.UCharacter.toUpperCase
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb

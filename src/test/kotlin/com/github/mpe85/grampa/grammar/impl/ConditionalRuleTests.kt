@@ -1,7 +1,7 @@
 package com.github.mpe85.grampa.grammar.impl
 
-import com.ibm.icu.lang.UCharacter.toString
 import com.github.mpe85.grampa.parser.Parser
+import com.ibm.icu.lang.UCharacter.toString
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb

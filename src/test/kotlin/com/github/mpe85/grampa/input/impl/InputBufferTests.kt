@@ -44,7 +44,6 @@ class InputBufferTests : StringSpec({
                     println(ex)
                     throw ex
                 }
-
             }
             shouldThrow<IndexOutOfBoundsException> {
                 buffer.getCodePoint(6)

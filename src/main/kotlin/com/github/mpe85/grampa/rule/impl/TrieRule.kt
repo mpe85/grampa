@@ -1,5 +1,8 @@
 package com.github.mpe85.grampa.rule.impl
 
+import com.github.mpe85.grampa.context.ParserContext
+import com.github.mpe85.grampa.util.checkEquality
+import com.github.mpe85.grampa.util.stringify
 import com.ibm.icu.lang.UCharacter
 import com.ibm.icu.lang.UCharacter.charCount
 import com.ibm.icu.lang.UCharacter.toString
@@ -8,9 +11,6 @@ import com.ibm.icu.util.BytesTrie.Result.INTERMEDIATE_VALUE
 import com.ibm.icu.util.BytesTrie.Result.NO_MATCH
 import com.ibm.icu.util.CharsTrieBuilder
 import com.ibm.icu.util.StringTrieBuilder.Option.FAST
-import com.github.mpe85.grampa.context.ParserContext
-import com.github.mpe85.grampa.util.checkEquality
-import com.github.mpe85.grampa.util.stringify
 import java.util.Objects.hash
 import kotlin.streams.asSequence
 import kotlin.streams.toList
@@ -79,6 +79,4 @@ public class IgnoreCaseTrieRule<T>(strings: Collection<String>) : TrieRule<T>(st
     public constructor(vararg strings: String) : this(strings.toList())
 
     override fun map(string: String): String = UCharacter.foldCase(string, true)
-
 }
-

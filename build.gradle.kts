@@ -13,11 +13,10 @@ plugins {
     id(Plugins.dokka) version Versions.dokka
     id(Plugins.jacoco)
     kotlin(Plugins.kotlinJvm) version Versions.kotlin
+    id(Plugins.ktlint) version Versions.ktlintPlugin
     id(Plugins.mavenPublish)
     id(Plugins.spotbugs) version Versions.spotbugsPlugin
     id(Plugins.versions) version Versions.versions
-    //id("org.jmailen.kotlinter") version "3.3.0"
-    //id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
 }
 
 group = "com.github.mpe85"

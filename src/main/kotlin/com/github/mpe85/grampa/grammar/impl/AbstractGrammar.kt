@@ -1,6 +1,5 @@
 package com.github.mpe85.grampa.grammar.impl
 
-import com.ibm.icu.lang.UCharacter
 import com.github.mpe85.grampa.context.RuleContext
 import com.github.mpe85.grampa.grammar.Grammar
 import com.github.mpe85.grampa.rule.Action
@@ -28,6 +27,7 @@ import com.github.mpe85.grampa.rule.toAction
 import com.github.mpe85.grampa.util.max
 import com.github.mpe85.grampa.util.min
 import com.github.mpe85.grampa.util.range
+import com.ibm.icu.lang.UCharacter
 import kotlin.streams.toList
 
 /**

@@ -1,12 +1,12 @@
 package com.github.mpe85.grampa.rule.impl
 
-import com.ibm.icu.lang.UCharacter.charCount
-import com.ibm.icu.lang.UCharacter.foldCase
-import com.ibm.icu.lang.UCharacter.toString
 import com.github.mpe85.grampa.context.ParserContext
 import com.github.mpe85.grampa.rule.Rule
 import com.github.mpe85.grampa.util.checkEquality
 import com.github.mpe85.grampa.util.stringify
+import com.ibm.icu.lang.UCharacter.charCount
+import com.ibm.icu.lang.UCharacter.foldCase
+import com.ibm.icu.lang.UCharacter.toString
 import java.util.Objects.hash
 
 /**
@@ -26,8 +26,8 @@ public open class CodePointPredicateRule<T>(private val predicate: (Int) -> Bool
     public constructor(codePoint: Int) : this({ it == codePoint })
 
     override fun match(context: ParserContext<T>): Boolean = !context.atEndOfInput &&
-            predicate(context.currentCodePoint) &&
-            context.advanceIndex(charCount(context.currentCodePoint))
+        predicate(context.currentCodePoint) &&
+        context.advanceIndex(charCount(context.currentCodePoint))
 
     override fun hashCode(): Int = hash(super.hashCode(), predicate)
     override fun equals(other: Any?): Boolean = checkEquality(other, { super.equals(other) }, { it.predicate })

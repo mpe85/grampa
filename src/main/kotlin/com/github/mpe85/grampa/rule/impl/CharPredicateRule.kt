@@ -23,9 +23,9 @@ public open class CharPredicateRule<T>(private val predicate: (Char) -> Boolean)
      */
     public constructor(character: Char) : this({ it == character })
 
-    override fun match(context: ParserContext<T>): Boolean = !context.atEndOfInput
-            && predicate(context.currentChar)
-            && context.advanceIndex(1)
+    override fun match(context: ParserContext<T>): Boolean = !context.atEndOfInput &&
+        predicate(context.currentChar) &&
+        context.advanceIndex(1)
 
     override fun hashCode(): Int = hash(super.hashCode(), predicate)
     override fun equals(other: Any?): Boolean = checkEquality(other, { super.equals(other) }, { it.predicate })
