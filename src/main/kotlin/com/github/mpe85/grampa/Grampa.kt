@@ -50,16 +50,12 @@ public fun <U : Grammar<T>, T> Class<U>.createGrammar(): U = kotlin.createGramma
  * @param[args] The constructor arguments
  * @return A grammar instance
  */
-public fun <U : Grammar<T>, T> KClass<U>.createGrammar(vararg args: Any?): U {
-    for (constructor in createGrammarSubClass().constructors) {
-        try {
-            return constructor.call(*args)
-        } catch (ex: IllegalArgumentException) {
-            continue
-        }
-    }
-    throw IllegalArgumentException("Failed to find a constructor that is callable with the given arguments.")
-}
+public fun <U : Grammar<T>, T> KClass<U>.createGrammar(vararg args: Any?): U =
+    createGrammarSubClass().constructors.asSequence()
+        .map { runCatching { it.call(*args) } }
+        .mapNotNull { it.getOrNull() }
+        .firstOrNull()
+        ?: throw IllegalArgumentException("Failed to find a constructor that is callable with the given arguments.")
 
 /**
  * Create a new grammar instance using the given parser [Class] and constructor arguments.
