@@ -5,6 +5,7 @@ import com.github.spotbugs.snom.SpotBugsTask
 import org.gradle.api.plugins.BasePlugin.BUILD_GROUP
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jlleitschuh.gradle.ktlint.KtlintExtension
 import java.util.Date
 
 plugins {
@@ -121,6 +122,10 @@ configure<SpotBugsExtension> {
     setEffort("max")
     setReportLevel("low")
     ignoreFailures.set(true)
+}
+
+configure<KtlintExtension> {
+    version.set("0.41.0")
 }
 
 val gitUrl = "https://github.com/mpe85/${project.name}"
