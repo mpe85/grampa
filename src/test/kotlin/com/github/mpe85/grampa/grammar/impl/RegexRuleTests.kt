@@ -23,7 +23,6 @@ class RegexRuleTests : StringSpec({
                 Parser(object : AbstractGrammar<Unit>() {
                     override fun root() = regex(pattern)
                 }).run(str).apply {
-                    println(pattern)
                     matched shouldBe true
                     matchedEntireInput shouldBe true
                     matchedInput shouldBe str

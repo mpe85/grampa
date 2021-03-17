@@ -38,12 +38,7 @@ class InputBufferTests : StringSpec({
             buffer.getCodePoint(4) shouldBe 'a'.toInt()
             buffer.getCodePoint(5) shouldBe 'r'.toInt()
             shouldThrow<IndexOutOfBoundsException> {
-                try {
-                    buffer.getCodePoint(-1)
-                } catch (ex: Exception) {
-                    println(ex)
-                    throw ex
-                }
+                buffer.getCodePoint(-1)
             }
             shouldThrow<IndexOutOfBoundsException> {
                 buffer.getCodePoint(6)
