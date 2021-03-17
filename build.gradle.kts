@@ -108,13 +108,12 @@ tasks {
             }
         }
     }
-}
-
-tasks.withType<DependencyUpdatesTask> {
-    revision = "release"
-    gradleReleaseChannel = CURRENT.id
-    rejectVersionIf {
-        candidate.version.isNonStable()
+    withType<DependencyUpdatesTask> {
+        revision = "release"
+        gradleReleaseChannel = CURRENT.id
+        rejectVersionIf {
+            candidate.version.isNonStable()
+        }
     }
 }
 
