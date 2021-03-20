@@ -125,7 +125,7 @@ configure<SpotBugsExtension> {
 }
 
 configure<KtlintExtension> {
-    version.set("0.41.0")
+    version.set(Versions.ktlint)
 }
 
 val gitUrl = "https://github.com/mpe85/${project.name}"

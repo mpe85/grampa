@@ -9,6 +9,7 @@ object Versions {
     const val icu4j = "68.2"
     const val kotest = "4.4.3"
     const val kotlin = "1.4.31"
+    const val ktlint = "0.41.0"
     const val ktlintPlugin = "10.0.0"
     const val mockk = "1.11.0"
     const val spotbugs = "4.2.2"
