@@ -34,6 +34,7 @@ dependencies {
     implementation(Libs.icu4j)
     implementation(Libs.kotlinReflect)
     implementation(Libs.kotlinStdlib)
+    testImplementation(Libs.junitJupiter)
     testImplementation(Libs.kotestAssertionsCore)
     testImplementation(Libs.kotestProperty)
     testImplementation(Libs.kotestRunnerJunit5)

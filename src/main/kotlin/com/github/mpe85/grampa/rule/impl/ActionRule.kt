@@ -1,3 +1,5 @@
+@file:JvmName("ActionRules")
+
 package com.github.mpe85.grampa.rule.impl
 
 import com.github.mpe85.grampa.context.ParserContext

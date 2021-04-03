@@ -1,3 +1,5 @@
+@file:JvmName("TestNotRules")
+
 package com.github.mpe85.grampa.rule.impl
 
 import com.github.mpe85.grampa.context.ParserContext
@@ -23,3 +25,10 @@ public class TestNotRule<T>(private val rule: Rule<T>) : AbstractRule<T>(rule) {
     override fun equals(other: Any?): Boolean = checkEquality(other, { super.equals(other) })
     override fun toString(): String = stringify("rule" to rule::class.simpleName)
 }
+
+/**
+ * Create a [TestNotRule] out of this rule.
+ *
+ * @return A [TestNotRule] with [this] as its child rule
+ */
+public fun <T> Rule<T>.testNot(): Rule<T> = TestNotRule(this)

@@ -1,6 +1,9 @@
+@file:JvmName("RegexRules")
+
 package com.github.mpe85.grampa.rule.impl
 
 import com.github.mpe85.grampa.context.ParserContext
+import com.github.mpe85.grampa.rule.Rule
 import com.github.mpe85.grampa.util.checkEquality
 import com.github.mpe85.grampa.util.stringify
 import java.util.Objects.hash
@@ -31,3 +34,10 @@ public class RegexRule<T>(private val pattern: Pattern) : AbstractRule<T>() {
     override fun equals(other: Any?): Boolean = checkEquality(other, { super.equals(other) }, { it.pattern })
     override fun toString(): String = stringify("pattern" to pattern)
 }
+
+/**
+ * Create a regex rule from this string.
+ *
+ * @return A [RegexRule]
+ */
+public fun <T> String.toRegexRule(): Rule<T> = RegexRule(this)

@@ -14,14 +14,14 @@ import com.github.mpe85.grampa.rule.impl.EndOfInputRule
 import com.github.mpe85.grampa.rule.impl.FirstOfRule
 import com.github.mpe85.grampa.rule.impl.IgnoreCaseTrieRule
 import com.github.mpe85.grampa.rule.impl.NeverRule
-import com.github.mpe85.grampa.rule.impl.RegexRule
 import com.github.mpe85.grampa.rule.impl.SequenceRule
 import com.github.mpe85.grampa.rule.impl.StringRule
-import com.github.mpe85.grampa.rule.impl.TestNotRule
-import com.github.mpe85.grampa.rule.impl.TestRule
 import com.github.mpe85.grampa.rule.impl.TrieRule
+import com.github.mpe85.grampa.rule.impl.test
+import com.github.mpe85.grampa.rule.impl.testNot
 import com.github.mpe85.grampa.rule.impl.times
 import com.github.mpe85.grampa.rule.impl.toIgnoreCaseRule
+import com.github.mpe85.grampa.rule.impl.toRegexRule
 import com.github.mpe85.grampa.rule.impl.toRule
 import com.github.mpe85.grampa.rule.toAction
 import com.github.mpe85.grampa.util.max
@@ -293,7 +293,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[regex] A regular expression
      * @return A grammar rule
      */
-    protected open fun regex(regex: String): Rule<T> = RegexRule(regex)
+    protected open fun regex(regex: String): Rule<T> = regex.toRegexRule()
 
     /**
      * A rule that matches a string within a set of strings.
@@ -517,7 +517,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[rule] The child rule to test
      * @return A grammar rule
      */
-    protected open fun test(rule: Rule<T>): Rule<T> = TestRule(rule)
+    protected open fun test(rule: Rule<T>): Rule<T> = rule.test()
 
     /**
      * A test rule that tests if its child rule does not match.
@@ -525,7 +525,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[rule] The child rule to test
      * @return A grammar rule
      */
-    protected open fun testNot(rule: Rule<T>): Rule<T> = TestNotRule(rule)
+    protected open fun testNot(rule: Rule<T>): Rule<T> = rule.testNot()
 
     /**
      * A conditional rule that runs a child rule if a condition is true, otherwise it runs another child rule.
