@@ -7,11 +7,11 @@ import com.github.mpe85.grampa.rule.Command
 import com.github.mpe85.grampa.rule.Rule
 import com.github.mpe85.grampa.rule.impl.ActionRule
 import com.github.mpe85.grampa.rule.impl.CharPredicateRule
+import com.github.mpe85.grampa.rule.impl.ChoiceRule
 import com.github.mpe85.grampa.rule.impl.CodePointPredicateRule
 import com.github.mpe85.grampa.rule.impl.ConditionalRule
 import com.github.mpe85.grampa.rule.impl.EmptyRule
 import com.github.mpe85.grampa.rule.impl.EndOfInputRule
-import com.github.mpe85.grampa.rule.impl.FirstOfRule
 import com.github.mpe85.grampa.rule.impl.IgnoreCaseTrieRule
 import com.github.mpe85.grampa.rule.impl.NeverRule
 import com.github.mpe85.grampa.rule.impl.SequenceRule
@@ -453,7 +453,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[rules] A variable number of rules
      * @return A grammar rule
      */
-    protected open fun firstOf(vararg rules: Rule<T>): Rule<T> = firstOf(rules.toList())
+    protected open fun choice(vararg rules: Rule<T>): Rule<T> = choice(rules.toList())
 
     /**
      * A rule that matches the first successful rule in a list of other rules.
@@ -461,10 +461,10 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[rules] A list of rules
      * @return A grammar rule
      */
-    protected open fun firstOf(rules: List<Rule<T>>): Rule<T> = when {
+    protected open fun choice(rules: List<Rule<T>>): Rule<T> = when {
         rules.isEmpty() -> emptyRule
         rules.size == 1 -> rules.first()
-        else -> FirstOfRule(rules)
+        else -> ChoiceRule(rules)
     }
 
     /**

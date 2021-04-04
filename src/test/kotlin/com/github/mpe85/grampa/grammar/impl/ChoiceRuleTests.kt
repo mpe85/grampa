@@ -12,19 +12,19 @@ import io.kotest.property.arbitrary.set
 import io.kotest.property.arbitrary.string
 import io.kotest.property.checkAll
 
-class FirstOfRuleTests : StringSpec({
+class ChoiceRuleTests : StringSpec({
     fun grammars(rules: List<Rule<Unit>>) = listOf(
         object : AbstractGrammar<Unit>() {
-            override fun root() = firstOf(*rules.toTypedArray())
+            override fun root() = choice(*rules.toTypedArray())
         },
         object : AbstractGrammar<Unit>() {
-            override fun root() = firstOf(rules)
+            override fun root() = choice(rules)
         },
         object : AbstractGrammar<Unit>() {
             override fun root() = rules.reduce(Rule<Unit>::or)
         }
     )
-    "FirstOf rule matches first matching rule" {
+    "Choice rule matches first matching rule" {
         checkAll(Arb.set(Arb.string(1..10, legalCodePoints()), 2..10)) { strings ->
             grammars(strings.map { it.toRule() }).forEach { grammar ->
                 val random = strings.random()
@@ -37,10 +37,10 @@ class FirstOfRuleTests : StringSpec({
             }
         }
     }
-    "Empty FirstOf rule matches any input" {
+    "Empty Choice rule matches any input" {
         checkAll(Arb.string(0..10, legalCodePoints())) { str ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = firstOf()
+                override fun root() = choice()
             }).run(str).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe str.isEmpty()

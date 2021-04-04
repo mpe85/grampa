@@ -1,4 +1,4 @@
-@file:JvmName("FirstOfRules")
+@file:JvmName("ChoiceRules")
 
 package com.github.mpe85.grampa.rule.impl
 
@@ -15,7 +15,7 @@ import java.util.Objects.hash
  * @param[T] The type of the stack elements
  * @param[rules] A list of child rules
  */
-public class FirstOfRule<T>(rules: List<Rule<T>>) : AbstractRule<T>(rules) {
+public class ChoiceRule<T>(rules: List<Rule<T>>) : AbstractRule<T>(rules) {
 
     override fun match(context: ParserContext<T>): Boolean = children.any { context.createChildContext(it).run() }
 
@@ -25,9 +25,9 @@ public class FirstOfRule<T>(rules: List<Rule<T>>) : AbstractRule<T>(rules) {
 }
 
 /**
- * Create a [FirstOfRule] out of this and another rule.
+ * Create a [ChoiceRule] out of this and another rule.
  *
  * @param[other] Another rule
- * @return A [FirstOfRule] with [this] and [other] as its child rules
+ * @return A [ChoiceRule] with [this] and [other] as its child rules
  */
-public infix fun <T> Rule<T>.or(other: Rule<T>): Rule<T> = FirstOfRule(listOf(this, other))
+public infix fun <T> Rule<T>.or(other: Rule<T>): Rule<T> = ChoiceRule(listOf(this, other))
