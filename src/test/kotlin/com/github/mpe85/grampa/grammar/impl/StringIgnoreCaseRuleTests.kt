@@ -9,6 +9,8 @@ import com.ibm.icu.lang.UCharacter.toUpperCase
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
+import io.kotest.property.arbitrary.arabic
+import io.kotest.property.arbitrary.cyrillic
 import io.kotest.property.arbitrary.string
 import io.kotest.property.checkAll
 
@@ -66,14 +68,14 @@ class StringIgnoreCaseRuleTests : StringSpec({
         }
     }
     "StringIgnoreCase rule does not match wrong string" {
-        checkAll(Arb.string(1..10, legalCodePoints()), Arb.string(1..10, legalCodePoints())) { str1, str2 ->
+        checkAll(Arb.string(1..10, Arb.arabic()), Arb.string(1..10, Arb.cyrillic())) { str1, str2 ->
             Parser(object : AbstractGrammar<Unit>() {
                 override fun root() = ignoreCase(str1)
             }).run(str2).apply {
-                matched shouldBe str2.startsWith(str1, true)
-                matchedEntireInput shouldBe str1.equals(str2, true)
-                matchedInput shouldBe if (str2.startsWith(str1, true)) str1 else null
-                restOfInput shouldBe if (str2.startsWith(str1, true)) str2.drop(str1.length) else str2
+                matched shouldBe false
+                matchedEntireInput shouldBe false
+                matchedInput shouldBe null
+                restOfInput shouldBe str2
             }
         }
     }
