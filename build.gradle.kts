@@ -6,16 +6,15 @@ import org.gradle.api.plugins.BasePlugin.BUILD_GROUP
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
-import java.util.Date
 
 plugins {
-    id(Plugins.bintray) version Versions.bintray
     id(Plugins.detekt) version Versions.detekt
     id(Plugins.dokka) version Versions.dokka
     id(Plugins.jacoco)
     kotlin(Plugins.kotlinJvm) version Versions.kotlin
     id(Plugins.ktlint) version Versions.ktlintPlugin
     id(Plugins.mavenPublish)
+    id(Plugins.signing)
     id(Plugins.spotbugs) version Versions.spotbugsPlugin
     id(Plugins.versions) version Versions.versions
 }
@@ -67,6 +66,11 @@ val sourcesJar = tasks.create<Jar>("sourcesJar") {
     from(sourceSets.main.get().allSource)
 }
 
+artifacts {
+    archives(javadocJar)
+    archives(sourcesJar)
+}
+
 tasks {
     named<SpotBugsTask>("spotbugsTest") {
         enabled = false
@@ -95,10 +99,6 @@ tasks {
             events("passed", "skipped", "failed")
         }
         finalizedBy("jacocoTestReport")
-    }
-    artifacts {
-        archives(javadocJar)
-        archives(sourcesJar)
     }
     withType<SpotBugsTask> {
         reports {
@@ -133,6 +133,17 @@ val gitUrl = "https://github.com/mpe85/${project.name}"
 val gitScmUrl = "https://github.com/mpe85/${project.name}.git"
 
 publishing {
+    repositories {
+        maven {
+            val releasesRepoUrl = "https://s01.oss.sonatype.org/content/repositories/releases/"
+            val snapshotsRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+            url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl)
+            credentials {
+                username = property("ossrhUsername") as String
+                password = property("ossrhPassword") as String
+            }
+        }
+    }
     publications {
         register<MavenPublication>("mavenJava") {
             from(components["java"])
@@ -145,54 +156,38 @@ publishing {
             groupId = "$group"
             artifactId = project.name
             version = "${project.version}"
-            pom.withXml {
-                asNode().apply {
-                    appendNode("description", "Grampa")
-                    appendNode("name", "$group:${project.name}")
-                    appendNode("url", gitUrl)
-                    appendNode("licenses").appendNode("license").apply {
-                        appendNode("name", "MIT")
-                        appendNode("url", "$gitUrl/blob/master/LICENSE")
+
+            pom {
+                name.set("Grampa")
+                description.set("AGrampa")
+                url.set(gitUrl)
+                licenses {
+                    license {
+                        name.set("MIT")
+                        url.set("$gitUrl/blob/master/LICENSE")
                     }
-                    appendNode("developers").appendNode("developer").apply {
-                        appendNode("id", "mpe85")
-                        appendNode("name", "Marco Perazzo")
-                        appendNode("email", "marco.perazzo85@gmail.com")
+                }
+                developers {
+                    developer {
+                        id.set("mpe85")
+                        name.set("Marco Perazzo")
+                        email.set("marco.perazzo85@gmail.com")
                     }
-                    appendNode("scm").apply {
-                        appendNode("url", gitScmUrl)
-                        appendNode("connection", "scm:git:$gitScmUrl")
-                    }
+                }
+                scm {
+                    connection.set(gitScmUrl)
+                    developerConnection.set(gitScmUrl)
+                    url.set(gitUrl)
                 }
             }
         }
     }
 }
 
-val bintrayUser: String? by project
-val bintrayKey: String? by project
-
-bintray {
-    user = bintrayUser ?: System.getenv("bintrayUser")
-    key = bintrayKey ?: System.getenv("bintrayKey")
-    setPublications("mavenJava")
-
-    pkg.apply {
-        repo = "maven"
-        name = project.name
-        setLicenses("MIT")
-        websiteUrl = gitUrl
-        vcsUrl = gitScmUrl
-        issueTrackerUrl = "$gitUrl/issues"
-
-        version.apply {
-            name = "${project.version}"
-            desc = "${project.version}"
-            released = Date().toString()
-            vcsTag = "${project.version}"
-        }
-    }
+signing {
+    sign(publishing.publications["mavenJava"])
 }
+
 
 fun String.isNonStable(): Boolean {
     val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { toUpperCase().contains(it) }

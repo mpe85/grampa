@@ -1,5 +1,4 @@
 object Versions {
-    const val bintray = "1.8.5"
     const val byteBuddy = "1.10.22"
     const val detekt = "1.16.0"
     const val dokka = "1.4.30"
@@ -19,13 +18,13 @@ object Versions {
 }
 
 object Plugins {
-    const val bintray = "com.jfrog.bintray"
     const val detekt = "io.gitlab.arturbosch.detekt"
     const val dokka = "org.jetbrains.dokka"
     const val jacoco = "org.gradle.jacoco"
     const val kotlinJvm = "jvm"
     const val ktlint = "org.jlleitschuh.gradle.ktlint"
     const val mavenPublish = "org.gradle.maven-publish"
+    const val signing = "org.gradle.signing"
     const val spotbugs = "com.github.spotbugs"
     const val versions = "com.github.ben-manes.versions"
 }
