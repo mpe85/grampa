@@ -3,7 +3,7 @@ object Versions {
     const val detekt = "1.16.0"
     const val dokka = "1.4.30"
     const val eventBus = "3.2.0"
-    const val icu4j = "68.2"
+    const val icu4j = "69.1"
     const val jacoco = "0.8.6"
     const val junit = "5.7.1"
     const val jvmTarget = "1.8"
