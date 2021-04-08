@@ -139,8 +139,8 @@ publishing {
             val snapshotsRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
             url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl)
             credentials {
-                username = property("ossrhUsername")?.toString()
-                password = property("ossrhPassword")?.toString()
+                username = "ossrhUsername".property()
+                password = "ossrhPassword".property()
             }
         }
     }
@@ -159,7 +159,7 @@ publishing {
 
             pom {
                 name.set("Grampa")
-                description.set("AGrampa")
+                description.set("Grampa")
                 url.set(gitUrl)
                 licenses {
                     license {
@@ -195,3 +195,5 @@ fun String.isNonStable(): Boolean {
     val isStable = stableKeyword || regex.matches(this)
     return isStable.not()
 }
+
+fun String.property() = if (hasProperty(this)) property(this)?.toString() else null
