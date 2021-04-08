@@ -188,7 +188,6 @@ signing {
     sign(publishing.publications["mavenJava"])
 }
 
-
 fun String.isNonStable(): Boolean {
     val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { toUpperCase().contains(it) }
     val regex = "^[0-9,.v-]+(-r)?$".toRegex()
