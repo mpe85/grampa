@@ -20,7 +20,7 @@ plugins {
 }
 
 group = "com.github.mpe85"
-version = "0.9.3-SNAPSHOT"
+version = "0.9.3"
 
 repositories {
     maven("https://kotlin.bintray.com/kotlinx") // until kotlinx.html is migrated to mavenCentral
