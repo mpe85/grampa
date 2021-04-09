@@ -1,7 +1,6 @@
 # Grampa: A grammar parser library for Kotlin
 
 [![Latest release](https://img.shields.io/github/release/mpe85/grampa/all.svg)](https://github.com/mpe85/grampa/releases/latest)
-[![Download](https://api.bintray.com/packages/mpe85/maven/grampa/images/download.svg)](https://bintray.com/mpe85/maven/grampa/_latestVersion)
 [![Kotlin](https://img.shields.io/badge/kotlin-1.4-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![Build](https://github.com/mpe85/grampa/actions/workflows/gradle.yml/badge.svg)](https://github.com/mpe85/grampa/actions/workflows/gradle.yml)
 [![Coverage](https://codecov.io/gh/mpe85/grampa/branch/master/graph/badge.svg)](https://codecov.io/gh/mpe85/grampa)
