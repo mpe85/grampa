@@ -12,8 +12,6 @@ object Versions {
     const val ktlint = "0.41.0"
     const val ktlintPlugin = "10.0.0"
     const val mockk = "1.11.0"
-    const val spotbugs = "4.2.2"
-    const val spotbugsPlugin = "4.7.0"
     const val versions = "0.38.0"
 }
 
@@ -25,7 +23,6 @@ object Plugins {
     const val ktlint = "org.jlleitschuh.gradle.ktlint"
     const val mavenPublish = "org.gradle.maven-publish"
     const val signing = "org.gradle.signing"
-    const val spotbugs = "com.github.spotbugs"
     const val versions = "com.github.ben-manes.versions"
 }
 
@@ -40,5 +37,4 @@ object Libs {
     const val kotlinReflect = "org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin}"
     const val kotlinStdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin}"
     const val mockk = "io.mockk:mockk:${Versions.mockk}"
-    const val spotbugsAnnotations = "com.github.spotbugs:spotbugs-annotations:${Versions.spotbugs}"
 }

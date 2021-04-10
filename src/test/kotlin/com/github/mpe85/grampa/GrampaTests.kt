@@ -8,7 +8,6 @@ import com.github.mpe85.grampa.rule.impl.EmptyRule
 import com.github.mpe85.grampa.rule.impl.RepeatRule
 import com.github.mpe85.grampa.rule.impl.SequenceRule
 import com.github.mpe85.grampa.rule.impl.times
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
@@ -64,8 +63,6 @@ class GrampaTests : StringSpec({
     "Non-overridable rule method" {
         open class InvalidGrammar : AbstractGrammar<String>() {
             override fun root() = expr('a')
-
-            @SuppressFBWarnings("IL_INFINITE_RECURSIVE_LOOP")
             private fun expr(c: Char) = char(c)
         }
         shouldThrow<IllegalArgumentException> { InvalidGrammar::class.createGrammar() }
@@ -82,7 +79,6 @@ class GrampaTests : StringSpec({
     }
     "Grammar inheritance" {
         open class SuperGrammar : TestGrammar() {
-            @SuppressFBWarnings("IL_INFINITE_RECURSIVE_LOOP")
             override fun root(): Rule<String> = sequence(char('a'), root())
             override fun verifyRules() = root().apply {
                 shouldBeInstanceOf<SequenceRule<String>>()

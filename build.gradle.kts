@@ -1,7 +1,5 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.github.benmanes.gradle.versions.updates.gradle.GradleReleaseChannel.CURRENT
-import com.github.spotbugs.snom.SpotBugsExtension
-import com.github.spotbugs.snom.SpotBugsTask
 import org.gradle.api.plugins.BasePlugin.BUILD_GROUP
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -15,7 +13,6 @@ plugins {
     id(Plugins.ktlint) version Versions.ktlintPlugin
     id(Plugins.mavenPublish)
     id(Plugins.signing)
-    id(Plugins.spotbugs) version Versions.spotbugsPlugin
     id(Plugins.versions) version Versions.versions
 }
 
@@ -38,7 +35,6 @@ dependencies {
     testImplementation(Libs.kotestProperty)
     testImplementation(Libs.kotestRunnerJunit5)
     testImplementation(Libs.mockk)
-    testCompileOnly(Libs.spotbugsAnnotations)
 }
 
 kotlin {
@@ -47,10 +43,6 @@ kotlin {
 
 jacoco {
     toolVersion = Versions.jacoco
-}
-
-spotbugs {
-    toolVersion.set(Versions.spotbugs)
 }
 
 val javadocJar = tasks.create<Jar>("javadocJar") {
@@ -72,9 +64,6 @@ artifacts {
 }
 
 tasks {
-    named<SpotBugsTask>("spotbugsTest") {
-        enabled = false
-    }
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = Versions.jvmTarget
     }
@@ -100,16 +89,6 @@ tasks {
         }
         finalizedBy("jacocoTestReport")
     }
-    withType<SpotBugsTask> {
-        reports {
-            create("html") {
-                isEnabled = true
-            }
-            create("xml") {
-                isEnabled = false
-            }
-        }
-    }
     withType<DependencyUpdatesTask> {
         revision = "release"
         gradleReleaseChannel = CURRENT.id
@@ -117,12 +96,6 @@ tasks {
             candidate.version.isNonStable()
         }
     }
-}
-
-configure<SpotBugsExtension> {
-    setEffort("max")
-    setReportLevel("low")
-    ignoreFailures.set(true)
 }
 
 configure<KtlintExtension> {
