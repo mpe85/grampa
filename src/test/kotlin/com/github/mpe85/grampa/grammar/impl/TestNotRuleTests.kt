@@ -17,7 +17,7 @@ class TestNotRuleTests : StringSpec({
     "TestNot rule matches failing rule" {
         checkAll(Arb.string(2..10, lowerCaseCodePoints()), Arb.string(2..10, upperCaseCodePoints())) { lower, upper ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = testNot(lower.toRule()) + upper.toRule()
+                override fun start() = testNot(lower.toRule()) + upper.toRule()
             }).run(upper).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
@@ -29,7 +29,7 @@ class TestNotRuleTests : StringSpec({
     "TestNot rule does not match matching rule" {
         checkAll(Arb.string(1..10, legalCodePoints())) { str ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = (str.toRule<Unit>()).testNot() + str.toRule()
+                override fun start() = (str.toRule<Unit>()).testNot() + str.toRule()
             }).run(str).apply {
                 matched shouldBe false
                 matchedEntireInput shouldBe false

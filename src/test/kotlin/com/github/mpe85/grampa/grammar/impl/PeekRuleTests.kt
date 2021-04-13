@@ -11,7 +11,7 @@ class PeekRuleTests : StringSpec({
     "Peek(context) rule peeks value at top of parser stack" {
         checkAll<Int> { int ->
             Parser(object : AbstractGrammar<Int>() {
-                override fun root() = push(int) + command { peek(it) shouldBe int }
+                override fun start() = push(int) + command { peek(it) shouldBe int }
             }).run("").apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
@@ -25,7 +25,7 @@ class PeekRuleTests : StringSpec({
     "Peek(down,context) rule peeks value on parser stack at given down position" {
         checkAll<Int, Int> { int1, int2 ->
             Parser(object : AbstractGrammar<Int>() {
-                override fun root() = push(int1) + push(int2) + command { peek(1, it) shouldBe int1 }
+                override fun start() = push(int1) + push(int2) + command { peek(1, it) shouldBe int1 }
             }).run("").apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
@@ -38,7 +38,7 @@ class PeekRuleTests : StringSpec({
     }
     "Peek(value) throws NoSuchElementException when stack is empty" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = command { peek(it) }
+            override fun start() = command { peek(it) }
         }).apply {
             shouldThrow<NoSuchElementException> { run("") }
         }

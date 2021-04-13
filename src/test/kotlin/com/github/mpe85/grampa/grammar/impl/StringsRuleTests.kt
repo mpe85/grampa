@@ -12,10 +12,10 @@ import io.kotest.property.checkAll
 class StringsRuleTests : StringSpec({
     fun grammars(strings: Collection<String>) = listOf(
         object : AbstractGrammar<Unit>() {
-            override fun root() = strings(*strings.toTypedArray())
+            override fun start() = strings(*strings.toTypedArray())
         },
         object : AbstractGrammar<Unit>() {
-            override fun root() = strings(strings)
+            override fun start() = strings(strings)
         }
     )
     "Strings rule matches string in collection" {

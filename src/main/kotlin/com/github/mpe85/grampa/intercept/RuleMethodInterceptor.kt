@@ -19,9 +19,9 @@ import kotlin.reflect.jvm.javaMethod
 /**
  * An interceptor for the rule methods of a grammar.
  * If a rule method gets called for the second time, the actual rule is replaced by a reference rule in the first place.
- * At the very ending of the grammar creating process (i.e. the first call of the root rule method)
+ * At the very ending of the grammar creating process (i.e. the first call of the start rule method)
  * all reference rules are replaced by the 'real' rules.
- * his is done to avoid endless recursions caused by circular rule dependencies.
+ * This is done to avoid endless recursions caused by circular rule dependencies.
  *
  * @author mpe85
  * @param[T] The type of the stack elements
@@ -29,7 +29,7 @@ import kotlin.reflect.jvm.javaMethod
 internal class RuleMethodInterceptor<T> {
 
     private val rules = mutableMapOf<Int, Rule<T>?>()
-    private val rootRuleMethod = requireNotNull(Grammar<T>::root.javaMethod)
+    private val startRuleMethod = requireNotNull(Grammar<T>::start.javaMethod)
 
     /**
      * Intercept rule methods.
@@ -48,7 +48,7 @@ internal class RuleMethodInterceptor<T> {
             rules[hash] = null
             superCall.call().also { rule ->
                 rules[hash] = rule
-                if (method.isRoot()) {
+                if (method.isStart()) {
                     rule.accept(ReferenceRuleReplaceVisitor(rules))
                 }
             }
@@ -56,11 +56,11 @@ internal class RuleMethodInterceptor<T> {
     }
 
     /**
-     * Check if a rule method is the root rule method.
+     * Check if a rule method is the start rule method.
      *
-     * @return true if it is the root rule method
+     * @return true if it is the start rule method
      */
-    private fun Method.isRoot() = rootRuleMethod.name == name && rootRuleMethod.parameterCount == parameterCount
+    private fun Method.isStart() = startRuleMethod.name == name && startRuleMethod.parameterCount == parameterCount
 }
 
 /**

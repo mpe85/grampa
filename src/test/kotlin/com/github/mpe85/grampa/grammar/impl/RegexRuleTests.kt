@@ -22,7 +22,7 @@ class RegexRuleTests : StringSpec({
         patterns.forEach { pattern ->
             checkAll(Arb.stringPattern(pattern)) { str ->
                 Parser(object : AbstractGrammar<Unit>() {
-                    override fun root() = pattern.toRegexRule<Unit>()
+                    override fun start() = pattern.toRegexRule<Unit>()
                 }).run(str).apply {
                     matched shouldBe true
                     matchedEntireInput shouldBe true

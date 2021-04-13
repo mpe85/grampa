@@ -13,7 +13,7 @@ import io.kotest.property.checkAll
 class WhitespaceRuleTests : StringSpec({
     "Whitespace rule matches all whitespace codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = whitespace()
+            override fun start() = whitespace()
         }).apply {
             checkAll(legalCodePoints().filter { UCharacter.isWhitespace(it.value) }) { cp ->
                 run(toString(cp.value)).apply {
@@ -27,7 +27,7 @@ class WhitespaceRuleTests : StringSpec({
     }
     "Whitespace rule does not match non-whitespace codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = whitespace()
+            override fun start() = whitespace()
         }).apply {
             checkAll(legalCodePoints().filterNot { UCharacter.isWhitespace(it.value) }) { cp ->
                 run(toString(cp.value)).apply {
@@ -41,7 +41,7 @@ class WhitespaceRuleTests : StringSpec({
     }
     "Whitespace rule does not match empty input" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = whitespace()
+            override fun start() = whitespace()
         }).run("").apply {
             matched shouldBe false
             matchedEntireInput shouldBe false

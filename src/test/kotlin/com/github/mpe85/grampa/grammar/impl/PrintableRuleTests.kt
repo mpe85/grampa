@@ -13,7 +13,7 @@ import io.kotest.property.checkAll
 class PrintableRuleTests : StringSpec({
     "Printable rule matches all printable codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = printable()
+            override fun start() = printable()
         }).apply {
             checkAll(legalCodePoints().filter { isPrintable(it.value) }) { cp ->
                 run(toString(cp.value)).apply {
@@ -27,7 +27,7 @@ class PrintableRuleTests : StringSpec({
     }
     "Printable rule does not match non-printable codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = printable()
+            override fun start() = printable()
         }).apply {
             checkAll(legalCodePoints().filterNot { isPrintable(it.value) }) { cp ->
                 run(toString(cp.value)).apply {
@@ -41,7 +41,7 @@ class PrintableRuleTests : StringSpec({
     }
     "Printable rule does not match empty input" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = printable()
+            override fun start() = printable()
         }).run("").apply {
             matched shouldBe false
             matchedEntireInput shouldBe false

@@ -13,7 +13,7 @@ import io.kotest.property.checkAll
 class SpaceCharRuleTests : StringSpec({
     "SpaceChar rule matches all space char codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = spaceChar()
+            override fun start() = spaceChar()
         }).apply {
             checkAll(legalCodePoints().filter { UCharacter.isSpaceChar(it.value) }) { cp ->
                 run(toString(cp.value)).apply {
@@ -27,7 +27,7 @@ class SpaceCharRuleTests : StringSpec({
     }
     "SpaceChar rule does not match non space char codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = spaceChar()
+            override fun start() = spaceChar()
         }).apply {
             checkAll(legalCodePoints().filterNot { UCharacter.isSpaceChar(it.value) }) { cp ->
                 run(toString(cp.value)).apply {
@@ -41,7 +41,7 @@ class SpaceCharRuleTests : StringSpec({
     }
     "SpaceChar rule does not match empty input" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = spaceChar()
+            override fun start() = spaceChar()
         }).run("").apply {
             matched shouldBe false
             matchedEntireInput shouldBe false

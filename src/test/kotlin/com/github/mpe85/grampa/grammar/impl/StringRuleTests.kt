@@ -12,7 +12,7 @@ class StringRuleTests : StringSpec({
     "String rule matches correct string" {
         checkAll(Arb.string(1..10, legalCodePoints())) { str ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = string(str)
+                override fun start() = string(str)
             }).run(str).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
@@ -24,7 +24,7 @@ class StringRuleTests : StringSpec({
     "String rule does not match wrong string" {
         checkAll(Arb.string(1..10, legalCodePoints()), Arb.string(1..10, legalCodePoints())) { str1, str2 ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = string(str1)
+                override fun start() = string(str1)
             }).run(str2).apply {
                 matched shouldBe str2.startsWith(str1)
                 matchedEntireInput shouldBe (str1 == str2)
@@ -36,7 +36,7 @@ class StringRuleTests : StringSpec({
     "Empty String rule matches any input" {
         checkAll(Arb.string(0..10, legalCodePoints())) { str ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = string("")
+                override fun start() = string("")
             }).run(str).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe str.isEmpty()

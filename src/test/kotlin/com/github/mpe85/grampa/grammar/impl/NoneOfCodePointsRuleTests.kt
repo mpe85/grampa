@@ -12,13 +12,13 @@ import io.kotest.property.checkAll
 class NoneOfCodePointsRuleTests : StringSpec({
     fun grammars(codePoints: Collection<Int>) = listOf(
         object : AbstractGrammar<Unit>() {
-            override fun root() = noneOfCodePoints(*codePoints.toIntArray())
+            override fun start() = noneOfCodePoints(*codePoints.toIntArray())
         },
         object : AbstractGrammar<Unit>() {
-            override fun root() = noneOfCodePoints(codePoints)
+            override fun start() = noneOfCodePoints(codePoints)
         },
         object : AbstractGrammar<Unit>() {
-            override fun root() = noneOfCodePoints(
+            override fun start() = noneOfCodePoints(
                 StringBuilder().run {
                     codePoints.forEach { appendCodePoint(it) }
                     toString()

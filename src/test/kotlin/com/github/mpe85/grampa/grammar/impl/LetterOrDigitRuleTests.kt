@@ -15,7 +15,7 @@ import io.kotest.property.checkAll
 class LetterOrDigitRuleTests : StringSpec({
     "LetterOrDigit rule matches all letter or digit characters" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = letterOrDigit()
+            override fun start() = letterOrDigit()
         }).apply {
             checkAll(Arb.char().filter { Character.isLetterOrDigit(it) }) { ch ->
                 run(ch.toString()).apply {
@@ -29,7 +29,7 @@ class LetterOrDigitRuleTests : StringSpec({
     }
     "LetterOrDigit rule matches all letter or digit codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = letterOrDigit()
+            override fun start() = letterOrDigit()
         }).apply {
             checkAll(legalCodePoints().filter { UCharacter.isLetterOrDigit(it.value) }) { cp ->
                 run(toString(cp.value)).apply {
@@ -43,7 +43,7 @@ class LetterOrDigitRuleTests : StringSpec({
     }
     "LetterOrDigit rule does not match non letter or digit characters" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = letterOrDigit()
+            override fun start() = letterOrDigit()
         }).apply {
             checkAll(Arb.char().filterNot { Character.isLetterOrDigit(it) }) { ch ->
                 run(ch.toString()).apply {
@@ -57,7 +57,7 @@ class LetterOrDigitRuleTests : StringSpec({
     }
     "LetterOrDigit rule does not match non letter or digit codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = letterOrDigit()
+            override fun start() = letterOrDigit()
         }).apply {
             checkAll(legalCodePoints().filterNot { UCharacter.isLetterOrDigit(it.value) }) { cp ->
                 run(toString(cp.value)).apply {
@@ -71,7 +71,7 @@ class LetterOrDigitRuleTests : StringSpec({
     }
     "LetterOrDigit rule does not match empty input" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = letterOrDigit()
+            override fun start() = letterOrDigit()
         }).run("").apply {
             matched shouldBe false
             matchedEntireInput shouldBe false

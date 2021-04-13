@@ -12,7 +12,7 @@ class ConditionalRuleTests : StringSpec({
     "Conditional(then,else) rule matches when condition evaluates to true and then rule matches" {
         checkAll(Arb.az()) { letter ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = conditional({ true }, letter(), digit())
+                override fun start() = conditional({ true }, letter(), digit())
             }).run(toString(letter.value)).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
@@ -24,7 +24,7 @@ class ConditionalRuleTests : StringSpec({
     "Conditional(then) rule matches when condition evaluates to true and then rule matches" {
         checkAll(Arb.az()) { letter ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = conditional({ true }, letter())
+                override fun start() = conditional({ true }, letter())
             }).run(toString(letter.value)).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
@@ -36,7 +36,7 @@ class ConditionalRuleTests : StringSpec({
     "Conditional(then,else) rule matches when condition evaluates to false and else rule matches" {
         checkAll(Arb.az()) { letter ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = conditional({ false }, digit(), letter())
+                override fun start() = conditional({ false }, digit(), letter())
             }).run(toString(letter.value)).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
@@ -48,7 +48,7 @@ class ConditionalRuleTests : StringSpec({
     "Conditional(then,else) rule does not match when condition evaluates to true and then rule does not match" {
         checkAll(Arb.az()) { letter ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = conditional({ true }, digit(), letter())
+                override fun start() = conditional({ true }, digit(), letter())
             }).run(toString(letter.value)).apply {
                 matched shouldBe false
                 matchedEntireInput shouldBe false
@@ -60,7 +60,7 @@ class ConditionalRuleTests : StringSpec({
     "Conditional(then) rule does not match when condition evaluates to true and then rule does not match" {
         checkAll(Arb.az()) { letter ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = conditional({ true }, digit())
+                override fun start() = conditional({ true }, digit())
             }).run(toString(letter.value)).apply {
                 matched shouldBe false
                 matchedEntireInput shouldBe false
@@ -72,7 +72,7 @@ class ConditionalRuleTests : StringSpec({
     "Conditional(then,else) rule does not match when condition evaluates to false and else rule does not match" {
         checkAll(Arb.az()) { letter ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = conditional({ false }, letter(), digit())
+                override fun start() = conditional({ false }, letter(), digit())
             }).run(toString(letter.value)).apply {
                 matched shouldBe false
                 matchedEntireInput shouldBe false

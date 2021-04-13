@@ -12,7 +12,7 @@ class ParserTests : StringSpec({
     }
     "Register listener" {
         Parser(object : AbstractGrammar<Int>() {
-            override fun root() = empty()
+            override fun start() = empty()
         }).apply {
             shouldNotThrowAny { registerListener(IntegerTestListener()) }
             shouldNotThrowAny { run("a") }
@@ -20,7 +20,7 @@ class ParserTests : StringSpec({
     }
     "Unregister listener" {
         Parser(object : AbstractGrammar<Int>() {
-            override fun root() = empty()
+            override fun start() = empty()
         }).apply {
             IntegerTestListener().let {
                 shouldNotThrowAny { registerListener(it) }

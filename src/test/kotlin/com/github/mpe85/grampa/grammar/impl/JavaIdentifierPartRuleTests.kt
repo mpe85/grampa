@@ -15,7 +15,7 @@ import java.lang.Character.isJavaIdentifierPart
 class JavaIdentifierPartRuleTests : StringSpec({
     "JavaIdentifierPart rule matches all java identifier part characters" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = javaIdentifierPart()
+            override fun start() = javaIdentifierPart()
         }).apply {
             checkAll(Arb.char().filter { isJavaIdentifierPart(it) }) { ch ->
                 run(ch.toString()).apply {
@@ -29,7 +29,7 @@ class JavaIdentifierPartRuleTests : StringSpec({
     }
     "JavaIdentifierPart rule matches all java identifier part codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = javaIdentifierPart()
+            override fun start() = javaIdentifierPart()
         }).apply {
             checkAll(legalCodePoints().filter { isJavaIdentifierPart(it.value) }) { cp ->
                 run(toString(cp.value)).apply {
@@ -43,7 +43,7 @@ class JavaIdentifierPartRuleTests : StringSpec({
     }
     "JavaIdentifierPart rule does not match non java identifier part characters" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = javaIdentifierPart()
+            override fun start() = javaIdentifierPart()
         }).apply {
             checkAll(Arb.char().filterNot { isJavaIdentifierPart(it) }) { ch ->
                 run(ch.toString()).apply {
@@ -57,7 +57,7 @@ class JavaIdentifierPartRuleTests : StringSpec({
     }
     "JavaIdentifierPart rule does not match non java identifier part codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = javaIdentifierPart()
+            override fun start() = javaIdentifierPart()
         }).apply {
             checkAll(legalCodePoints().filterNot { isJavaIdentifierPart(it.value) }) { cp ->
                 run(toString(cp.value)).apply {
@@ -71,7 +71,7 @@ class JavaIdentifierPartRuleTests : StringSpec({
     }
     "JavaIdentifierPart rule does not match empty input" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = javaIdentifierPart()
+            override fun start() = javaIdentifierPart()
         }).run("").apply {
             matched shouldBe false
             matchedEntireInput shouldBe false

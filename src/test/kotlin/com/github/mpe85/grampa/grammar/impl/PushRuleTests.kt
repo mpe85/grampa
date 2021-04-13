@@ -9,7 +9,7 @@ class PushRuleTests : StringSpec({
     "Push rule pushes value on parser stack" {
         checkAll<Int> { int ->
             Parser(object : AbstractGrammar<Int>() {
-                override fun root() = push(int)
+                override fun start() = push(int)
             }).run("").apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true

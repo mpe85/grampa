@@ -15,7 +15,7 @@ import java.lang.Character.isJavaIdentifierStart
 class JavaIdentifierStartRuleTests : StringSpec({
     "JavaIdentifierStart rule matches all java identifier start characters" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = javaIdentifierStart()
+            override fun start() = javaIdentifierStart()
         }).apply {
             checkAll(Arb.char().filter { isJavaIdentifierStart(it) }) { ch ->
                 run(ch.toString()).apply {
@@ -29,7 +29,7 @@ class JavaIdentifierStartRuleTests : StringSpec({
     }
     "JavaIdentifierStart rule matches all java identifier start codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = javaIdentifierStart()
+            override fun start() = javaIdentifierStart()
         }).apply {
             checkAll(legalCodePoints().filter { isJavaIdentifierStart(it.value) }) { cp ->
                 run(toString(cp.value)).apply {
@@ -43,7 +43,7 @@ class JavaIdentifierStartRuleTests : StringSpec({
     }
     "JavaIdentifierStart rule does not match non java identifier start characters" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = javaIdentifierStart()
+            override fun start() = javaIdentifierStart()
         }).apply {
             checkAll(Arb.char().filterNot { isJavaIdentifierStart(it) }) { ch ->
                 run(ch.toString()).apply {
@@ -57,7 +57,7 @@ class JavaIdentifierStartRuleTests : StringSpec({
     }
     "JavaIdentifierStart rule does not match non java identifier start codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = javaIdentifierStart()
+            override fun start() = javaIdentifierStart()
         }).apply {
             checkAll(legalCodePoints().filterNot { isJavaIdentifierStart(it.value) }) { cp ->
                 run(toString(cp.value)).apply {
@@ -71,7 +71,7 @@ class JavaIdentifierStartRuleTests : StringSpec({
     }
     "JavaIdentifierStart rule does not match empty input" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = javaIdentifierStart()
+            override fun start() = javaIdentifierStart()
         }).run("").apply {
             matched shouldBe false
             matchedEntireInput shouldBe false

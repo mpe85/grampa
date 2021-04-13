@@ -13,7 +13,7 @@ import io.kotest.property.checkAll
 class BmpRuleTests : StringSpec({
     "Bmp rule matches all BMP codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = bmp()
+            override fun start() = bmp()
         }).apply {
             checkAll(legalCodePoints().filter { isBMP(it.value) }) { cp ->
                 run(toString(cp.value)).apply {
@@ -27,7 +27,7 @@ class BmpRuleTests : StringSpec({
     }
     "Bmp rule does not match non-BMP codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = bmp()
+            override fun start() = bmp()
         }).apply {
             checkAll(legalCodePoints().filterNot { isBMP(it.value) }) { cp ->
                 run(toString(cp.value)).apply {
@@ -41,7 +41,7 @@ class BmpRuleTests : StringSpec({
     }
     "Bmp rule does not match empty input" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = bmp()
+            override fun start() = bmp()
         }).run("").apply {
             matched shouldBe false
             matchedEntireInput shouldBe false

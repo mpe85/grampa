@@ -32,7 +32,7 @@ class PostRuleTests : StringSpec({
     "Post(event) rule posts value to event bus" {
         checkAll<Int> { int ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = post(int)
+                override fun start() = post(int)
             }).apply {
                 val listener = Listener().also {
                     registerListener(it)
@@ -50,7 +50,7 @@ class PostRuleTests : StringSpec({
     "Post(supplier) rule posts supplied value to event bus" {
         checkAll<Int> { int ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = post { int }
+                override fun start() = post { int }
             }).apply {
                 val listener = Listener().also {
                     registerListener(it)

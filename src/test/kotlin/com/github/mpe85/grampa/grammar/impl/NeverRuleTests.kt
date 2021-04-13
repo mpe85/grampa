@@ -11,7 +11,7 @@ import io.kotest.property.checkAll
 class NeverRuleTests : StringSpec({
     "Never rule matches no input" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = never()
+            override fun start() = never()
         }).apply {
             checkAll(Arb.string(1, 10, legalCodePoints())) { str ->
                 run(str).apply {

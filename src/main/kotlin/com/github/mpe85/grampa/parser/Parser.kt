@@ -17,13 +17,13 @@ import org.greenrobot.eventbus.EventBus
  * @author mpe85
  * @param[T] The type of the stack elements
  * @param[grammar] A grammar instance
- * @property[rootRule] The root rule of the parser's grammar
+ * @property[startRule] The start rule of the parser's grammar
  * @property[bus] The parser's event bus
  * @property[stack] The parser's value stack
  */
 public class Parser<T>(grammar: Grammar<T>) {
 
-    private val rootRule = grammar.root()
+    private val startRule = grammar.start()
     private val bus = EventBus.builder().logNoSubscriberMessages(false).build()
     private var stack = LinkedListRestorableStack<T>()
 
@@ -55,19 +55,19 @@ public class Parser<T>(grammar: Grammar<T>) {
      * @param[inputBuffer] An input buffer
      * @return The parse result
      */
-    public fun run(inputBuffer: InputBuffer): ParseResult<T> = createRootContext(inputBuffer).let { ctx ->
+    public fun run(inputBuffer: InputBuffer): ParseResult<T> = createStartContext(inputBuffer).let { ctx ->
         bus.post(PreParseEvent(ctx))
         ParseResult(ctx.run(), ctx).also { bus.post(PostParseEvent(it)) }
     }
 
     /**
-     * Create the initial root context for the parser's root rule.
+     * Create the initial start context for the parser's start rule.
      *
      * @param[inputBuffer] An input buffer
      * @return A rule context
      */
-    private fun createRootContext(inputBuffer: InputBuffer) = stack.run {
+    private fun createStartContext(inputBuffer: InputBuffer) = stack.run {
         reset()
-        Context(ContextState(inputBuffer, 0, rootRule, 0, this, bus))
+        Context(ContextState(inputBuffer, 0, startRule, 0, this, bus))
     }
 }

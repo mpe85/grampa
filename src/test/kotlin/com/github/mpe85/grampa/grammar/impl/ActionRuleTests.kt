@@ -8,7 +8,7 @@ import io.kotest.matchers.shouldNotBe
 class ActionRuleTests : StringSpec({
     "Action rule matches when action succeeds" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = action {
+            override fun start() = action {
                 it.stack.push(Unit)
                 it.level shouldBe 0
                 it.position shouldNotBe null
@@ -24,7 +24,7 @@ class ActionRuleTests : StringSpec({
     }
     "Action rule does not match when action fails" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = action {
+            override fun start() = action {
                 it.stack.push(Unit)
                 it.level shouldBe 0
                 it.position shouldNotBe null

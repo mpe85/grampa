@@ -8,7 +8,7 @@ import com.github.mpe85.grampa.stack.RestorableStack
  *
  * @author mpe85
  * @param[T] The type of the stack elements
- * @param[context] The root context after the parse run
+ * @param[context] The context after the parse run
  * @property[matched] true if the parse run matched the input successfully; also true if there was a partial match.
  * @property[matchedEntireInput] true if the parse run matched the entire input successfully
  * @property[matchedInput] The part of the input that matched successfully

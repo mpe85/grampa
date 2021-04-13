@@ -15,7 +15,7 @@ class CodePointRangeRuleTests : StringSpec({
         checkAll(legalCodePoints(), legalCodePoints(), legalCodePoints()) { cp1, cp2, cp3 ->
             val codePoints = listOf(cp1.value, cp2.value, cp3.value).sorted()
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = codePointRange(codePoints[0], codePoints[2])
+                override fun start() = codePointRange(codePoints[0], codePoints[2])
             }).run(toString(codePoints[1])).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
@@ -29,7 +29,7 @@ class CodePointRangeRuleTests : StringSpec({
             val (below, lower, upper) = codepoints.toList().map { it.value }.sorted()
                 .let { Triple(it[0], it[1], it[2]) }
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = codePointRange(lower, upper)
+                override fun start() = codePointRange(lower, upper)
             }).run(toString(below)).apply {
                 matched shouldBe false
                 matchedEntireInput shouldBe false
@@ -43,7 +43,7 @@ class CodePointRangeRuleTests : StringSpec({
             val (lower, upper, above) = codepoints.toList().map { it.value }.sorted()
                 .let { Triple(it[0], it[1], it[2]) }
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = codePointRange(lower, upper)
+                override fun start() = codePointRange(lower, upper)
             }).run(toString(above)).apply {
                 matched shouldBe false
                 matchedEntireInput shouldBe false
@@ -56,7 +56,7 @@ class CodePointRangeRuleTests : StringSpec({
         checkAll(legalCodePoints(), legalCodePoints()) { cp1, cp2 ->
             val codePoints = listOf(cp1.value, cp2.value).sorted()
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = codePointRange(codePoints[0], codePoints[1])
+                override fun start() = codePointRange(codePoints[0], codePoints[1])
             }).run("").apply {
                 matched shouldBe false
                 matchedEntireInput shouldBe false
@@ -70,7 +70,7 @@ class CodePointRangeRuleTests : StringSpec({
             val (low, high) = codePoints.toList().map { it.value }.sorted().let { it[0] to it[1] }
             shouldThrow<IllegalArgumentException> {
                 Parser(object : AbstractGrammar<Unit>() {
-                    override fun root() = codePointRange(high, low)
+                    override fun start() = codePointRange(high, low)
                 })
             }
         }

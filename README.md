@@ -65,7 +65,7 @@ Create a grammar class by extending the `AbstractGrammar` class:
 
 ```kotlin
 open class LetterGrammar : AbstractGrammar<Unit>() {
-    override fun root() = oneOrMore(letter()) + eoi()
+    override fun start() = oneOrMore(letter()) + eoi()
 }
 ```
 

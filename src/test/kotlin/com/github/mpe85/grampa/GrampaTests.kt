@@ -16,22 +16,22 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 open class TestGrammar(val dummy: String?) : AbstractGrammar<String>() {
     constructor() : this(null)
 
-    override fun root() = expr('a')
+    override fun start() = expr('a')
     protected open fun expr(c: Char): Rule<String> = choice(
         char(c),
         sequence(
             empty(),
-            root(66),
+            start(66),
             noop(),
             char('('),
-            root(),
+            start(),
             char(')')
         )
     )
 
-    protected open fun root(i: Int) = i * empty()
+    protected open fun start(i: Int) = i * empty()
     protected open fun noop() = empty()
-    open fun verifyRules() = root().apply {
+    open fun verifyRules() = start().apply {
         shouldBeInstanceOf<ChoiceRule<String>>()
         children.size shouldBe 2
         children[0].shouldBeInstanceOf<CharPredicateRule<String>>()
@@ -62,7 +62,7 @@ class GrampaTests : StringSpec({
     }
     "Non-overridable rule method" {
         open class InvalidGrammar : AbstractGrammar<String>() {
-            override fun root() = expr('a')
+            override fun start() = expr('a')
             private fun expr(c: Char) = char(c)
         }
         shouldThrow<IllegalArgumentException> { InvalidGrammar::class.createGrammar() }
@@ -79,8 +79,8 @@ class GrampaTests : StringSpec({
     }
     "Grammar inheritance" {
         open class SuperGrammar : TestGrammar() {
-            override fun root(): Rule<String> = sequence(char('a'), root())
-            override fun verifyRules() = root().apply {
+            override fun start(): Rule<String> = sequence(char('a'), start())
+            override fun verifyRules() = start().apply {
                 shouldBeInstanceOf<SequenceRule<String>>()
                 children.size shouldBe 2
                 children[0].shouldBeInstanceOf<CharPredicateRule<String>>()
@@ -90,7 +90,7 @@ class GrampaTests : StringSpec({
         }
 
         open class SubGrammar : SuperGrammar() {
-            override fun root() = super.root().also { it.toString() }
+            override fun start() = super.start().also { it.toString() }
         }
         SuperGrammar::class.createGrammar().verifyRules()
         SubGrammar::class.createGrammar().verifyRules()

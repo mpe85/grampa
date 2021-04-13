@@ -16,7 +16,7 @@ class OneOrMoreRuleTests : StringSpec({
     "OneOrMore rule matches if child rule matches once" {
         checkAll(legalCodePoints()) { cp ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = oneOrMore(cp.value.toRule())
+                override fun start() = oneOrMore(cp.value.toRule())
             }).run(toString(cp.value)).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
@@ -28,7 +28,7 @@ class OneOrMoreRuleTests : StringSpec({
     "OneOrMore rule matches if child rule matches multiple times" {
         checkAll(legalCodePoints(), Arb.positiveInts(10)) { cp, n ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = oneOrMore(cp.value.toRule())
+                override fun start() = oneOrMore(cp.value.toRule())
             }).apply {
                 val repeated = toString(cp.value).repeat(n)
                 run(repeated).apply {
@@ -43,7 +43,7 @@ class OneOrMoreRuleTests : StringSpec({
     "OneOrMore rule does not match if child rule does not match" {
         checkAll(lowerCaseCodePoints(), upperCaseCodePoints()) { lower, upper ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = oneOrMore(lower.value.toRule())
+                override fun start() = oneOrMore(lower.value.toRule())
             }).apply {
                 run(toString(upper.value)).apply {
                     matched shouldBe false

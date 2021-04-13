@@ -13,7 +13,7 @@ import io.kotest.property.checkAll
 class AsciiRuleTests : StringSpec({
     "Ascii rule matches all ASCII codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = ascii()
+            override fun start() = ascii()
         }).apply {
             checkAll(Arb.ascii()) { cp ->
                 run(toString(cp.value)).apply {
@@ -27,7 +27,7 @@ class AsciiRuleTests : StringSpec({
     }
     "Ascii rule does not match non-ASCII codepoints" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = ascii()
+            override fun start() = ascii()
         }).apply {
             checkAll(legalCodePoints().filterNot { it.value in Char.MIN_VALUE.toInt()..Byte.MAX_VALUE.toInt() }) { cp ->
                 run(toString(cp.value)).apply {
@@ -41,7 +41,7 @@ class AsciiRuleTests : StringSpec({
     }
     "Ascii rule does not match empty input" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = ascii()
+            override fun start() = ascii()
         }).run("").apply {
             matched shouldBe false
             matchedEntireInput shouldBe false

@@ -8,7 +8,7 @@ import io.kotest.matchers.shouldBe
 class ParseRunnerTests : StringSpec({
     "Run parser" {
         Parser(object : Grammar<Unit> {
-            override fun root() = StringRule<Unit>("foo")
+            override fun start() = StringRule<Unit>("foo")
         }).apply {
             run("foo").matched shouldBe true
             run("foobar").matched shouldBe true

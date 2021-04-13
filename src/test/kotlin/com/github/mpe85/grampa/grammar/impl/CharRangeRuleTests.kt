@@ -14,7 +14,7 @@ class CharRangeRuleTests : StringSpec({
         checkAll<Char, Char, Char> { ch1, ch2, ch3 ->
             val chars = listOf(ch1, ch2, ch3).sorted()
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = charRange(chars[0], chars[2])
+                override fun start() = charRange(chars[0], chars[2])
             }).run("${chars[1]}").apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
@@ -27,7 +27,7 @@ class CharRangeRuleTests : StringSpec({
         checkAll(Arb.set(Arb.char(), 3..3)) { chars ->
             val (below, lower, upper) = chars.toList().sorted().let { Triple(it[0], it[1], it[2]) }
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = charRange(lower, upper)
+                override fun start() = charRange(lower, upper)
             }).run("$below").apply {
                 matched shouldBe false
                 matchedEntireInput shouldBe false
@@ -40,7 +40,7 @@ class CharRangeRuleTests : StringSpec({
         checkAll(Arb.set(Arb.char(), 3..3)) { chars ->
             val (lower, upper, above) = chars.toList().sorted().let { Triple(it[0], it[1], it[2]) }
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = charRange(lower, upper)
+                override fun start() = charRange(lower, upper)
             }).run("$above").apply {
                 matched shouldBe false
                 matchedEntireInput shouldBe false
@@ -53,7 +53,7 @@ class CharRangeRuleTests : StringSpec({
         checkAll<Char, Char> { ch1, ch2 ->
             val chars = listOf(ch1, ch2).sorted()
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = charRange(chars[0], chars[1])
+                override fun start() = charRange(chars[0], chars[1])
             }).run("").apply {
                 matched shouldBe false
                 matchedEntireInput shouldBe false
@@ -67,7 +67,7 @@ class CharRangeRuleTests : StringSpec({
             val (low, high) = chars.sorted().let { it[0] to it[1] }
             shouldThrow<IllegalArgumentException> {
                 Parser(object : AbstractGrammar<Unit>() {
-                    override fun root() = charRange(high, low)
+                    override fun start() = charRange(high, low)
                 })
             }
         }

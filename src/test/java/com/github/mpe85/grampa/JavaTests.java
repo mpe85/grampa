@@ -17,7 +17,7 @@ public class JavaTests {
 
         @NotNull
         @Override
-        public Rule<String> root() {
+        public Rule<String> start() {
             return StringRules.toRule("my");
         }
     }

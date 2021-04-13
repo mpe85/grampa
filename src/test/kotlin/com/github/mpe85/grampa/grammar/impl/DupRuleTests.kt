@@ -11,7 +11,7 @@ class DupRuleTests : StringSpec({
     "Dup rule duplicates value on parser stack" {
         checkAll<Int> { int ->
             Parser(object : AbstractGrammar<Int>() {
-                override fun root() = push(int) + dup()
+                override fun start() = push(int) + dup()
             }).run("").apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
@@ -25,7 +25,7 @@ class DupRuleTests : StringSpec({
     }
     "Dup rule throws NoSuchElementException when stack is empty" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = dup()
+            override fun start() = dup()
         }).apply {
             shouldThrow<NoSuchElementException> { run("") }
         }

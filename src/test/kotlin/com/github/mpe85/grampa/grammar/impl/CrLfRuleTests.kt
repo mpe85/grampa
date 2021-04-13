@@ -11,7 +11,7 @@ import io.kotest.property.checkAll
 class CrLfRuleTests : StringSpec({
     "CRLF rule matches CRLF character" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = crlf()
+            override fun start() = crlf()
         }).run("\r\n").apply {
             matched shouldBe true
             matchedEntireInput shouldBe true
@@ -21,7 +21,7 @@ class CrLfRuleTests : StringSpec({
     }
     "CRLF rule does not match non-CRLF strings" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = crlf()
+            override fun start() = crlf()
         }).apply {
             checkAll(Arb.string().filterNot { it.startsWith("\r\n") }) { str ->
                 run(str).apply {
@@ -35,7 +35,7 @@ class CrLfRuleTests : StringSpec({
     }
     "CRLF rule does not match empty input" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = crlf()
+            override fun start() = crlf()
         }).run("").apply {
             matched shouldBe false
             matchedEntireInput shouldBe false

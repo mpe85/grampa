@@ -11,9 +11,9 @@ import com.github.mpe85.grampa.rule.Rule
 public interface Grammar<T> {
 
     /**
-     * Get the root rule of the grammar.
+     * Get the starting rule of the grammar.
      *
      * @return A grammar rule
      */
-    public fun root(): Rule<T>
+    public fun start(): Rule<T>
 }

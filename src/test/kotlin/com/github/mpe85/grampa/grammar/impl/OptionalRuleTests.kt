@@ -14,7 +14,7 @@ class OptionalRuleTests : StringSpec({
     "Optional rule matches if child rule matches" {
         checkAll(legalCodePoints()) { cp ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = optional(cp.value.toRule())
+                override fun start() = optional(cp.value.toRule())
             }).run(toString(cp.value)).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
@@ -26,7 +26,7 @@ class OptionalRuleTests : StringSpec({
     "Optional rule matches if child rule does not match" {
         checkAll(lowerCaseCodePoints(), upperCaseCodePoints()) { lower, upper ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = optional(lower.value.toRule())
+                override fun start() = optional(lower.value.toRule())
             }).run(toString(upper.value)).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe false

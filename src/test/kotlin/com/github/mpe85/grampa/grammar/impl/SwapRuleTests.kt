@@ -11,7 +11,7 @@ class SwapRuleTests : StringSpec({
     "Swap rule swaps values on parser stack" {
         checkAll<Int, Int> { int1, int2 ->
             Parser(object : AbstractGrammar<Int>() {
-                override fun root() = push(int1) + push(int2) + swap()
+                override fun start() = push(int1) + push(int2) + swap()
             }).run("").apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
@@ -25,7 +25,7 @@ class SwapRuleTests : StringSpec({
     }
     "Swap rule throws IndexOutOfBoundsException when stack is empty" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = swap()
+            override fun start() = swap()
         }).apply {
             shouldThrow<IndexOutOfBoundsException> { run("") }
         }
@@ -33,7 +33,7 @@ class SwapRuleTests : StringSpec({
     "Swap rule throws IndexOutOfBoundsException when stack has one element only" {
         checkAll<Int> { int ->
             Parser(object : AbstractGrammar<Int>() {
-                override fun root() = push(int) + swap()
+                override fun start() = push(int) + swap()
             }).apply {
                 shouldThrow<IndexOutOfBoundsException> { run("") }
             }

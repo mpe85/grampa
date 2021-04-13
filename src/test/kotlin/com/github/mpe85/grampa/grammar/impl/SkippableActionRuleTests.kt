@@ -8,7 +8,7 @@ import io.kotest.matchers.shouldNotBe
 class SkippableActionRuleTests : StringSpec({
     "SkippableAction rule matches when action succeeds" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = skippableAction {
+            override fun start() = skippableAction {
                 it.stack.push(Unit)
                 it.level shouldBe 0
                 it.position shouldNotBe null
@@ -24,7 +24,7 @@ class SkippableActionRuleTests : StringSpec({
     }
     "SkippableAction rule does not match when action fails" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = action {
+            override fun start() = action {
                 it.stack.push(Unit)
                 it.level shouldBe 0
                 it.position shouldNotBe null
@@ -40,7 +40,7 @@ class SkippableActionRuleTests : StringSpec({
     }
     "SkippableAction rule with succeeding action is skipped when it is part of a Test rule" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = test(
+            override fun start() = test(
                 skippableAction {
                     it.stack.push(Unit)
                     it.level shouldBe 0
@@ -58,7 +58,7 @@ class SkippableActionRuleTests : StringSpec({
     }
     "SkippableAction rule with failing action is skipped when it is part of a Test rule" {
         Parser(object : AbstractGrammar<Unit>() {
-            override fun root() = test(
+            override fun start() = test(
                 skippableAction {
                     it.stack.push(Unit)
                     it.level shouldBe 0

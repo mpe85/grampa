@@ -17,16 +17,16 @@ import io.kotest.property.checkAll
 class SequenceRuleTests : StringSpec({
     fun grammars(rules: List<Rule<Unit>>) = listOf(
         object : AbstractGrammar<Unit>() {
-            override fun root() = sequence(*rules.toTypedArray())
+            override fun start() = sequence(*rules.toTypedArray())
         },
         object : AbstractGrammar<Unit>() {
-            override fun root() = sequence(rules)
+            override fun start() = sequence(rules)
         },
         object : AbstractGrammar<Unit>() {
-            override fun root() = rules.reduce(Rule<Unit>::and)
+            override fun start() = rules.reduce(Rule<Unit>::and)
         },
         object : AbstractGrammar<Unit>() {
-            override fun root() = rules.reduce(Rule<Unit>::plus)
+            override fun start() = rules.reduce(Rule<Unit>::plus)
         }
     )
     "Sequence rule matches correct sequence" {
@@ -45,7 +45,7 @@ class SequenceRuleTests : StringSpec({
     "Empty Sequence rule matches any input" {
         checkAll(Arb.string(0..10, legalCodePoints())) { str ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun root() = sequence()
+                override fun start() = sequence()
             }).run(str).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe str.isEmpty()
@@ -57,7 +57,7 @@ class SequenceRuleTests : StringSpec({
     "Sequence rule matches sequence of stack actions" {
         checkAll(Arb.int(), Arb.int(), Arb.string(1..10, legalCodePoints())) { i1, i2, str ->
             Parser(object : AbstractGrammar<Int>() {
-                override fun root() = sequence(
+                override fun start() = sequence(
                     push(i1),
                     push { peek(it) + i2 },
                     sequence(push { pop(1, it) + peek(it) }),
