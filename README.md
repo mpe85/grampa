@@ -20,10 +20,10 @@ Adding a dependency using Gradle (Groovy DSL):
 
 ```groovy
 repositories {
-    jcenter()
+    mavenCentral()
 }
 dependencies {
-    implementation 'com.github.mpe85:grampa:0.9.2'
+    implementation 'com.github.mpe85:grampa:0.9.3'
 }
 ```
 
@@ -31,32 +31,25 @@ Adding a dependency using Gradle (Kotlin DSL):
 
 ```kotlin
 repositories {
-    jcenter()
+    mavenCentral()
 }
 dependencies {
-    implementation("com.github.mpe85:grampa:0.9.2")
+    implementation("com.github.mpe85:grampa:0.9.3")
 }
 ```
 
 Adding a dependency using Maven:
-
 ```xml
-
 <dependency>
     <groupId>com.github.mpe85</groupId>
     <artifactId>grampa</artifactId>
-    <version>0.9.2</version>
-    <type>pom</type>
+    <version>0.9.3</version>
 </dependency>
 ```
-
 Adding a dependency using Ivy:
 
 ```xml
-
-<dependency org='com.github.mpe85' name='grampa' rev='0.9.2'>
-    <artifact name='grampa' ext='pom'></artifact>
-</dependency>
+<dependency org="com.github.mpe85" name="grampa" rev="0.9.3"/>
 ```
 
 ## Getting started
