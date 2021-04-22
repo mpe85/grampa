@@ -1,7 +1,7 @@
 object Versions {
     const val byteBuddy = "1.11.0"
     const val detekt = "1.16.0"
-    const val dokka = "1.4.30"
+    const val dokka = "1.4.32"
     const val eventBus = "3.2.0"
     const val icu4j = "69.1"
     const val jacoco = "0.8.6"

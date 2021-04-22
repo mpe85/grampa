@@ -20,7 +20,7 @@ group = "com.github.mpe85"
 version = "0.9.4-SNAPSHOT"
 
 repositories {
-    maven("https://kotlin.bintray.com/kotlinx") // until kotlinx.html is migrated to mavenCentral
+    maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven") // until kotlinx.html is migrated to mavenCentral
     mavenCentral()
 }
 
