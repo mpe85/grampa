@@ -5,6 +5,8 @@ import com.github.mpe85.grampa.parser.Parser
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
+import io.kotest.property.arbitrary.arabic
+import io.kotest.property.arbitrary.cyrillic
 import io.kotest.property.arbitrary.set
 import io.kotest.property.arbitrary.string
 import io.kotest.property.checkAll
@@ -35,13 +37,16 @@ class StringsRuleTests : StringSpec({
         }
     }
     "Strings rule does not match string not in collection" {
-        checkAll(Arb.set(Arb.string(1..10, legalCodePoints()), 2..10)) { strings ->
-            grammars(strings.drop(1)).forEach { grammar ->
-                Parser(grammar).run(strings.first()).apply {
+        checkAll(
+            Arb.string(1..10, Arb.arabic()),
+            Arb.set(Arb.string(1..10, Arb.cyrillic()), 1..10)
+        ) { string, strings ->
+            grammars(strings).forEach { grammar ->
+                Parser(grammar).run(string).apply {
                     matched shouldBe false
                     matchedEntireInput shouldBe false
                     matchedInput shouldBe null
-                    restOfInput shouldBe strings.first()
+                    restOfInput shouldBe string
                 }
             }
         }
