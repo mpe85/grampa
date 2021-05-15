@@ -5,10 +5,11 @@ import com.github.mpe85.grampa.event.PreMatchEvent
 import com.github.mpe85.grampa.grammar.impl.AbstractGrammar
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.core.spec.style.StringSpec
+import java.io.IOException
 
 class ParserTests : StringSpec({
     class IntegerTestListener : ParseEventListener<Int>() {
-        override fun beforeMatch(event: PreMatchEvent<Int>) = throw RuntimeException()
+        override fun beforeMatch(event: PreMatchEvent<Int>) = throw IOException()
     }
     "Register listener" {
         Parser(object : AbstractGrammar<Int>() {
