@@ -119,9 +119,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @return A grammar rule
      */
     protected open fun charRange(lowerBound: Char, upperBound: Char): Rule<T> {
-        Char.MIN_VALUE
         require(lowerBound <= upperBound) { "A 'lowerBound' must not be greater than an 'upperBound'." }
-        return CharPredicateRule { it in lowerBound..upperBound }
+        return (lowerBound..upperBound).toRule()
     }
 
     /**
@@ -204,7 +203,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      */
     protected open fun codePointRange(lowerBound: Int, upperBound: Int): Rule<T> {
         require(lowerBound <= upperBound) { "A 'lowerBound' must not be greater than an 'upperBound'." }
-        return CodePointPredicateRule { it in lowerBound..upperBound }
+        return (lowerBound..upperBound).toRule()
     }
 
     /**

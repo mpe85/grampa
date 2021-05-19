@@ -59,3 +59,10 @@ public fun <T> Int.toRule(): Rule<T> = CodePointPredicateRule(this)
  * @return A [IgnoreCaseCodePointRule]
  */
 public fun <T> Int.toIgnoreCaseRule(): Rule<T> = IgnoreCaseCodePointRule(this)
+
+/**
+ * Create a rule from this code point range.
+ *
+ * @return A [CodePointPredicateRule]
+ */
+public fun <T> IntRange.toRule(): Rule<T> = CodePointPredicateRule { it in first..last }

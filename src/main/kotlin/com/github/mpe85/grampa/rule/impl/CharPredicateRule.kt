@@ -57,3 +57,10 @@ public fun <T> Char.toRule(): Rule<T> = CharPredicateRule(this)
  * @return A [IgnoreCaseCharRule]
  */
 public fun <T> Char.toIgnoreCaseRule(): Rule<T> = IgnoreCaseCharRule(this)
+
+/**
+ * Create a rule from this character range.
+ *
+ * @return A [CharPredicateRule]
+ */
+public fun <T> CharRange.toRule(): Rule<T> = CharPredicateRule { it in first..last }
