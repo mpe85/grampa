@@ -45,7 +45,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     private val eoiRule by lazy { EndOfInputRule<T>() }
     private val anyCharRule by lazy { CharPredicateRule<T> { true } }
     private val anyCodePointRule by lazy { CodePointPredicateRule<T>(UCharacter::isLegal) }
-    private val asciiRule by lazy { CharPredicateRule<T> { it in Char.MIN_VALUE..Byte.MAX_VALUE.toChar() } }
+    private val asciiRule by lazy { CharPredicateRule<T> { it in Char.MIN_VALUE..Byte.MAX_VALUE.toInt().toChar() } }
     private val bmpRule by lazy { CodePointPredicateRule<T>(UCharacter::isBMP) }
     private val digitRule by lazy { CodePointPredicateRule<T>(UCharacter::isDigit) }
     private val javaIdentStartRule by lazy { CodePointPredicateRule<T>(Character::isJavaIdentifierStart) }

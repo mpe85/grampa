@@ -50,7 +50,7 @@ internal fun legalChars() = Arb.char(Char.MIN_VALUE + 1..Char.MAX_VALUE)
  * @return An [Arb] of [Char]s
  */
 internal fun lowerCaseChars() = legalChars().filter {
-    it.isLowerCase() && it != it.toUpperCase()
+    it.isLowerCase() && it != it.uppercaseChar()
 }
 
 /**
@@ -59,5 +59,5 @@ internal fun lowerCaseChars() = legalChars().filter {
  * @return An [Arb] of [Char]s
  */
 internal fun upperCaseChars() = legalChars().filter {
-    it.isUpperCase() && it != it.toLowerCase()
+    it.isUpperCase() && it != it.lowercaseChar()
 }

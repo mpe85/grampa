@@ -28,7 +28,7 @@ class CharRuleTests : StringSpec({
             Parser(object : AbstractGrammar<Unit>() {
                 override fun start() = char(ch)
             }).apply {
-                val uppercase = ch.toUpperCase()
+                val uppercase = ch.uppercaseChar()
                 run("$uppercase").apply {
                     matched shouldBe false
                     matchedEntireInput shouldBe false
@@ -43,7 +43,7 @@ class CharRuleTests : StringSpec({
             Parser(object : AbstractGrammar<Unit>() {
                 override fun start() = char(ch)
             }).apply {
-                val lowercase = ch.toLowerCase()
+                val lowercase = ch.lowercaseChar()
                 run("$lowercase").apply {
                     matched shouldBe false
                     matchedEntireInput shouldBe false

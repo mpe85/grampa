@@ -23,7 +23,7 @@ class LfRuleTests : StringSpec({
         Parser(object : AbstractGrammar<Unit>() {
             override fun start() = lf()
         }).apply {
-            checkAll(legalCodePoints().filterNot { it.value == '\n'.toInt() }) { cp ->
+            checkAll(legalCodePoints().filterNot { it.value == '\n'.code }) { cp ->
                 run(toString(cp.value)).apply {
                     matched shouldBe false
                     matchedEntireInput shouldBe false

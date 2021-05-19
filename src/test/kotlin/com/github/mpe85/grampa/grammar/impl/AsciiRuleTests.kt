@@ -29,7 +29,7 @@ class AsciiRuleTests : StringSpec({
         Parser(object : AbstractGrammar<Unit>() {
             override fun start() = ascii()
         }).apply {
-            checkAll(legalCodePoints().filterNot { it.value in Char.MIN_VALUE.toInt()..Byte.MAX_VALUE.toInt() }) { cp ->
+            checkAll(legalCodePoints().filterNot { it.value in Char.MIN_VALUE.code..Byte.MAX_VALUE.toInt() }) { cp ->
                 run(toString(cp.value)).apply {
                     matched shouldBe false
                     matchedEntireInput shouldBe false

@@ -51,7 +51,7 @@ public open class TrieRule<T> constructor(private val strings: Collection<String
                 break
             }
         }
-        val charCount = context.restOfInput.codePoints().asSequence().take(longestMatch).sumBy { charCount(it) }
+        val charCount = context.restOfInput.codePoints().asSequence().take(longestMatch).sumOf { charCount(it) }
         longestMatch > 0 && context.advanceIndex(charCount)
     } finally {
         trie.reset()

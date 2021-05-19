@@ -23,7 +23,7 @@ class CrRuleTests : StringSpec({
         Parser(object : AbstractGrammar<Unit>() {
             override fun start() = cr()
         }).apply {
-            checkAll(legalCodePoints().filterNot { it.value == '\r'.toInt() }) { cp ->
+            checkAll(legalCodePoints().filterNot { it.value == '\r'.code }) { cp ->
                 run(toString(cp.value)).apply {
                     matched shouldBe false
                     matchedEntireInput shouldBe false

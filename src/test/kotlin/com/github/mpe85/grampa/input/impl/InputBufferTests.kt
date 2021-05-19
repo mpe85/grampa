@@ -31,12 +31,12 @@ class InputBufferTests : StringSpec({
     }
     "Get code point" {
         buffers.forAll { buffer ->
-            buffer.getCodePoint(0) shouldBe 'f'.toInt()
-            buffer.getCodePoint(1) shouldBe 'o'.toInt()
-            buffer.getCodePoint(2) shouldBe 'o'.toInt()
-            buffer.getCodePoint(3) shouldBe 'b'.toInt()
-            buffer.getCodePoint(4) shouldBe 'a'.toInt()
-            buffer.getCodePoint(5) shouldBe 'r'.toInt()
+            buffer.getCodePoint(0) shouldBe 'f'.code
+            buffer.getCodePoint(1) shouldBe 'o'.code
+            buffer.getCodePoint(2) shouldBe 'o'.code
+            buffer.getCodePoint(3) shouldBe 'b'.code
+            buffer.getCodePoint(4) shouldBe 'a'.code
+            buffer.getCodePoint(5) shouldBe 'r'.code
             shouldThrow<IndexOutOfBoundsException> {
                 buffer.getCodePoint(-1)
             }

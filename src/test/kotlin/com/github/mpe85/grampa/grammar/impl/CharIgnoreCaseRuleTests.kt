@@ -26,7 +26,7 @@ class CharIgnoreCaseRuleTests : StringSpec({
             Parser(object : AbstractGrammar<Unit>() {
                 override fun start() = ignoreCase(ch)
             }).apply {
-                val uppercase = ch.toUpperCase()
+                val uppercase = ch.uppercaseChar()
                 run("$uppercase").apply {
                     matched shouldBe true
                     matchedEntireInput shouldBe true
@@ -41,7 +41,7 @@ class CharIgnoreCaseRuleTests : StringSpec({
             Parser(object : AbstractGrammar<Unit>() {
                 override fun start() = ignoreCase(ch)
             }).apply {
-                val lowercase = ch.toLowerCase()
+                val lowercase = ch.lowercaseChar()
                 run("$lowercase").apply {
                     matched shouldBe true
                     matchedEntireInput shouldBe true
@@ -56,7 +56,7 @@ class CharIgnoreCaseRuleTests : StringSpec({
             Parser(object : AbstractGrammar<Unit>() {
                 override fun start() = ignoreCase(ch)
             }).apply {
-                checkAll(Arb.char().filter { it.toUpperCase() != ch.toUpperCase() }) { c ->
+                checkAll(Arb.char().filter { it.uppercaseChar() != ch.uppercaseChar() }) { c ->
                     run("$c").apply {
                         matched shouldBe false
                         matchedEntireInput shouldBe false

@@ -41,6 +41,6 @@ public class CharSequenceLineCounter(private val input: CharSequence) : LineCoun
     private fun checkBounds(index: Int) = index.also { input[it] }
 
     private companion object {
-        private const val LF: Int = '\n'.toInt()
+        private const val LF: Int = '\n'.code
     }
 }

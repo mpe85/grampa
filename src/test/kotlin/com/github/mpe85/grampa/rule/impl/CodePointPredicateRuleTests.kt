@@ -10,10 +10,10 @@ import java.util.function.Predicate
 
 class CodePointPredicateRuleTests : StringSpec({
     "equals/hashCode/ToString" {
-        val predicate = Predicate { cp: Int -> cp == 'a'.toInt() }
+        val predicate = Predicate { cp: Int -> cp == 'a'.code }
         val rule1 = CodePointPredicateRule<String>(predicate::test)
         val rule2 = CodePointPredicateRule<String>(predicate::test)
-        val rule3 = CodePointPredicateRule<String>('a'.toInt())
+        val rule3 = CodePointPredicateRule<String>('a'.code)
         rule1 shouldBe rule2
         rule1 shouldNotBe rule3
         rule1 shouldNotBe Any()
@@ -28,10 +28,10 @@ class CodePointPredicateRuleTests : StringSpec({
     "Rule match" {
         val ctx = mockk<ParserContext<String>>().apply {
             every { atEndOfInput } returns false
-            every { currentCodePoint } returns 'a'.toInt()
+            every { currentCodePoint } returns 'a'.code
             every { advanceIndex(1) } returns true
         }
-        CodePointPredicateRule<String>('a'.toInt()).match(ctx) shouldBe true
-        CodePointPredicateRule<String>('b'.toInt()).match(ctx) shouldBe false
+        CodePointPredicateRule<String>('a'.code).match(ctx) shouldBe true
+        CodePointPredicateRule<String>('b'.code).match(ctx) shouldBe false
     }
 })
