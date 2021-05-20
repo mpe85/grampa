@@ -89,13 +89,6 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun anyChar(): Rule<T> = anyCharRule
 
     /**
-     * A rule that matches any code point.
-     *
-     * @return A grammar rule
-     */
-    protected open fun anyCodePoint(): Rule<T> = anyCodePointRule
-
-    /**
      * A rule that matches a specific character.
      *
      * @param[character] The character to match
@@ -177,6 +170,13 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @return A grammar rule
      */
     protected open fun noneOfChars(characters: String): Rule<T> = noneOfChars(characters.toCharArray().toList())
+
+    /**
+     * A rule that matches any code point.
+     *
+     * @return A grammar rule
+     */
+    protected open fun anyCodePoint(): Rule<T> = anyCodePointRule
 
     /**
      * A rule that matches a specific code point.
