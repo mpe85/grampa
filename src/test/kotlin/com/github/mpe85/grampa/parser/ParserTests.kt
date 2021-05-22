@@ -2,7 +2,7 @@ package com.github.mpe85.grampa.parser
 
 import com.github.mpe85.grampa.event.ParseEventListener
 import com.github.mpe85.grampa.event.PreMatchEvent
-import com.github.mpe85.grampa.grammar.impl.AbstractGrammar
+import com.github.mpe85.grampa.grammar.AbstractGrammar
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.core.spec.style.StringSpec
 import java.io.IOException

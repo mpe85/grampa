@@ -1,7 +1,7 @@
 package com.github.mpe85.grampa;
 
+import com.github.mpe85.grampa.grammar.AbstractGrammar;
 import com.github.mpe85.grampa.grammar.Grammar;
-import com.github.mpe85.grampa.grammar.impl.AbstractGrammar;
 import com.github.mpe85.grampa.parser.ParseResult;
 import com.github.mpe85.grampa.parser.Parser;
 import com.github.mpe85.grampa.rule.Rule;

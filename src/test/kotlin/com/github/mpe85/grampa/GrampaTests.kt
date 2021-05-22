@@ -1,6 +1,6 @@
 package com.github.mpe85.grampa
 
-import com.github.mpe85.grampa.grammar.impl.AbstractGrammar
+import com.github.mpe85.grampa.grammar.AbstractGrammar
 import com.github.mpe85.grampa.rule.Rule
 import com.github.mpe85.grampa.rule.impl.CharPredicateRule
 import com.github.mpe85.grampa.rule.impl.ChoiceRule
