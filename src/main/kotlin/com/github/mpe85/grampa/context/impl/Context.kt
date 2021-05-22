@@ -9,6 +9,19 @@ import com.github.mpe85.grampa.rule.Rule
 import com.github.mpe85.grampa.stack.RestorableStack
 import org.greenrobot.eventbus.EventBus
 
+/**
+ * An internal context state.
+ *
+ * @author mpe85
+ * @param[T] The type of the stack elements
+ * @property[inputBuffer] The underlying input buffer
+ * @property[level] The current context level, corresponds to the number of parents that a context (recursively) has
+ * @property[rule] The rule that is currently executed
+ * @property[startIndex] The start index at the beginning of the rule execution
+ * @property[stack] The parser stack
+ * @property[bus] The parser event bus
+ * @property[parentContext] The optional parent context
+ */
 internal data class ContextState<T>(
     val inputBuffer: InputBuffer,
     val level: Int,
@@ -19,6 +32,16 @@ internal data class ContextState<T>(
     val parentContext: ParserContext<T>? = null
 )
 
+/**
+ * The internal context implementation.
+ *
+ * @author mpe85
+ * @param[T] The type of the stack elements
+ * @param[state] The current context state
+ * @property[rule] The rule that is currently executed
+ * @property[cachedCurrentChar] The cached current character
+ * @property[cachedCurrentCodePoint] The cached current code point
+ */
 internal class Context<T>(state: ContextState<T>) : ParserContext<T> {
 
     override val inputBuffer = state.inputBuffer
@@ -100,6 +123,9 @@ internal class Context<T>(state: ContextState<T>) : ParserContext<T> {
     override fun createChildContext(rule: Rule<T>) =
         Context(ContextState(inputBuffer, level + 1, rule, currentIndex, stack, bus, this))
 
+    /**
+     * Invalidate the internal cache.
+     */
     private fun invalidateCache() {
         cachedCurrentChar = null
         cachedCurrentCodePoint = null
