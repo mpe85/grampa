@@ -22,19 +22,3 @@ internal class SequenceRule<T>(rules: List<Rule<T>>) : AbstractRule<T>(rules) {
     override fun equals(other: Any?): Boolean = checkEquality(other, { super.equals(other) })
     override fun toString(): String = stringify("#children" to children.size)
 }
-
-/**
- * Create a [SequenceRule] out of this and another rule.
- *
- * @param[other] Another rule
- * @return A [SequenceRule] with [this] and [other] as its child rules
- */
-public infix fun <T> Rule<T>.and(other: Rule<T>): Rule<T> = SequenceRule(listOf(this, other))
-
-/**
- * Create a [SequenceRule] out of this and another rule.
- *
- * @param[other] Another rule
- * @return A [SequenceRule] with [this] and [other] as its child rules
- */
-public operator fun <T> Rule<T>.plus(other: Rule<T>): Rule<T> = this and other

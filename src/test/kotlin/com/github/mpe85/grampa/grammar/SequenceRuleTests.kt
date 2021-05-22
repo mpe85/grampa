@@ -3,8 +3,6 @@ package com.github.mpe85.grampa.grammar
 import com.github.mpe85.grampa.legalCodePoints
 import com.github.mpe85.grampa.parser.Parser
 import com.github.mpe85.grampa.rule.Rule
-import com.github.mpe85.grampa.rule.and
-import com.github.mpe85.grampa.rule.plus
 import com.github.mpe85.grampa.rule.toRule
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
@@ -23,10 +21,10 @@ class SequenceRuleTests : StringSpec({
             override fun start() = sequence(rules)
         },
         object : AbstractGrammar<Unit>() {
-            override fun start() = rules.reduce(Rule<Unit>::and)
+            override fun start() = rules.reduce { acc, rule -> acc and rule }
         },
         object : AbstractGrammar<Unit>() {
-            override fun start() = rules.reduce(Rule<Unit>::plus)
+            override fun start() = rules.reduce { acc, rule -> acc + rule }
         }
     )
     "Sequence rule matches correct sequence" {

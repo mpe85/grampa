@@ -427,6 +427,22 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     }
 
     /**
+     * A sequence rule that matches this and another rule.
+     *
+     * @param[other] Another rule
+     * @return A grammar rule
+     */
+    protected open infix fun Rule<T>.and(other: Rule<T>): Rule<T> = sequence(listOf(this, other))
+
+    /**
+     * A sequence rule that matches this and another rule.
+     *
+     * @param[other] Another rule
+     * @return A grammar rule
+     */
+    protected open operator fun Rule<T>.plus(other: Rule<T>): Rule<T> = sequence(listOf(this, other))
+
+    /**
      * A rule that matches the first successful rule in a list of other rules.
      *
      * @param[rules] A variable number of rules
@@ -445,6 +461,14 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
         rules.size == 1 -> rules.first()
         else -> ChoiceRule(rules)
     }
+
+    /**
+     * A choice rule that matches this rule if successful or another rule.
+     *
+     * @param[other] Another rule
+     * @return A grammar rule
+     */
+    protected open infix fun Rule<T>.or(other: Rule<T>): Rule<T> = choice(listOf(this, other))
 
     /**
      * A rule that matches its child rule optionally.

@@ -3,7 +3,6 @@ package com.github.mpe85.grampa.grammar
 import com.github.mpe85.grampa.legalCodePoints
 import com.github.mpe85.grampa.lowerCaseCodePoints
 import com.github.mpe85.grampa.parser.Parser
-import com.github.mpe85.grampa.rule.plus
 import com.github.mpe85.grampa.rule.test
 import com.github.mpe85.grampa.rule.toRule
 import com.github.mpe85.grampa.upperCaseCodePoints

@@ -3,7 +3,6 @@ package com.github.mpe85.grampa.grammar
 import com.github.mpe85.grampa.legalCodePoints
 import com.github.mpe85.grampa.parser.Parser
 import com.github.mpe85.grampa.rule.Rule
-import com.github.mpe85.grampa.rule.or
 import com.github.mpe85.grampa.rule.toRule
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
@@ -21,7 +20,7 @@ class ChoiceRuleTests : StringSpec({
             override fun start() = choice(rules)
         },
         object : AbstractGrammar<Unit>() {
-            override fun start() = rules.reduce(Rule<Unit>::or)
+            override fun start() = rules.reduce { acc, rule -> acc or rule }
         }
     )
     "Choice rule matches first matching rule" {

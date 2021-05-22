@@ -22,11 +22,3 @@ internal class ChoiceRule<T>(rules: List<Rule<T>>) : AbstractRule<T>(rules) {
     override fun equals(other: Any?): Boolean = checkEquality(other, { super.equals(other) })
     override fun toString(): String = stringify("#children" to children.size)
 }
-
-/**
- * Create a [ChoiceRule] out of this and another rule.
- *
- * @param[other] Another rule
- * @return A [ChoiceRule] with [this] and [other] as its child rules
- */
-public infix fun <T> Rule<T>.or(other: Rule<T>): Rule<T> = ChoiceRule(listOf(this, other))

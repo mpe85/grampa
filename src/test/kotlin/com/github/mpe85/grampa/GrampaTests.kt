@@ -48,6 +48,15 @@ open class TestGrammar(val dummy: String?) : AbstractGrammar<String>() {
 }
 
 class GrampaTests : StringSpec({
+
+    "hurzelburzel" {
+        try {
+            TestGrammar::class.createGrammar()
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+    }
+
     "Create grammar" {
         TestGrammar::class.createGrammar().apply {
             dummy shouldBe null
