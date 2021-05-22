@@ -3,6 +3,7 @@
 package com.github.mpe85.grampa.rule.impl
 
 import com.github.mpe85.grampa.context.ParserContext
+import com.github.mpe85.grampa.rule.AbstractRule
 import com.github.mpe85.grampa.rule.Rule
 import com.github.mpe85.grampa.util.checkEquality
 import com.github.mpe85.grampa.util.stringify
@@ -18,14 +19,14 @@ import java.util.Objects.hash
  * @param[T] The type of the stack elements
  * @property[predicate] A predicate that is tested by the rule
  */
-public open class CodePointPredicateRule<T>(private val predicate: (Int) -> Boolean) : AbstractRule<T>() {
+internal open class CodePointPredicateRule<T>(private val predicate: (Int) -> Boolean) : AbstractRule<T>() {
 
     /**
      * Construct a code point predicate rule that exactly matches a specific code point.
      *
      * @param[codePoint] A code point
      */
-    public constructor(codePoint: Int) : this({ it == codePoint })
+    constructor(codePoint: Int) : this({ it == codePoint })
 
     override fun match(context: ParserContext<T>): Boolean = !context.atEndOfInput &&
         predicate(context.currentCodePoint) &&
@@ -43,7 +44,7 @@ public open class CodePointPredicateRule<T>(private val predicate: (Int) -> Bool
  * @param[T] The type of the stack elements
  * @param[codePoint] A code point
  */
-public class IgnoreCaseCodePointRule<T>(codePoint: Int) :
+internal class IgnoreCaseCodePointRule<T>(codePoint: Int) :
     CodePointPredicateRule<T>({ foldCase(toString(it), true) == foldCase(toString(codePoint), true) })
 
 /**

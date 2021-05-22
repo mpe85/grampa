@@ -3,6 +3,7 @@
 package com.github.mpe85.grampa.rule.impl
 
 import com.github.mpe85.grampa.context.ParserContext
+import com.github.mpe85.grampa.rule.AbstractRule
 import com.github.mpe85.grampa.rule.Rule
 import com.github.mpe85.grampa.util.checkEquality
 import com.github.mpe85.grampa.util.stringify
@@ -16,14 +17,14 @@ import java.util.Objects.hash
  * @param[T] The type of the stack elements
  * @property[predicate] A predicate that is tested by the rule
  */
-public open class CharPredicateRule<T>(private val predicate: (Char) -> Boolean) : AbstractRule<T>() {
+internal open class CharPredicateRule<T>(private val predicate: (Char) -> Boolean) : AbstractRule<T>() {
 
     /**
      * Construct a character predicate rule that exactly matches a specific character.
      *
      * @param[character] A character
      */
-    public constructor(character: Char) : this({ it == character })
+    constructor(character: Char) : this({ it == character })
 
     override fun match(context: ParserContext<T>): Boolean = !context.atEndOfInput &&
         predicate(context.currentChar) &&
@@ -41,7 +42,7 @@ public open class CharPredicateRule<T>(private val predicate: (Char) -> Boolean)
  * @param[T] The type of the stack elements
  * @param[character] A character
  */
-public class IgnoreCaseCharRule<T>(character: Char) :
+internal class IgnoreCaseCharRule<T>(character: Char) :
     CharPredicateRule<T>({ toUpperCase(it) == toUpperCase(character) })
 
 /**

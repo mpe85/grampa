@@ -2,6 +2,7 @@ package com.github.mpe85.grampa.rule.impl
 
 import com.github.mpe85.grampa.context.ParserContext
 import com.github.mpe85.grampa.context.RuleContext
+import com.github.mpe85.grampa.rule.AbstractRule
 import com.github.mpe85.grampa.rule.Rule
 import com.github.mpe85.grampa.util.checkEquality
 import com.github.mpe85.grampa.util.stringify
@@ -16,7 +17,7 @@ import java.util.Objects.hash
  * @property[thenRule] A rule to run if the condition evaluates to true
  * @property[elseRule] An optional rule to run if the condition evaluates to false
  */
-public class ConditionalRule<T> @JvmOverloads constructor(
+internal class ConditionalRule<T>(
     private val condition: (RuleContext<T>) -> Boolean,
     private val thenRule: Rule<T>,
     private val elseRule: Rule<T>? = null

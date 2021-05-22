@@ -1,6 +1,7 @@
 package com.github.mpe85.grampa.rule.impl
 
 import com.github.mpe85.grampa.context.ParserContext
+import com.github.mpe85.grampa.rule.AbstractRule
 import com.github.mpe85.grampa.util.checkEquality
 import com.github.mpe85.grampa.util.stringify
 import java.util.Objects.hash
@@ -11,7 +12,7 @@ import java.util.Objects.hash
  * @author mpe85
  * @param[T] The type of the stack elements
  */
-public class EndOfInputRule<T> : AbstractRule<T>() {
+internal class EndOfInputRule<T> : AbstractRule<T>() {
 
     override fun match(context: ParserContext<T>): Boolean = context.atEndOfInput
 

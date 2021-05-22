@@ -10,19 +10,19 @@ import java.util.LinkedList
  * @author mpe85
  * @param[E] The type of the stack elements
  */
-public open class LinkedListStack<E> : LinkedList<E>, Stack<E> {
+internal open class LinkedListStack<E> : LinkedList<E>, Stack<E> {
 
     /**
      * Construct an empty stack.
      */
-    public constructor() : super()
+    constructor() : super()
 
     /**
      * Construct a stack with initial elements.
      *
      * @param[c] The initial elements on the stack.
      */
-    public constructor(c: Collection<E>) : super(c)
+    constructor(c: Collection<E>) : super(c)
 
     override fun push(down: Int, element: E): Unit = add(down, element)
     override fun pop(down: Int): E = removeAt(down)

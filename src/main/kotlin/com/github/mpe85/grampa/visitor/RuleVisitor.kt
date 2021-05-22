@@ -1,7 +1,7 @@
 package com.github.mpe85.grampa.visitor
 
+import com.github.mpe85.grampa.rule.AbstractRule
 import com.github.mpe85.grampa.rule.Rule
-import com.github.mpe85.grampa.rule.impl.AbstractRule
 
 /**
  * Visitor for [Rule]s.

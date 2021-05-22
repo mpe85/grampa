@@ -1,9 +1,9 @@
 package com.github.mpe85.grampa.visitor.impl
 
 import com.github.mpe85.grampa.intercept.RuleMethodInterceptor
+import com.github.mpe85.grampa.rule.AbstractRule
 import com.github.mpe85.grampa.rule.ReferenceRule
 import com.github.mpe85.grampa.rule.Rule
-import com.github.mpe85.grampa.rule.impl.AbstractRule
 import com.github.mpe85.grampa.visitor.RuleVisitor
 
 /**

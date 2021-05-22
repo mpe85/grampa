@@ -3,6 +3,7 @@
 package com.github.mpe85.grampa.rule.impl
 
 import com.github.mpe85.grampa.context.ParserContext
+import com.github.mpe85.grampa.rule.AbstractRule
 import com.github.mpe85.grampa.rule.Rule
 import com.github.mpe85.grampa.util.checkEquality
 import com.github.mpe85.grampa.util.stringify
@@ -15,7 +16,7 @@ import java.util.Objects.hash
  * @param[T] The type of the stack elements
  * @param[rules] A list of child rules
  */
-public class ChoiceRule<T>(rules: List<Rule<T>>) : AbstractRule<T>(rules) {
+internal class ChoiceRule<T>(rules: List<Rule<T>>) : AbstractRule<T>(rules) {
 
     override fun match(context: ParserContext<T>): Boolean = children.any { context.createChildContext(it).run() }
 

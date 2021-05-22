@@ -1,6 +1,7 @@
 package com.github.mpe85.grampa.rule.impl
 
 import com.github.mpe85.grampa.context.ParserContext
+import com.github.mpe85.grampa.rule.AbstractRule
 import com.github.mpe85.grampa.util.checkEquality
 import com.github.mpe85.grampa.util.stringify
 import com.ibm.icu.lang.UCharacter
@@ -22,7 +23,7 @@ import kotlin.streams.toList
  * @param[T] The type of the stack elements
  * @param[strings] A collection of strings from which the trie is built up
  */
-public open class TrieRule<T> constructor(private val strings: Collection<String>) : AbstractRule<T>() {
+internal open class TrieRule<T>(private val strings: Collection<String>) : AbstractRule<T>() {
 
     private val trie = CharsTrieBuilder().run {
         strings.asSequence().map(::map).distinct().forEach { add(it, 0) }
@@ -36,7 +37,7 @@ public open class TrieRule<T> constructor(private val strings: Collection<String
      *
      * @param[strings] A variable number of strings
      */
-    public constructor(vararg strings: String) : this(strings.toList())
+    constructor(vararg strings: String) : this(strings.toList())
 
     override fun match(context: ParserContext<T>): Boolean = try {
         var longestMatch = 0
@@ -69,14 +70,14 @@ public open class TrieRule<T> constructor(private val strings: Collection<String
  * @param[T] The type of the stack elements
  * @param[strings] A collection of strings from which the trie is built up
  */
-public class IgnoreCaseTrieRule<T>(strings: Collection<String>) : TrieRule<T>(strings) {
+internal class IgnoreCaseTrieRule<T>(strings: Collection<String>) : TrieRule<T>(strings) {
 
     /**
      * Construct a case-insensitive trie.
      *
      * @param[strings] A variable number of strings
      */
-    public constructor(vararg strings: String) : this(strings.toList())
+    constructor(vararg strings: String) : this(strings.toList())
 
     override fun map(string: String): String = UCharacter.foldCase(string, true)
 }

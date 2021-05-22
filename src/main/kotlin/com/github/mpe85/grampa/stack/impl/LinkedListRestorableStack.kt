@@ -10,19 +10,19 @@ import java.util.Deque
  * @author mpe85
  * @param[E] The type of the stack elements
  */
-public class LinkedListRestorableStack<E> : LinkedListStack<E>, RestorableStack<E> {
+internal class LinkedListRestorableStack<E> : LinkedListStack<E>, RestorableStack<E> {
 
     /**
      * Construct an empty restorable stack.
      */
-    public constructor() : super()
+    constructor() : super()
 
     /**
      * Construct a restorable stack with initial elements.
      *
      * @param[c] The initial elements on the stack.
      */
-    public constructor(c: Collection<E>) : super(c)
+    constructor(c: Collection<E>) : super(c)
 
     override val snapshotCount: Int get() = snapshots.size
 

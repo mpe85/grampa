@@ -1,6 +1,7 @@
 package com.github.mpe85.grampa.rule.impl
 
 import com.github.mpe85.grampa.context.ParserContext
+import com.github.mpe85.grampa.rule.AbstractRule
 import com.github.mpe85.grampa.rule.ReferenceRule
 import com.github.mpe85.grampa.rule.Rule
 import com.github.mpe85.grampa.util.stringify

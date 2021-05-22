@@ -2,9 +2,9 @@ package com.github.mpe85.grampa.intercept
 
 import com.github.mpe85.grampa.context.ParserContext
 import com.github.mpe85.grampa.grammar.Grammar
+import com.github.mpe85.grampa.rule.AbstractRule
 import com.github.mpe85.grampa.rule.ReferenceRule
 import com.github.mpe85.grampa.rule.Rule
-import com.github.mpe85.grampa.rule.impl.AbstractRule
 import com.github.mpe85.grampa.util.checkEquality
 import com.github.mpe85.grampa.util.stringify
 import com.github.mpe85.grampa.visitor.impl.ReferenceRuleReplaceVisitor

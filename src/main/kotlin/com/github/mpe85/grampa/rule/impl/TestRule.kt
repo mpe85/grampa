@@ -3,6 +3,7 @@
 package com.github.mpe85.grampa.rule.impl
 
 import com.github.mpe85.grampa.context.ParserContext
+import com.github.mpe85.grampa.rule.AbstractRule
 import com.github.mpe85.grampa.rule.Rule
 import com.github.mpe85.grampa.util.checkEquality
 import com.github.mpe85.grampa.util.stringify
@@ -15,7 +16,7 @@ import java.util.Objects.hash
  * @param[T] The type of the stack elements
  * @property[rule] The child rule to test
  */
-public class TestRule<T>(private var rule: Rule<T>) : AbstractRule<T>(rule) {
+internal class TestRule<T>(private var rule: Rule<T>) : AbstractRule<T>(rule) {
 
     override val testRule: Boolean = true
 

@@ -1,7 +1,5 @@
-package com.github.mpe85.grampa.rule.impl
+package com.github.mpe85.grampa.rule
 
-import com.github.mpe85.grampa.rule.ReferenceRule
-import com.github.mpe85.grampa.rule.Rule
 import com.github.mpe85.grampa.util.checkEquality
 import com.github.mpe85.grampa.visitor.RuleVisitor
 import java.util.Objects.hash

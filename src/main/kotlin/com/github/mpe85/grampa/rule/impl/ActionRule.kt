@@ -4,6 +4,7 @@ package com.github.mpe85.grampa.rule.impl
 
 import com.github.mpe85.grampa.context.ParserContext
 import com.github.mpe85.grampa.context.RuleContext
+import com.github.mpe85.grampa.rule.AbstractRule
 import com.github.mpe85.grampa.rule.Action
 import com.github.mpe85.grampa.rule.Command
 import com.github.mpe85.grampa.rule.Rule
@@ -20,7 +21,7 @@ import java.util.Objects.hash
  * @property[action] The action that is executed by the rule
  * @property[skippable] Whether the action is skippable inside test rules
  */
-public open class ActionRule<T> @JvmOverloads constructor(
+internal class ActionRule<T>(
     private val action: (RuleContext<T>) -> Boolean,
     private val skippable: Boolean = false
 ) : AbstractRule<T>() {
