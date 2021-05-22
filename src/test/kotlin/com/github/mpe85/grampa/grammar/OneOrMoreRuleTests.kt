@@ -3,7 +3,7 @@ package com.github.mpe85.grampa.grammar
 import com.github.mpe85.grampa.legalCodePoints
 import com.github.mpe85.grampa.lowerCaseCodePoints
 import com.github.mpe85.grampa.parser.Parser
-import com.github.mpe85.grampa.rule.impl.toRule
+import com.github.mpe85.grampa.rule.toRule
 import com.github.mpe85.grampa.upperCaseCodePoints
 import com.ibm.icu.lang.UCharacter.toString
 import io.kotest.core.spec.style.StringSpec

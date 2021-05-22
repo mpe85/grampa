@@ -7,7 +7,7 @@ import com.github.mpe85.grampa.rule.ReferenceRule
 import com.github.mpe85.grampa.rule.Rule
 import com.github.mpe85.grampa.util.checkEquality
 import com.github.mpe85.grampa.util.stringify
-import com.github.mpe85.grampa.visitor.impl.ReferenceRuleReplaceVisitor
+import com.github.mpe85.grampa.visitor.ReferenceRuleReplaceVisitor
 import net.bytebuddy.implementation.bind.annotation.AllArguments
 import net.bytebuddy.implementation.bind.annotation.Origin
 import net.bytebuddy.implementation.bind.annotation.SuperCall

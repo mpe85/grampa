@@ -1,8 +1,8 @@
 package com.github.mpe85.grampa.intercept
 
+import com.github.mpe85.grampa.rule.EmptyRule
 import com.github.mpe85.grampa.rule.ReferenceRule
 import com.github.mpe85.grampa.rule.Rule
-import com.github.mpe85.grampa.rule.impl.EmptyRule
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe

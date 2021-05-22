@@ -1,7 +1,7 @@
 package com.github.mpe85.grampa.grammar
 
 import com.github.mpe85.grampa.parser.Parser
-import com.github.mpe85.grampa.rule.impl.plus
+import com.github.mpe85.grampa.rule.plus
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe

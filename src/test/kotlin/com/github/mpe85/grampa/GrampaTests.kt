@@ -1,13 +1,13 @@
 package com.github.mpe85.grampa
 
 import com.github.mpe85.grampa.grammar.AbstractGrammar
+import com.github.mpe85.grampa.rule.CharPredicateRule
+import com.github.mpe85.grampa.rule.ChoiceRule
+import com.github.mpe85.grampa.rule.EmptyRule
+import com.github.mpe85.grampa.rule.RepeatRule
 import com.github.mpe85.grampa.rule.Rule
-import com.github.mpe85.grampa.rule.impl.CharPredicateRule
-import com.github.mpe85.grampa.rule.impl.ChoiceRule
-import com.github.mpe85.grampa.rule.impl.EmptyRule
-import com.github.mpe85.grampa.rule.impl.RepeatRule
-import com.github.mpe85.grampa.rule.impl.SequenceRule
-import com.github.mpe85.grampa.rule.impl.times
+import com.github.mpe85.grampa.rule.SequenceRule
+import com.github.mpe85.grampa.rule.times
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe

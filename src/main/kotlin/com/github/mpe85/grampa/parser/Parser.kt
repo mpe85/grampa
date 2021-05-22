@@ -6,9 +6,9 @@ import com.github.mpe85.grampa.event.ParseEventListener
 import com.github.mpe85.grampa.event.PostParseEvent
 import com.github.mpe85.grampa.event.PreParseEvent
 import com.github.mpe85.grampa.grammar.Grammar
+import com.github.mpe85.grampa.input.CharSequenceInputBuffer
 import com.github.mpe85.grampa.input.InputBuffer
-import com.github.mpe85.grampa.input.impl.CharSequenceInputBuffer
-import com.github.mpe85.grampa.stack.impl.LinkedListRestorableStack
+import com.github.mpe85.grampa.stack.LinkedListRestorableStack
 import org.greenrobot.eventbus.EventBus
 
 /**

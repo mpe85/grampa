@@ -3,9 +3,9 @@ package com.github.mpe85.grampa.grammar
 import com.github.mpe85.grampa.legalCodePoints
 import com.github.mpe85.grampa.lowerCaseCodePoints
 import com.github.mpe85.grampa.parser.Parser
-import com.github.mpe85.grampa.rule.impl.plus
-import com.github.mpe85.grampa.rule.impl.testNot
-import com.github.mpe85.grampa.rule.impl.toRule
+import com.github.mpe85.grampa.rule.plus
+import com.github.mpe85.grampa.rule.testNot
+import com.github.mpe85.grampa.rule.toRule
 import com.github.mpe85.grampa.upperCaseCodePoints
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe

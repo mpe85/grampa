@@ -5,7 +5,7 @@ import com.github.mpe85.grampa.grammar.Grammar;
 import com.github.mpe85.grampa.parser.ParseResult;
 import com.github.mpe85.grampa.parser.Parser;
 import com.github.mpe85.grampa.rule.Rule;
-import com.github.mpe85.grampa.rule.impl.StringRules;
+import com.github.mpe85.grampa.rule.StringRules;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
