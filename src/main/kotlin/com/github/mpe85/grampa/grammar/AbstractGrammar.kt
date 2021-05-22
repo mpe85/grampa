@@ -39,53 +39,34 @@ import kotlin.streams.toList
 @Suppress("Detekt.TooManyFunctions")
 public abstract class AbstractGrammar<T> : Grammar<T> {
 
-    private val emptyRule by lazy { EmptyRule<T>() }
-    private val neverRule by lazy { NeverRule<T>() }
-    private val eoiRule by lazy { EndOfInputRule<T>() }
-    private val anyCharRule by lazy { CharPredicateRule<T> { true } }
-    private val anyCodePointRule by lazy { CodePointPredicateRule<T>(UCharacter::isLegal) }
-    private val asciiRule by lazy { CharPredicateRule<T> { it in Char.MIN_VALUE..Byte.MAX_VALUE.toInt().toChar() } }
-    private val bmpRule by lazy { CodePointPredicateRule<T>(UCharacter::isBMP) }
-    private val digitRule by lazy { CodePointPredicateRule<T>(UCharacter::isDigit) }
-    private val javaIdentStartRule by lazy { CodePointPredicateRule<T>(Character::isJavaIdentifierStart) }
-    private val javaIdentPartRule by lazy { CodePointPredicateRule<T>(Character::isJavaIdentifierPart) }
-    private val letterRule by lazy { CodePointPredicateRule<T>(UCharacter::isLetter) }
-    private val letterOrDigitRule by lazy { CodePointPredicateRule<T>(UCharacter::isLetterOrDigit) }
-    private val printableRule by lazy { CodePointPredicateRule<T>(UCharacter::isPrintable) }
-    private val spaceCharRule by lazy { CodePointPredicateRule<T>(UCharacter::isSpaceChar) }
-    private val whitespaceRule by lazy { CodePointPredicateRule<T>(UCharacter::isWhitespace) }
-    private val crRule by lazy { CharPredicateRule<T>('\r') }
-    private val lfRule by lazy { CharPredicateRule<T>('\n') }
-    private val crlfRule by lazy { StringRule<T>("\r\n") }
-
     /**
      * A rule that matches an empty string.
      * Or in other words, a rule that matches no input character and always succeeds.
      *
      * @return A grammar rule
      */
-    protected open fun empty(): Rule<T> = emptyRule
+    protected open fun empty(): Rule<T> = EmptyRule()
 
     /**
      * A rule that always fails.
      *
      * @return A grammar rule
      */
-    protected open fun never(): Rule<T> = neverRule
+    protected open fun never(): Rule<T> = NeverRule()
 
     /**
      * A rule that matches the end of the input.
      *
      * @return A grammar rule
      */
-    protected open fun eoi(): Rule<T> = eoiRule
+    protected open fun eoi(): Rule<T> = EndOfInputRule()
 
     /**
      * A rule that matches any character.
      *
      * @return A grammar rule
      */
-    protected open fun anyChar(): Rule<T> = anyCharRule
+    protected open fun anyChar(): Rule<T> = CharPredicateRule { true }
 
     /**
      * A rule that matches a specific character.
@@ -122,7 +103,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @return A grammar rule
      */
     protected open fun anyOfChars(characters: Collection<Char>): Rule<T> = when {
-        characters.isEmpty() -> neverRule
+        characters.isEmpty() -> never()
         characters.size == 1 -> characters.first().toRule()
         else -> CharPredicateRule { characters.sorted().binarySearch(it) >= 0 }
     }
@@ -150,7 +131,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @return A grammar rule
      */
     protected open fun noneOfChars(characters: Collection<Char>): Rule<T> = when {
-        characters.isEmpty() -> anyCharRule
+        characters.isEmpty() -> anyChar()
         else -> CharPredicateRule { characters.sorted().binarySearch(it) < 0 }
     }
 
@@ -175,7 +156,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      *
      * @return A grammar rule
      */
-    protected open fun anyCodePoint(): Rule<T> = anyCodePointRule
+    protected open fun anyCodePoint(): Rule<T> = CodePointPredicateRule(UCharacter::isLegal)
 
     /**
      * A rule that matches a specific code point.
@@ -212,7 +193,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @return A grammar rule
      */
     protected open fun anyOfCodePoints(codePoints: Collection<Int>): Rule<T> = when {
-        codePoints.isEmpty() -> neverRule
+        codePoints.isEmpty() -> never()
         codePoints.size == 1 -> codePoints.first().toRule()
         else -> CodePointPredicateRule { codePoints.sorted().binarySearch(it) >= 0 }
     }
@@ -240,7 +221,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @return A grammar rule
      */
     protected open fun noneOfCodePoints(codePoints: Collection<Int>): Rule<T> = when {
-        codePoints.isEmpty() -> anyCodePointRule
+        codePoints.isEmpty() -> anyCodePoint()
         else -> CodePointPredicateRule { codePoints.sorted().binarySearch(it) < 0 }
     }
 
@@ -268,7 +249,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @return A grammar rule
      */
     protected open fun string(string: String): Rule<T> = when {
-        string.isEmpty() -> emptyRule
+        string.isEmpty() -> empty()
         string.length == 1 -> string.first().toRule()
         string.codePoints().count() == 1L -> string.codePointAt(0).toRule()
         else -> StringRule(string)
@@ -281,7 +262,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @return A grammar rule
      */
     protected open fun ignoreCase(string: String): Rule<T> = when {
-        string.isEmpty() -> emptyRule
+        string.isEmpty() -> empty()
         else -> IgnoreCaseTrieRule(string)
     }
 
@@ -300,7 +281,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @return A grammar rule
      */
     protected open fun strings(strings: Collection<String>): Rule<T> = when {
-        strings.isEmpty() -> neverRule
+        strings.isEmpty() -> never()
         strings.size == 1 -> strings.first().toRule()
         else -> TrieRule(strings)
     }
@@ -320,7 +301,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @return A grammar rule
      */
     protected open fun ignoreCase(strings: Collection<String>): Rule<T> = when {
-        strings.isEmpty() -> neverRule
+        strings.isEmpty() -> never()
         strings.size == 1 -> ignoreCase(strings.first())
         else -> IgnoreCaseTrieRule(strings)
     }
@@ -338,28 +319,28 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      *
      * @return A grammar rule
      */
-    protected open fun ascii(): Rule<T> = asciiRule
+    protected open fun ascii(): Rule<T> = CharPredicateRule { it in Char.MIN_VALUE..Byte.MAX_VALUE.toInt().toChar() }
 
     /**
      * A rule that matches a characters of Unicode's Basic Multilingual Plane.
      *
      * @return A grammar rule
      */
-    protected open fun bmp(): Rule<T> = bmpRule
+    protected open fun bmp(): Rule<T> = CodePointPredicateRule(UCharacter::isBMP)
 
     /**
      * A rule that matches a digit.
      *
      * @return A grammar rule
      */
-    protected open fun digit(): Rule<T> = digitRule
+    protected open fun digit(): Rule<T> = CodePointPredicateRule(UCharacter::isDigit)
 
     /**
      * A rule that matches a character which is valid to be the first character of a Java identifier.
      *
      * @return A grammar rule
      */
-    protected open fun javaIdentifierStart(): Rule<T> = javaIdentStartRule
+    protected open fun javaIdentifierStart(): Rule<T> = CodePointPredicateRule(Character::isJavaIdentifierStart)
 
     /**
      * A rule that matches a character which is valid to be part character of a Java identifier, other than the first
@@ -367,63 +348,63 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      *
      * @return A grammar rule
      */
-    protected open fun javaIdentifierPart(): Rule<T> = javaIdentPartRule
+    protected open fun javaIdentifierPart(): Rule<T> = CodePointPredicateRule(Character::isJavaIdentifierPart)
 
     /**
      * A rule that matches a letter.
      *
      * @return A grammar rule
      */
-    protected open fun letter(): Rule<T> = letterRule
+    protected open fun letter(): Rule<T> = CodePointPredicateRule(UCharacter::isLetter)
 
     /**
      * A rule that matches a letter or a digit.
      *
      * @return A grammar rule
      */
-    protected open fun letterOrDigit(): Rule<T> = letterOrDigitRule
+    protected open fun letterOrDigit(): Rule<T> = CodePointPredicateRule(UCharacter::isLetterOrDigit)
 
     /**
      * A rule that matches a printable character.
      *
      * @return A grammar rule
      */
-    protected open fun printable(): Rule<T> = printableRule
+    protected open fun printable(): Rule<T> = CodePointPredicateRule(UCharacter::isPrintable)
 
     /**
      * A rule that matches a space character.
      *
      * @return A grammar rule
      */
-    protected open fun spaceChar(): Rule<T> = spaceCharRule
+    protected open fun spaceChar(): Rule<T> = CodePointPredicateRule(UCharacter::isSpaceChar)
 
     /**
      * A rule that matches a whitespace character.
      *
      * @return A grammar rule
      */
-    protected open fun whitespace(): Rule<T> = whitespaceRule
+    protected open fun whitespace(): Rule<T> = CodePointPredicateRule(UCharacter::isWhitespace)
 
     /**
      * A rule that matches the carriage return character.
      *
      * @return A grammar rule
      */
-    protected open fun cr(): Rule<T> = crRule
+    protected open fun cr(): Rule<T> = CharPredicateRule('\r')
 
     /**
      * A rule that matches the line feed character.
      *
      * @return A grammar rule
      */
-    protected open fun lf(): Rule<T> = lfRule
+    protected open fun lf(): Rule<T> = CharPredicateRule('\n')
 
     /**
      * A rule that matches the carriage return and line feed characters.
      *
      * @return A grammar rule
      */
-    protected open fun crlf(): Rule<T> = crlfRule
+    protected open fun crlf(): Rule<T> = StringRule("\r\n")
 
     /**
      * A rule that matches a sequence of other rules.
@@ -440,7 +421,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @return A grammar rule
      */
     protected open fun sequence(rules: List<Rule<T>>): Rule<T> = when {
-        rules.isEmpty() -> emptyRule
+        rules.isEmpty() -> empty()
         rules.size == 1 -> rules.first()
         else -> SequenceRule(rules)
     }
@@ -460,7 +441,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @return A grammar rule
      */
     protected open fun choice(rules: List<Rule<T>>): Rule<T> = when {
-        rules.isEmpty() -> emptyRule
+        rules.isEmpty() -> empty()
         rules.size == 1 -> rules.first()
         else -> ChoiceRule(rules)
     }
