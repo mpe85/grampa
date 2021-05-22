@@ -15,9 +15,9 @@ import com.github.mpe85.grampa.rule.NeverRule
 import com.github.mpe85.grampa.rule.Rule
 import com.github.mpe85.grampa.rule.SequenceRule
 import com.github.mpe85.grampa.rule.StringRule
+import com.github.mpe85.grampa.rule.TestNotRule
+import com.github.mpe85.grampa.rule.TestRule
 import com.github.mpe85.grampa.rule.TrieRule
-import com.github.mpe85.grampa.rule.test
-import com.github.mpe85.grampa.rule.testNot
 import com.github.mpe85.grampa.rule.times
 import com.github.mpe85.grampa.rule.toAction
 import com.github.mpe85.grampa.rule.toIgnoreCaseRule
@@ -520,7 +520,14 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[rule] The child rule to test
      * @return A grammar rule
      */
-    protected open fun test(rule: Rule<T>): Rule<T> = rule.test()
+    protected open fun test(rule: Rule<T>): Rule<T> = TestRule(rule)
+
+    /**
+     * Create a test rule out of this rule that tests if this rule matches.
+     *
+     * @return A grammar rule
+     */
+    protected open fun Rule<T>.toTest(): Rule<T> = test(this)
 
     /**
      * A test rule that tests if its child rule does not match.
@@ -528,7 +535,14 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[rule] The child rule to test
      * @return A grammar rule
      */
-    protected open fun testNot(rule: Rule<T>): Rule<T> = rule.testNot()
+    protected open fun testNot(rule: Rule<T>): Rule<T> = TestNotRule(rule)
+
+    /**
+     * Create a test-not rule out of this rule that tests if this rule does not match.
+     *
+     * @return A grammar rule
+     */
+    protected open fun Rule<T>.toTestNot(): Rule<T> = testNot(this)
 
     /**
      * A conditional rule that runs a child rule if a condition is true, otherwise it runs another child rule.
