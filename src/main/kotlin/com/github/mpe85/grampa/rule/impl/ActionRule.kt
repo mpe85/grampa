@@ -18,7 +18,7 @@ import java.util.Objects.hash
  * @author mpe85
  * @param[T] The type of the stack elements
  * @property[action] The action that is executed by the rule
- * @property[skippable] Indicates if the action is skippable inside test rules
+ * @property[skippable] Whether the action is skippable inside test rules
  */
 public open class ActionRule<T> @JvmOverloads constructor(
     private val action: (RuleContext<T>) -> Boolean,

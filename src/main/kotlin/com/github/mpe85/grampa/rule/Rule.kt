@@ -10,7 +10,7 @@ import com.github.mpe85.grampa.visitor.RuleVisitor
  * @param[T] The type of the stack elements
  * @property[children] The child rules of the rule
  * @property[child] The (first) child rule of the rule
- * @property[testRule] Indicates if the rule is directly or indirectly part of a test rule.
+ * @property[testRule] Whether the rule is directly or indirectly part of a test rule.
  */
 public interface Rule<T> {
 
