@@ -576,14 +576,6 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun action(action: Action<T>): Rule<T> = ActionRule(action::run)
 
     /**
-     * A rule that executes a command.
-     *
-     * @param[command] The command to execute
-     * @return The created grammar rule
-     */
-    protected open fun command(command: Command<T>): Rule<T> = action(command.toAction())
-
-    /**
      * A rule that runs an action. The action is skipped if the rule is run inside a test rule.
      *
      * @param[action] The skippable action to run
@@ -592,12 +584,45 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun skippableAction(action: Action<T>): Rule<T> = ActionRule(action::run, true)
 
     /**
+     * A rule that runs this action function.
+     *
+     * @param[skippable] Whether the action should be skippable
+     * @return The created grammar rule
+     */
+    protected open fun <T> ((RuleContext<T>) -> Boolean).toRule(skippable: Boolean = false): Rule<T> =
+        ActionRule(this, skippable)
+
+    /**
+     * A rule that runs this action.
+     *
+     * @param[skippable] Whether the action should be skippable
+     * @return The created grammar rule
+     */
+    protected open fun <T> Action<T>.toRule(skippable: Boolean = false): Rule<T> = ActionRule(this::run, skippable)
+
+    /**
+     * A rule that executes a command.
+     *
+     * @param[command] The command to execute
+     * @return The created grammar rule
+     */
+    protected open fun command(command: Command<T>): Rule<T> = action(command.toAction())
+
+    /**
      * A rule that executes a command. The command is skipped if the rule is run inside a test rule.
      *
      * @param[command] The command to execute
      * @return The created grammar rule
      */
     protected open fun skippableCommand(command: Command<T>): Rule<T> = skippableAction(command.toAction())
+
+    /**
+     * A rule that executes this command.
+     *
+     * @param[skippable] Whether the command should be skippable
+     * @return The created grammar rule
+     */
+    protected open fun <T> Command<T>.toRule(skippable: Boolean = false): Rule<T> = toAction().toRule(skippable)
 
     /**
      * Post a static event to the parser's event bus.

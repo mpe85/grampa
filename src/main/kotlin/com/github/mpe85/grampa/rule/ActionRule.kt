@@ -29,24 +29,3 @@ internal class ActionRule<T>(
 
     override fun toString(): String = stringify("action" to action, "skippable" to skippable)
 }
-
-/**
- * Create a rule from this action function.
- *
- * @return A [ActionRule]
- */
-public fun <T> ((RuleContext<T>) -> Boolean).toRule(skippable: Boolean = false): Rule<T> = ActionRule(this, skippable)
-
-/**
- * Create a rule from this action.
- *
- * @return A [ActionRule]
- */
-public fun <T> Action<T>.toRule(skippable: Boolean = false): Rule<T> = ActionRule(this::run, skippable)
-
-/**
- * Create a rule from this command.
- *
- * @return A [ActionRule]
- */
-public fun <T> Command<T>.toRule(skippable: Boolean = false): Rule<T> = toAction().toRule(skippable)
