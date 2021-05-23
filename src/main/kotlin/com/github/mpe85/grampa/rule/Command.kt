@@ -17,11 +17,11 @@ public fun interface Command<T> {
      * @param[context] A rule context
      */
     public fun execute(context: RuleContext<T>)
-}
 
-/**
- * Convert the parser command to a parser action.
- *
- * @return A parser action
- */
-public fun <T> Command<T>.toAction(): Action<T> = Action { execute(it); true }
+    /**
+     * Convert this command to an action.
+     *
+     * @return The converted action
+     */
+    public fun toAction(): Action<T> = Action { execute(it); true }
+}

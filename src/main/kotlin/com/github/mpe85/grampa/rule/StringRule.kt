@@ -27,10 +27,3 @@ internal class StringRule<T> constructor(private val string: String) : AbstractR
     override fun equals(other: Any?): Boolean = checkEquality(other, { super.equals(other) }, { it.string })
     override fun toString(): String = stringify("string" to string)
 }
-
-/**
- * Create a rule from this string.
- *
- * @return A [StringRule]
- */
-public fun <T> String.toRule(): Rule<T> = StringRule(this)

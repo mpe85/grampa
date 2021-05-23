@@ -3,7 +3,7 @@ package com.github.mpe85.grampa.grammar
 import com.github.mpe85.grampa.legalCodePoints
 import com.github.mpe85.grampa.parser.Parser
 import com.github.mpe85.grampa.rule.Rule
-import com.github.mpe85.grampa.rule.toRule
+import com.github.mpe85.grampa.rule.StringRule
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
@@ -29,7 +29,7 @@ class SequenceRuleTests : StringSpec({
     )
     "Sequence rule matches correct sequence" {
         checkAll(Arb.list(Arb.string(0..10, legalCodePoints()), 2..10)) { strings ->
-            grammars(strings.map { it.toRule() }).forEach { grammar ->
+            grammars(strings.map { StringRule(it) }).forEach { grammar ->
                 val joined = strings.reduce(String::plus)
                 Parser(grammar).run(joined).apply {
                     matched shouldBe true

@@ -3,7 +3,6 @@ package com.github.mpe85.grampa.grammar
 import com.github.mpe85.grampa.legalCodePoints
 import com.github.mpe85.grampa.lowerCaseCodePoints
 import com.github.mpe85.grampa.parser.Parser
-import com.github.mpe85.grampa.rule.toRule
 import com.github.mpe85.grampa.upperCaseCodePoints
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
@@ -27,7 +26,7 @@ class TestRuleTests : StringSpec({
     "Test rule does not match failing rule" {
         checkAll(Arb.string(2..10, lowerCaseCodePoints()), Arb.string(2..10, upperCaseCodePoints())) { lower, upper ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun start() = lower.toRule<Unit>().toTest() + upper.toRule()
+                override fun start() = lower.toRule().toTest() + upper.toRule()
             }).run(upper).apply {
                 matched shouldBe false
                 matchedEntireInput shouldBe false

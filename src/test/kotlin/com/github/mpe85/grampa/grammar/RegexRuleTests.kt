@@ -1,7 +1,6 @@
 package com.github.mpe85.grampa.grammar
 
 import com.github.mpe85.grampa.parser.Parser
-import com.github.mpe85.grampa.rule.toRegexRule
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
@@ -22,7 +21,7 @@ class RegexRuleTests : StringSpec({
         patterns.forEach { pattern ->
             checkAll(Arb.stringPattern(pattern)) { str ->
                 Parser(object : AbstractGrammar<Unit>() {
-                    override fun start() = pattern.toRegexRule<Unit>()
+                    override fun start() = pattern.toRegexRule()
                 }).run(str).apply {
                     matched shouldBe true
                     matchedEntireInput shouldBe true

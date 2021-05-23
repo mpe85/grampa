@@ -33,10 +33,3 @@ internal class RegexRule<T>(private val pattern: Pattern) : AbstractRule<T>() {
     override fun equals(other: Any?): Boolean = checkEquality(other, { super.equals(other) }, { it.pattern })
     override fun toString(): String = stringify("pattern" to pattern)
 }
-
-/**
- * Create a regex rule from this string.
- *
- * @return A [RegexRule]
- */
-public fun <T> String.toRegexRule(): Rule<T> = RegexRule(this)

@@ -2,7 +2,6 @@ package com.github.mpe85.grampa.grammar
 
 import com.github.mpe85.grampa.legalCodePoints
 import com.github.mpe85.grampa.parser.Parser
-import com.github.mpe85.grampa.rule.toRule
 import com.ibm.icu.lang.UCharacter.toString
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe

@@ -14,6 +14,7 @@ import com.github.mpe85.grampa.rule.IgnoreCaseCharRule
 import com.github.mpe85.grampa.rule.IgnoreCaseCodePointRule
 import com.github.mpe85.grampa.rule.IgnoreCaseTrieRule
 import com.github.mpe85.grampa.rule.NeverRule
+import com.github.mpe85.grampa.rule.RegexRule
 import com.github.mpe85.grampa.rule.Rule
 import com.github.mpe85.grampa.rule.SequenceRule
 import com.github.mpe85.grampa.rule.StringRule
@@ -21,9 +22,6 @@ import com.github.mpe85.grampa.rule.TestNotRule
 import com.github.mpe85.grampa.rule.TestRule
 import com.github.mpe85.grampa.rule.TrieRule
 import com.github.mpe85.grampa.rule.times
-import com.github.mpe85.grampa.rule.toAction
-import com.github.mpe85.grampa.rule.toRegexRule
-import com.github.mpe85.grampa.rule.toRule
 import com.github.mpe85.grampa.util.max
 import com.github.mpe85.grampa.util.min
 import com.github.mpe85.grampa.util.range
@@ -299,6 +297,13 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     }
 
     /**
+     * A rule that matches this string.
+     *
+     * @return The created grammar rule
+     */
+    protected open fun String.toRule(): Rule<T> = string(this)
+
+    /**
      * A rule that matches a specific string, ignoring the case of its characters (case-insensitive).
      *
      * @param[string] The string to match
@@ -310,12 +315,26 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     }
 
     /**
+     * A rule that matches this string, ignoring the case of its characters (case-insensitive).
+     *
+     * @return The created grammar rule
+     */
+    protected open fun String.toIgnoreCaseRule(): Rule<T> = ignoreCase(this)
+
+    /**
      * A rule that matches a regular expression.
      *
      * @param[regex] A regular expression
      * @return The created grammar rule
      */
-    protected open fun regex(regex: String): Rule<T> = regex.toRegexRule()
+    protected open fun regex(regex: String): Rule<T> = RegexRule(regex)
+
+    /**
+     * A rule that matches this regular expression.
+     *
+     * @return The created grammar rule
+     */
+    protected open fun String.toRegexRule(): Rule<T> = regex(this)
 
     /**
      * A rule that matches a string within a set of strings.

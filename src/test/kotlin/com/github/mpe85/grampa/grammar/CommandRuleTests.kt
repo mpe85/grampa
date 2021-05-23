@@ -1,7 +1,6 @@
 package com.github.mpe85.grampa.grammar
 
 import com.github.mpe85.grampa.parser.Parser
-import com.github.mpe85.grampa.rule.toRule
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -26,7 +25,7 @@ class CommandRuleTests : StringSpec({
     "Command rule provides matched char sequence of previous rule" {
         checkAll<String> { str ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun start() = str.toRule<Unit>() + command {
+                override fun start() = str.toRule() + command {
                     it.previousMatch shouldBe str
                 }
             }).run(str).apply {

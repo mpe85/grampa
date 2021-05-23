@@ -3,7 +3,7 @@ package com.github.mpe85.grampa.grammar
 import com.github.mpe85.grampa.legalCodePoints
 import com.github.mpe85.grampa.parser.Parser
 import com.github.mpe85.grampa.rule.Rule
-import com.github.mpe85.grampa.rule.toRule
+import com.github.mpe85.grampa.rule.StringRule
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
@@ -25,7 +25,7 @@ class ChoiceRuleTests : StringSpec({
     )
     "Choice rule matches first matching rule" {
         checkAll(Arb.set(Arb.string(1..10, legalCodePoints()), 2..10)) { strings ->
-            grammars(strings.map { it.toRule() }).forEach { grammar ->
+            grammars(strings.map { StringRule(it) }).forEach { grammar ->
                 val random = strings.random()
                 Parser(grammar).run(random).apply {
                     matched shouldBe true

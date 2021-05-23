@@ -5,7 +5,6 @@ import com.github.mpe85.grampa.grammar.Grammar;
 import com.github.mpe85.grampa.parser.ParseResult;
 import com.github.mpe85.grampa.parser.Parser;
 import com.github.mpe85.grampa.rule.Rule;
-import com.github.mpe85.grampa.rule.StringRules;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +17,7 @@ public class JavaTests {
         @NotNull
         @Override
         public Rule<String> start() {
-            return StringRules.toRule("my");
+            return toRule("my");
         }
     }
 
