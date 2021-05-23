@@ -42,24 +42,3 @@ internal open class CharPredicateRule<T>(private val predicate: (Char) -> Boolea
  */
 internal class IgnoreCaseCharRule<T>(character: Char) :
     CharPredicateRule<T>({ toUpperCase(it) == toUpperCase(character) })
-
-/**
- * Create a rule from this character.
- *
- * @return A [CharPredicateRule]
- */
-public fun <T> Char.toRule(): Rule<T> = CharPredicateRule(this)
-
-/**
- * Create an ignore-case rule from this character.
- *
- * @return A [IgnoreCaseCharRule]
- */
-public fun <T> Char.toIgnoreCaseRule(): Rule<T> = IgnoreCaseCharRule(this)
-
-/**
- * Create a rule from this character range.
- *
- * @return A [CharPredicateRule]
- */
-public fun <T> CharRange.toRule(): Rule<T> = CharPredicateRule { it in first..last }

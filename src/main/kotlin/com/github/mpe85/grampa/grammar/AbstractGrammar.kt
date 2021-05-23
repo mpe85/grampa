@@ -10,6 +10,8 @@ import com.github.mpe85.grampa.rule.Command
 import com.github.mpe85.grampa.rule.ConditionalRule
 import com.github.mpe85.grampa.rule.EmptyRule
 import com.github.mpe85.grampa.rule.EndOfInputRule
+import com.github.mpe85.grampa.rule.IgnoreCaseCharRule
+import com.github.mpe85.grampa.rule.IgnoreCaseCodePointRule
 import com.github.mpe85.grampa.rule.IgnoreCaseTrieRule
 import com.github.mpe85.grampa.rule.NeverRule
 import com.github.mpe85.grampa.rule.Rule
@@ -20,7 +22,6 @@ import com.github.mpe85.grampa.rule.TestRule
 import com.github.mpe85.grampa.rule.TrieRule
 import com.github.mpe85.grampa.rule.times
 import com.github.mpe85.grampa.rule.toAction
-import com.github.mpe85.grampa.rule.toIgnoreCaseRule
 import com.github.mpe85.grampa.rule.toRegexRule
 import com.github.mpe85.grampa.rule.toRule
 import com.github.mpe85.grampa.util.max
@@ -74,7 +75,14 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[character] The character to match
      * @return The created grammar rule
      */
-    protected open fun char(character: Char): Rule<T> = character.toRule()
+    protected open fun char(character: Char): Rule<T> = CharPredicateRule(character)
+
+    /**
+     * A rule that matches this character.
+     *
+     * @return The created grammar rule
+     */
+    protected open fun Char.toRule(): Rule<T> = char(this)
 
     /**
      * A rule that matches a specific character, ignoring the case of the character (case-insensitive).
@@ -82,7 +90,14 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[character] The character to match
      * @return The created grammar rule
      */
-    protected open fun ignoreCase(character: Char): Rule<T> = character.toIgnoreCaseRule()
+    protected open fun ignoreCase(character: Char): Rule<T> = IgnoreCaseCharRule(character)
+
+    /**
+     * A rule that matches this character, ignoring its case (case-insensitive).
+     *
+     * @return The created grammar rule
+     */
+    protected open fun Char.toIgnoreCaseRule(): Rule<T> = ignoreCase(this)
 
     /**
      * A rule that matches a character within a range of characters.
@@ -93,8 +108,15 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      */
     protected open fun charRange(lowerBound: Char, upperBound: Char): Rule<T> {
         require(lowerBound <= upperBound) { "A 'lowerBound' must not be greater than an 'upperBound'." }
-        return (lowerBound..upperBound).toRule()
+        return CharPredicateRule { it in lowerBound..upperBound }
     }
+
+    /**
+     * A rule that matches a character within this range of characters.
+     *
+     * @return The created grammar rule
+     */
+    protected open fun CharRange.toRule(): Rule<T> = charRange(first, last)
 
     /**
      * A rule that matches a character within a set of characters.
@@ -164,7 +186,14 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[codePoint] The code point to match
      * @return The created grammar rule
      */
-    protected open fun codePoint(codePoint: Int): Rule<T> = codePoint.toRule()
+    protected open fun codePoint(codePoint: Int): Rule<T> = CodePointPredicateRule(codePoint)
+
+    /**
+     * A rule that matches this code point.
+     *
+     * @return The created grammar rule
+     */
+    protected open fun Int.toRule(): Rule<T> = codePoint(this)
 
     /**
      * A rule that matches a specific code point, ignoring the case of the code point (case-insensitive).
@@ -172,7 +201,14 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[codePoint] The code point to match
      * @return The created grammar rule
      */
-    protected open fun ignoreCase(codePoint: Int): Rule<T> = codePoint.toIgnoreCaseRule()
+    protected open fun ignoreCase(codePoint: Int): Rule<T> = IgnoreCaseCodePointRule(codePoint)
+
+    /**
+     * A rule that matches this code point, ignoring its case (case-insensitive).
+     *
+     * @return The created grammar rule
+     */
+    protected open fun Int.toIgnoreCaseRule(): Rule<T> = ignoreCase(this)
 
     /**
      * A rule that matches a code point within a range of code points.
@@ -183,8 +219,15 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      */
     protected open fun codePointRange(lowerBound: Int, upperBound: Int): Rule<T> {
         require(lowerBound <= upperBound) { "A 'lowerBound' must not be greater than an 'upperBound'." }
-        return (lowerBound..upperBound).toRule()
+        return CodePointPredicateRule { it in lowerBound..upperBound }
     }
+
+    /**
+     * A rule that matches a code point within this range of code points.
+     *
+     * @return The created grammar rule
+     */
+    protected open fun IntRange.toRule(): Rule<T> = codePointRange(first, last)
 
     /**
      * A rule that matches a code point within a set of code points.
