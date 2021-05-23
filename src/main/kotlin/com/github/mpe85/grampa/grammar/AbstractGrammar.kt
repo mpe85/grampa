@@ -15,16 +15,15 @@ import com.github.mpe85.grampa.rule.IgnoreCaseCodePointRule
 import com.github.mpe85.grampa.rule.IgnoreCaseTrieRule
 import com.github.mpe85.grampa.rule.NeverRule
 import com.github.mpe85.grampa.rule.RegexRule
+import com.github.mpe85.grampa.rule.RepeatRule
 import com.github.mpe85.grampa.rule.Rule
 import com.github.mpe85.grampa.rule.SequenceRule
 import com.github.mpe85.grampa.rule.StringRule
 import com.github.mpe85.grampa.rule.TestNotRule
 import com.github.mpe85.grampa.rule.TestRule
 import com.github.mpe85.grampa.rule.TrieRule
-import com.github.mpe85.grampa.rule.times
+import com.github.mpe85.grampa.util.UnboundedRange
 import com.github.mpe85.grampa.util.max
-import com.github.mpe85.grampa.util.min
-import com.github.mpe85.grampa.util.range
 import com.ibm.icu.lang.UCharacter
 import kotlin.streams.toList
 
@@ -76,7 +75,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun char(character: Char): Rule<T> = CharPredicateRule(character)
 
     /**
-     * A rule that matches this character.
+     * A rule that matches [this] character.
      *
      * @return The created grammar rule
      */
@@ -91,7 +90,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun ignoreCase(character: Char): Rule<T> = IgnoreCaseCharRule(character)
 
     /**
-     * A rule that matches this character, ignoring its case (case-insensitive).
+     * A rule that matches [this] character, ignoring its case (case-insensitive).
      *
      * @return The created grammar rule
      */
@@ -110,7 +109,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     }
 
     /**
-     * A rule that matches a character within this range of characters.
+     * A rule that matches a character within [this] range of characters.
      *
      * @return The created grammar rule
      */
@@ -187,7 +186,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun codePoint(codePoint: Int): Rule<T> = CodePointPredicateRule(codePoint)
 
     /**
-     * A rule that matches this code point.
+     * A rule that matches [this] code point.
      *
      * @return The created grammar rule
      */
@@ -202,7 +201,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun ignoreCase(codePoint: Int): Rule<T> = IgnoreCaseCodePointRule(codePoint)
 
     /**
-     * A rule that matches this code point, ignoring its case (case-insensitive).
+     * A rule that matches [this] code point, ignoring its case (case-insensitive).
      *
      * @return The created grammar rule
      */
@@ -221,7 +220,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     }
 
     /**
-     * A rule that matches a code point within this range of code points.
+     * A rule that matches a code point within [this] range of code points.
      *
      * @return The created grammar rule
      */
@@ -297,7 +296,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     }
 
     /**
-     * A rule that matches this string.
+     * A rule that matches [this] string.
      *
      * @return The created grammar rule
      */
@@ -315,7 +314,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     }
 
     /**
-     * A rule that matches this string, ignoring the case of its characters (case-insensitive).
+     * A rule that matches [this] string, ignoring the case of its characters (case-insensitive).
      *
      * @return The created grammar rule
      */
@@ -330,7 +329,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun regex(regex: String): Rule<T> = RegexRule(regex)
 
     /**
-     * A rule that matches this regular expression.
+     * A rule that matches [this] regular expression.
      *
      * @return The created grammar rule
      */
@@ -488,7 +487,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     }
 
     /**
-     * A sequence rule that matches this and another rule.
+     * A sequence rule that matches [this] and another rule.
      *
      * @param[other] Another rule
      * @return The created grammar rule
@@ -496,7 +495,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open infix fun Rule<T>.and(other: Rule<T>): Rule<T> = sequence(listOf(this, other))
 
     /**
-     * A sequence rule that matches this and another rule.
+     * A sequence rule that matches [this] and another rule.
      *
      * @param[other] Another rule
      * @return The created grammar rule
@@ -524,7 +523,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     }
 
     /**
-     * A choice rule that matches this rule if successful or another rule.
+     * A choice rule that matches [this] rule if successful or another rule.
      *
      * @param[other] Another rule
      * @return The created grammar rule
@@ -538,7 +537,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[rule] The child rule to match optionally
      * @return The created grammar rule
      */
-    protected open fun optional(rule: Rule<T>): Rule<T> = max(1) * rule
+    protected open fun optional(rule: Rule<T>): Rule<T> = RepeatRule(rule, 0, 1)
 
     /**
      * A rule that matches its child rule zero or more times.
@@ -546,7 +545,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[rule] The child rule to repeat
      * @return The created grammar rule
      */
-    protected open fun zeroOrMore(rule: Rule<T>): Rule<T> = min(0) * rule
+    protected open fun zeroOrMore(rule: Rule<T>): Rule<T> = RepeatRule(rule, 0)
 
     /**
      * A rule that matches its child rule one or more times.
@@ -554,26 +553,50 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[rule] The child rule to repeat
      * @return The created grammar rule
      */
-    protected open fun oneOrMore(rule: Rule<T>): Rule<T> = min(1) * rule
+    protected open fun oneOrMore(rule: Rule<T>): Rule<T> = RepeatRule(rule, 1)
 
     /**
-     * Repeat a rule exactly n times.
+     * Repeat a rule exactly [n] times.
      *
      * @param[rule] The child rule to repeat
      * @param[n] The number of repetitions
      * @return The created grammar rule
      */
-    protected open fun repeat(rule: Rule<T>, n: Int): Rule<T> = n * rule
+    protected open fun repeat(rule: Rule<T>, n: Int): Rule<T> = RepeatRule(rule, n, n)
 
     /**
-     * Repeat a rule between min and max times.
+     * Repeat a rule between [min] and [max] times.
      *
      * @param[rule] The child rule to repeat
      * @param[min] The minimum number of repetitions
      * @param[max] The maximum number of repetitions, may be null (unbounded)
      * @return The created grammar rule
      */
-    protected open fun repeat(rule: Rule<T>, min: Int = 0, max: Int? = null): Rule<T> = range(min, max) * rule
+    protected open fun repeat(rule: Rule<T>, min: Int = 0, max: Int? = null): Rule<T> = RepeatRule(rule, min, max)
+
+    /**
+     * Repeat a rule exactly [this] times.
+     *
+     * @param[rule] The rule to repeat
+     * @return The created grammar rule
+     */
+    protected open operator fun Int.times(rule: Rule<T>): Rule<T> = repeat(rule, this)
+
+    /**
+     * Repeat a rule between [first] and [last] times.
+     *
+     * @param[rule] The rule to repeat
+     * @return The created grammar rule
+     */
+    protected open operator fun IntRange.times(rule: Rule<T>): Rule<T> = repeat(rule, first, last)
+
+    /**
+     * Repeat a rule between [min] and [max] times where [max] may be unbounded.
+     *
+     * @param[rule] The rule to repeat
+     * @return The created grammar rule
+     */
+    protected open operator fun UnboundedRange.times(rule: Rule<T>): Rule<T> = repeat(rule, min, max)
 
     /**
      * A test rule that tests if its child rule matches.
@@ -584,7 +607,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun test(rule: Rule<T>): Rule<T> = TestRule(rule)
 
     /**
-     * Create a test rule out of this rule that tests if this rule matches.
+     * A test rule that tests if [this] rule matches.
      *
      * @return The created grammar rule
      */
@@ -599,7 +622,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun testNot(rule: Rule<T>): Rule<T> = TestNotRule(rule)
 
     /**
-     * Create a test-not rule out of this rule that tests if this rule does not match.
+     * A test rule that tests if [this] rule does not match.
      *
      * @return The created grammar rule
      */
@@ -646,7 +669,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun skippableAction(action: Action<T>): Rule<T> = ActionRule(action::run, true)
 
     /**
-     * A rule that runs this action function.
+     * A rule that runs [this] action function.
      *
      * @param[skippable] Whether the action should be skippable
      * @return The created grammar rule
@@ -655,7 +678,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
         ActionRule(this, skippable)
 
     /**
-     * A rule that runs this action.
+     * A rule that runs [this] action.
      *
      * @param[skippable] Whether the action should be skippable
      * @return The created grammar rule
@@ -679,7 +702,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun skippableCommand(command: Command<T>): Rule<T> = skippableAction(command.toAction())
 
     /**
-     * A rule that executes this command.
+     * A rule that executes [this] command.
      *
      * @param[skippable] Whether the command should be skippable
      * @return The created grammar rule

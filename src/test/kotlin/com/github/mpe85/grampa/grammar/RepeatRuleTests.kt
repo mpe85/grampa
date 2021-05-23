@@ -2,11 +2,16 @@ package com.github.mpe85.grampa.grammar
 
 import com.github.mpe85.grampa.legalCodePoints
 import com.github.mpe85.grampa.parser.Parser
+import com.github.mpe85.grampa.rule.EmptyRule
+import com.github.mpe85.grampa.rule.RepeatRule
+import com.github.mpe85.grampa.util.min
 import com.ibm.icu.lang.UCharacter.toString
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
 import io.kotest.property.arbitrary.int
+import io.kotest.property.arbitrary.list
+import io.kotest.property.arbitrary.positiveInts
 import io.kotest.property.arbitrary.set
 import io.kotest.property.checkAll
 
@@ -208,6 +213,40 @@ class RepeatRuleTests : StringSpec({
                     restOfInput shouldBe ""
                 }
             }
+        }
+    }
+    "RepeatRule is constructed by times operator on Int" {
+        checkAll(Arb.positiveInts()) { int ->
+            object : AbstractGrammar<Unit>() {
+                override fun start() = int.times(EmptyRule())
+            }.start() shouldBe RepeatRule(EmptyRule(), int, int)
+            object : AbstractGrammar<Unit>() {
+                override fun start() = int * EmptyRule()
+            }.start() shouldBe RepeatRule(EmptyRule(), int, int)
+        }
+    }
+    "RepeatRule is constructed by times operator on IntRange" {
+        checkAll(Arb.list(Arb.positiveInts(), 2..2)) { list ->
+            val (min, max) = list.sorted()
+            object : AbstractGrammar<Unit>() {
+                override fun start() = (min..max).times(EmptyRule())
+            }.start() shouldBe RepeatRule(EmptyRule(), min, max)
+            object : AbstractGrammar<Unit>() {
+                override fun start() = (min..max).times(EmptyRule())
+            }.start() shouldBe RepeatRule(EmptyRule(), min, max)
+            object : AbstractGrammar<Unit>() {
+                override fun start() = (min..max) * EmptyRule()
+            }.start() shouldBe RepeatRule(EmptyRule(), min, max)
+        }
+    }
+    "RepeatRule is constructed by times operator on UnboundedRange" {
+        checkAll(Arb.positiveInts()) { int ->
+            object : AbstractGrammar<Unit>() {
+                override fun start() = min(int).times(EmptyRule())
+            }.start() shouldBe RepeatRule(EmptyRule(), int)
+            object : AbstractGrammar<Unit>() {
+                override fun start() = min(int) * EmptyRule()
+            }.start() shouldBe RepeatRule(EmptyRule(), int)
         }
     }
 })

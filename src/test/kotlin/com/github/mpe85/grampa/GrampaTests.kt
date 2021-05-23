@@ -7,7 +7,6 @@ import com.github.mpe85.grampa.rule.EmptyRule
 import com.github.mpe85.grampa.rule.RepeatRule
 import com.github.mpe85.grampa.rule.Rule
 import com.github.mpe85.grampa.rule.SequenceRule
-import com.github.mpe85.grampa.rule.times
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
@@ -48,15 +47,6 @@ open class TestGrammar(val dummy: String?) : AbstractGrammar<String>() {
 }
 
 class GrampaTests : StringSpec({
-
-    "hurzelburzel" {
-        try {
-            TestGrammar::class.createGrammar()
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-        }
-    }
-
     "Create grammar" {
         TestGrammar::class.createGrammar().apply {
             dummy shouldBe null
