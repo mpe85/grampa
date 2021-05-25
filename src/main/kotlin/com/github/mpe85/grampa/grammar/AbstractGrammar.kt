@@ -22,6 +22,7 @@ import com.github.mpe85.grampa.rule.StringRule
 import com.github.mpe85.grampa.rule.TestNotRule
 import com.github.mpe85.grampa.rule.TestRule
 import com.github.mpe85.grampa.rule.TrieRule
+import com.github.mpe85.grampa.rule.toAction
 import com.github.mpe85.grampa.util.UnboundedRange
 import com.github.mpe85.grampa.util.max
 import com.ibm.icu.lang.UCharacter
@@ -674,7 +675,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[skippable] Whether the action should be skippable
      * @return The created grammar rule
      */
-    protected open fun <T> ((RuleContext<T>) -> Boolean).toRule(skippable: Boolean = false): Rule<T> =
+    protected open fun ((RuleContext<T>) -> Boolean).toActionRule(skippable: Boolean = false): Rule<T> =
         ActionRule(this, skippable)
 
     /**
@@ -683,7 +684,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[skippable] Whether the action should be skippable
      * @return The created grammar rule
      */
-    protected open fun <T> Action<T>.toRule(skippable: Boolean = false): Rule<T> = ActionRule(this::run, skippable)
+    protected open fun Action<T>.toRule(skippable: Boolean = false): Rule<T> = ActionRule(::run, skippable)
 
     /**
      * A rule that executes a command.
@@ -702,12 +703,21 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun skippableCommand(command: Command<T>): Rule<T> = skippableAction(command.toAction())
 
     /**
+     * A rule that executes [this] command function.
+     *
+     * @param[skippable] Whether the command should be skippable
+     * @return The created grammar rule
+     */
+    protected open fun ((RuleContext<T>) -> Unit).toCommandRule(skippable: Boolean = false): Rule<T> =
+        ActionRule(toAction(), skippable)
+
+    /**
      * A rule that executes [this] command.
      *
      * @param[skippable] Whether the command should be skippable
      * @return The created grammar rule
      */
-    protected open fun <T> Command<T>.toRule(skippable: Boolean = false): Rule<T> = toAction().toRule(skippable)
+    protected open fun Command<T>.toRule(skippable: Boolean = false): Rule<T> = ActionRule(toAction()::run, skippable)
 
     /**
      * Post a static event to the parser's event bus.

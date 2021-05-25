@@ -43,7 +43,7 @@ class ActionRuleTests : StringSpec({
     }
     "Action function is correctly converted to action rule" {
         val grammar = object : AbstractGrammar<Unit>() {
-            override fun start() = { _: RuleContext<Unit> -> true }.toRule()
+            override fun start() = { _: RuleContext<Unit> -> true }.toActionRule()
         }
         grammar.start().toString() shouldBe "ActionRule(action=" +
             "(com.github.mpe85.grampa.context.RuleContext<kotlin.Unit>) -> kotlin.Boolean, skippable=false)"
@@ -55,6 +55,13 @@ class ActionRuleTests : StringSpec({
         grammar.start().toString() shouldBe "ActionRule(action=" +
             "fun com.github.mpe85.grampa.rule.Action<T>.run(" +
             "com.github.mpe85.grampa.context.RuleContext<T>): kotlin.Boolean, skippable=false)"
+    }
+    "Command function is correctly converted to action rule" {
+        val grammar = object : AbstractGrammar<Unit>() {
+            override fun start() = { _: RuleContext<Unit> -> }.toCommandRule()
+        }
+        grammar.start().toString() shouldBe "ActionRule(action=" +
+            "(com.github.mpe85.grampa.context.RuleContext<T>) -> kotlin.Boolean, skippable=false)"
     }
     "Command is correctly converted to action rule" {
         val grammar = object : AbstractGrammar<Unit>() {
