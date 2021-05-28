@@ -12,7 +12,7 @@ object Versions {
     const val ktlint = "0.41.0"
     const val ktlintPlugin = "10.0.0"
     const val mockk = "1.11.0"
-    const val versions = "0.38.0"
+    const val versions = "0.39.0"
 }
 
 object Plugins {
