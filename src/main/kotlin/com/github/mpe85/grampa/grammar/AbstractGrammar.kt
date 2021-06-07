@@ -803,6 +803,16 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun push(value: T): Rule<T> = command { it.stack.push(value) }
 
     /**
+     * Push a new element onto the stack at a given position.
+     * Note that the value is constructed at grammar create time.
+     *
+     * @param[down] The number of elements on the stack to skip
+     * @param[value] The value to push
+     * @return The created grammar rule
+     */
+    protected open fun push(down: Int, value: T): Rule<T> = command { it.stack.push(down, value) }
+
+    /**
      * Push a new element onto the stack.
      * Note that the value is supplied by a value supplier at parser runtime which has access to the parser context.
      *
@@ -810,6 +820,17 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @return The created grammar rule
      */
     protected open fun push(supplier: (RuleContext<T>) -> T): Rule<T> = command { it.stack.push(supplier(it)) }
+
+    /**
+     * Push a new element onto the stack at a given position.
+     * Note that the value is supplied by a value supplier at parser runtime which has access to the parser context.
+     *
+     * @param[down] The number of elements on the stack to skip
+     * @param[supplier] The value supplier that supplies the value to push
+     * @return The created grammar rule
+     */
+    protected open fun push(down: Int, supplier: (RuleContext<T>) -> T): Rule<T> =
+        command { it.stack.push(down, supplier(it)) }
 
     /**
      * Duplicate the top stack element.
