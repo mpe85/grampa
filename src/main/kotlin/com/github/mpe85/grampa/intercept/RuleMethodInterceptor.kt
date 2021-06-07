@@ -64,7 +64,7 @@ internal class RuleMethodInterceptor<T> {
 }
 
 /**
- * A reference rule implementation that stores a reference to a another rule.
+ * A reference rule implementation that stores a reference to another rule.
  * Note that this is only used by [RuleMethodInterceptor].
  *
  * @author mpe85
