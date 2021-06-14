@@ -77,7 +77,7 @@ tasks {
     }
     withType<JacocoReport> {
         reports {
-            xml.isEnabled = true
+            xml.required.set(true)
         }
     }
     withType<Test> {
