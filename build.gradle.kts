@@ -17,7 +17,7 @@ plugins {
 }
 
 group = "com.github.mpe85"
-version = "0.9.5"
+version = "0.9.6-SNAPSHOT"
 
 repositories {
     mavenCentral()
