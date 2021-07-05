@@ -62,6 +62,11 @@ artifacts {
     archives(sourcesJar)
 }
 
+java {
+    sourceCompatibility = JavaVersion.toVersion(Versions.jvmTarget)
+    targetCompatibility = JavaVersion.toVersion(Versions.jvmTarget)
+}
+
 tasks {
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = Versions.jvmTarget
