@@ -36,6 +36,11 @@ dependencies {
     testImplementation(Libs.mockk)
 }
 
+java {
+    sourceCompatibility = JavaVersion.toVersion(Versions.jvmTarget)
+    targetCompatibility = JavaVersion.toVersion(Versions.jvmTarget)
+}
+
 kotlin {
     explicitApi()
 }
@@ -60,11 +65,6 @@ val sourcesJar = tasks.create<Jar>("sourcesJar") {
 artifacts {
     archives(javadocJar)
     archives(sourcesJar)
-}
-
-java {
-    sourceCompatibility = JavaVersion.toVersion(Versions.jvmTarget)
-    targetCompatibility = JavaVersion.toVersion(Versions.jvmTarget)
 }
 
 tasks {
