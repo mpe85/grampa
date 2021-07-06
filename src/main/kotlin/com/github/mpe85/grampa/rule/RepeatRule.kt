@@ -10,11 +10,11 @@ import java.util.Objects.hash
  *
  * @author mpe85
  * @param[T] The type of the stack elements
- * @property[rule] The rule to repeat
- * @property[min] The minimum number of cycles
- * @property[max] An optional maximum number of cycles
+ * @param[rule] The rule to repeat
+ * @param[min] The minimum number of cycles
+ * @param[max] An optional maximum number of cycles
  */
-internal class RepeatRule<T>(private val rule: Rule<T>, private val min: Int, private val max: Int? = null) :
+internal class RepeatRule<T>(rule: Rule<T>, private val min: Int, private val max: Int? = null) :
     AbstractRule<T>(rule) {
 
     init {
@@ -23,6 +23,8 @@ internal class RepeatRule<T>(private val rule: Rule<T>, private val min: Int, pr
             require(it >= min) { "A 'max' number must not be lower than the 'min' number." }
         }
     }
+
+    private val rule get() = checkNotNull(child)
 
     override fun match(context: ParserContext<T>): Boolean {
         var iterations = 0

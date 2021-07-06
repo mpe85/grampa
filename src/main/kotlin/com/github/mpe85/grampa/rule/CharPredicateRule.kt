@@ -11,7 +11,7 @@ import java.util.Objects.hash
  *
  * @author mpe85
  * @param[T] The type of the stack elements
- * @property[predicate] A predicate that is tested by the rule
+ * @param[predicate] A predicate that is tested by the rule
  */
 internal open class CharPredicateRule<T>(private val predicate: (Char) -> Boolean) : AbstractRule<T>() {
 

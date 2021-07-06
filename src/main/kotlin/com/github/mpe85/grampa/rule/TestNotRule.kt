@@ -10,10 +10,11 @@ import java.util.Objects.hash
  *
  * @author mpe85
  * @param[T] The type of the stack elements
- * @property[rule] The child rule to test
+ * @param[rule] The child rule to test
  */
-internal class TestNotRule<T>(private val rule: Rule<T>) : AbstractRule<T>(rule) {
+internal class TestNotRule<T>(rule: Rule<T>) : AbstractRule<T>(rule) {
 
+    private val rule get() = checkNotNull(child)
     override val testRule: Boolean = true
 
     override fun match(context: ParserContext<T>): Boolean = !context.createChildContext(rule).run()

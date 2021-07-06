@@ -12,7 +12,7 @@ import java.util.regex.Pattern.compile
  *
  * @author mpe85
  * @param[T] The type of the stack elements
- * @property[pattern] A compiled regular expression
+ * @param[pattern] A compiled regular expression
  */
 internal class RegexRule<T>(private val pattern: Pattern) : AbstractRule<T>() {
 

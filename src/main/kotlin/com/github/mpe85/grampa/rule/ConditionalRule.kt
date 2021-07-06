@@ -11,15 +11,18 @@ import java.util.Objects.hash
  *
  * @author mpe85
  * @param[T] The type of the stack elements
- * @property[condition] A condition that is evaluated when the rule is run
- * @property[thenRule] A rule to run if the condition evaluates to true
- * @property[elseRule] An optional rule to run if the condition evaluates to false
+ * @param[condition] A condition that is evaluated when the rule is run
+ * @param[thenRule] A rule to run if the condition evaluates to true
+ * @param[elseRule] An optional rule to run if the condition evaluates to false
  */
 internal class ConditionalRule<T>(
     private val condition: (RuleContext<T>) -> Boolean,
-    private val thenRule: Rule<T>,
-    private val elseRule: Rule<T>? = null
+    thenRule: Rule<T>,
+    elseRule: Rule<T>? = null
 ) : AbstractRule<T>(elseRule?.let { listOf(thenRule, it) } ?: listOf(thenRule)) {
+
+    private val thenRule get() = checkNotNull(child)
+    private val elseRule get() = children.getOrNull(1)
 
     override fun match(context: ParserContext<T>): Boolean =
         if (condition(context)) thenRule.match(context) else elseRule?.match(context) ?: true
