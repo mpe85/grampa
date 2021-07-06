@@ -50,6 +50,7 @@ internal class RuleMethodInterceptor<T> {
                 rules[hash] = rule
                 if (method.isStart()) {
                     rule.accept(ReferenceRuleReplaceVisitor(rules))
+                    rules.clear()
                 }
             }
         }
