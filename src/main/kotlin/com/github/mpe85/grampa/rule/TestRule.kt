@@ -1,5 +1,3 @@
-@file:JvmName("TestRules")
-
 package com.github.mpe85.grampa.rule
 
 import com.github.mpe85.grampa.context.ParserContext
