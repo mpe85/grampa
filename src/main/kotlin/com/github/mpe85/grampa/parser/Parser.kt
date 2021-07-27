@@ -1,7 +1,7 @@
 package com.github.mpe85.grampa.parser
 
-import com.github.mpe85.grampa.context.impl.Context
-import com.github.mpe85.grampa.context.impl.ContextState
+import com.github.mpe85.grampa.context.Context
+import com.github.mpe85.grampa.context.ContextState
 import com.github.mpe85.grampa.event.ParseEventListener
 import com.github.mpe85.grampa.event.PostParseEvent
 import com.github.mpe85.grampa.event.PreParseEvent

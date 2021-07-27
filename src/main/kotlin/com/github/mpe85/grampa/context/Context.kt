@@ -1,6 +1,5 @@
-package com.github.mpe85.grampa.context.impl
+package com.github.mpe85.grampa.context
 
-import com.github.mpe85.grampa.context.ParserContext
 import com.github.mpe85.grampa.event.MatchFailureEvent
 import com.github.mpe85.grampa.event.MatchSuccessEvent
 import com.github.mpe85.grampa.event.PreMatchEvent

@@ -1,7 +1,5 @@
 package com.github.mpe85.grampa.context
 
-import com.github.mpe85.grampa.context.impl.Context
-import com.github.mpe85.grampa.context.impl.ContextState
 import com.github.mpe85.grampa.input.StringInputBuffer
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
