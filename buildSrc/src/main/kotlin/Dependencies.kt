@@ -1,5 +1,5 @@
 object Versions {
-    const val byteBuddy = "1.11.14"
+    const val byteBuddy = "1.11.15"
     const val detekt = "1.18.1"
     const val dokka = "1.5.0"
     const val eventBus = "3.2.0"
@@ -10,7 +10,7 @@ object Versions {
     const val kotest = "4.6.2"
     const val kotlin = "1.5.30"
     const val ktlint = "0.41.0"
-    const val ktlintPlugin = "10.1.0"
+    const val ktlintPlugin = "10.2.0"
     const val mockk = "1.12.0"
     const val versions = "0.39.0"
 }
