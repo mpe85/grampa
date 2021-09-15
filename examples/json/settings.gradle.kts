@@ -1,3 +1,1 @@
-
-rootProject.name = "grampa-example-json"
-
+rootProject.name = "json"

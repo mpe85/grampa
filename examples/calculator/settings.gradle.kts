@@ -1,1 +1,1 @@
-rootProject.name = "grampa-example-calculator"
+rootProject.name = "calculator"
