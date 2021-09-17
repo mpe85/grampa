@@ -1,5 +1,5 @@
 object Versions {
-    const val byteBuddy = "1.11.15"
+    const val byteBuddy = "1.11.16"
     const val detekt = "1.18.1"
     const val dokka = "1.5.30"
     const val eventBus = "3.2.0"
@@ -7,7 +7,7 @@ object Versions {
     const val jacoco = "0.8.7"
     const val junit = "5.8.0"
     const val jvmTarget = "1.8"
-    const val kotest = "4.6.2"
+    const val kotest = "4.6.3"
     const val kotlin = "1.5.30"
     const val ktlint = "0.41.0"
     const val ktlintPlugin = "10.2.0"
