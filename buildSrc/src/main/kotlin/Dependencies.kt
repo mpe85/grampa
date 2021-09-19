@@ -8,7 +8,7 @@ object Versions {
     const val junit = "5.8.0"
     const val jvmTarget = "1.8"
     const val kotest = "4.6.3"
-    const val kotlin = "1.5.30"
+    const val kotlin = "1.5.31"
     const val ktlint = "0.41.0"
     const val ktlintPlugin = "10.2.0"
     const val mockk = "1.12.0"
