@@ -8,7 +8,7 @@ jobs:
   build:
     strategy:
       matrix:
-        jdk: [ 8, 11, 16 ]
+        jdk: [ 8, 11, 17 ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -20,6 +20,6 @@ jobs:
           architecture: x64
       - run: ./gradlew build
       - uses: codecov/codecov-action@v2
-        if: matrix.jdk == 11
+        if: matrix.jdk == 17
         with:
           directory: ./build/reports/jacoco
