@@ -23,7 +23,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    implementation 'com.github.mpe85:grampa:0.9.3'
+    implementation 'com.github.mpe85:grampa:0.9.5'
 }
 ```
 
@@ -34,7 +34,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    implementation("com.github.mpe85:grampa:0.9.3")
+    implementation("com.github.mpe85:grampa:0.9.5")
 }
 ```
 
@@ -45,7 +45,7 @@ Adding a dependency using Maven:
 <dependency>
     <groupId>com.github.mpe85</groupId>
     <artifactId>grampa</artifactId>
-    <version>0.9.3</version>
+    <version>0.9.5</version>
 </dependency>
 ```
 
@@ -53,7 +53,7 @@ Adding a dependency using Ivy:
 
 ```xml
 
-<dependency org="com.github.mpe85" name="grampa" rev="0.9.3"/>
+<dependency org="com.github.mpe85" name="grampa" rev="0.9.5"/>
 ```
 
 ## Getting started
@@ -79,4 +79,4 @@ val parser: Parser<Unit> = Parser(grammar)
 val result: ParseResult<Unit> = parser.run("abc")
 ```
 
-See the [Github Wiki](https://github.com/mpe85/grampa/wiki) for a detailed documentation and examples.
+See the [GitHub Wiki](https://github.com/mpe85/grampa/wiki) for a detailed documentation and examples.
