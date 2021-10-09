@@ -1,4 +1,4 @@
-# Grampa: A grammar parser library for Kotlin
+# Grampa: A grammar parser library for Kotlin/JVM
 
 [![Latest Release](https://img.shields.io/github/release/mpe85/grampa/all.svg?label=Latest%20Release)](https://github.com/mpe85/grampa/releases/latest)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.mpe85/grampa.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.github.mpe85%22%20AND%20a:%22grampa%22)
@@ -8,7 +8,7 @@
 [![License](https://img.shields.io/github/license/mpe85/grampa.svg?label=License)](https://github.com/mpe85/grampa/blob/master/LICENSE)
 
 Grampa — short for **Gram**mar **pa**rser — is a library that allows you to define grammars completely in Kotlin source
-code without any pre-processing phase (unlike other parser generators like ANTLR and JavaCC). Hence there is no DSL to
+code without any pre-processing phase (unlike other parser generators like ANTLR and JavaCC). Hence, there is no DSL to
 be learned, the whole grammar definition is in one place (a Kotlin class) and can be changed and maintained very easily.
 This library is inspired by [parboiled v1](https://github.com/sirthias/parboiled)
 and [grappa](https://github.com/fge/grappa), but the focus is laid on simple and clean code without a lot of crazy and
@@ -80,3 +80,8 @@ val result: ParseResult<Unit> = parser.run("abc")
 ```
 
 See the [GitHub Wiki](https://github.com/mpe85/grampa/wiki) for a detailed documentation and examples.
+
+## Other Kotlin targets
+
+Since this library relies on byte code manipulation using [byte-buddy](https://bytebuddy.net) only the 'Kotlin/JVM'
+target is supported. Other Kotlin targets (like 'Kotlin/JS' or one of the various native targets) are unsupported.
