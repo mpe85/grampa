@@ -8,7 +8,7 @@ import com.ibm.icu.lang.UCharacter.toString
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
-import io.kotest.property.arbitrary.positiveInts
+import io.kotest.property.arbitrary.positiveInt
 import io.kotest.property.checkAll
 
 class ZeroOrMoreRuleTests : StringSpec({
@@ -25,7 +25,7 @@ class ZeroOrMoreRuleTests : StringSpec({
         }
     }
     "ZeroOrMore rule matches if child rule matches multiple times" {
-        checkAll(legalCodePoints(), Arb.positiveInts(10)) { cp, n ->
+        checkAll(legalCodePoints(), Arb.positiveInt(10)) { cp, n ->
             Parser(object : AbstractGrammar<Unit>() {
                 override fun start() = zeroOrMore(cp.value.toRule())
             }).apply {

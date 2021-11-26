@@ -3,12 +3,12 @@ package com.github.mpe85.grampa.util
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
-import io.kotest.property.arbitrary.positiveInts
+import io.kotest.property.arbitrary.positiveInt
 import io.kotest.property.checkAll
 
 class UnboundedRangeTests : StringSpec({
     "Unbounded range with lower limit" {
-        checkAll(Arb.positiveInts()) { int ->
+        checkAll(Arb.positiveInt()) { int ->
             range(int).apply {
                 min shouldBe int
                 max shouldBe null
@@ -21,7 +21,7 @@ class UnboundedRangeTests : StringSpec({
         }
     }
     "Unbounded range with upper limit" {
-        checkAll(Arb.positiveInts()) { int ->
+        checkAll(Arb.positiveInt()) { int ->
             range(max = int).apply {
                 min shouldBe 0
                 max shouldBe int
@@ -34,7 +34,7 @@ class UnboundedRangeTests : StringSpec({
         }
     }
     "Unbounded range with lower and upper limit" {
-        checkAll(Arb.positiveInts(), Arb.positiveInts()) { int1, int2 ->
+        checkAll(Arb.positiveInt(), Arb.positiveInt()) { int1, int2 ->
             range(int1, int2).apply {
                 min shouldBe int1
                 max shouldBe int2

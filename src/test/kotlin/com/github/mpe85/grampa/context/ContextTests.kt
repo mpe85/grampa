@@ -6,7 +6,7 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
 import io.kotest.property.arbitrary.int
-import io.kotest.property.arbitrary.negativeInts
+import io.kotest.property.arbitrary.negativeInt
 import io.kotest.property.arbitrary.string
 import io.kotest.property.checkAll
 import io.mockk.mockk
@@ -27,7 +27,7 @@ class ContextTests : StringSpec({
         }
     }
     "Advancing index with negative delta throws IllegalArgumentException" {
-        checkAll(Arb.negativeInts()) { int ->
+        checkAll(Arb.negativeInt()) { int ->
             Context<String>(ContextState(mockk(), 0, mockk(), 0, mockk(), mockk())).apply {
                 shouldThrow<IllegalArgumentException> { advanceIndex(int) }
             }

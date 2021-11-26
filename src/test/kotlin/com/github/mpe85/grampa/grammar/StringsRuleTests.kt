@@ -5,6 +5,7 @@ import com.github.mpe85.grampa.parser.Parser
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
+import io.kotest.property.arbitrary.Codepoint
 import io.kotest.property.arbitrary.arabic
 import io.kotest.property.arbitrary.cyrillic
 import io.kotest.property.arbitrary.set
@@ -38,8 +39,8 @@ class StringsRuleTests : StringSpec({
     }
     "Strings rule does not match string not in collection" {
         checkAll(
-            Arb.string(1..10, Arb.arabic()),
-            Arb.set(Arb.string(1..10, Arb.cyrillic()), 1..10)
+            Arb.string(1..10, Codepoint.arabic()),
+            Arb.set(Arb.string(1..10, Codepoint.cyrillic()), 1..10)
         ) { string, strings ->
             grammars(strings).forEach { grammar ->
                 Parser(grammar).run(string).apply {

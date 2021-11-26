@@ -11,7 +11,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
 import io.kotest.property.arbitrary.int
 import io.kotest.property.arbitrary.list
-import io.kotest.property.arbitrary.positiveInts
+import io.kotest.property.arbitrary.positiveInt
 import io.kotest.property.arbitrary.set
 import io.kotest.property.checkAll
 
@@ -216,7 +216,7 @@ class RepeatRuleTests : StringSpec({
         }
     }
     "RepeatRule is constructed by times operator on Int" {
-        checkAll(Arb.positiveInts()) { int ->
+        checkAll(Arb.positiveInt()) { int ->
             object : AbstractGrammar<Unit>() {
                 override fun start() = int.times(EmptyRule())
             }.start() shouldBe RepeatRule(EmptyRule(), int, int)
@@ -226,7 +226,7 @@ class RepeatRuleTests : StringSpec({
         }
     }
     "RepeatRule is constructed by times operator on IntRange" {
-        checkAll(Arb.list(Arb.positiveInts(), 2..2)) { list ->
+        checkAll(Arb.list(Arb.positiveInt(), 2..2)) { list ->
             val (min, max) = list.sorted()
             object : AbstractGrammar<Unit>() {
                 override fun start() = (min..max).times(EmptyRule())
@@ -240,7 +240,7 @@ class RepeatRuleTests : StringSpec({
         }
     }
     "RepeatRule is constructed by times operator on UnboundedRange" {
-        checkAll(Arb.positiveInts()) { int ->
+        checkAll(Arb.positiveInt()) { int ->
             object : AbstractGrammar<Unit>() {
                 override fun start() = min(int).times(EmptyRule())
             }.start() shouldBe RepeatRule(EmptyRule(), int)
