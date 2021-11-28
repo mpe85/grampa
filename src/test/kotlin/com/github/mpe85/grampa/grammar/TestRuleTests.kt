@@ -5,6 +5,7 @@ import com.github.mpe85.grampa.parser.Parser
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
+import io.kotest.property.arbitrary.Codepoint
 import io.kotest.property.arbitrary.arabic
 import io.kotest.property.arbitrary.cyrillic
 import io.kotest.property.arbitrary.string
@@ -24,7 +25,7 @@ class TestRuleTests : StringSpec({
         }
     }
     "Test rule does not match failing rule" {
-        checkAll(Arb.string(2..10, Arb.arabic()), Arb.string(2..10, Arb.cyrillic())) { lower, upper ->
+        checkAll(Arb.string(2..10, Codepoint.arabic()), Arb.string(2..10, Codepoint.cyrillic())) { lower, upper ->
             Parser(object : AbstractGrammar<Unit>() {
                 override fun start() = lower.toRule().toTest() + upper.toRule()
             }).run(upper).apply {

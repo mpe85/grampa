@@ -9,6 +9,7 @@ import com.ibm.icu.lang.UCharacter.toUpperCase
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
+import io.kotest.property.arbitrary.Codepoint
 import io.kotest.property.arbitrary.az
 import io.kotest.property.arbitrary.cyrillic
 import io.kotest.property.arbitrary.set
@@ -75,7 +76,10 @@ class StringsIgnoreCaseRuleTests : StringSpec({
         }
     }
     "StringsIgnoreCase rule does not match string not in collection" {
-        checkAll(Arb.set(Arb.string(1..10, Arb.az()), 2..10), Arb.string(1..10, Arb.cyrillic())) { strings, string ->
+        checkAll(
+            Arb.set(Arb.string(1..10, Codepoint.az()), 2..10),
+            Arb.string(1..10, Codepoint.cyrillic())
+        ) { strings, string ->
             grammars(strings).forEach { grammar ->
                 Parser(grammar).run(string).apply {
                     matched shouldBe false
