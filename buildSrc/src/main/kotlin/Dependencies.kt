@@ -2,7 +2,7 @@ object Versions {
     const val byteBuddy = "1.12.3"
     const val detekt = "1.19.0"
     const val dokka = "1.6.0"
-    const val eventBus = "3.2.0"
+    const val eventBus = "3.3.0"
     const val icu4j = "70.1"
     const val jacoco = "0.8.7"
     const val junit = "5.8.2"
@@ -28,7 +28,7 @@ object Plugins {
 
 object Libs {
     const val byteBuddy = "net.bytebuddy:byte-buddy:${Versions.byteBuddy}"
-    const val eventBus = "org.greenrobot:eventbus:${Versions.eventBus}"
+    const val eventBus = "org.greenrobot:eventbus-java:${Versions.eventBus}"
     const val icu4j = "com.ibm.icu:icu4j:${Versions.icu4j}"
     const val junitJupiter = "org.junit.jupiter:junit-jupiter:${Versions.junit}"
     const val kotestAssertionsCore = "io.kotest:kotest-assertions-core:${Versions.kotest}"
