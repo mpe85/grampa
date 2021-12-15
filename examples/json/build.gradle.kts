@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.6.0"
+    kotlin("jvm") version "1.6.10"
     application
 }
 
@@ -13,7 +13,7 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8", "1.6.0"))
+    implementation(kotlin("stdlib-jdk8", "1.6.10"))
     implementation("com.github.mpe85:grampa:0.9.6-SNAPSHOT")
 }
 
