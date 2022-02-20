@@ -9,10 +9,10 @@ object Versions {
     const val jvmTarget = "1.8"
     const val kotest = "5.1.0"
     const val kotlin = "1.6.10"
-    const val ktlint = "0.43.2"
+    const val ktlint = "0.44.0"
     const val ktlintPlugin = "10.2.1"
     const val mockk = "1.12.2"
-    const val versions = "0.41.0"
+    const val versions = "0.42.0"
 }
 
 object Plugins {
