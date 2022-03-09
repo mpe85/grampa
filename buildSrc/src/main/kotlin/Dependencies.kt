@@ -11,7 +11,7 @@ object Versions {
     const val kotlin = "1.6.10"
     const val ktlint = "0.44.0"
     const val ktlintPlugin = "10.2.1"
-    const val mockk = "1.12.2"
+    const val mockk = "1.12.3"
     const val versions = "0.42.0"
 }
 
