@@ -8,8 +8,8 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 plugins {
     id(Plugins.detekt) version Versions.detekt
     id(Plugins.dokka) version Versions.dokka
-    id(Plugins.jacoco)
     kotlin(Plugins.kotlinJvm) version Versions.kotlin
+    id(Plugins.kover) version Versions.kover
     id(Plugins.ktlint) version Versions.ktlintPlugin
     id(Plugins.mavenPublish)
     id(Plugins.signing)
@@ -43,10 +43,6 @@ java {
 
 kotlin {
     explicitApi()
-}
-
-jacoco {
-    toolVersion = Versions.jacoco
 }
 
 val javadocJar = tasks.create<Jar>("javadocJar") {
@@ -87,11 +83,9 @@ tasks {
     }
     withType<Test> {
         useJUnitPlatform()
-        dependsOn("cleanTest")
         testLogging {
             events("passed", "skipped", "failed")
         }
-        finalizedBy("jacocoTestReport")
     }
     withType<DependencyUpdatesTask> {
         revision = "release"
