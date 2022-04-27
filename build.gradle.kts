@@ -1,9 +1,11 @@
-import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.github.benmanes.gradle.versions.updates.gradle.GradleReleaseChannel.CURRENT
 import org.gradle.api.plugins.BasePlugin.BUILD_GROUP
 import org.jetbrains.dokka.gradle.DokkaTask
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jlleitschuh.gradle.ktlint.KtlintExtension
+
+group = "com.github.mpe85"
+version = "0.9.6-SNAPSHOT"
+val gitUrl = "https://github.com/mpe85/${project.name}"
+val gitScmUrl = "https://github.com/mpe85/${project.name}.git"
 
 plugins {
     id(Plugins.detekt) version Versions.detekt
@@ -15,9 +17,6 @@ plugins {
     id(Plugins.signing)
     id(Plugins.versions) version Versions.versions
 }
-
-group = "com.github.mpe85"
-version = "0.9.6-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -36,13 +35,12 @@ dependencies {
     testImplementation(Libs.mockk)
 }
 
-java {
-    sourceCompatibility = JavaVersion.toVersion(Versions.jvmTarget)
-    targetCompatibility = JavaVersion.toVersion(Versions.jvmTarget)
-}
-
 kotlin {
     explicitApi()
+}
+
+ktlint {
+    version.set(Versions.ktlint)
 }
 
 val javadocJar = tasks.create<Jar>("javadocJar") {
@@ -64,10 +62,14 @@ artifacts {
 }
 
 tasks {
-    withType<KotlinCompile> {
+    compileTestJava {
+        sourceCompatibility = Versions.jvmTarget
+        targetCompatibility = Versions.jvmTarget
+    }
+    compileKotlin {
         kotlinOptions.jvmTarget = Versions.jvmTarget
     }
-    withType<Jar> {
+    jar {
         manifest {
             attributes["Implementation-Title"] = project.name
             attributes["Implementation-Version"] = project.version
@@ -76,18 +78,13 @@ tasks {
             attributes["Automatic-Module-Name"] = "${project.group}.${project.name}"
         }
     }
-    withType<JacocoReport> {
-        reports {
-            xml.required.set(true)
-        }
-    }
-    withType<Test> {
+    test {
         useJUnitPlatform()
         testLogging {
             events("passed", "skipped", "failed")
         }
     }
-    withType<DependencyUpdatesTask> {
+    dependencyUpdates {
         revision = "release"
         gradleReleaseChannel = CURRENT.id
         rejectVersionIf {
@@ -95,13 +92,6 @@ tasks {
         }
     }
 }
-
-configure<KtlintExtension> {
-    version.set(Versions.ktlint)
-}
-
-val gitUrl = "https://github.com/mpe85/${project.name}"
-val gitScmUrl = "https://github.com/mpe85/${project.name}.git"
 
 publishing {
     repositories {

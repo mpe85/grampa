@@ -1,11 +1,9 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+group = "com.github.mpe85"
 
 plugins {
     kotlin("jvm") version "1.6.21"
     application
 }
-
-group = "com.github.mpe85"
 
 repositories {
     mavenCentral()
@@ -17,14 +15,12 @@ dependencies {
     implementation("com.github.mpe85:grampa:0.9.6-SNAPSHOT")
 }
 
-tasks.withType<JavaCompile> {
-    targetCompatibility = "1.8"
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
-}
-
 application {
     mainClass.set("com.github.mpe85.calculator.Main")
+}
+
+tasks {
+    compileKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
 }
