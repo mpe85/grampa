@@ -67,7 +67,9 @@ tasks {
         targetCompatibility = Versions.jvmTarget
     }
     compileKotlin {
-        kotlinOptions.jvmTarget = Versions.jvmTarget
+        kotlinOptions {
+            jvmTarget = Versions.jvmTarget
+        }
     }
     jar {
         manifest {
