@@ -1,15 +1,15 @@
 * text=auto
 
-*.java			text
+*.java          text
 *.kt            text
-*.gradle		text
+*.gradle        text
 *.properties	text
 *.xml			text
-*.yml			text
+*.yml           text
 *.md			text
 
 *.sh			text eol=lf
-gradlew			text eol=lf
+gradlew         text eol=lf
 
 *.bat			text eol=crlf
 
