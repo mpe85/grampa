@@ -3,14 +3,14 @@
 *.java          text
 *.kt            text
 *.gradle        text
-*.properties	text
-*.xml			text
+*.properties    text
+*.xml           text
 *.yml           text
-*.md			text
+*.md            text
 
-*.sh			text eol=lf
+*.sh            text eol=lf
 gradlew         text eol=lf
 
-*.bat			text eol=crlf
+*.bat           text eol=crlf
 
-*.jar			binary
+*.jar           binary
