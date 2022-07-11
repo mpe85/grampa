@@ -1,4 +1,6 @@
-# Grampa: A grammar parser library for Kotlin/JVM
+# Grampa
+
+*A grammar parser library for Kotlin/JVM*
 
 [![Latest Release](https://img.shields.io/github/release/mpe85/grampa/all.svg?label=Latest%20Release)](https://github.com/mpe85/grampa/releases/latest)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.mpe85/grampa.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.github.mpe85%22%20AND%20a:%22grampa%22)
