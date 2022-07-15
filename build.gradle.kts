@@ -3,7 +3,7 @@ import org.gradle.api.plugins.BasePlugin.BUILD_GROUP
 import org.jetbrains.dokka.gradle.DokkaTask
 
 group = "com.github.mpe85"
-version = "1.1.0"
+version = "1.1.1-SNAPSHOT"
 val gitUrl = "https://github.com/mpe85/${project.name}"
 val gitScmUrl = "https://github.com/mpe85/${project.name}.git"
 
