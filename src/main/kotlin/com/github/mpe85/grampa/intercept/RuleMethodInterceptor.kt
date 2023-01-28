@@ -44,7 +44,9 @@ internal class RuleMethodInterceptor<T> {
         @SuperCall superCall: Callable<Rule<T>>,
         @AllArguments vararg args: Any?
     ): Rule<T> = hash(method.name, args.contentHashCode()).let { hash ->
-        if (rules.containsKey(hash)) ReferenceRuleImpl(hash) else {
+        if (rules.containsKey(hash)) {
+            ReferenceRuleImpl(hash)
+        } else {
             rules[hash] = null
             superCall.call().also { rule ->
                 rules[hash] = rule
