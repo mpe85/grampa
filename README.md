@@ -25,7 +25,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    implementation 'com.github.mpe85:grampa:1.1.0'
+    implementation 'com.github.mpe85:grampa:1.1.1'
 }
 ```
 
@@ -36,7 +36,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    implementation("com.github.mpe85:grampa:1.1.0")
+    implementation("com.github.mpe85:grampa:1.1.1")
 }
 ```
 
@@ -47,7 +47,7 @@ Adding a dependency using Maven:
 <dependency>
     <groupId>com.github.mpe85</groupId>
     <artifactId>grampa</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
 </dependency>
 ```
 
@@ -55,7 +55,7 @@ Adding a dependency using Ivy:
 
 ```xml
 
-<dependency org="com.github.mpe85" name="grampa" rev="1.1.0"/>
+<dependency org="com.github.mpe85" name="grampa" rev="1.1.1"/>
 ```
 
 ## Getting started
