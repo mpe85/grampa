@@ -11,17 +11,9 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8", "1.7.22"))
-    implementation("com.github.mpe85:grampa:1.1.0")
+    implementation("com.github.mpe85:grampa:1.1.1")
 }
 
 application {
     mainClass.set("com.github.mpe85.calculator.Main")
-}
-
-tasks {
-    compileKotlin {
-        kotlinOptions {
-            jvmTarget = "1.8"
-        }
-    }
 }
