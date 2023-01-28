@@ -35,6 +35,11 @@ dependencies {
     testImplementation(Libs.mockk)
 }
 
+java {
+    sourceCompatibility = Versions.jvmTarget
+    targetCompatibility = Versions.jvmTarget
+}
+
 kotlin {
     explicitApi()
 }
@@ -62,15 +67,6 @@ artifacts {
 }
 
 tasks {
-    compileTestJava {
-        sourceCompatibility = Versions.jvmTarget
-        targetCompatibility = Versions.jvmTarget
-    }
-    compileKotlin {
-        kotlinOptions {
-            jvmTarget = Versions.jvmTarget
-        }
-    }
     jar {
         manifest {
             attributes["Implementation-Title"] = project.name
