@@ -23,7 +23,7 @@ class StringsIgnoreCaseRuleTests : StringSpec({
         },
         object : AbstractGrammar<Unit>() {
             override fun start() = ignoreCase(strings)
-        }
+        },
     )
     "StringsIgnoreCase rule matches string in collection" {
         checkAll(Arb.set(Arb.string(1..10, legalCodePoints()), 1..10)) { strings ->
@@ -78,7 +78,7 @@ class StringsIgnoreCaseRuleTests : StringSpec({
     "StringsIgnoreCase rule does not match string not in collection" {
         checkAll(
             Arb.set(Arb.string(1..10, Codepoint.az()), 2..10),
-            Arb.string(1..10, Codepoint.cyrillic())
+            Arb.string(1..10, Codepoint.cyrillic()),
         ) { strings, string ->
             grammars(strings).forEach { grammar ->
                 Parser(grammar).run(string).apply {

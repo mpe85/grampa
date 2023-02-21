@@ -28,7 +28,7 @@ internal data class ContextState<T>(
     val startIndex: Int,
     val stack: RestorableStack<T>,
     val bus: EventBus,
-    val parentContext: ParserContext<T>? = null
+    val parentContext: ParserContext<T>? = null,
 )
 
 /**

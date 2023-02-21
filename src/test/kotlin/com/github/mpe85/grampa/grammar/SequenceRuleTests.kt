@@ -25,7 +25,7 @@ class SequenceRuleTests : StringSpec({
         },
         object : AbstractGrammar<Unit>() {
             override fun start() = rules.reduce { acc, rule -> acc + rule }
-        }
+        },
     )
     "Sequence rule matches correct sequence" {
         checkAll(Arb.list(Arb.string(0..10, legalCodePoints()), 2..10)) { strings ->
@@ -63,8 +63,8 @@ class SequenceRuleTests : StringSpec({
                         action {
                             it.stack.push(0)
                             false
-                        }
-                    )
+                        },
+                    ),
                 )
             }).run(str).apply {
                 matched shouldBe true

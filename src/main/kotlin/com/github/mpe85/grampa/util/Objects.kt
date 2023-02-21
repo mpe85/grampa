@@ -14,7 +14,7 @@ import java.util.Objects.equals
 internal inline fun <reified T : Any> T.checkEquality(
     other: Any?,
     superEquals: () -> Boolean = { true },
-    vararg properties: (T) -> Any? = emptyArray()
+    vararg properties: (T) -> Any? = emptyArray(),
 ) = when {
     other === this -> true
     other !is T -> false

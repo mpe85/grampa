@@ -22,9 +22,9 @@ class NoneOfCodePointsRuleTests : StringSpec({
                 StringBuilder().run {
                     codePoints.forEach { appendCodePoint(it) }
                     toString()
-                }
+                },
             )
-        }
+        },
     )
     "NoneOfCodePoints rule does not match codepoint in collection" {
         checkAll(Arb.set(legalCodePoints(), 1..10)) { codePoints ->

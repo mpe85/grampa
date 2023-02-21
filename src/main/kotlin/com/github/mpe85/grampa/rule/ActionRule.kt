@@ -16,7 +16,7 @@ import java.util.Objects.hash
  */
 internal class ActionRule<T>(
     private val action: (RuleContext<T>) -> Boolean,
-    private val skippable: Boolean = false
+    private val skippable: Boolean = false,
 ) : AbstractRule<T>() {
 
     override fun match(context: ParserContext<T>): Boolean = context.inTestRule && skippable || action(context)

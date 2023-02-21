@@ -21,7 +21,7 @@ class ChoiceRuleTests : StringSpec({
         },
         object : AbstractGrammar<Unit>() {
             override fun start() = rules.reduce { acc, rule -> acc or rule }
-        }
+        },
     )
     "Choice rule matches first matching rule" {
         checkAll(Arb.set(Arb.string(1..10, legalCodePoints()), 2..10)) { strings ->

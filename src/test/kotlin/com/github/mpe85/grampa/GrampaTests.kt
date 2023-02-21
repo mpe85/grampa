@@ -24,8 +24,8 @@ open class TestGrammar(val dummy: String?) : AbstractGrammar<String>() {
             noop(),
             char('('),
             start(),
-            char(')')
-        )
+            char(')'),
+        ),
     )
 
     protected open fun start(i: Int) = i * empty()

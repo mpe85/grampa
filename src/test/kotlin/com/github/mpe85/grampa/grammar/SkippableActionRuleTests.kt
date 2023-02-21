@@ -46,7 +46,7 @@ class SkippableActionRuleTests : StringSpec({
                     it.level shouldBe 0
                     it.position shouldNotBe null
                     true
-                }
+                },
             )
         }).run("").apply {
             matched shouldBe true
@@ -64,7 +64,7 @@ class SkippableActionRuleTests : StringSpec({
                     it.level shouldBe 0
                     it.position shouldNotBe null
                     false
-                }
+                },
             )
         }).run("").apply {
             matched shouldBe true

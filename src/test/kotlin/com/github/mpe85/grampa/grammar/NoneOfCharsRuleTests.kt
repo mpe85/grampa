@@ -18,7 +18,7 @@ class NoneOfCharsRuleTests : StringSpec({
         },
         object : AbstractGrammar<Unit>() {
             override fun start() = noneOfChars(chars.joinToString(""))
-        }
+        },
     )
     "NoneOfChars rule does not match character in collection" {
         checkAll(Arb.set(Arb.char(), 1..10)) { chars ->

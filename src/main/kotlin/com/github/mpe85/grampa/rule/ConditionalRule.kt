@@ -18,7 +18,7 @@ import java.util.Objects.hash
 internal class ConditionalRule<T>(
     private val condition: (RuleContext<T>) -> Boolean,
     thenRule: Rule<T>,
-    elseRule: Rule<T>? = null
+    elseRule: Rule<T>? = null,
 ) : AbstractRule<T>(elseRule?.let { listOf(thenRule, it) } ?: listOf(thenRule)) {
 
     private val thenRule get() = checkNotNull(child)
@@ -34,6 +34,6 @@ internal class ConditionalRule<T>(
     override fun toString(): String = stringify(
         "condition" to condition,
         "thenRule" to thenRule::class.simpleName,
-        "elseRule" to elseRule?.let { it::class.simpleName }
+        "elseRule" to elseRule?.let { it::class.simpleName },
     )
 }

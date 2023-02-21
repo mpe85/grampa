@@ -22,9 +22,9 @@ class AnyOfCodePointsRuleTests : StringSpec({
                 StringBuilder().run {
                     codePoints.forEach { appendCodePoint(it) }
                     toString()
-                }
+                },
             )
-        }
+        },
     )
     "AnyOfCodePoints rule matches codepoint in collection" {
         checkAll(Arb.set(legalCodePoints(), 1..10)) { codePoints ->

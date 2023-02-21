@@ -28,7 +28,7 @@ class SkippableCommandRuleTests : StringSpec({
                     it.stack.push(Unit)
                     it.level shouldBe 0
                     it.position shouldNotBe null
-                }
+                },
             )
         }).run("").apply {
             matched shouldBe true

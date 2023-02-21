@@ -640,7 +640,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun conditional(
         condition: (RuleContext<T>) -> Boolean,
         thenRule: Rule<T>,
-        elseRule: Rule<T>
+        elseRule: Rule<T>,
     ): Rule<T> = ConditionalRule(condition, thenRule, elseRule)
 
     /**

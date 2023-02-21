@@ -11,7 +11,7 @@ class InputBufferTests : StringSpec({
         StringBufferInputBuffer(StringBuffer("foobar")),
         StringBuilderInputBuffer(StringBuilder("foobar")),
         StringSegmentInputBuffer(StringSegment("foobar", false)),
-        StringInputBuffer("foobar")
+        StringInputBuffer("foobar"),
     )
     "Get character" {
         buffers.forAll { buffer ->

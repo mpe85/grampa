@@ -19,7 +19,7 @@ class StringsRuleTests : StringSpec({
         },
         object : AbstractGrammar<Unit>() {
             override fun start() = strings(strings)
-        }
+        },
     )
     "Strings rule matches string in collection" {
         checkAll(Arb.set(Arb.string(1..10, legalCodePoints()), 1..10)) { strings ->
@@ -40,7 +40,7 @@ class StringsRuleTests : StringSpec({
     "Strings rule does not match string not in collection" {
         checkAll(
             Arb.string(1..10, Codepoint.arabic()),
-            Arb.set(Arb.string(1..10, Codepoint.cyrillic()), 1..10)
+            Arb.set(Arb.string(1..10, Codepoint.cyrillic()), 1..10),
         ) { string, strings ->
             grammars(strings).forEach { grammar ->
                 Parser(grammar).run(string).apply {

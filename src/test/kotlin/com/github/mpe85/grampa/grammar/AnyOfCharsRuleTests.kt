@@ -18,7 +18,7 @@ class AnyOfCharsRuleTests : StringSpec({
         },
         object : AbstractGrammar<Unit>() {
             override fun start() = anyOfChars(chars.joinToString(""))
-        }
+        },
     )
     "AnyOfChars rule matches character in collection" {
         checkAll(Arb.set(Arb.char(), 1..10)) { chars ->

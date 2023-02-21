@@ -42,7 +42,7 @@ internal class RuleMethodInterceptor<T> {
     fun intercept(
         @Origin method: Method,
         @SuperCall superCall: Callable<Rule<T>>,
-        @AllArguments vararg args: Any?
+        @AllArguments vararg args: Any?,
     ): Rule<T> = hash(method.name, args.contentHashCode()).let { hash ->
         if (rules.containsKey(hash)) {
             ReferenceRuleImpl(hash)

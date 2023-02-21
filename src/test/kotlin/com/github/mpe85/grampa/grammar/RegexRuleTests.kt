@@ -15,7 +15,7 @@ class RegexRuleTests : StringSpec({
         "(\\d+)",
         "(\\D+)",
         "(\\w+)",
-        "(\\W+)"
+        "(\\W+)",
     )
     "Regex rule matches correct pattern" {
         patterns.forEach { pattern ->
