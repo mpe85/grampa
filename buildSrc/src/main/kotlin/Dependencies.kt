@@ -3,7 +3,7 @@ import org.gradle.api.JavaVersion
 object Versions {
     const val byteBuddy = "1.14.0"
     const val detekt = "1.22.0"
-    const val dokka = "1.7.20"
+    const val dokka = "1.8.10"
     const val eventBus = "3.3.1"
     const val icu4j = "72.1"
     const val junit = "5.9.2"
@@ -11,7 +11,7 @@ object Versions {
     const val kotlin = "1.8.10"
     const val kover = "0.6.1"
     const val ktlint = "0.48.2"
-    const val ktlintPlugin = "11.2.0"
+    const val ktlintPlugin = "11.3.1"
     const val mockk = "1.13.4"
     const val versions = "0.46.0"
 
