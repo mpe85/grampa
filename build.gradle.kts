@@ -1,6 +1,8 @@
 import com.github.benmanes.gradle.versions.updates.gradle.GradleReleaseChannel.CURRENT
 import org.gradle.api.plugins.BasePlugin.BUILD_GROUP
 import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.util.Locale
 
 group = "com.github.mpe85"
 version = "1.2.0-SNAPSHOT"
@@ -67,6 +69,11 @@ artifacts {
 }
 
 tasks {
+    withType<KotlinCompile> {
+        kotlinOptions {
+            jvmTarget = Versions.jvmTarget.toString()
+        }
+    }
     jar {
         manifest {
             attributes["Implementation-Title"] = project.name
@@ -148,7 +155,7 @@ signing {
 }
 
 fun String.isNonStable(): Boolean {
-    val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { toUpperCase().contains(it) }
+    val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { uppercase(Locale.ENGLISH).contains(it) }
     val regex = "^[0-9,.v-]+(-r)?$".toRegex()
     val isStable = stableKeyword || regex.matches(this)
     return isStable.not()
