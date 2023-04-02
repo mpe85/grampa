@@ -1,4 +1,5 @@
 import com.github.benmanes.gradle.versions.updates.gradle.GradleReleaseChannel.CURRENT
+import io.gitlab.arturbosch.detekt.Detekt
 import org.gradle.api.plugins.BasePlugin.BUILD_GROUP
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -73,6 +74,9 @@ tasks {
         kotlinOptions {
             jvmTarget = Versions.jvmTarget.toString()
         }
+    }
+    withType<Detekt> {
+        jvmTarget = Versions.jvmTarget.toString()
     }
     jar {
         manifest {
