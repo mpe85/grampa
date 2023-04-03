@@ -1,5 +1,6 @@
 import com.github.benmanes.gradle.versions.updates.gradle.GradleReleaseChannel.CURRENT
 import io.gitlab.arturbosch.detekt.Detekt
+import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 import org.gradle.api.plugins.BasePlugin.BUILD_GROUP
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -70,12 +71,15 @@ artifacts {
 }
 
 tasks {
-    withType<KotlinCompile> {
+    withType<KotlinCompile>().configureEach {
         kotlinOptions {
             jvmTarget = Versions.jvmTarget.toString()
         }
     }
-    withType<Detekt> {
+    withType<Detekt>().configureEach {
+        jvmTarget = Versions.jvmTarget.toString()
+    }
+    withType<DetektCreateBaselineTask>().configureEach {
         jvmTarget = Versions.jvmTarget.toString()
     }
     jar {
