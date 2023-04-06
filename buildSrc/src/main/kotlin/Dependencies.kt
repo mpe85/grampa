@@ -1,7 +1,7 @@
 import org.gradle.api.JavaVersion
 
 object Versions {
-    const val byteBuddy = "1.14.3"
+    const val byteBuddy = "1.14.4"
     const val detekt = "1.22.0"
     const val dokka = "1.8.10"
     const val eventBus = "3.3.1"
