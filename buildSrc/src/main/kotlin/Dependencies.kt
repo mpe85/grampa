@@ -10,7 +10,7 @@ object Versions {
     const val kover = "0.6.1"
     const val ktlint = "0.48.2"
     const val ktlintPlugin = "11.3.1"
-    const val mockk = "1.13.4"
+    const val mockk = "1.13.3"
     const val multiJvmTest = "0.4.20"
     const val versions = "0.46.0"
 }
