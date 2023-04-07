@@ -1,9 +1,6 @@
 import com.github.benmanes.gradle.versions.updates.gradle.GradleReleaseChannel.CURRENT
-import io.gitlab.arturbosch.detekt.Detekt
-import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 import org.gradle.api.plugins.BasePlugin.BUILD_GROUP
 import org.jetbrains.dokka.gradle.DokkaTask
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.Locale
 
 group = "com.github.mpe85"
@@ -18,6 +15,7 @@ plugins {
     id(Plugins.kover) version Versions.kover
     id(Plugins.ktlint) version Versions.ktlintPlugin
     id(Plugins.mavenPublish)
+    // id(Plugins.multiJvmTest) version Versions.multiJvmTest
     id(Plugins.signing)
     id(Plugins.versions) version Versions.versions
 }
@@ -39,17 +37,24 @@ dependencies {
     testImplementation(Libs.mockk)
 }
 
-java {
-    sourceCompatibility = Versions.jvmTarget
-    targetCompatibility = Versions.jvmTarget
-}
-
 kotlin {
     explicitApi()
 }
 
 ktlint {
     version.set(Versions.ktlint)
+}
+
+kover {
+    htmlReport {
+        onCheck.set(true)
+    }
+    xmlReport {
+        onCheck.set(true)
+    }
+    verify {
+        onCheck.set(true)
+    }
 }
 
 val javadocJar = tasks.create<Jar>("javadocJar") {
@@ -71,17 +76,6 @@ artifacts {
 }
 
 tasks {
-    withType<KotlinCompile>().configureEach {
-        kotlinOptions {
-            jvmTarget = Versions.jvmTarget.toString()
-        }
-    }
-    withType<Detekt>().configureEach {
-        jvmTarget = Versions.jvmTarget.toString()
-    }
-    withType<DetektCreateBaselineTask>().configureEach {
-        jvmTarget = Versions.jvmTarget.toString()
-    }
     jar {
         manifest {
             attributes["Implementation-Title"] = project.name
@@ -91,17 +85,17 @@ tasks {
             attributes["Automatic-Module-Name"] = "${project.group}.${project.name}"
         }
     }
-    test {
-        useJUnitPlatform()
-        testLogging {
-            events("passed", "skipped", "failed")
-        }
-    }
     dependencyUpdates {
         revision = "release"
         gradleReleaseChannel = CURRENT.id
         rejectVersionIf {
             candidate.version.isNonStable()
+        }
+    }
+    withType<Test>().configureEach {
+        useJUnitPlatform()
+        testLogging {
+            events("passed", "skipped", "failed")
         }
     }
 }

@@ -1,5 +1,3 @@
-import org.gradle.api.JavaVersion
-
 object Versions {
     const val byteBuddy = "1.14.4"
     const val detekt = "1.22.0"
@@ -13,9 +11,8 @@ object Versions {
     const val ktlint = "0.48.2"
     const val ktlintPlugin = "11.3.1"
     const val mockk = "1.13.4"
+    const val multiJvmTest = "0.4.20"
     const val versions = "0.46.0"
-
-    val jvmTarget = JavaVersion.VERSION_1_8
 }
 
 object Plugins {
@@ -25,6 +22,7 @@ object Plugins {
     const val kover = "org.jetbrains.kotlinx.kover"
     const val ktlint = "org.jlleitschuh.gradle.ktlint"
     const val mavenPublish = "org.gradle.maven-publish"
+    const val multiJvmTest = "org.danilopianini.multi-jvm-test-plugin"
     const val signing = "org.gradle.signing"
     const val versions = "com.github.ben-manes.versions"
 }
