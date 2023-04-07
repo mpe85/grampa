@@ -11,7 +11,6 @@ object Versions {
     const val ktlint = "0.48.2"
     const val ktlintPlugin = "11.3.1"
     const val mockk = "1.13.3"
-    const val multiJvmTest = "0.4.20"
     const val versions = "0.46.0"
 }
 
@@ -22,7 +21,6 @@ object Plugins {
     const val kover = "org.jetbrains.kotlinx.kover"
     const val ktlint = "org.jlleitschuh.gradle.ktlint"
     const val mavenPublish = "org.gradle.maven-publish"
-    const val multiJvmTest = "org.danilopianini.multi-jvm-test-plugin"
     const val signing = "org.gradle.signing"
     const val versions = "com.github.ben-manes.versions"
 }

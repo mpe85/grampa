@@ -5,6 +5,7 @@ import java.util.Locale
 
 group = "com.github.mpe85"
 version = "1.2.0-SNAPSHOT"
+val additionalTestToolchains = listOf(11, 17, 20)
 val gitUrl = "https://github.com/mpe85/${project.name}"
 val gitScmUrl = "https://github.com/mpe85/${project.name}.git"
 
@@ -15,7 +16,6 @@ plugins {
     id(Plugins.kover) version Versions.kover
     id(Plugins.ktlint) version Versions.ktlintPlugin
     id(Plugins.mavenPublish)
-    // id(Plugins.multiJvmTest) version Versions.multiJvmTest
     id(Plugins.signing)
     id(Plugins.versions) version Versions.versions
 }
@@ -57,13 +57,24 @@ kover {
     }
 }
 
-val javadocJar = tasks.create<Jar>("javadocJar") {
+additionalTestToolchains.forEach {
+    tasks.create<Test>("testOn$it") {
+        group = JavaBasePlugin.VERIFICATION_GROUP
+        javaLauncher.set(
+            javaToolchains.launcherFor {
+                languageVersion.set(JavaLanguageVersion.of(it))
+            },
+        )
+    }
+}
+
+val javadocJar by tasks.creating(Jar::class) {
     group = BUILD_GROUP
     dependsOn("dokkaHtml")
     archiveClassifier.set("javadoc")
     from(tasks.getByName<DokkaTask>("dokkaHtml").outputDirectory)
 }
-val sourcesJar = tasks.create<Jar>("sourcesJar") {
+val sourcesJar by tasks.creating(Jar::class) {
     group = BUILD_GROUP
     dependsOn("classes")
     archiveClassifier.set("sources")
