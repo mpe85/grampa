@@ -3,7 +3,7 @@
 *A grammar parser library for Kotlin/JVM*
 
 [![Latest Release](https://img.shields.io/github/release/mpe85/grampa/all.svg?label=Latest%20Release)](https://github.com/mpe85/grampa/releases/latest)
-[![Maven Central](https://img.shields.io/maven-central/v/com.github.mpe85/grampa.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.github.mpe85%22%20AND%20a:%22grampa%22)
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.mpe85/grampa.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/com.github.mpe85/grampa)
 [![Kotlin](https://img.shields.io/badge/kotlin-1.8-blue.svg?logo=kotlin&label=Kotlin)](http://kotlinlang.org)
 [![Build](https://github.com/mpe85/grampa/actions/workflows/gradle.yml/badge.svg)](https://github.com/mpe85/grampa/actions/workflows/gradle.yml)
 [![Coverage](https://codecov.io/gh/mpe85/grampa/branch/master/graph/badge.svg)](https://codecov.io/gh/mpe85/grampa)
