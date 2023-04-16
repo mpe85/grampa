@@ -27,11 +27,11 @@ public interface InputBuffer {
     public fun getCodePoint(index: Int): Int
 
     /**
-     * Get a sub sequence of the input.
+     * Get a subsequence of the input.
      *
      * @param [start] a valid start index
      * @param [end] a valid end index
-     * @return the sub sequence
+     * @return the subsequence
      */
     public fun subSequence(start: Int, end: Int): CharSequence
 

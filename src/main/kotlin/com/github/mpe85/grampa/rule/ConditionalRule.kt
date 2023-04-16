@@ -7,7 +7,7 @@ import com.github.mpe85.grampa.util.stringify
 import java.util.Objects.hash
 
 /**
- * A rule implementation that runs one of two sub rules, depending on a condition.
+ * A rule implementation that runs one of two sub-rules, depending on a condition.
  *
  * @author mpe85
  * @param[T] The type of the stack elements

@@ -164,7 +164,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun noneOfChars(vararg characters: Char): Rule<T> = noneOfChars(characters.toList())
 
     /**
-     * A rule that matches a character not in a a set of characters.
+     * A rule that matches a character not in a set of characters.
      *
      * @param[characters] A string containing the set of characters.
      * @return The created grammar rule
@@ -592,7 +592,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open operator fun IntRange.times(rule: Rule<T>): Rule<T> = repeat(rule, first, last)
 
     /**
-     * Repeat a rule between [min] and [max] times where [max] may be unbounded.
+     * Repeat a rule between [min] and [max] times, where [max] may be unbounded.
      *
      * @param[rule] The rule to repeat
      * @return The created grammar rule
