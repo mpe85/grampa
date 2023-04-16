@@ -12,7 +12,7 @@ import java.util.Objects.hash
  * @param[T] The type of the stack elements
  * @param[string] A string
  */
-internal class StringRule<T> constructor(private val string: String) : AbstractRule<T>() {
+internal class StringRule<T>(private val string: String) : AbstractRule<T>() {
 
     override fun match(context: ParserContext<T>): Boolean {
         if (context.numberOfCharsLeft >= string.length) {
