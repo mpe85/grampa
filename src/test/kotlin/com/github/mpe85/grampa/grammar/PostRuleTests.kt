@@ -23,11 +23,25 @@ class PostRuleTests : StringSpec({
             this.event = event
         }
 
-        override fun beforeParse(event: PreParseEvent<Unit>) = event.context shouldNotBe null
-        override fun beforeMatch(event: PreMatchEvent<Unit>) = event.context shouldNotBe null
-        override fun afterMatchSuccess(event: MatchSuccessEvent<Unit>) = event.context shouldNotBe null
-        override fun afterParse(event: PostParseEvent<Unit>) = event.result shouldNotBe null
-        override fun afterMatchFailure(event: MatchFailureEvent<Unit>) = event.context shouldNotBe null
+        override fun beforeParse(event: PreParseEvent<Unit>) {
+            event.context shouldNotBe null
+        }
+
+        override fun beforeMatch(event: PreMatchEvent<Unit>) {
+            event.context shouldNotBe null
+        }
+
+        override fun afterMatchSuccess(event: MatchSuccessEvent<Unit>) {
+            event.context shouldNotBe null
+        }
+
+        override fun afterParse(event: PostParseEvent<Unit>) {
+            event.result shouldNotBe null
+        }
+
+        override fun afterMatchFailure(event: MatchFailureEvent<Unit>) {
+            event.context shouldNotBe null
+        }
     }
     "Post(event) rule posts value to event bus" {
         checkAll<Int> { int ->
