@@ -5,7 +5,7 @@ object Versions {
     const val eventBus = "3.3.1"
     const val icu4j = "73.1"
     const val junit = "5.9.3"
-    const val kotest = "5.6.1"
+    const val kotest = "5.6.2"
     const val kotlin = "1.8.21"
     const val kover = "0.6.1"
     const val ktlint = "0.48.2"
