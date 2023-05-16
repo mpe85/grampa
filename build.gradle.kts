@@ -45,15 +45,17 @@ ktlint {
     version.set(Versions.ktlint)
 }
 
-kover {
-    htmlReport {
-        onCheck.set(true)
-    }
-    xmlReport {
-        onCheck.set(true)
-    }
-    verify {
-        onCheck.set(true)
+koverReport {
+    defaults {
+        html {
+            onCheck = true
+        }
+        xml {
+            onCheck = true
+        }
+        verify {
+            onCheck = true
+        }
     }
 }
 
