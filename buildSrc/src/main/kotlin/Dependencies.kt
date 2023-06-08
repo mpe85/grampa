@@ -6,7 +6,7 @@ object Versions {
     const val icu4j = "73.1"
     const val junit = "5.9.3"
     const val kotest = "5.6.2"
-    const val kotlin = "1.8.21"
+    const val kotlin = "1.8.22"
     const val kover = "0.7.1"
     const val ktlint = "0.49.1"
     const val ktlintPlugin = "11.4.0"
