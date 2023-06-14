@@ -3,7 +3,7 @@ object Versions {
     const val detekt = "1.23.0"
     const val dokka = "1.8.20"
     const val eventBus = "3.3.1"
-    const val icu4j = "73.1"
+    const val icu4j = "73.2"
     const val junit = "5.9.3"
     const val kotest = "5.6.2"
     const val kotlin = "1.8.22"
@@ -11,7 +11,7 @@ object Versions {
     const val ktlint = "0.49.1"
     const val ktlintPlugin = "11.4.0"
     const val mockk = "1.13.5"
-    const val versions = "0.46.0"
+    const val versions = "0.47.0"
 }
 
 object Plugins {
