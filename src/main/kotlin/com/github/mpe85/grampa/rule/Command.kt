@@ -23,7 +23,10 @@ public fun interface Command<T> {
      *
      * @return The converted action
      */
-    public fun toAction(): Action<T> = Action { execute(it); true }
+    public fun toAction(): Action<T> = Action { ctx ->
+        execute(ctx)
+        true
+    }
 }
 
 /**
@@ -31,4 +34,7 @@ public fun interface Command<T> {
  *
  * @return The converted action function
  */
-public fun <T> ((RuleContext<T>) -> Unit).toAction(): (RuleContext<T>) -> Boolean = { ctx -> invoke(ctx); true }
+public fun <T> ((RuleContext<T>) -> Unit).toAction(): (RuleContext<T>) -> Boolean = { ctx ->
+    invoke(ctx)
+    true
+}

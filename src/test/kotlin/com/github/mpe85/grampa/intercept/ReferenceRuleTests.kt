@@ -20,7 +20,9 @@ class ReferenceRuleTests : StringSpec({
 
     fun createReferenceRule(ruleMethod: String): ReferenceRule<Int> {
         val intercept = RuleMethodInterceptor<Int>().let {
-            { it.intercept(RuleMethods::class.java.getDeclaredMethod(ruleMethod), RuleMethods()) }
+            {
+                it.intercept(RuleMethods::class.java.getDeclaredMethod(ruleMethod), RuleMethods())
+            }
         }
         shouldNotThrowAny { intercept() }
         // The second intercept will cause the creation of a ReferenceRule
