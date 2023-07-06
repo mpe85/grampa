@@ -1,7 +1,7 @@
 group = "com.github.mpe85"
 
 plugins {
-    kotlin("jvm") version "1.8.22"
+    kotlin("jvm") version "1.9.0"
     application
 }
 
@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8", "1.8.22"))
+    implementation(kotlin("stdlib-jdk8", "1.9.0"))
     implementation("com.github.mpe85:grampa:1.2.0")
 }
 
