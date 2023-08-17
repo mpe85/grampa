@@ -10,14 +10,14 @@ val gitUrl = "https://github.com/mpe85/${project.name}"
 val gitScmUrl = "https://github.com/mpe85/${project.name}.git"
 
 plugins {
-    id(Plugins.detekt) version Versions.detekt
-    id(Plugins.dokka) version Versions.dokka
-    kotlin(Plugins.kotlinJvm) version Versions.kotlin
-    id(Plugins.kover) version Versions.kover
-    id(Plugins.ktlint) version Versions.ktlintPlugin
-    id(Plugins.mavenPublish)
-    id(Plugins.signing)
-    id(Plugins.versions) version Versions.versions
+    id(Plugins.DETEKT) version Versions.DETEKT
+    id(Plugins.DOKKA) version Versions.DOKKA
+    kotlin(Plugins.KOTLIN_JVM) version Versions.KOTLIN
+    id(Plugins.KOVER) version Versions.KOVER
+    id(Plugins.KTLINT) version Versions.KTLINT_PLUGIN
+    id(Plugins.MAVEN_PUBLISH)
+    id(Plugins.SIGNING)
+    id(Plugins.VERSIONS) version Versions.VERSIONS
 }
 
 repositories {
@@ -25,16 +25,16 @@ repositories {
 }
 
 dependencies {
-    implementation(Libs.byteBuddy)
-    implementation(Libs.eventBus)
-    implementation(Libs.icu4j)
-    implementation(Libs.kotlinReflect)
-    implementation(Libs.kotlinStdlib)
-    testImplementation(Libs.junitJupiter)
-    testImplementation(Libs.kotestAssertionsCore)
-    testImplementation(Libs.kotestProperty)
-    testImplementation(Libs.kotestRunnerJunit5)
-    testImplementation(Libs.mockk)
+    implementation(Libs.BYTE_BUDDY)
+    implementation(Libs.EVENT_BUS)
+    implementation(Libs.ICU4J)
+    implementation(Libs.KOTLIN_REFLECT)
+    implementation(Libs.KOTLIN_STDLIB)
+    testImplementation(Libs.JUNIT_JUPITER)
+    testImplementation(Libs.KOTEST_ASSERTIONS_CORE)
+    testImplementation(Libs.KOTEST_PROPERTY)
+    testImplementation(Libs.KOTEST_RUNNER_JUNIT5)
+    testImplementation(Libs.MOCKK)
 }
 
 kotlin {
@@ -42,7 +42,7 @@ kotlin {
 }
 
 ktlint {
-    version.set(Versions.ktlint)
+    version.set(Versions.KTLINT)
 }
 
 koverReport {
