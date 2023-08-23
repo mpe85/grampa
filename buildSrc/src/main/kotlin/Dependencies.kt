@@ -6,7 +6,7 @@ object Versions {
     const val ICU4J = "73.2"
     const val JUNIT = "5.10.0"
     const val KOTEST = "5.6.2"
-    const val KOTLIN = "1.9.0"
+    const val KOTLIN = "1.9.10"
     const val KOVER = "0.7.3"
     const val KTLINT = "0.50.0"
     const val KTLINT_PLUGIN = "11.5.1"
