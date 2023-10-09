@@ -1,5 +1,5 @@
 object Versions {
-    const val BYTE_BUDDY = "1.14.8"
+    const val BYTE_BUDDY = "1.14.9"
     const val DETEKT = "1.23.1"
     const val DOKKA = "1.9.0"
     const val EVENT_BUS = "3.3.1"
@@ -11,7 +11,7 @@ object Versions {
     const val KTLINT = "1.0.0"
     const val KTLINT_PLUGIN = "11.6.0"
     const val MOCKK = "1.13.7"
-    const val VERSIONS = "0.48.0"
+    const val VERSIONS = "0.49.0"
 }
 
 object Plugins {
