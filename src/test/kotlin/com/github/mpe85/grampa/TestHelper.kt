@@ -13,11 +13,18 @@ import io.kotest.property.arbitrary.filter
 private val foldCaseSpecialI = listOf(0x130, 0x131)
 
 /**
- * Create an [Arb] of legal [Codepoint] according to [UCharacter.isLegal].
+ * Create an [Arb] of legal [Codepoint]s according to [UCharacter.isLegal].
  *
  * @return An [Arb] of [Codepoint]s
  */
 internal fun legalCodePoints() = Arb.codepoints().filter { UCharacter.isLegal(it.value) }
+
+/**
+ * Create an [Arb] of illegal [Codepoint]s according to [UCharacter.isLegal].
+ *
+ * @return An [Arb] of [Codepoint]s
+ */
+internal fun illegalCodePoints() = Arb.codepoints().filter { !UCharacter.isLegal(it.value) }
 
 /**
  * Create an [Arb] of lower case [Codepoint]s that differ from the [Codepoint] returned by [UCharacter.toUpperCase].

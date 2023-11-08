@@ -384,7 +384,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun ascii(): Rule<T> = CharPredicateRule { it in Char.MIN_VALUE..Byte.MAX_VALUE.toInt().toChar() }
 
     /**
-     * A rule that matches a characters of Unicode's Basic Multilingual Plane.
+     * A rule that matches a character of Unicode's Basic Multilingual Plane.
      *
      * @return The created grammar rule
      */
@@ -410,6 +410,13 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @return The created grammar rule
      */
     protected open fun javaIdentifierPart(): Rule<T> = CodePointPredicateRule(Character::isJavaIdentifierPart)
+
+    /**
+     * A rule that matches a legal Unicode code points.
+     *
+     * @return The created grammar rule
+     */
+    protected open fun legal(): Rule<T> = CodePointPredicateRule(UCharacter::isLegal)
 
     /**
      * A rule that matches a letter.
