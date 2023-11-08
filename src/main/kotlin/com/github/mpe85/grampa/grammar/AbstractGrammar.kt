@@ -630,6 +630,13 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun Rule<T>.toTestNot(): Rule<T> = testNot(this)
 
     /**
+     * A test rule that tests if [this] rule does not match.
+     *
+     * @return The created grammar rule
+     */
+    protected open operator fun Rule<T>.not(): Rule<T> = testNot(this)
+
+    /**
      * A conditional rule that runs a child rule if a condition is true, otherwise it runs another child rule.
      *
      * @param[condition] The condition to check
