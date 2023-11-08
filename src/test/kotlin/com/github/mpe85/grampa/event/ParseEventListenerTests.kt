@@ -20,7 +20,7 @@ class ParseEventListenerTests : StringSpec({
 
         EventBus.builder().logNoSubscriberMessages(false).build().apply {
             register(listener)
-            post(PreParseEvent(mockk<ParserContext<String>>(relaxed = true)))
+            post(PreParseEvent(mockk<ParserContext<String>>()))
         }
 
         listener.called shouldBe true
@@ -38,7 +38,7 @@ class ParseEventListenerTests : StringSpec({
             }
         }
 
-        val event = PreParseEvent(mockk<ParserContext<String>>(relaxed = true))
+        val event = PreParseEvent(mockk<ParserContext<String>>())
         EventBus.builder().logNoSubscriberMessages(false).build().apply {
             register(listener)
             post(event)
@@ -48,5 +48,14 @@ class ParseEventListenerTests : StringSpec({
         listener.exEvent?.causingSubscriber shouldBe listener
         listener.exEvent?.causingEvent shouldBe event
         listener.exEvent?.throwable shouldBe ex
+    }
+    "ParseEventListener methods return Unit" {
+        ParseEventListener<Unit>().apply {
+            beforeParse(mockk()) shouldBe Unit
+            beforeMatch(mockk()) shouldBe Unit
+            afterMatchSuccess(mockk()) shouldBe Unit
+            afterMatchFailure(mockk()) shouldBe Unit
+            afterParse(mockk()) shouldBe Unit
+        }
     }
 })
