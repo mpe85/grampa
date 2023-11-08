@@ -4,7 +4,7 @@ sealed class JsonElement {
     abstract fun accept(visitor: JsonElementVisitor, depth: Int = 0)
 }
 
-object JsonNull : JsonElement() {
+data object JsonNull : JsonElement() {
     override fun accept(visitor: JsonElementVisitor, depth: Int) = visitor.visit(this, depth)
 }
 
@@ -28,7 +28,6 @@ data class JsonArray(val elements: MutableList<JsonElement>) : JsonElement() {
     override fun accept(visitor: JsonElementVisitor, depth: Int) = visitor.visit(this, depth)
 }
 
-
 interface JsonElementVisitor {
     fun visit(jsonNull: JsonNull, depth: Int = 0)
     fun visit(string: JsonString, depth: Int = 0)
@@ -39,28 +38,18 @@ interface JsonElementVisitor {
 }
 
 class PrintVisitor : JsonElementVisitor {
-    override fun visit(jsonNull: JsonNull, depth: Int) {
-        print("null")
-    }
+    override fun visit(jsonNull: JsonNull, depth: Int) = print("null")
 
-    override fun visit(string: JsonString, depth: Int) {
-        print("\"${string.value}\"")
-    }
+    override fun visit(string: JsonString, depth: Int) = print("\"${string.value}\"")
 
-    override fun visit(number: JsonNumber, depth: Int) {
-        print(number.value)
-    }
+    override fun visit(number: JsonNumber, depth: Int) = print(number.value)
 
-    override fun visit(boolean: JsonBoolean, depth: Int) {
-        print(boolean.value)
-    }
+    override fun visit(boolean: JsonBoolean, depth: Int) = print(boolean.value)
 
     override fun visit(obj: JsonObject, depth: Int) {
         println("{")
         obj.properties.asSequence().forEachIndexed { i, (key, value) ->
-            if (i > 0) {
-                println(",")
-            }
+            if (i > 0) println(",")
             indent(depth + 1)
             print("\"$key\" : ")
             value.accept(this, depth + 1)
@@ -73,9 +62,7 @@ class PrintVisitor : JsonElementVisitor {
     override fun visit(array: JsonArray, depth: Int) {
         println("[")
         array.elements.asSequence().forEachIndexed { i, element ->
-            if (i > 0) {
-                println(",")
-            }
+            if (i > 0) println(",")
             indent(depth + 1)
             element.accept(this, depth + 1)
         }
