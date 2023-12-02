@@ -9,7 +9,7 @@ object Versions {
     const val KOTLIN = "1.9.21"
     const val KOVER = "0.7.5"
     const val KTLINT = "1.0.1"
-    const val KTLINT_PLUGIN = "11.6.1"
+    const val KTLINT_PLUGIN = "12.0.2"
     const val MOCKK = "1.13.7"
     const val VERSIONS = "0.50.0"
 }
