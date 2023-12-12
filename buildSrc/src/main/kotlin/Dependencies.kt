@@ -3,7 +3,7 @@ object Versions {
     const val DETEKT = "1.23.4"
     const val DOKKA = "1.9.10"
     const val EVENT_BUS = "3.3.1"
-    const val ICU4J = "74.1"
+    const val ICU4J = "74.2"
     const val JUNIT = "5.10.1"
     const val KOTEST = "5.8.0"
     const val KOTLIN = "1.9.21"
