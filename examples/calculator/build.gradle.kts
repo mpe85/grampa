@@ -10,7 +10,6 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8", "1.9.23"))
     implementation("com.github.mpe85:grampa:1.3.0")
 }
 
