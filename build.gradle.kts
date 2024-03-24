@@ -41,10 +41,6 @@ kotlin {
     explicitApi()
 }
 
-ktlint {
-    version.set("1.2.1")
-}
-
 koverReport {
     defaults {
         html {
