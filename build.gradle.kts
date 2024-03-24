@@ -10,14 +10,14 @@ val gitUrl = "https://github.com/mpe85/${project.name}"
 val gitScmUrl = "https://github.com/mpe85/${project.name}.git"
 
 plugins {
-    id(Plugins.DETEKT) version Versions.DETEKT
-    id(Plugins.DOKKA) version Versions.DOKKA
-    kotlin(Plugins.KOTLIN_JVM) version Versions.KOTLIN
-    id(Plugins.KOVER) version Versions.KOVER
-    id(Plugins.KTLINT) version Versions.KTLINT_PLUGIN
-    id(Plugins.MAVEN_PUBLISH)
-    id(Plugins.SIGNING)
-    id(Plugins.VERSIONS) version Versions.VERSIONS
+    id("io.gitlab.arturbosch.detekt") version "1.23.5"
+    id("org.jetbrains.dokka") version "1.9.20"
+    kotlin("jvm") version "1.9.23"
+    id("org.jetbrains.kotlinx.kover") version "0.7.6"
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
+    id("org.gradle.maven-publish")
+    id("org.gradle.signing")
+    id("com.github.ben-manes.versions") version "0.51.0"
 }
 
 repositories {
@@ -25,16 +25,16 @@ repositories {
 }
 
 dependencies {
-    implementation(Libs.BYTE_BUDDY)
-    implementation(Libs.EVENT_BUS)
-    implementation(Libs.ICU4J)
-    implementation(Libs.KOTLIN_REFLECT)
-    implementation(Libs.KOTLIN_STDLIB)
-    testImplementation(Libs.JUNIT_JUPITER)
-    testImplementation(Libs.KOTEST_ASSERTIONS_CORE)
-    testImplementation(Libs.KOTEST_PROPERTY)
-    testImplementation(Libs.KOTEST_RUNNER_JUNIT5)
-    testImplementation(Libs.MOCKK)
+    implementation("net.bytebuddy:byte-buddy:1.14.12")
+    implementation("org.greenrobot:eventbus-java:3.3.1")
+    implementation("com.ibm.icu:icu4j:74.2")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.23")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.23")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
+    testImplementation("io.kotest:kotest-assertions-core:5.8.1")
+    testImplementation("io.kotest:kotest-property:5.8.1")
+    testImplementation("io.kotest:kotest-runner-junit5:5.8.1")
+    testImplementation("io.mockk:mockk:1.13.10")
 }
 
 kotlin {
@@ -42,7 +42,7 @@ kotlin {
 }
 
 ktlint {
-    version.set(Versions.KTLINT)
+    version.set("1.2.1")
 }
 
 koverReport {
@@ -100,6 +100,7 @@ tasks {
     }
     dependencyUpdates {
         revision = "release"
+        checkConstraints = false
         gradleReleaseChannel = CURRENT.id
         rejectVersionIf {
             candidate.version.isNonStable()
