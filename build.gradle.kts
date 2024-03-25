@@ -11,7 +11,7 @@ val gitScmUrl = "https://github.com/mpe85/${project.name}.git"
 
 plugins {
     kotlin("jvm") version "1.9.23"
-    id("io.gitlab.arturbosch.detekt") version "1.23.5"
+    id("io.gitlab.arturbosch.detekt") version "1.23.6"
     id("org.jetbrains.dokka") version "1.9.20"
     id("org.jetbrains.kotlinx.kover") version "0.7.6"
     id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
