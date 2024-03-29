@@ -142,7 +142,7 @@ publishing {
                 licenses {
                     license {
                         name.set("MIT")
-                        url.set("$gitUrl/blob/master/LICENSE")
+                        url.set("$gitUrl/blob/main/LICENSE")
                     }
                 }
                 developers {

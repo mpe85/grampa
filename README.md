@@ -6,8 +6,8 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.mpe85/grampa.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/com.github.mpe85/grampa)
 [![Kotlin](https://img.shields.io/badge/kotlin-1.9-blue.svg?logo=kotlin&label=Kotlin)](http://kotlinlang.org)
 [![Build](https://github.com/mpe85/grampa/actions/workflows/gradle.yml/badge.svg)](https://github.com/mpe85/grampa/actions/workflows/gradle.yml)
-[![Coverage](https://codecov.io/gh/mpe85/grampa/branch/master/graph/badge.svg)](https://codecov.io/gh/mpe85/grampa)
-[![License](https://img.shields.io/github/license/mpe85/grampa.svg?label=License)](https://github.com/mpe85/grampa/blob/master/LICENSE)
+[![Coverage](https://codecov.io/gh/mpe85/grampa/branch/main/graph/badge.svg)](https://codecov.io/gh/mpe85/grampa)
+[![License](https://img.shields.io/github/license/mpe85/grampa.svg?label=License)](https://github.com/mpe85/grampa/blob/main/LICENSE)
 
 Grampa — short for **Gram**mar **pa**rser — is a library that allows you to define grammars completely in Kotlin source
 code without any pre-processing phase (unlike other parser generators like ANTLR and JavaCC). Hence, there is no DSL to
