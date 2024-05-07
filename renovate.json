@@ -3,5 +3,5 @@
   "extends": [
     "config:recommended"
   ],
-  "includePaths": ["examples/**"]
+  "includePaths": [".", "examples/calculator", "examples/json"]
 }
