@@ -13,7 +13,7 @@ plugins {
     kotlin("jvm") version "1.9.24"
     id("io.gitlab.arturbosch.detekt") version "1.23.6"
     id("org.jetbrains.dokka") version "1.9.20"
-    id("org.jetbrains.kotlinx.kover") version "0.7.6"
+    id("org.jetbrains.kotlinx.kover") version "0.8.0"
     id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
     id("org.gradle.maven-publish")
     id("org.gradle.signing")
