@@ -13,7 +13,7 @@ class CodePointPredicateRuleTests : StringSpec({
         val predicate = Predicate { cp: Int -> cp == 'a'.code }
         val rule1 = CodePointPredicateRule<String>(predicate::test)
         val rule2 = CodePointPredicateRule<String>(predicate::test)
-        val rule3 = CodePointPredicateRule<String>('a'.code)
+        val rule3 = CodePointPredicateRule<String> @JvmSerializableLambda { it == 'a'.code }
         rule1 shouldBe rule2
         rule1 shouldNotBe rule3
         rule1 shouldNotBe Any()

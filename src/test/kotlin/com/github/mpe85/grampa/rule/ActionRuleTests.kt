@@ -9,7 +9,7 @@ class ActionRuleTests : StringSpec({
         val action = Action<String> { true }
         val rule1 = ActionRule(action::run)
         val rule2 = ActionRule(action::run, false)
-        val rule3 = ActionRule<String>({ true })
+        val rule3 = ActionRule<String>(@JvmSerializableLambda { true })
         rule1 shouldBe rule2
         rule1 shouldNotBe rule3
         rule1 shouldNotBe Any()

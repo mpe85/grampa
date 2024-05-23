@@ -13,7 +13,7 @@ class CharPredicateRuleTests : StringSpec({
         val predicate = Predicate { ch: Char -> ch == 'a' }
         val rule1 = CharPredicateRule<String>(predicate::test)
         val rule2 = CharPredicateRule<String>(predicate::test)
-        val rule3 = CharPredicateRule<String>('a')
+        val rule3 = CharPredicateRule<String> @JvmSerializableLambda { it == 'a' }
         rule1 shouldBe rule2
         rule1 shouldNotBe rule3
         rule1 shouldNotBe Any()

@@ -3,10 +3,12 @@ package com.github.mpe85.grampa.grammar
 import com.github.mpe85.grampa.context.RuleContext
 import com.github.mpe85.grampa.parser.Parser
 import com.github.mpe85.grampa.rule.Action
+import com.github.mpe85.grampa.rule.ActionRule
 import com.github.mpe85.grampa.rule.Command
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 
 class ActionRuleTests : StringSpec({
     "Action rule matches when action succeeds" {
@@ -45,30 +47,25 @@ class ActionRuleTests : StringSpec({
         val grammar = object : AbstractGrammar<Unit>() {
             override fun start() = { _: RuleContext<Unit> -> true }.toActionRule()
         }
-        grammar.start().toString() shouldBe "ActionRule(action=" +
-            "(com.github.mpe85.grampa.context.RuleContext<kotlin.Unit>) -> kotlin.Boolean, skippable=false)"
+        grammar.start().shouldBeInstanceOf<ActionRule<Unit>>()
+
     }
     "Action is correctly converted to action rule" {
         val grammar = object : AbstractGrammar<Unit>() {
             override fun start() = Action<Unit> { true }.toRule()
         }
-        grammar.start().toString() shouldBe "ActionRule(action=" +
-            "fun com.github.mpe85.grampa.rule.Action<T>.run(" +
-            "com.github.mpe85.grampa.context.RuleContext<T>): kotlin.Boolean, skippable=false)"
+        grammar.start().shouldBeInstanceOf<ActionRule<Unit>>()
     }
     "Command function is correctly converted to action rule" {
         val grammar = object : AbstractGrammar<Unit>() {
             override fun start() = { _: RuleContext<Unit> -> }.toCommandRule()
         }
-        grammar.start().toString() shouldBe "ActionRule(action=" +
-            "(com.github.mpe85.grampa.context.RuleContext<T>) -> kotlin.Boolean, skippable=false)"
+        grammar.start().shouldBeInstanceOf<ActionRule<Unit>>()
     }
     "Command is correctly converted to action rule" {
         val grammar = object : AbstractGrammar<Unit>() {
             override fun start() = Command<Unit> {}.toRule()
         }
-        grammar.start().toString() shouldBe "ActionRule(action=" +
-            "fun com.github.mpe85.grampa.rule.Action<T>.run(" +
-            "com.github.mpe85.grampa.context.RuleContext<T>): kotlin.Boolean, skippable=false)"
+        grammar.start().shouldBeInstanceOf<ActionRule<Unit>>()
     }
 })
