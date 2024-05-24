@@ -22,8 +22,8 @@ class AbstractRuleTests : StringSpec({
         rule1 shouldBe rule2
         rule1 shouldNotBe Any()
         rule1.hashCode() shouldBe rule2.hashCode()
-        rule1.toString() shouldBe "\$OnlyChildRule()"
-        rule2.toString() shouldBe "\$OnlyChildRule()"
+        rule1.toString() shouldBe "${OnlyChildRule::class.simpleName}()"
+        rule2.toString() shouldBe "${OnlyChildRule::class.simpleName}()"
     }
     "Replace reference rule" {
         OnlyChildRule(mockk<ReferenceRule<String>>()).apply {
