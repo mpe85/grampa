@@ -48,7 +48,6 @@ class ActionRuleTests : StringSpec({
             override fun start() = { _: RuleContext<Unit> -> true }.toActionRule()
         }
         grammar.start().shouldBeInstanceOf<ActionRule<Unit>>()
-
     }
     "Action is correctly converted to action rule" {
         val grammar = object : AbstractGrammar<Unit>() {
