@@ -32,7 +32,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
     testImplementation("io.kotest:kotest-assertions-core:5.9.0")
-    testImplementation("io.kotest:kotest-property:5.9.0")
+    testImplementation("io.kotest:kotest-property:5.9.1")
     testImplementation("io.kotest:kotest-runner-junit5:5.9.1")
     testImplementation("io.mockk:mockk:1.13.11")
 }
