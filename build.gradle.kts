@@ -30,7 +30,7 @@ dependencies {
     implementation("com.ibm.icu:icu4j:75.1")
     implementation("org.jetbrains.kotlin:kotlin-reflect:2.0.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.0")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.3")
     testImplementation("io.kotest:kotest-assertions-core:5.9.1")
     testImplementation("io.kotest:kotest-property:5.9.1")
     testImplementation("io.kotest:kotest-runner-junit5:5.9.1")
