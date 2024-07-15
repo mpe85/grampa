@@ -1,6 +1,6 @@
 # Grampa
 
-*A grammar parser library for Kotlin/JVM*
+*A PEG parser library for Kotlin/JVM*
 
 [![Latest Release](https://img.shields.io/github/release/mpe85/grampa/all.svg?label=Latest%20Release)](https://github.com/mpe85/grampa/releases/latest)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.mpe85/grampa.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/com.github.mpe85/grampa)
