@@ -4,7 +4,7 @@ import org.jetbrains.dokka.gradle.DokkaTask
 import java.util.Locale
 
 group = "com.github.mpe85"
-version = "1.4.0"
+version = "1.4.1-SNAPSHOT"
 val additionalTestToolchains = listOf(11, 17, 21, 22)
 val gitUrl = "https://github.com/mpe85/${project.name}"
 val gitScmUrl = "https://github.com/mpe85/${project.name}.git"
