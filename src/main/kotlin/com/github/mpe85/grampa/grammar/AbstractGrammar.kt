@@ -89,7 +89,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @return The created grammar rule
      */
     @Deprecated(
-        message = "Renamed method to charIgnoreCase.",
+        message = "Renamed function to charIgnoreCase.",
         replaceWith = ReplaceWith("charIgnoreCase(character)"),
     )
     protected open fun ignoreCase(character: Char): Rule<T> = charIgnoreCase(character)
@@ -212,7 +212,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @return The created grammar rule
      */
     @Deprecated(
-        message = "Renamed method to codePointIgnoreCase.",
+        message = "Renamed function to codePointIgnoreCase.",
         replaceWith = ReplaceWith("codePointIgnoreCase(codePoint)"),
     )
     protected open fun ignoreCase(codePoint: Int): Rule<T> = codePointIgnoreCase(codePoint)
@@ -335,7 +335,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @return The created grammar rule
      */
     @Deprecated(
-        message = "Renamed method to stringIgnoreCase.",
+        message = "Renamed function to stringIgnoreCase.",
         replaceWith = ReplaceWith("stringIgnoreCase(string)"),
     )
     protected open fun ignoreCase(string: String): Rule<T> = stringIgnoreCase(string)
@@ -400,7 +400,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @return The created grammar rule
      */
     @Deprecated(
-        message = "Renamed method to stringsIgnoreCase.",
+        message = "Renamed function to stringsIgnoreCase.",
         replaceWith = ReplaceWith("stringsIgnoreCase(strings)"),
     )
     protected open fun ignoreCase(strings: Collection<String>): Rule<T> = stringsIgnoreCase(strings)
@@ -424,7 +424,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @return The created grammar rule
      */
     @Deprecated(
-        message = "Renamed method to stringsIgnoreCase.",
+        message = "Renamed function to stringsIgnoreCase.",
         replaceWith = ReplaceWith("stringsIgnoreCase(*strings)"),
     )
     protected open fun ignoreCase(vararg strings: String): Rule<T> = stringsIgnoreCase(*strings)
