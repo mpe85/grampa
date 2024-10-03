@@ -19,7 +19,7 @@ class StringIgnoreCaseRuleTests : StringSpec({
     "StringIgnoreCase rule matches correct string" {
         checkAll(Arb.string(1..10, legalCodePoints())) { str ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun start() = ignoreCase(str)
+                override fun start() = stringIgnoreCase(str)
             }).run(str).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
@@ -31,7 +31,7 @@ class StringIgnoreCaseRuleTests : StringSpec({
     "StringIgnoreCase rule matches correct lowercase string" {
         checkAll(Arb.string(1..10, upperCaseCodePoints())) { str ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun start() = ignoreCase(str)
+                override fun start() = stringIgnoreCase(str)
             }).run(toLowerCase(str)).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
@@ -39,7 +39,7 @@ class StringIgnoreCaseRuleTests : StringSpec({
                 restOfInput shouldBe ""
             }
             Parser(object : AbstractGrammar<Unit>() {
-                override fun start() = ignoreCase(toLowerCase(str))
+                override fun start() = stringIgnoreCase(toLowerCase(str))
             }).run(str).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
@@ -51,7 +51,7 @@ class StringIgnoreCaseRuleTests : StringSpec({
     "StringIgnoreCase rule matches correct uppercase string" {
         checkAll(Arb.string(1..10, lowerCaseCodePoints())) { str ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun start() = ignoreCase(str)
+                override fun start() = stringIgnoreCase(str)
             }).run(toUpperCase(str)).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
@@ -59,7 +59,7 @@ class StringIgnoreCaseRuleTests : StringSpec({
                 restOfInput shouldBe ""
             }
             Parser(object : AbstractGrammar<Unit>() {
-                override fun start() = ignoreCase(toUpperCase(str))
+                override fun start() = stringIgnoreCase(toUpperCase(str))
             }).run(str).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
@@ -71,7 +71,7 @@ class StringIgnoreCaseRuleTests : StringSpec({
     "StringIgnoreCase rule does not match wrong string" {
         checkAll(Arb.string(1..10, Codepoint.arabic()), Arb.string(1..10, Codepoint.cyrillic())) { str1, str2 ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun start() = ignoreCase(str1)
+                override fun start() = stringIgnoreCase(str1)
             }).run(str2).apply {
                 matched shouldBe false
                 matchedEntireInput shouldBe false
@@ -83,7 +83,7 @@ class StringIgnoreCaseRuleTests : StringSpec({
     "Empty StringIgnoreCase rule matches any input" {
         checkAll(Arb.string(0..10, legalCodePoints())) { str ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun start() = ignoreCase("")
+                override fun start() = stringIgnoreCase("")
             }).run(str).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe str.isEmpty()

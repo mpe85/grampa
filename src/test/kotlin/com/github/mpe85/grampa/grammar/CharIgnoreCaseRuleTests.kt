@@ -12,7 +12,7 @@ class CharIgnoreCaseRuleTests : StringSpec({
     "CharIgnoreCase rule matches correct character" {
         checkAll<Char> { ch ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun start() = ignoreCase(ch)
+                override fun start() = charIgnoreCase(ch)
             }).run("$ch").apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
@@ -24,7 +24,7 @@ class CharIgnoreCaseRuleTests : StringSpec({
     "Lowercase CharIgnoreCase rule matches uppercase character" {
         checkAll(Arb.char(CharRange('a', 'z'))) { ch ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun start() = ignoreCase(ch)
+                override fun start() = charIgnoreCase(ch)
             }).apply {
                 val uppercase = ch.uppercaseChar()
                 run("$uppercase").apply {
@@ -39,7 +39,7 @@ class CharIgnoreCaseRuleTests : StringSpec({
     "Uppercase CharIgnoreCase rule matches lowercase character" {
         checkAll(Arb.char(CharRange('A', 'Z'))) { ch ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun start() = ignoreCase(ch)
+                override fun start() = charIgnoreCase(ch)
             }).apply {
                 val lowercase = ch.lowercaseChar()
                 run("$lowercase").apply {
@@ -54,7 +54,7 @@ class CharIgnoreCaseRuleTests : StringSpec({
     "CharIgnoreCase rule does not match wrong character" {
         checkAll<Char> { ch ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun start() = ignoreCase(ch)
+                override fun start() = charIgnoreCase(ch)
             }).apply {
                 checkAll(Arb.char().filter { it.uppercaseChar() != ch.uppercaseChar() }) { c ->
                     run("$c").apply {
@@ -70,7 +70,7 @@ class CharIgnoreCaseRuleTests : StringSpec({
     "CharIgnoreCase rule does not match empty input" {
         checkAll<Char> { ch ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun start() = ignoreCase(ch)
+                override fun start() = charIgnoreCase(ch)
             }).run("").apply {
                 matched shouldBe false
                 matchedEntireInput shouldBe false

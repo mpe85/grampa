@@ -88,14 +88,26 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[character] The character to match
      * @return The created grammar rule
      */
-    protected open fun ignoreCase(character: Char): Rule<T> = IgnoreCaseCharRule(character)
+    @Deprecated(
+        message = "Renamed method to charIgnoreCase.",
+        replaceWith = ReplaceWith("charIgnoreCase(character)"),
+    )
+    protected open fun ignoreCase(character: Char): Rule<T> = charIgnoreCase(character)
+
+    /**
+     * A rule that matches a specific character, ignoring the case of the character (case-insensitive).
+     *
+     * @param[character] The character to match
+     * @return The created grammar rule
+     */
+    protected open fun charIgnoreCase(character: Char): Rule<T> = IgnoreCaseCharRule(character)
 
     /**
      * A rule that matches [this] character, ignoring its case (case-insensitive).
      *
      * @return The created grammar rule
      */
-    protected open fun Char.toIgnoreCaseRule(): Rule<T> = ignoreCase(this)
+    protected open fun Char.toIgnoreCaseRule(): Rule<T> = charIgnoreCase(this)
 
     /**
      * A rule that matches a character within a range of characters.
@@ -199,14 +211,27 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[codePoint] The code point to match
      * @return The created grammar rule
      */
-    protected open fun ignoreCase(codePoint: Int): Rule<T> = IgnoreCaseCodePointRule(codePoint)
+    @Deprecated(
+        message = "Renamed method to codePointIgnoreCase.",
+        replaceWith = ReplaceWith("codePointIgnoreCase(codePoint)"),
+    )
+    protected open fun ignoreCase(codePoint: Int): Rule<T> = codePointIgnoreCase(codePoint)
+
+    /**
+     * A rule that matches a specific code point, ignoring the case of the code point (case-insensitive).
+     *
+     * @param[codePoint] The code point to match
+     * @return The created grammar rule
+     */
+    protected open fun codePointIgnoreCase(codePoint: Int): Rule<T> = IgnoreCaseCodePointRule(codePoint)
+
 
     /**
      * A rule that matches [this] code point, ignoring its case (case-insensitive).
      *
      * @return The created grammar rule
      */
-    protected open fun Int.toIgnoreCaseRule(): Rule<T> = ignoreCase(this)
+    protected open fun Int.toIgnoreCaseRule(): Rule<T> = codePointIgnoreCase(this)
 
     /**
      * A rule that matches a code point within a range of code points.
@@ -309,7 +334,19 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[string] The string to match
      * @return The created grammar rule
      */
-    protected open fun ignoreCase(string: String): Rule<T> = when {
+    @Deprecated(
+        message = "Renamed method to stringIgnoreCase.",
+        replaceWith = ReplaceWith("stringIgnoreCase(string)"),
+    )
+    protected open fun ignoreCase(string: String): Rule<T> = stringIgnoreCase(string)
+
+    /**
+     * A rule that matches a specific string, ignoring the case of its characters (case-insensitive).
+     *
+     * @param[string] The string to match
+     * @return The created grammar rule
+     */
+    protected open fun stringIgnoreCase(string: String): Rule<T> = when {
         string.isEmpty() -> empty()
         else -> IgnoreCaseTrieRule(string)
     }
@@ -319,7 +356,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      *
      * @return The created grammar rule
      */
-    protected open fun String.toIgnoreCaseRule(): Rule<T> = ignoreCase(this)
+    protected open fun String.toIgnoreCaseRule(): Rule<T> = stringIgnoreCase(this)
 
     /**
      * A rule that matches a regular expression.
@@ -362,9 +399,21 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[strings] A collection of strings
      * @return The created grammar rule
      */
-    protected open fun ignoreCase(strings: Collection<String>): Rule<T> = when {
+    @Deprecated(
+        message = "Renamed method to stringsIgnoreCase.",
+        replaceWith = ReplaceWith("stringsIgnoreCase(strings)"),
+    )
+    protected open fun ignoreCase(strings: Collection<String>): Rule<T> = stringsIgnoreCase(strings)
+
+    /**
+     * A rule that matches a string within a set of strings, ignoring the case of their characters (case-insensitive).
+     *
+     * @param[strings] A collection of strings
+     * @return The created grammar rule
+     */
+    protected open fun stringsIgnoreCase(strings: Collection<String>): Rule<T> = when {
         strings.isEmpty() -> never()
-        strings.size == 1 -> ignoreCase(strings.first())
+        strings.size == 1 -> stringIgnoreCase(strings.first())
         else -> IgnoreCaseTrieRule(strings)
     }
 
@@ -374,7 +423,19 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[strings] A variable number of strings
      * @return The created grammar rule
      */
-    protected open fun ignoreCase(vararg strings: String): Rule<T> = ignoreCase(strings.toList())
+    @Deprecated(
+        message = "Renamed method to stringsIgnoreCase.",
+        replaceWith = ReplaceWith("stringsIgnoreCase(*strings)"),
+    )
+    protected open fun ignoreCase(vararg strings: String): Rule<T> = stringsIgnoreCase(*strings)
+
+    /**
+     * A rule that matches a string within a set of strings, ignoring the case of their characters (case-insensitive).
+     *
+     * @param[strings] A variable number of strings
+     * @return The created grammar rule
+     */
+    protected open fun stringsIgnoreCase(vararg strings: String): Rule<T> = stringsIgnoreCase(strings.toList())
 
     /**
      * A rule that matches an ASCII character.

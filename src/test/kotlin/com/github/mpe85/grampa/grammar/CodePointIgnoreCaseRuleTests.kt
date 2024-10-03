@@ -17,7 +17,7 @@ class CodePointIgnoreCaseRuleTests : StringSpec({
     "CodePointIgnoreCase rule matches correct codepoint" {
         checkAll(legalCodePoints()) { cp ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun start() = ignoreCase(cp.value)
+                override fun start() = codePointIgnoreCase(cp.value)
             }).run(toString(cp.value)).apply {
                 matched shouldBe true
                 matchedEntireInput shouldBe true
@@ -29,7 +29,7 @@ class CodePointIgnoreCaseRuleTests : StringSpec({
     "Lowercase CodePointIgnoreCase rule matches uppercase codepoint" {
         checkAll(lowerCaseCodePoints()) { cp ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun start() = ignoreCase(cp.value)
+                override fun start() = codePointIgnoreCase(cp.value)
             }).apply {
                 val upperCase = toUpperCase(cp.value)
                 run(toString(upperCase)).apply {
@@ -44,7 +44,7 @@ class CodePointIgnoreCaseRuleTests : StringSpec({
     "Uppercase CodePointIgnoreCase rule matches lowercase codepoint" {
         checkAll(upperCaseCodePoints()) { cp ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun start() = ignoreCase(cp.value)
+                override fun start() = codePointIgnoreCase(cp.value)
             }).apply {
                 val lowerCase = toLowerCase(cp.value)
                 run(toString(lowerCase)).apply {
@@ -59,7 +59,7 @@ class CodePointIgnoreCaseRuleTests : StringSpec({
     "CodePointIgnoreCase rule does not match wrong codepoint" {
         checkAll(Arb.set(legalCodePoints(), 2..2)) { codePoints ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun start() = ignoreCase(codePoints.first().value)
+                override fun start() = codePointIgnoreCase(codePoints.first().value)
             }).run(toString(codePoints.last().value)).apply {
                 matched shouldBe false
                 matchedEntireInput shouldBe false
@@ -71,7 +71,7 @@ class CodePointIgnoreCaseRuleTests : StringSpec({
     "CodePointIgnoreCase rule does not match empty input" {
         checkAll(legalCodePoints()) { cp ->
             Parser(object : AbstractGrammar<Unit>() {
-                override fun start() = ignoreCase(cp.value)
+                override fun start() = codePointIgnoreCase(cp.value)
             }).run("").apply {
                 matched shouldBe false
                 matchedEntireInput shouldBe false
