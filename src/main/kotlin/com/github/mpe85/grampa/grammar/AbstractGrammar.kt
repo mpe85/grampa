@@ -225,7 +225,6 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      */
     protected open fun codePointIgnoreCase(codePoint: Int): Rule<T> = IgnoreCaseCodePointRule(codePoint)
 
-
     /**
      * A rule that matches [this] code point, ignoring its case (case-insensitive).
      *
