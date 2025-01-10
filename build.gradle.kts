@@ -58,7 +58,7 @@ kover {
 }
 
 additionalTestToolchains.forEach {
-    tasks.create<Test>("testOn$it") {
+    tasks.register<Test>("testOn$it") {
         group = JavaBasePlugin.VERIFICATION_GROUP
         javaLauncher.set(
             javaToolchains.launcherFor {
@@ -68,13 +68,13 @@ additionalTestToolchains.forEach {
     }
 }
 
-val javadocJar by tasks.creating(Jar::class) {
+val javadocJar by tasks.registering(Jar::class) {
     group = BUILD_GROUP
     dependsOn("dokkaHtml")
     archiveClassifier.set("javadoc")
     from(tasks.getByName<DokkaTask>("dokkaHtml").outputDirectory)
 }
-val sourcesJar by tasks.creating(Jar::class) {
+val sourcesJar by tasks.registering(Jar::class) {
     group = BUILD_GROUP
     dependsOn("classes")
     archiveClassifier.set("sources")
