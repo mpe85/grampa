@@ -1,6 +1,5 @@
 import com.github.benmanes.gradle.versions.updates.gradle.GradleReleaseChannel.CURRENT
 import org.gradle.api.plugins.BasePlugin.BUILD_GROUP
-import org.jetbrains.dokka.gradle.DokkaTask
 import java.util.Locale
 
 group = "com.github.mpe85"
@@ -70,9 +69,9 @@ additionalTestToolchains.forEach {
 
 val javadocJar by tasks.registering(Jar::class) {
     group = BUILD_GROUP
-    dependsOn("dokkaHtml")
+    dependsOn(tasks.dokkaGenerate)
     archiveClassifier.set("javadoc")
-    from(tasks.getByName<DokkaTask>("dokkaHtml").outputDirectory)
+    from(tasks.dokkaGeneratePublicationHtml.get().outputDirectory)
 }
 val sourcesJar by tasks.registering(Jar::class) {
     group = BUILD_GROUP
