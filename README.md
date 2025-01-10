@@ -7,6 +7,7 @@
 [![Kotlin](https://img.shields.io/badge/kotlin-2.0-blue.svg?logo=kotlin&label=Kotlin)](http://kotlinlang.org)
 [![Build](https://github.com/mpe85/grampa/actions/workflows/gradle.yml/badge.svg)](https://github.com/mpe85/grampa/actions/workflows/gradle.yml)
 [![Coverage](https://codecov.io/gh/mpe85/grampa/branch/main/graph/badge.svg)](https://codecov.io/gh/mpe85/grampa)
+[![Javadoc](https://www.javadoc.io/badge/com.github.mpe85/grampa.svg)](https://www.javadoc.io/doc/com.github.mpe85/grampa)
 [![License](https://img.shields.io/github/license/mpe85/grampa.svg?label=License)](https://github.com/mpe85/grampa/blob/main/LICENSE)
 
 Grampa — short for **Gram**mar **pa**rser — is a library that allows you to define grammars completely in Kotlin source
