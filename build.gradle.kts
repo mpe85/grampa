@@ -3,7 +3,7 @@ import org.gradle.api.plugins.BasePlugin.BUILD_GROUP
 import java.util.Locale
 
 group = "com.github.mpe85"
-version = "1.5.0"
+version = "1.5.1-SNAPSHOT"
 val additionalTestToolchains = listOf(11, 17, 21, 23)
 val gitUrl = "https://github.com/mpe85/${project.name}"
 val gitScmUrl = "https://github.com/mpe85/${project.name}.git"
