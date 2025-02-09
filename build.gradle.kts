@@ -1,5 +1,6 @@
 import com.github.benmanes.gradle.versions.updates.gradle.GradleReleaseChannel.CURRENT
 import org.gradle.api.plugins.BasePlugin.BUILD_GROUP
+import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import java.util.Locale
 
 group = "com.github.mpe85"
@@ -53,6 +54,12 @@ kover {
                 onCheck = true
             }
         }
+    }
+}
+
+dokka {
+    dokkaSourceSets.configureEach {
+        documentedVisibilities(VisibilityModifier.Public, VisibilityModifier.Protected)
     }
 }
 
