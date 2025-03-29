@@ -24,13 +24,13 @@ class RegexRuleTests : StringSpec({
         rule3.toString() shouldBe "RegexRule(pattern=[a]{3})"
     }
     "Rule match" {
-        mockk<ParserContext<String>>().apply {
+        mockk<ParserContext<String>> {
             every { restOfInput } returns "aaa"
             every { advanceIndex(3) } returns true
         }.let {
             RegexRule<String>("[a]{3}").match(it) shouldBe true
         }
-        mockk<ParserContext<String>>().apply {
+        mockk<ParserContext<String>> {
             every { restOfInput } returns "aaa"
             every { advanceIndex(3) } returns false
         }.let {

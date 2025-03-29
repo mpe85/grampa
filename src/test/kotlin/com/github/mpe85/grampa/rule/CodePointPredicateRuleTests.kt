@@ -26,7 +26,7 @@ class CodePointPredicateRuleTests : StringSpec({
         rule3.toString() shouldBe "CodePointPredicateRule(predicate=(kotlin.Int) -> kotlin.Boolean)"
     }
     "Rule match" {
-        val ctx = mockk<ParserContext<String>>().apply {
+        val ctx = mockk<ParserContext<String>> {
             every { atEndOfInput } returns false
             every { currentCodePoint } returns 'a'.code
             every { advanceIndex(1) } returns true

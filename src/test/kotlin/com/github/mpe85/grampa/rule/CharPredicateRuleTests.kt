@@ -26,7 +26,7 @@ class CharPredicateRuleTests : StringSpec({
         rule3.toString() shouldBe "CharPredicateRule(predicate=(kotlin.Char) -> kotlin.Boolean)"
     }
     "Rule match" {
-        val ctx = mockk<ParserContext<String>>().apply {
+        val ctx = mockk<ParserContext<String>> {
             every { atEndOfInput } returns false
             every { currentChar } returns 'a'
             every { advanceIndex(1) } returns true
