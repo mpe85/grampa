@@ -5,7 +5,7 @@ import java.util.Locale
 
 group = "com.github.mpe85"
 version = "1.5.1-SNAPSHOT"
-val additionalTestToolchains = listOf(11, 17, 21, 24)
+val additionalTestToolchains = listOf(8, 11, 21, 24)
 val gitUrl = "https://github.com/mpe85/${project.name}"
 val gitScmUrl = "https://github.com/mpe85/${project.name}.git"
 
@@ -37,8 +37,15 @@ dependencies {
     testImplementation("io.mockk:mockk:1.14.2")
 }
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+    }
+}
+
 kotlin {
     explicitApi()
+    jvmToolchain(8)
 }
 
 kover {

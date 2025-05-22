@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '8'
+          java-version: '17'
       - run: ./gradlew build
       - uses: codecov/codecov-action@v5
         with:
