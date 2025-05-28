@@ -8,7 +8,11 @@ object Main {
     fun main(args: Array<String>) {
         val calcGrammar = CalculatorGrammar::class.createGrammar()
         val parser = Parser(calcGrammar)
-        val result = parser.run("(1 + 2) * -3")
+        var result = parser.run("(1 + 2) * -3")
+        println(result.stackTop)
+        result = parser.run("1 + 2 * -3")
+        println(result.stackTop)
+        result = parser.run("1 + 2 * 3")
         println(result.stackTop)
     }
 }

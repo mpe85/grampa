@@ -13,6 +13,8 @@ import org.greenrobot.eventbus.EventBus
 
 /**
  * The parser that parses an input text using a given parser grammar.
+ * An instance of this class can be used to parse several inputs one after the other,
+ * but it is not thread-safe since it uses a single internal state that is reset when a new parser run is started.
  *
  * @author mpe85
  * @param[T] The type of the stack elements
@@ -43,6 +45,7 @@ public class Parser<T>(grammar: Grammar<T>) {
 
     /**
      * Run the parser against a character sequence.
+     * Can be called several times for different inputs, but not in parallel (not thread-safe).
      *
      * @param[charSequence] A character sequence
      * @return The parse result
@@ -50,7 +53,8 @@ public class Parser<T>(grammar: Grammar<T>) {
     public fun run(charSequence: CharSequence): ParseResult<T> = run(CharSequenceInputBuffer(charSequence))
 
     /**
-     * Run the parser against an input buffer. This function must only be called once.
+     * Run the parser against an input buffer.
+     * Can be called several times for different inputs, but not in parallel (not thread-safe).
      *
      * @param[inputBuffer] An input buffer
      * @return The parse result

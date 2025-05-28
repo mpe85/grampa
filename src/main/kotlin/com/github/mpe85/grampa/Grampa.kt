@@ -22,7 +22,7 @@ import kotlin.reflect.jvm.javaMethod
 import kotlin.reflect.jvm.jvmErasure
 
 /**
- * Create a new grammar instance using the given grammar [KClass].
+ * Create a new [Grammar] instance using the given grammar [KClass].
  * The grammar class must have a no-args constructor which will be called by this function.
  *
  * @param[U] The type of the grammar
@@ -32,7 +32,7 @@ import kotlin.reflect.jvm.jvmErasure
 public fun <U : Grammar<T>, T> KClass<U>.createGrammar(): U = createGrammarSubClass().createInstance()
 
 /**
- * Create a new grammar instance using the given grammar [Class].
+ * Create a new [Grammar] instance using the given grammar [Class].
  * The grammar class must have a no-args constructor which will be called by this function.
  *
  * @param[U] The type of the grammar
@@ -42,7 +42,7 @@ public fun <U : Grammar<T>, T> KClass<U>.createGrammar(): U = createGrammarSubCl
 public fun <U : Grammar<T>, T> Class<U>.createGrammar(): U = kotlin.createGrammar()
 
 /**
- * Create a new grammar instance using the given grammar [KClass] and constructor arguments.
+ * Create a new [Grammar] instance using the given grammar [KClass] and constructor arguments.
  * The grammar class must have a constructor which matches the passed argument types.
  *
  * @param[U] The type of the grammar
@@ -58,7 +58,7 @@ public fun <U : Grammar<T>, T> KClass<U>.createGrammar(vararg args: Any?): U =
         ?: throw IllegalArgumentException("Failed to find a constructor that is callable with the given arguments.")
 
 /**
- * Create a new grammar instance using the given parser [Class] and constructor arguments.
+ * Create a new [Grammar] instance using the given parser [Class] and constructor arguments.
  * The grammar class must have a constructor which matches the passed argument types.
  *
  * @param[U] The type of the grammar
