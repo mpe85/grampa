@@ -10,13 +10,13 @@ import io.kotest.property.checkAll
 
 class NoneOfCharsRuleTests : StringSpec({
     fun grammars(chars: Collection<Char>) = listOf(
-        object : AbstractGrammar<Unit>() {
+        object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = noneOfChars(*chars.toCharArray())
         },
-        object : AbstractGrammar<Unit>() {
+        object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = noneOfChars(chars)
         },
-        object : AbstractGrammar<Unit>() {
+        object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = noneOfChars(chars.joinToString(""))
         },
     )

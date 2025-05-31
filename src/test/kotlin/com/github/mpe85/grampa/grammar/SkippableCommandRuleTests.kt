@@ -7,7 +7,7 @@ import io.kotest.matchers.shouldNotBe
 
 class SkippableCommandRuleTests : StringSpec({
     "SkippableCommand rule matches when command is executed" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = skippableCommand {
                 it.stack.push(Unit)
                 it.level shouldBe 0
@@ -22,7 +22,7 @@ class SkippableCommandRuleTests : StringSpec({
         }
     }
     "SkippableCommand rule is skipped when it is part of a Test rule" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = test(
                 skippableCommand {
                     it.stack.push(Unit)

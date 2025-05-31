@@ -10,13 +10,13 @@ import io.kotest.property.checkAll
 
 class AnyOfCharsRuleTests : StringSpec({
     fun grammars(chars: Collection<Char>) = listOf(
-        object : AbstractGrammar<Unit>() {
+        object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = anyOfChars(*chars.toCharArray())
         },
-        object : AbstractGrammar<Unit>() {
+        object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = anyOfChars(chars)
         },
-        object : AbstractGrammar<Unit>() {
+        object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = anyOfChars(chars.joinToString(""))
         },
     )

@@ -3,6 +3,7 @@ package com.github.mpe85.grampa.parser
 import com.github.mpe85.grampa.event.ParseEventListener
 import com.github.mpe85.grampa.event.PreMatchEvent
 import com.github.mpe85.grampa.grammar.AbstractGrammar
+import com.github.mpe85.grampa.grammar.ValidGrammar
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.core.spec.style.StringSpec
 import java.io.IOException
@@ -12,7 +13,7 @@ class ParserTests : StringSpec({
         override fun beforeMatch(event: PreMatchEvent<Int>) = throw IOException()
     }
     "Register listener" {
-        Parser(object : AbstractGrammar<Int>() {
+        Parser(object : AbstractGrammar<Int>(), ValidGrammar {
             override fun start() = empty()
         }).apply {
             shouldNotThrowAny { registerListener(IntegerTestListener()) }
@@ -20,7 +21,7 @@ class ParserTests : StringSpec({
         }
     }
     "Unregister listener" {
-        Parser(object : AbstractGrammar<Int>() {
+        Parser(object : AbstractGrammar<Int>(), ValidGrammar {
             override fun start() = empty()
         }).apply {
             IntegerTestListener().let {

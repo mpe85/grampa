@@ -18,10 +18,10 @@ import io.kotest.property.checkAll
 
 class StringsIgnoreCaseRuleTests : StringSpec({
     fun grammars(strings: Collection<String>) = listOf(
-        object : AbstractGrammar<Unit>() {
+        object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = stringsIgnoreCase(*strings.toTypedArray())
         },
-        object : AbstractGrammar<Unit>() {
+        object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = stringsIgnoreCase(strings)
         },
     )

@@ -14,7 +14,7 @@ import java.lang.Character.isJavaIdentifierPart
 
 class JavaIdentifierPartRuleTests : StringSpec({
     "JavaIdentifierPart rule matches all java identifier part characters" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = javaIdentifierPart()
         }).apply {
             checkAll(Arb.char().filter { isJavaIdentifierPart(it) }) { ch ->
@@ -28,7 +28,7 @@ class JavaIdentifierPartRuleTests : StringSpec({
         }
     }
     "JavaIdentifierPart rule matches all java identifier part codepoints" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = javaIdentifierPart()
         }).apply {
             checkAll(legalCodePoints().filter { isJavaIdentifierPart(it.value) }) { cp ->
@@ -42,7 +42,7 @@ class JavaIdentifierPartRuleTests : StringSpec({
         }
     }
     "JavaIdentifierPart rule does not match non java identifier part characters" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = javaIdentifierPart()
         }).apply {
             checkAll(Arb.char().filterNot { isJavaIdentifierPart(it) }) { ch ->
@@ -56,7 +56,7 @@ class JavaIdentifierPartRuleTests : StringSpec({
         }
     }
     "JavaIdentifierPart rule does not match non java identifier part codepoints" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = javaIdentifierPart()
         }).apply {
             checkAll(legalCodePoints().filterNot { isJavaIdentifierPart(it.value) }) { cp ->
@@ -70,7 +70,7 @@ class JavaIdentifierPartRuleTests : StringSpec({
         }
     }
     "JavaIdentifierPart rule does not match empty input" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = javaIdentifierPart()
         }).run("").apply {
             matched shouldBe false

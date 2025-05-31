@@ -14,7 +14,7 @@ import io.kotest.property.checkAll
 
 class LetterRuleTests : StringSpec({
     "Letter rule matches all letter characters" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = letter()
         }).apply {
             checkAll(Arb.char().filter { Character.isLetter(it) }) { ch ->
@@ -28,7 +28,7 @@ class LetterRuleTests : StringSpec({
         }
     }
     "Letter rule matches all letter codepoints" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = letter()
         }).apply {
             checkAll(legalCodePoints().filter { UCharacter.isLetter(it.value) }) { cp ->
@@ -42,7 +42,7 @@ class LetterRuleTests : StringSpec({
         }
     }
     "Letter rule does not match non-letter characters" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = letter()
         }).apply {
             checkAll(Arb.char().filterNot { Character.isLetter(it) }) { ch ->
@@ -56,7 +56,7 @@ class LetterRuleTests : StringSpec({
         }
     }
     "Letter rule does not match non-letter codepoints" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = letter()
         }).apply {
             checkAll(legalCodePoints().filterNot { UCharacter.isLetter(it.value) }) { cp ->
@@ -70,7 +70,7 @@ class LetterRuleTests : StringSpec({
         }
     }
     "Letter rule does not match empty input" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = letter()
         }).run("").apply {
             matched shouldBe false

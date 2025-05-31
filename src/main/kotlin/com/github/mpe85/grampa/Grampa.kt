@@ -3,6 +3,7 @@
 package com.github.mpe85.grampa
 
 import com.github.mpe85.grampa.grammar.Grammar
+import com.github.mpe85.grampa.grammar.ValidGrammar
 import com.github.mpe85.grampa.intercept.RuleMethodInterceptor
 import com.github.mpe85.grampa.rule.Rule
 import com.github.mpe85.grampa.util.isFinal
@@ -72,6 +73,7 @@ private fun <U : Grammar<T>, T> KClass<U>.createGrammarSubClass(): KClass<out U>
     validate()
     return ByteBuddy()
         .subclass(java)
+        .implement(ValidGrammar::class.java)
         .method(returns(Rule::class.java))
         .intercept(withDefaultConfiguration().to(RuleMethodInterceptor<T>()))
         .make()

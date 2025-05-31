@@ -7,7 +7,7 @@ import io.kotest.property.checkAll
 
 class AnyCharRuleTests : StringSpec({
     "AnyChar rule matches all characters" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = anyChar()
         }).apply {
             checkAll<Char> { ch ->
@@ -21,7 +21,7 @@ class AnyCharRuleTests : StringSpec({
         }
     }
     "AnyChar rule does not match empty input" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = anyChar()
         }).run("").apply {
             matched shouldBe false

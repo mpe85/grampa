@@ -10,7 +10,7 @@ import io.kotest.property.checkAll
 
 class LfRuleTests : StringSpec({
     "LF rule matches LF character" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = lf()
         }).run("\n").apply {
             matched shouldBe true
@@ -20,7 +20,7 @@ class LfRuleTests : StringSpec({
         }
     }
     "LF rule does not match non-LF codepoints" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = lf()
         }).apply {
             checkAll(legalCodePoints().filterNot { it.value == '\n'.code }) { cp ->
@@ -34,7 +34,7 @@ class LfRuleTests : StringSpec({
         }
     }
     "LF rule does not match empty input" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = lf()
         }).run("").apply {
             matched shouldBe false

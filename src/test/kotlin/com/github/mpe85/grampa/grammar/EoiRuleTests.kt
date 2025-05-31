@@ -10,7 +10,7 @@ import io.kotest.property.checkAll
 
 class EoiRuleTests : StringSpec({
     "EOI rule matches at end of any input" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = sequence(zeroOrMore(anyCodePoint()), eoi())
         }).apply {
             checkAll(Arb.string(0, 10, legalCodePoints())) { str ->
@@ -24,7 +24,7 @@ class EoiRuleTests : StringSpec({
         }
     }
     "EOI rule does not match before end of input" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = eoi()
         }).apply {
             checkAll(Arb.string(1, 10, legalCodePoints())) { str ->

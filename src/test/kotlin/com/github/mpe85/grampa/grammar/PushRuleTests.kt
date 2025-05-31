@@ -8,7 +8,7 @@ import io.kotest.property.checkAll
 class PushRuleTests : StringSpec({
     "Push rule pushes value on parser stack" {
         checkAll<Int, Int> { int1, int2 ->
-            Parser(object : AbstractGrammar<Int>() {
+            Parser(object : AbstractGrammar<Int>(), ValidGrammar {
                 override fun start() = push(int1) + push(1, int2)
             }).run("").apply {
                 matched shouldBe true
@@ -22,7 +22,7 @@ class PushRuleTests : StringSpec({
     }
     "Push rule pushes supplied value on parser stack" {
         checkAll<Int, Int> { int1, int2 ->
-            Parser(object : AbstractGrammar<Int>() {
+            Parser(object : AbstractGrammar<Int>(), ValidGrammar {
                 override fun start() = push { int1 } + push(1) { int2 }
             }).run("").apply {
                 matched shouldBe true

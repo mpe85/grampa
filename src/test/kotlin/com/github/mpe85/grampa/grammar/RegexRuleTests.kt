@@ -20,7 +20,7 @@ class RegexRuleTests : StringSpec({
     "Regex rule matches correct pattern" {
         patterns.forEach { pattern ->
             checkAll(Arb.stringPattern(pattern)) { str ->
-                Parser(object : AbstractGrammar<Unit>() {
+                Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
                     override fun start() = pattern.toRegexRule()
                 }).run(str).apply {
                     matched shouldBe true

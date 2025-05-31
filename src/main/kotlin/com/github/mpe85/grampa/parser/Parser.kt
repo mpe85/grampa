@@ -2,10 +2,12 @@ package com.github.mpe85.grampa.parser
 
 import com.github.mpe85.grampa.context.Context
 import com.github.mpe85.grampa.context.ContextState
+import com.github.mpe85.grampa.createGrammar
 import com.github.mpe85.grampa.event.ParseEventListener
 import com.github.mpe85.grampa.event.PostParseEvent
 import com.github.mpe85.grampa.event.PreParseEvent
 import com.github.mpe85.grampa.grammar.Grammar
+import com.github.mpe85.grampa.grammar.ValidGrammar
 import com.github.mpe85.grampa.input.CharSequenceInputBuffer
 import com.github.mpe85.grampa.input.InputBuffer
 import com.github.mpe85.grampa.stack.LinkedListRestorableStack
@@ -18,12 +20,18 @@ import org.greenrobot.eventbus.EventBus
  *
  * @author mpe85
  * @param[T] The type of the stack elements
- * @param[grammar] A grammar instance
+ * @param[grammar] A grammar instance that must be created beforehand by any of the [createGrammar] functions
  * @property[startRule] The start rule of the parser's grammar
  * @property[bus] The parser's event bus
  * @property[stack] The parser's value stack
  */
 public class Parser<T>(grammar: Grammar<T>) {
+
+    init {
+        require(grammar is ValidGrammar) {
+            "The given grammar instance '$grammar' is invalid. Did you instantiate it using createGrammar()?"
+        }
+    }
 
     private val startRule = grammar.start()
     private val bus = EventBus.builder().logNoSubscriberMessages(false).build()

@@ -10,7 +10,7 @@ import io.kotest.property.checkAll
 
 class LegalRuleTests : StringSpec({
     "Legal rule matches legal Unicode code points" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = legal()
         }).apply {
             checkAll(legalCodePoints()) { cp ->
@@ -24,7 +24,7 @@ class LegalRuleTests : StringSpec({
         }
     }
     "Legal rule does not match illegal Unicode code points" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = legal()
         }).apply {
             checkAll(illegalCodePoints()) { cp ->

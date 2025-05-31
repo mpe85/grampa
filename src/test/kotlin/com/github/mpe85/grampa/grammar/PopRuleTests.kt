@@ -9,7 +9,7 @@ import io.kotest.property.checkAll
 class PopRuleTests : StringSpec({
     "Pop rule pops value from parser stack" {
         checkAll<Int> { int ->
-            Parser(object : AbstractGrammar<Int>() {
+            Parser(object : AbstractGrammar<Int>(), ValidGrammar {
                 override fun start() = push(int) + pop()
             }).run("").apply {
                 matched shouldBe true
@@ -23,7 +23,7 @@ class PopRuleTests : StringSpec({
     }
     "Pop(down) rule pops value from parser stack at given down position" {
         checkAll<Int, Int> { int1, int2 ->
-            Parser(object : AbstractGrammar<Int>() {
+            Parser(object : AbstractGrammar<Int>(), ValidGrammar {
                 override fun start() = push(int1) + push(int2) + pop(1)
             }).run("").apply {
                 matched shouldBe true
@@ -37,7 +37,7 @@ class PopRuleTests : StringSpec({
     }
     "Pop(context) rule pops value from parser stack" {
         checkAll<Int> { int ->
-            Parser(object : AbstractGrammar<Int>() {
+            Parser(object : AbstractGrammar<Int>(), ValidGrammar {
                 override fun start() = push(int) + command { pop(it) shouldBe int }
             }).run("").apply {
                 matched shouldBe true
@@ -51,7 +51,7 @@ class PopRuleTests : StringSpec({
     }
     "Pop(down,context) rule pops value from parser stack at given down position" {
         checkAll<Int, Int> { int1, int2 ->
-            Parser(object : AbstractGrammar<Int>() {
+            Parser(object : AbstractGrammar<Int>(), ValidGrammar {
                 override fun start() = push(int1) + push(int2) + command { pop(1, it) shouldBe int1 }
             }).run("").apply {
                 matched shouldBe true
@@ -64,7 +64,7 @@ class PopRuleTests : StringSpec({
         }
     }
     "Pop(value) throws NoSuchElementException when stack is empty" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = pop()
         }).apply {
             shouldThrow<NoSuchElementException> { run("") }

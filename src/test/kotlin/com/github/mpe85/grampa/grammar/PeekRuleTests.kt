@@ -9,7 +9,7 @@ import io.kotest.property.checkAll
 class PeekRuleTests : StringSpec({
     "Peek(context) rule peeks value at top of parser stack" {
         checkAll<Int> { int ->
-            Parser(object : AbstractGrammar<Int>() {
+            Parser(object : AbstractGrammar<Int>(), ValidGrammar {
                 override fun start() = push(int) + command { peek(it) shouldBe int }
             }).run("").apply {
                 matched shouldBe true
@@ -23,7 +23,7 @@ class PeekRuleTests : StringSpec({
     }
     "Peek(down,context) rule peeks value on parser stack at given down position" {
         checkAll<Int, Int> { int1, int2 ->
-            Parser(object : AbstractGrammar<Int>() {
+            Parser(object : AbstractGrammar<Int>(), ValidGrammar {
                 override fun start() = push(int1) + push(int2) + command { peek(1, it) shouldBe int1 }
             }).run("").apply {
                 matched shouldBe true
@@ -36,7 +36,7 @@ class PeekRuleTests : StringSpec({
         }
     }
     "Peek(value) throws NoSuchElementException when stack is empty" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = command { peek(it) }
         }).apply {
             shouldThrow<NoSuchElementException> { run("") }

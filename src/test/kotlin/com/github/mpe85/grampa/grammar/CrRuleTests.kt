@@ -10,7 +10,7 @@ import io.kotest.property.checkAll
 
 class CrRuleTests : StringSpec({
     "CR rule matches CR character" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = cr()
         }).run("\r").apply {
             matched shouldBe true
@@ -20,7 +20,7 @@ class CrRuleTests : StringSpec({
         }
     }
     "CR rule does not match non-CR codepoints" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = cr()
         }).apply {
             checkAll(legalCodePoints().filterNot { it.value == '\r'.code }) { cp ->
@@ -34,7 +34,7 @@ class CrRuleTests : StringSpec({
         }
     }
     "CR rule does not match empty input" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = cr()
         }).run("").apply {
             matched shouldBe false

@@ -9,7 +9,7 @@ import io.kotest.property.checkAll
 class SwapRuleTests : StringSpec({
     "Swap rule swaps values on parser stack" {
         checkAll<Int, Int> { int1, int2 ->
-            Parser(object : AbstractGrammar<Int>() {
+            Parser(object : AbstractGrammar<Int>(), ValidGrammar {
                 override fun start() = push(int1) + push(int2) + swap()
             }).run("").apply {
                 matched shouldBe true
@@ -23,7 +23,7 @@ class SwapRuleTests : StringSpec({
         }
     }
     "Swap rule throws IndexOutOfBoundsException when stack is empty" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = swap()
         }).apply {
             shouldThrow<IndexOutOfBoundsException> { run("") }
@@ -31,7 +31,7 @@ class SwapRuleTests : StringSpec({
     }
     "Swap rule throws IndexOutOfBoundsException when stack has one element only" {
         checkAll<Int> { int ->
-            Parser(object : AbstractGrammar<Int>() {
+            Parser(object : AbstractGrammar<Int>(), ValidGrammar {
                 override fun start() = push(int) + swap()
             }).apply {
                 shouldThrow<IndexOutOfBoundsException> { run("") }

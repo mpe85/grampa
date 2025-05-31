@@ -13,7 +13,7 @@ import io.kotest.property.checkAll
 class CharRuleTests : StringSpec({
     "Char rule matches correct character" {
         checkAll<Char> { ch ->
-            Parser(object : AbstractGrammar<Unit>() {
+            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = char(ch)
             }).run("$ch").apply {
                 matched shouldBe true
@@ -25,7 +25,7 @@ class CharRuleTests : StringSpec({
     }
     "Lowercase Char rule does not match uppercase character" {
         checkAll(lowerCaseChars()) { ch ->
-            Parser(object : AbstractGrammar<Unit>() {
+            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = char(ch)
             }).apply {
                 val uppercase = ch.uppercaseChar()
@@ -40,7 +40,7 @@ class CharRuleTests : StringSpec({
     }
     "Uppercase Char rule does not match lowercase character" {
         checkAll(upperCaseChars()) { ch ->
-            Parser(object : AbstractGrammar<Unit>() {
+            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = char(ch)
             }).apply {
                 val lowercase = ch.lowercaseChar()
@@ -55,7 +55,7 @@ class CharRuleTests : StringSpec({
     }
     "Char rule does not match wrong character" {
         checkAll(Arb.set(Arb.char(), 2..2)) { chars ->
-            Parser(object : AbstractGrammar<Unit>() {
+            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = char(chars.first())
             }).run("${chars.last()}").apply {
                 matched shouldBe false
@@ -67,7 +67,7 @@ class CharRuleTests : StringSpec({
     }
     "Char rule does not match empty input" {
         checkAll<Char> { ch ->
-            Parser(object : AbstractGrammar<Unit>() {
+            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = char(ch)
             }).run("").apply {
                 matched shouldBe false

@@ -14,7 +14,7 @@ import io.kotest.property.checkAll
 
 class LetterOrDigitRuleTests : StringSpec({
     "LetterOrDigit rule matches all letter or digit characters" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = letterOrDigit()
         }).apply {
             checkAll(Arb.char().filter { Character.isLetterOrDigit(it) }) { ch ->
@@ -28,7 +28,7 @@ class LetterOrDigitRuleTests : StringSpec({
         }
     }
     "LetterOrDigit rule matches all letter or digit codepoints" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = letterOrDigit()
         }).apply {
             checkAll(legalCodePoints().filter { UCharacter.isLetterOrDigit(it.value) }) { cp ->
@@ -42,7 +42,7 @@ class LetterOrDigitRuleTests : StringSpec({
         }
     }
     "LetterOrDigit rule does not match non letter or digit characters" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = letterOrDigit()
         }).apply {
             checkAll(Arb.char().filterNot { Character.isLetterOrDigit(it) }) { ch ->
@@ -56,7 +56,7 @@ class LetterOrDigitRuleTests : StringSpec({
         }
     }
     "LetterOrDigit rule does not match non letter or digit codepoints" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = letterOrDigit()
         }).apply {
             checkAll(legalCodePoints().filterNot { UCharacter.isLetterOrDigit(it.value) }) { cp ->
@@ -70,7 +70,7 @@ class LetterOrDigitRuleTests : StringSpec({
         }
     }
     "LetterOrDigit rule does not match empty input" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = letterOrDigit()
         }).run("").apply {
             matched shouldBe false

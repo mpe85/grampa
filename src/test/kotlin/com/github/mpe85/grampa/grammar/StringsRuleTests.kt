@@ -14,10 +14,10 @@ import io.kotest.property.checkAll
 
 class StringsRuleTests : StringSpec({
     fun grammars(strings: Collection<String>) = listOf(
-        object : AbstractGrammar<Unit>() {
+        object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = strings(*strings.toTypedArray())
         },
-        object : AbstractGrammar<Unit>() {
+        object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = strings(strings)
         },
     )

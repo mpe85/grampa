@@ -10,7 +10,7 @@ import io.kotest.property.checkAll
 
 class AnyCodePointRuleTests : StringSpec({
     "AnyCodePoint rule matches all code points" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = anyCodePoint()
         }).apply {
             checkAll(Arb.string(1, legalCodePoints())) { str ->
@@ -24,7 +24,7 @@ class AnyCodePointRuleTests : StringSpec({
         }
     }
     "AnyCodePoint rule does not match empty input" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = anyCodePoint()
         }).run("").apply {
             matched shouldBe false

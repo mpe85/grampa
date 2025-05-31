@@ -8,7 +8,7 @@ import io.kotest.property.checkAll
 
 class CommandRuleTests : StringSpec({
     "Command rule matches when command is executed" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = command {
                 it.stack.push(Unit)
                 it.level shouldBe 0
@@ -24,7 +24,7 @@ class CommandRuleTests : StringSpec({
     }
     "Command rule provides matched char sequence of previous rule" {
         checkAll<String> { str ->
-            Parser(object : AbstractGrammar<Unit>() {
+            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = str.toRule() + command {
                     it.previousMatch shouldBe str
                 }

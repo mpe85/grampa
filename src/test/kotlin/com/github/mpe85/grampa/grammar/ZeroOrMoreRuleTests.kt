@@ -14,7 +14,7 @@ import io.kotest.property.checkAll
 class ZeroOrMoreRuleTests : StringSpec({
     "ZeroOrMore rule matches if child rule matches once" {
         checkAll(legalCodePoints()) { cp ->
-            Parser(object : AbstractGrammar<Unit>() {
+            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = zeroOrMore(cp.value.toRule())
             }).run(toString(cp.value)).apply {
                 matched shouldBe true
@@ -26,7 +26,7 @@ class ZeroOrMoreRuleTests : StringSpec({
     }
     "ZeroOrMore rule matches if child rule matches multiple times" {
         checkAll(legalCodePoints(), Arb.positiveInt(10)) { cp, n ->
-            Parser(object : AbstractGrammar<Unit>() {
+            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = zeroOrMore(cp.value.toRule())
             }).apply {
                 val repeated = toString(cp.value).repeat(n)
@@ -41,7 +41,7 @@ class ZeroOrMoreRuleTests : StringSpec({
     }
     "ZeroOrMore rule matches if child rule does not match" {
         checkAll(lowerCaseCodePoints(), upperCaseCodePoints()) { lower, upper ->
-            Parser(object : AbstractGrammar<Unit>() {
+            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = zeroOrMore(lower.value.toRule())
             }).apply {
                 run(toString(upper.value)).apply {

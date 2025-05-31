@@ -14,7 +14,7 @@ import java.lang.Character.isJavaIdentifierStart
 
 class JavaIdentifierStartRuleTests : StringSpec({
     "JavaIdentifierStart rule matches all java identifier start characters" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = javaIdentifierStart()
         }).apply {
             checkAll(Arb.char().filter { isJavaIdentifierStart(it) }) { ch ->
@@ -28,7 +28,7 @@ class JavaIdentifierStartRuleTests : StringSpec({
         }
     }
     "JavaIdentifierStart rule matches all java identifier start codepoints" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = javaIdentifierStart()
         }).apply {
             checkAll(legalCodePoints().filter { isJavaIdentifierStart(it.value) }) { cp ->
@@ -42,7 +42,7 @@ class JavaIdentifierStartRuleTests : StringSpec({
         }
     }
     "JavaIdentifierStart rule does not match non java identifier start characters" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = javaIdentifierStart()
         }).apply {
             checkAll(Arb.char().filterNot { isJavaIdentifierStart(it) }) { ch ->
@@ -56,7 +56,7 @@ class JavaIdentifierStartRuleTests : StringSpec({
         }
     }
     "JavaIdentifierStart rule does not match non java identifier start codepoints" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = javaIdentifierStart()
         }).apply {
             checkAll(legalCodePoints().filterNot { isJavaIdentifierStart(it.value) }) { cp ->
@@ -70,7 +70,7 @@ class JavaIdentifierStartRuleTests : StringSpec({
         }
     }
     "JavaIdentifierStart rule does not match empty input" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = javaIdentifierStart()
         }).run("").apply {
             matched shouldBe false

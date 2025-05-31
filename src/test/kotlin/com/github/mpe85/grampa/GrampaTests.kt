@@ -1,6 +1,7 @@
 package com.github.mpe85.grampa
 
 import com.github.mpe85.grampa.grammar.AbstractGrammar
+import com.github.mpe85.grampa.grammar.ValidGrammar
 import com.github.mpe85.grampa.rule.CharPredicateRule
 import com.github.mpe85.grampa.rule.ChoiceRule
 import com.github.mpe85.grampa.rule.EmptyRule
@@ -51,10 +52,12 @@ class GrampaTests : StringSpec({
         TestGrammar::class.createGrammar().apply {
             dummy shouldBe null
             verifyRules()
+            shouldBeInstanceOf<ValidGrammar>()
         }
         TestGrammar::class.createGrammar("foo").apply {
             dummy shouldBe "foo"
             verifyRules()
+            shouldBeInstanceOf<ValidGrammar>()
         }
         shouldThrow<IllegalArgumentException> { TestGrammar::class.createGrammar(4711) }
         shouldThrow<IllegalArgumentException> { TestGrammar::class.createGrammar("foo", "bar") }
@@ -91,7 +94,13 @@ class GrampaTests : StringSpec({
         open class SubGrammar : SuperGrammar() {
             override fun start() = super.start().also { it.toString() }
         }
-        SuperGrammar::class.createGrammar().verifyRules()
-        SubGrammar::class.createGrammar().verifyRules()
+        SuperGrammar::class.createGrammar().apply {
+            verifyRules()
+            shouldBeInstanceOf<ValidGrammar>()
+        }
+        SubGrammar::class.createGrammar().apply {
+            verifyRules()
+            shouldBeInstanceOf<ValidGrammar>()
+        }
     }
 })

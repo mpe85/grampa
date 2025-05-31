@@ -10,7 +10,7 @@ import io.kotest.property.checkAll
 
 class EmptyRuleTests : StringSpec({
     "Empty rule matches non-empty input" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = empty()
         }).apply {
             checkAll(Arb.string(1, 10, legalCodePoints())) { str ->
@@ -24,7 +24,7 @@ class EmptyRuleTests : StringSpec({
         }
     }
     "Empty rule matches empty input" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = empty()
         }).run("").apply {
             matched shouldBe true

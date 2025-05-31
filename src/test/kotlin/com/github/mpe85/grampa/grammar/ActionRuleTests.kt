@@ -12,7 +12,7 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 
 class ActionRuleTests : StringSpec({
     "Action rule matches when action succeeds" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = action {
                 it.stack.push(Unit)
                 it.level shouldBe 0
@@ -28,7 +28,7 @@ class ActionRuleTests : StringSpec({
         }
     }
     "Action rule does not match when action fails" {
-        Parser(object : AbstractGrammar<Unit>() {
+        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = action {
                 it.stack.push(Unit)
                 it.level shouldBe 0
@@ -44,25 +44,25 @@ class ActionRuleTests : StringSpec({
         }
     }
     "Action function is correctly converted to action rule" {
-        val grammar = object : AbstractGrammar<Unit>() {
+        val grammar = object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = { _: RuleContext<Unit> -> true }.toActionRule()
         }
         grammar.start().shouldBeInstanceOf<ActionRule<Unit>>()
     }
     "Action is correctly converted to action rule" {
-        val grammar = object : AbstractGrammar<Unit>() {
+        val grammar = object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = Action<Unit> { true }.toRule()
         }
         grammar.start().shouldBeInstanceOf<ActionRule<Unit>>()
     }
     "Command function is correctly converted to action rule" {
-        val grammar = object : AbstractGrammar<Unit>() {
+        val grammar = object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = { _: RuleContext<Unit> -> }.toCommandRule()
         }
         grammar.start().shouldBeInstanceOf<ActionRule<Unit>>()
     }
     "Command is correctly converted to action rule" {
-        val grammar = object : AbstractGrammar<Unit>() {
+        val grammar = object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = Command<Unit> {}.toRule()
         }
         grammar.start().shouldBeInstanceOf<ActionRule<Unit>>()

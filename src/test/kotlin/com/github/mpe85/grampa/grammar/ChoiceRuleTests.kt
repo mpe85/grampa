@@ -13,13 +13,13 @@ import io.kotest.property.checkAll
 
 class ChoiceRuleTests : StringSpec({
     fun grammars(rules: List<Rule<Unit>>) = listOf(
-        object : AbstractGrammar<Unit>() {
+        object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = choice(*rules.toTypedArray())
         },
-        object : AbstractGrammar<Unit>() {
+        object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = choice(rules)
         },
-        object : AbstractGrammar<Unit>() {
+        object : AbstractGrammar<Unit>(), ValidGrammar {
             override fun start() = rules.reduce { acc, rule -> acc or rule }
         },
     )
@@ -38,7 +38,7 @@ class ChoiceRuleTests : StringSpec({
     }
     "Empty Choice rule matches any input" {
         checkAll(Arb.string(0..10, legalCodePoints())) { str ->
-            Parser(object : AbstractGrammar<Unit>() {
+            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = choice()
             }).run(str).apply {
                 matched shouldBe true

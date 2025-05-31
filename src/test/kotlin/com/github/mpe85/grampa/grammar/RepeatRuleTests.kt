@@ -18,7 +18,7 @@ import io.kotest.property.checkAll
 class RepeatRuleTests : StringSpec({
     "Repeat(n) rule matches if child rule matches exactly n times" {
         checkAll(legalCodePoints(), Arb.int(2..10)) { cp, n ->
-            Parser(object : AbstractGrammar<Unit>() {
+            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = repeat(cp.value.toRule(), n)
             }).apply {
                 val repeated = toString(cp.value).repeat(n)
@@ -33,7 +33,7 @@ class RepeatRuleTests : StringSpec({
     }
     "Repeat(n) rule does not match if child rule matches less than n times" {
         checkAll(legalCodePoints(), Arb.int(2..10)) { cp, n ->
-            Parser(object : AbstractGrammar<Unit>() {
+            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = repeat(cp.value.toRule(), n)
             }).apply {
                 val repeated = toString(cp.value).repeat(n - 1)
@@ -48,7 +48,7 @@ class RepeatRuleTests : StringSpec({
     }
     "Repeat(n) rule matches if child rule matches more than n times" {
         checkAll(legalCodePoints(), Arb.int(2..10)) { cp, n ->
-            Parser(object : AbstractGrammar<Unit>() {
+            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = repeat(cp.value.toRule(), n)
             }).apply {
                 val repeated = toString(cp.value).repeat(n + 1)
@@ -64,7 +64,7 @@ class RepeatRuleTests : StringSpec({
     "Repeat(min,max) rule matches if child rule matches exactly min times" {
         checkAll(legalCodePoints(), Arb.set(Arb.int(2..10), 2)) { cp, ints ->
             val (min, max) = ints.sorted()
-            Parser(object : AbstractGrammar<Unit>() {
+            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = repeat(cp.value.toRule(), min, max)
             }).apply {
                 val repeated = toString(cp.value).repeat(min)
@@ -80,7 +80,7 @@ class RepeatRuleTests : StringSpec({
     "Repeat(min,max) rule matches if child rule matches exactly max times" {
         checkAll(legalCodePoints(), Arb.set(Arb.int(2..10), 2)) { cp, ints ->
             val (min, max) = ints.sorted()
-            Parser(object : AbstractGrammar<Unit>() {
+            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = repeat(cp.value.toRule(), min, max)
             }).apply {
                 val repeated = toString(cp.value).repeat(max)
@@ -96,7 +96,7 @@ class RepeatRuleTests : StringSpec({
     "Repeat(min,max) rule does not match if child rule matches less than min times" {
         checkAll(legalCodePoints(), Arb.set(Arb.int(2..10), 2)) { cp, ints ->
             val (min, max) = ints.sorted()
-            Parser(object : AbstractGrammar<Unit>() {
+            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = repeat(cp.value.toRule(), min, max)
             }).apply {
                 val repeated = toString(cp.value).repeat(min - 1)
@@ -112,7 +112,7 @@ class RepeatRuleTests : StringSpec({
     "Repeat(min,max) rule matches if child rule matches more than max times" {
         checkAll(legalCodePoints(), Arb.set(Arb.int(2..10), 2)) { cp, ints ->
             val (min, max) = ints.sorted()
-            Parser(object : AbstractGrammar<Unit>() {
+            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = repeat(cp.value.toRule(), min, max)
             }).apply {
                 val repeated = toString(cp.value).repeat(max + 1)
@@ -127,7 +127,7 @@ class RepeatRuleTests : StringSpec({
     }
     "Repeat(max) rule matches if child rule matches exactly max times" {
         checkAll(legalCodePoints(), Arb.int(2..10)) { cp, max ->
-            Parser(object : AbstractGrammar<Unit>() {
+            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = repeat(cp.value.toRule(), max = max)
             }).apply {
                 val repeated = toString(cp.value).repeat(max)
@@ -142,7 +142,7 @@ class RepeatRuleTests : StringSpec({
     }
     "Repeat(max) rule matches if child rule matches less than max times" {
         checkAll(legalCodePoints(), Arb.int(2..10)) { cp, max ->
-            Parser(object : AbstractGrammar<Unit>() {
+            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = repeat(cp.value.toRule(), max = max)
             }).apply {
                 val repeated = toString(cp.value).repeat(max - 1)
@@ -157,7 +157,7 @@ class RepeatRuleTests : StringSpec({
     }
     "Repeat(max) rule matches if child rule matches more than max times" {
         checkAll(legalCodePoints(), Arb.int(2..10)) { cp, max ->
-            Parser(object : AbstractGrammar<Unit>() {
+            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = repeat(cp.value.toRule(), max = max)
             }).apply {
                 val repeated = toString(cp.value).repeat(max + 1)
@@ -172,7 +172,7 @@ class RepeatRuleTests : StringSpec({
     }
     "Repeat(min) rule matches if child rule matches exactly min times" {
         checkAll(legalCodePoints(), Arb.int(2..10)) { cp, min ->
-            Parser(object : AbstractGrammar<Unit>() {
+            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = repeat(cp.value.toRule(), min = min)
             }).apply {
                 val repeated = toString(cp.value).repeat(min)
@@ -187,7 +187,7 @@ class RepeatRuleTests : StringSpec({
     }
     "Repeat(min) rule does not match if child rule matches less than min times" {
         checkAll(legalCodePoints(), Arb.int(2..10)) { cp, min ->
-            Parser(object : AbstractGrammar<Unit>() {
+            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = repeat(cp.value.toRule(), min = min)
             }).apply {
                 val repeated = toString(cp.value).repeat(min - 1)
@@ -202,7 +202,7 @@ class RepeatRuleTests : StringSpec({
     }
     "Repeat(min) rule matches if child rule matches more than min times" {
         checkAll(legalCodePoints(), Arb.int(2..10)) { cp, min ->
-            Parser(object : AbstractGrammar<Unit>() {
+            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = repeat(cp.value.toRule(), min = min)
             }).apply {
                 val repeated = toString(cp.value).repeat(min + 1)
@@ -217,10 +217,10 @@ class RepeatRuleTests : StringSpec({
     }
     "RepeatRule is constructed by times operator on Int" {
         checkAll(Arb.positiveInt()) { int ->
-            object : AbstractGrammar<Unit>() {
+            object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = int.times(EmptyRule())
             }.start() shouldBe RepeatRule(EmptyRule(), int, int)
-            object : AbstractGrammar<Unit>() {
+            object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = int * EmptyRule()
             }.start() shouldBe RepeatRule(EmptyRule(), int, int)
         }
@@ -228,23 +228,23 @@ class RepeatRuleTests : StringSpec({
     "RepeatRule is constructed by times operator on IntRange" {
         checkAll(Arb.list(Arb.positiveInt(), 2..2)) { list ->
             val (min, max) = list.sorted()
-            object : AbstractGrammar<Unit>() {
+            object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = (min..max).times(EmptyRule())
             }.start() shouldBe RepeatRule(EmptyRule(), min, max)
-            object : AbstractGrammar<Unit>() {
+            object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = (min..max).times(EmptyRule())
             }.start() shouldBe RepeatRule(EmptyRule(), min, max)
-            object : AbstractGrammar<Unit>() {
+            object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = (min..max) * EmptyRule()
             }.start() shouldBe RepeatRule(EmptyRule(), min, max)
         }
     }
     "RepeatRule is constructed by times operator on UnboundedRange" {
         checkAll(Arb.positiveInt()) { int ->
-            object : AbstractGrammar<Unit>() {
+            object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = min(int).times(EmptyRule())
             }.start() shouldBe RepeatRule(EmptyRule(), int)
-            object : AbstractGrammar<Unit>() {
+            object : AbstractGrammar<Unit>(), ValidGrammar {
                 override fun start() = min(int) * EmptyRule()
             }.start() shouldBe RepeatRule(EmptyRule(), int)
         }
