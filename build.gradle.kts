@@ -4,7 +4,7 @@ import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import java.util.Locale
 
 group = "com.github.mpe85"
-version = "1.5.1-SNAPSHOT"
+version = "1.6.0"
 val additionalTestToolchains = listOf(8, 11, 21, 24)
 val gitUrl = "https://github.com/mpe85/${project.name}"
 val gitScmUrl = "https://github.com/mpe85/${project.name}.git"
