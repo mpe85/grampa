@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.mpe85:grampa:1.5.0")
+    implementation("com.github.mpe85:grampa:1.6.0")
 }
 
 application {

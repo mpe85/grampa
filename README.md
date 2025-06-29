@@ -4,7 +4,7 @@
 
 [![Latest Release](https://img.shields.io/github/release/mpe85/grampa/all.svg?label=Latest%20Release)](https://github.com/mpe85/grampa/releases/latest)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.mpe85/grampa.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/com.github.mpe85/grampa)
-[![Kotlin](https://img.shields.io/badge/kotlin-2.1-blue.svg?logo=kotlin&label=Kotlin)](http://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/kotlin-2.2-blue.svg?logo=kotlin&label=Kotlin)](http://kotlinlang.org)
 [![Build](https://github.com/mpe85/grampa/actions/workflows/gradle.yml/badge.svg)](https://github.com/mpe85/grampa/actions/workflows/gradle.yml)
 [![Coverage](https://codecov.io/gh/mpe85/grampa/branch/main/graph/badge.svg)](https://codecov.io/gh/mpe85/grampa)
 [![Javadoc](https://www.javadoc.io/badge/com.github.mpe85/grampa.svg)](https://www.javadoc.io/doc/com.github.mpe85/grampa)
@@ -26,7 +26,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    implementation 'com.github.mpe85:grampa:1.5.0'
+    implementation 'com.github.mpe85:grampa:1.6.0'
 }
 ```
 
@@ -37,7 +37,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    implementation("com.github.mpe85:grampa:1.5.0")
+    implementation("com.github.mpe85:grampa:1.6.0")
 }
 ```
 
@@ -48,7 +48,7 @@ Adding a dependency using Maven:
 <dependency>
     <groupId>com.github.mpe85</groupId>
     <artifactId>grampa</artifactId>
-    <version>1.5.0</version>
+    <version>1.6.0</version>
 </dependency>
 ```
 
@@ -56,7 +56,7 @@ Adding a dependency using Ivy:
 
 ```xml
 
-<dependency org="com.github.mpe85" name="grampa" rev="1.5.0"/>
+<dependency org="com.github.mpe85" name="grampa" rev="1.6.0"/>
 ```
 
 ## Getting started
