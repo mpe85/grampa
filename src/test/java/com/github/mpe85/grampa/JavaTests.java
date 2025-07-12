@@ -12,15 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class JavaTests {
 
-    public static class MyGrammar extends AbstractGrammar<String> {
-
-        @NotNull
-        @Override
-        public Rule<String> start() {
-            return toRule("my");
-        }
-    }
-
     @Test
     public void createGrammar() {
         Grammar<String> grammar = Grampa.createGrammar(MyGrammar.class);
@@ -30,6 +21,15 @@ public class JavaTests {
         assertFalse(result.getMatchedEntireInput());
         assertEquals("my", result.getMatchedInput());
         assertEquals("grammar", result.getRestOfInput());
+    }
+
+    public static class MyGrammar extends AbstractGrammar<String> {
+
+        @NotNull
+        @Override
+        public Rule<String> start() {
+            return toRule("my");
+        }
     }
 
 }
