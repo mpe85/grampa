@@ -7,9 +7,9 @@ import java.util.Objects.hash
 /**
  * An abstract rule that is base for all rule implementations.
  *
- * @author mpe85
  * @param[T] The type of the stack elements
  * @param[children] A list of child rules
+ * @author mpe85
  */
 public abstract class AbstractRule<T>(children: List<Rule<T>> = emptyList()) : Rule<T> {
 
@@ -22,9 +22,11 @@ public abstract class AbstractRule<T>(children: List<Rule<T>> = emptyList()) : R
      */
     protected constructor(child: Rule<T>) : this(listOf(child))
 
-    override val children: List<Rule<T>> get() = internalChildren
+    override val children: List<Rule<T>>
+        get() = internalChildren
 
-    override val child: Rule<T>? get() = internalChildren.getOrNull(0)
+    override val child: Rule<T>?
+        get() = internalChildren.getOrNull(0)
 
     override val testRule: Boolean = false
 
@@ -35,7 +37,9 @@ public abstract class AbstractRule<T>(children: List<Rule<T>> = emptyList()) : R
     }
 
     override fun accept(visitor: RuleVisitor<T>): Unit = visitor.visit(this)
+
     override fun hashCode(): Int = hash(children, testRule)
+
     override fun equals(other: Any?): Boolean =
         checkEquality(other, properties = arrayOf({ it.children }, { it.testRule }))
 }

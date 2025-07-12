@@ -5,14 +5,8 @@ plugins {
     application
 }
 
-repositories {
-    mavenCentral()
-}
+repositories { mavenCentral() }
 
-dependencies {
-    implementation("com.github.mpe85:grampa:1.6.0")
-}
+dependencies { implementation("com.github.mpe85:grampa:1.6.0") }
 
-application {
-    mainClass.set("com.github.mpe85.json.Main")
-}
+application { mainClass.set("com.github.mpe85.json.Main") }

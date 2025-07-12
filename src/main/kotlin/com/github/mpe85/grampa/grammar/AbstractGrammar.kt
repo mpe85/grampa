@@ -29,18 +29,18 @@ import com.ibm.icu.lang.UCharacter
 import kotlin.streams.toList
 
 /**
- * An abstract grammar that defines a bunch of useful grammar rules and actions.
- * A concrete grammar class should usually extend this class.
+ * An abstract grammar that defines a bunch of useful grammar rules and actions. A concrete grammar
+ * class should usually extend this class.
  *
- * @author mpe85
  * @param[T] The type of the stack elements
+ * @author mpe85
  */
 @Suppress("Detekt.TooManyFunctions")
 public abstract class AbstractGrammar<T> : Grammar<T> {
 
     /**
-     * A rule that matches an empty string.
-     * Or in other words, a rule that matches no input character and always succeeds.
+     * A rule that matches an empty string. Or in other words, a rule that matches no input
+     * character and always succeeds.
      *
      * @return The created grammar rule
      */
@@ -83,7 +83,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun Char.toRule(): Rule<T> = char(this)
 
     /**
-     * A rule that matches a specific character, ignoring the case of the character (case-insensitive).
+     * A rule that matches a specific character, ignoring the case of the character
+     * (case-insensitive).
      *
      * @param[character] The character to match
      * @return The created grammar rule
@@ -95,7 +96,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun ignoreCase(character: Char): Rule<T> = charIgnoreCase(character)
 
     /**
-     * A rule that matches a specific character, ignoring the case of the character (case-insensitive).
+     * A rule that matches a specific character, ignoring the case of the character
+     * (case-insensitive).
      *
      * @param[character] The character to match
      * @return The created grammar rule
@@ -117,7 +119,9 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @return The created grammar rule
      */
     protected open fun charRange(lowerBound: Char, upperBound: Char): Rule<T> {
-        require(lowerBound <= upperBound) { "A 'lowerBound' must not be greater than an 'upperBound'." }
+        require(lowerBound <= upperBound) {
+            "A 'lowerBound' must not be greater than an 'upperBound'."
+        }
         return CharPredicateRule { it in lowerBound..upperBound }
     }
 
@@ -134,11 +138,12 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[characters] A collection of characters
      * @return The created grammar rule
      */
-    protected open fun anyOfChars(characters: Collection<Char>): Rule<T> = when {
-        characters.isEmpty() -> never()
-        characters.size == 1 -> characters.first().toRule()
-        else -> CharPredicateRule { characters.sorted().binarySearch(it) >= 0 }
-    }
+    protected open fun anyOfChars(characters: Collection<Char>): Rule<T> =
+        when {
+            characters.isEmpty() -> never()
+            characters.size == 1 -> characters.first().toRule()
+            else -> CharPredicateRule { characters.sorted().binarySearch(it) >= 0 }
+        }
 
     /**
      * A rule that matches a character within a set of characters.
@@ -146,7 +151,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[characters] A variable number of characters
      * @return The created grammar rule
      */
-    protected open fun anyOfChars(vararg characters: Char): Rule<T> = anyOfChars(characters.toList())
+    protected open fun anyOfChars(vararg characters: Char): Rule<T> =
+        anyOfChars(characters.toList())
 
     /**
      * A rule that matches a character within a set of characters.
@@ -154,7 +160,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[characters] A string containing the set of characters.
      * @return The created grammar rule
      */
-    protected open fun anyOfChars(characters: String): Rule<T> = anyOfChars(characters.toCharArray().toList())
+    protected open fun anyOfChars(characters: String): Rule<T> =
+        anyOfChars(characters.toCharArray().toList())
 
     /**
      * A rule that matches a character not in a set of characters.
@@ -162,10 +169,11 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[characters] A collection of characters
      * @return The created grammar rule
      */
-    protected open fun noneOfChars(characters: Collection<Char>): Rule<T> = when {
-        characters.isEmpty() -> anyChar()
-        else -> CharPredicateRule { characters.sorted().binarySearch(it) < 0 }
-    }
+    protected open fun noneOfChars(characters: Collection<Char>): Rule<T> =
+        when {
+            characters.isEmpty() -> anyChar()
+            else -> CharPredicateRule { characters.sorted().binarySearch(it) < 0 }
+        }
 
     /**
      * A rule that matches a character not in a set of characters.
@@ -173,7 +181,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[characters] A variable number of characters
      * @return The created grammar rule
      */
-    protected open fun noneOfChars(vararg characters: Char): Rule<T> = noneOfChars(characters.toList())
+    protected open fun noneOfChars(vararg characters: Char): Rule<T> =
+        noneOfChars(characters.toList())
 
     /**
      * A rule that matches a character not in a set of characters.
@@ -181,7 +190,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[characters] A string containing the set of characters.
      * @return The created grammar rule
      */
-    protected open fun noneOfChars(characters: String): Rule<T> = noneOfChars(characters.toCharArray().toList())
+    protected open fun noneOfChars(characters: String): Rule<T> =
+        noneOfChars(characters.toCharArray().toList())
 
     /**
      * A rule that matches any code point.
@@ -206,7 +216,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun Int.toRule(): Rule<T> = codePoint(this)
 
     /**
-     * A rule that matches a specific code point, ignoring the case of the code point (case-insensitive).
+     * A rule that matches a specific code point, ignoring the case of the code point
+     * (case-insensitive).
      *
      * @param[codePoint] The code point to match
      * @return The created grammar rule
@@ -218,12 +229,14 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun ignoreCase(codePoint: Int): Rule<T> = codePointIgnoreCase(codePoint)
 
     /**
-     * A rule that matches a specific code point, ignoring the case of the code point (case-insensitive).
+     * A rule that matches a specific code point, ignoring the case of the code point
+     * (case-insensitive).
      *
      * @param[codePoint] The code point to match
      * @return The created grammar rule
      */
-    protected open fun codePointIgnoreCase(codePoint: Int): Rule<T> = IgnoreCaseCodePointRule(codePoint)
+    protected open fun codePointIgnoreCase(codePoint: Int): Rule<T> =
+        IgnoreCaseCodePointRule(codePoint)
 
     /**
      * A rule that matches [this] code point, ignoring its case (case-insensitive).
@@ -240,7 +253,9 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @return The created grammar rule
      */
     protected open fun codePointRange(lowerBound: Int, upperBound: Int): Rule<T> {
-        require(lowerBound <= upperBound) { "A 'lowerBound' must not be greater than an 'upperBound'." }
+        require(lowerBound <= upperBound) {
+            "A 'lowerBound' must not be greater than an 'upperBound'."
+        }
         return CodePointPredicateRule { it in lowerBound..upperBound }
     }
 
@@ -257,11 +272,12 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[codePoints] A collection of code points.
      * @return The created grammar rule
      */
-    protected open fun anyOfCodePoints(codePoints: Collection<Int>): Rule<T> = when {
-        codePoints.isEmpty() -> never()
-        codePoints.size == 1 -> codePoints.first().toRule()
-        else -> CodePointPredicateRule { codePoints.sorted().binarySearch(it) >= 0 }
-    }
+    protected open fun anyOfCodePoints(codePoints: Collection<Int>): Rule<T> =
+        when {
+            codePoints.isEmpty() -> never()
+            codePoints.size == 1 -> codePoints.first().toRule()
+            else -> CodePointPredicateRule { codePoints.sorted().binarySearch(it) >= 0 }
+        }
 
     /**
      * A rule that matches a code point within a set of code points.
@@ -269,7 +285,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[codePoints] A variable number of code points
      * @return The created grammar rule
      */
-    protected open fun anyOfCodePoints(vararg codePoints: Int): Rule<T> = anyOfCodePoints(codePoints.toList())
+    protected open fun anyOfCodePoints(vararg codePoints: Int): Rule<T> =
+        anyOfCodePoints(codePoints.toList())
 
     /**
      * A rule that matches a code point within a set of code points.
@@ -277,7 +294,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[codePoints] A string containing the set of code points.
      * @return The created grammar rule
      */
-    protected open fun anyOfCodePoints(codePoints: String): Rule<T> = anyOfCodePoints(codePoints.codePoints().toList())
+    protected open fun anyOfCodePoints(codePoints: String): Rule<T> =
+        anyOfCodePoints(codePoints.codePoints().toList())
 
     /**
      * A rule that matches a code point not in a set of code points.
@@ -285,10 +303,11 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[codePoints] A collection of code points.
      * @return The created grammar rule
      */
-    protected open fun noneOfCodePoints(codePoints: Collection<Int>): Rule<T> = when {
-        codePoints.isEmpty() -> anyCodePoint()
-        else -> CodePointPredicateRule { codePoints.sorted().binarySearch(it) < 0 }
-    }
+    protected open fun noneOfCodePoints(codePoints: Collection<Int>): Rule<T> =
+        when {
+            codePoints.isEmpty() -> anyCodePoint()
+            else -> CodePointPredicateRule { codePoints.sorted().binarySearch(it) < 0 }
+        }
 
     /**
      * A rule that matches a code point not in a set of code points.
@@ -296,7 +315,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[codePoints] A variable number of code points
      * @return The created grammar rule
      */
-    protected open fun noneOfCodePoints(vararg codePoints: Int): Rule<T> = noneOfCodePoints(codePoints.toList())
+    protected open fun noneOfCodePoints(vararg codePoints: Int): Rule<T> =
+        noneOfCodePoints(codePoints.toList())
 
     /**
      * A rule that matches a code point not in a set of code points.
@@ -313,12 +333,13 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[string] The string to match
      * @return The created grammar rule
      */
-    protected open fun string(string: String): Rule<T> = when {
-        string.isEmpty() -> empty()
-        string.length == 1 -> string.first().toRule()
-        string.codePoints().count() == 1L -> string.codePointAt(0).toRule()
-        else -> StringRule(string)
-    }
+    protected open fun string(string: String): Rule<T> =
+        when {
+            string.isEmpty() -> empty()
+            string.length == 1 -> string.first().toRule()
+            string.codePoints().count() == 1L -> string.codePointAt(0).toRule()
+            else -> StringRule(string)
+        }
 
     /**
      * A rule that matches [this] string.
@@ -328,7 +349,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun String.toRule(): Rule<T> = string(this)
 
     /**
-     * A rule that matches a specific string, ignoring the case of its characters (case-insensitive).
+     * A rule that matches a specific string, ignoring the case of its characters
+     * (case-insensitive).
      *
      * @param[string] The string to match
      * @return The created grammar rule
@@ -340,15 +362,17 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun ignoreCase(string: String): Rule<T> = stringIgnoreCase(string)
 
     /**
-     * A rule that matches a specific string, ignoring the case of its characters (case-insensitive).
+     * A rule that matches a specific string, ignoring the case of its characters
+     * (case-insensitive).
      *
      * @param[string] The string to match
      * @return The created grammar rule
      */
-    protected open fun stringIgnoreCase(string: String): Rule<T> = when {
-        string.isEmpty() -> empty()
-        else -> IgnoreCaseTrieRule(string)
-    }
+    protected open fun stringIgnoreCase(string: String): Rule<T> =
+        when {
+            string.isEmpty() -> empty()
+            else -> IgnoreCaseTrieRule(string)
+        }
 
     /**
      * A rule that matches [this] string, ignoring the case of its characters (case-insensitive).
@@ -378,11 +402,12 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[strings] A collection of strings
      * @return The created grammar rule
      */
-    protected open fun strings(strings: Collection<String>): Rule<T> = when {
-        strings.isEmpty() -> never()
-        strings.size == 1 -> strings.first().toRule()
-        else -> TrieRule(strings)
-    }
+    protected open fun strings(strings: Collection<String>): Rule<T> =
+        when {
+            strings.isEmpty() -> never()
+            strings.size == 1 -> strings.first().toRule()
+            else -> TrieRule(strings)
+        }
 
     /**
      * A rule that matches a string within a set of strings.
@@ -393,7 +418,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun strings(vararg strings: String): Rule<T> = strings(strings.toList())
 
     /**
-     * A rule that matches a string within a set of strings, ignoring the case of their characters (case-insensitive).
+     * A rule that matches a string within a set of strings, ignoring the case of their characters
+     * (case-insensitive).
      *
      * @param[strings] A collection of strings
      * @return The created grammar rule
@@ -405,19 +431,22 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun ignoreCase(strings: Collection<String>): Rule<T> = stringsIgnoreCase(strings)
 
     /**
-     * A rule that matches a string within a set of strings, ignoring the case of their characters (case-insensitive).
+     * A rule that matches a string within a set of strings, ignoring the case of their characters
+     * (case-insensitive).
      *
      * @param[strings] A collection of strings
      * @return The created grammar rule
      */
-    protected open fun stringsIgnoreCase(strings: Collection<String>): Rule<T> = when {
-        strings.isEmpty() -> never()
-        strings.size == 1 -> stringIgnoreCase(strings.first())
-        else -> IgnoreCaseTrieRule(strings)
-    }
+    protected open fun stringsIgnoreCase(strings: Collection<String>): Rule<T> =
+        when {
+            strings.isEmpty() -> never()
+            strings.size == 1 -> stringIgnoreCase(strings.first())
+            else -> IgnoreCaseTrieRule(strings)
+        }
 
     /**
-     * A rule that matches a string within a set of strings, ignoring the case of their characters (case-insensitive).
+     * A rule that matches a string within a set of strings, ignoring the case of their characters
+     * (case-insensitive).
      *
      * @param[strings] A variable number of strings
      * @return The created grammar rule
@@ -429,19 +458,23 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun ignoreCase(vararg strings: String): Rule<T> = stringsIgnoreCase(*strings)
 
     /**
-     * A rule that matches a string within a set of strings, ignoring the case of their characters (case-insensitive).
+     * A rule that matches a string within a set of strings, ignoring the case of their characters
+     * (case-insensitive).
      *
      * @param[strings] A variable number of strings
      * @return The created grammar rule
      */
-    protected open fun stringsIgnoreCase(vararg strings: String): Rule<T> = stringsIgnoreCase(strings.toList())
+    protected open fun stringsIgnoreCase(vararg strings: String): Rule<T> =
+        stringsIgnoreCase(strings.toList())
 
     /**
      * A rule that matches an ASCII character.
      *
      * @return The created grammar rule
      */
-    protected open fun ascii(): Rule<T> = CharPredicateRule { it in Char.MIN_VALUE..Byte.MAX_VALUE.toInt().toChar() }
+    protected open fun ascii(): Rule<T> = CharPredicateRule {
+        it in Char.MIN_VALUE..Byte.MAX_VALUE.toInt().toChar()
+    }
 
     /**
      * A rule that matches a character of Unicode's Basic Multilingual Plane.
@@ -458,18 +491,22 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun digit(): Rule<T> = CodePointPredicateRule(UCharacter::isDigit)
 
     /**
-     * A rule that matches a character which is valid to be the first character of a Java identifier.
+     * A rule that matches a character which is valid to be the first character of a Java
+     * identifier.
      *
      * @return The created grammar rule
      */
-    protected open fun javaIdentifierStart(): Rule<T> = CodePointPredicateRule(Character::isJavaIdentifierStart)
+    protected open fun javaIdentifierStart(): Rule<T> =
+        CodePointPredicateRule(Character::isJavaIdentifierStart)
 
     /**
-     * A rule that matches a character which is valid to be part of a Java identifier, other than the first character.
+     * A rule that matches a character which is valid to be part of a Java identifier, other than
+     * the first character.
      *
      * @return The created grammar rule
      */
-    protected open fun javaIdentifierPart(): Rule<T> = CodePointPredicateRule(Character::isJavaIdentifierPart)
+    protected open fun javaIdentifierPart(): Rule<T> =
+        CodePointPredicateRule(Character::isJavaIdentifierPart)
 
     /**
      * A rule that matches a legal Unicode code points.
@@ -490,7 +527,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      *
      * @return The created grammar rule
      */
-    protected open fun letterOrDigit(): Rule<T> = CodePointPredicateRule(UCharacter::isLetterOrDigit)
+    protected open fun letterOrDigit(): Rule<T> =
+        CodePointPredicateRule(UCharacter::isLetterOrDigit)
 
     /**
      * A rule that matches a printable character.
@@ -548,11 +586,12 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[rules] A list of rules
      * @return The created grammar rule
      */
-    protected open fun sequence(rules: List<Rule<T>>): Rule<T> = when {
-        rules.isEmpty() -> empty()
-        rules.size == 1 -> rules.first()
-        else -> SequenceRule(rules)
-    }
+    protected open fun sequence(rules: List<Rule<T>>): Rule<T> =
+        when {
+            rules.isEmpty() -> empty()
+            rules.size == 1 -> rules.first()
+            else -> SequenceRule(rules)
+        }
 
     /**
      * A sequence rule that matches [this] and another rule.
@@ -568,7 +607,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[other] Another rule
      * @return The created grammar rule
      */
-    protected open operator fun Rule<T>.plus(other: Rule<T>): Rule<T> = sequence(listOf(this, other))
+    protected open operator fun Rule<T>.plus(other: Rule<T>): Rule<T> =
+        sequence(listOf(this, other))
 
     /**
      * A rule that matches the first successful rule in a list of other rules.
@@ -584,11 +624,12 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[rules] A list of rules
      * @return The created grammar rule
      */
-    protected open fun choice(rules: List<Rule<T>>): Rule<T> = when {
-        rules.isEmpty() -> empty()
-        rules.size == 1 -> rules.first()
-        else -> ChoiceRule(rules)
-    }
+    protected open fun choice(rules: List<Rule<T>>): Rule<T> =
+        when {
+            rules.isEmpty() -> empty()
+            rules.size == 1 -> rules.first()
+            else -> ChoiceRule(rules)
+        }
 
     /**
      * A choice rule that matches [this] rule if successful or another rule.
@@ -599,8 +640,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open infix fun Rule<T>.or(other: Rule<T>): Rule<T> = choice(listOf(this, other))
 
     /**
-     * A rule that matches its child rule optionally.
-     * In other words, a rule that repeats its child rule zero or one time.
+     * A rule that matches its child rule optionally. In other words, a rule that repeats its child
+     * rule zero or one time.
      *
      * @param[rule] The child rule to match optionally
      * @return The created grammar rule
@@ -640,7 +681,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[max] The maximum number of repetitions, may be null (unbounded)
      * @return The created grammar rule
      */
-    protected open fun repeat(rule: Rule<T>, min: Int = 0, max: Int? = null): Rule<T> = RepeatRule(rule, min, max)
+    protected open fun repeat(rule: Rule<T>, min: Int = 0, max: Int? = null): Rule<T> =
+        RepeatRule(rule, min, max)
 
     /**
      * Repeat a rule exactly [this] times.
@@ -664,7 +706,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[rule] The rule to repeat
      * @return The created grammar rule
      */
-    protected open operator fun UnboundedRange.times(rule: Rule<T>): Rule<T> = repeat(rule, min, max)
+    protected open operator fun UnboundedRange.times(rule: Rule<T>): Rule<T> =
+        repeat(rule, min, max)
 
     /**
      * A test rule that tests if its child rule matches.
@@ -704,7 +747,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open operator fun Rule<T>.not(): Rule<T> = testNot(this)
 
     /**
-     * A conditional rule that runs a child rule if a condition is true, otherwise it runs another child rule.
+     * A conditional rule that runs a child rule if a condition is true, otherwise it runs another
+     * child rule.
      *
      * @param[condition] The condition to check
      * @param[thenRule] The rule to run if the condition is true
@@ -724,8 +768,10 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[thenRule] The rule to run if the condition is true
      * @return The created grammar rule
      */
-    protected open fun conditional(condition: (RuleContext<T>) -> Boolean, thenRule: Rule<T>): Rule<T> =
-        ConditionalRule(condition, thenRule)
+    protected open fun conditional(
+        condition: (RuleContext<T>) -> Boolean,
+        thenRule: Rule<T>,
+    ): Rule<T> = ConditionalRule(condition, thenRule)
 
     /**
      * A rule that runs an action.
@@ -749,8 +795,9 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[skippable] Whether the action should be skippable
      * @return The created grammar rule
      */
-    protected open fun ((RuleContext<T>) -> Boolean).toActionRule(skippable: Boolean = false): Rule<T> =
-        ActionRule(this, skippable)
+    protected open fun ((RuleContext<T>) -> Boolean).toActionRule(
+        skippable: Boolean = false
+    ): Rule<T> = ActionRule(this, skippable)
 
     /**
      * A rule that runs [this] action.
@@ -758,7 +805,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[skippable] Whether the action should be skippable
      * @return The created grammar rule
      */
-    protected open fun Action<T>.toRule(skippable: Boolean = false): Rule<T> = ActionRule(::run, skippable)
+    protected open fun Action<T>.toRule(skippable: Boolean = false): Rule<T> =
+        ActionRule(::run, skippable)
 
     /**
      * A rule that executes a command.
@@ -774,7 +822,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[command] The command to execute
      * @return The created grammar rule
      */
-    protected open fun skippableCommand(command: Command<T>): Rule<T> = skippableAction(command.toAction())
+    protected open fun skippableCommand(command: Command<T>): Rule<T> =
+        skippableAction(command.toAction())
 
     /**
      * A rule that executes [this] command function.
@@ -782,8 +831,9 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[skippable] Whether the command should be skippable
      * @return The created grammar rule
      */
-    protected open fun ((RuleContext<T>) -> Unit).toCommandRule(skippable: Boolean = false): Rule<T> =
-        ActionRule(toAction(), skippable)
+    protected open fun ((RuleContext<T>) -> Unit).toCommandRule(
+        skippable: Boolean = false
+    ): Rule<T> = ActionRule(toAction(), skippable)
 
     /**
      * A rule that executes [this] command.
@@ -791,11 +841,12 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @param[skippable] Whether the command should be skippable
      * @return The created grammar rule
      */
-    protected open fun Command<T>.toRule(skippable: Boolean = false): Rule<T> = ActionRule(toAction()::run, skippable)
+    protected open fun Command<T>.toRule(skippable: Boolean = false): Rule<T> =
+        ActionRule(toAction()::run, skippable)
 
     /**
-     * Post a static event to the parser's event bus.
-     * Note that the event object is constructed at grammar create time (thus static).
+     * Post a static event to the parser's event bus. Note that the event object is constructed at
+     * grammar create time (thus static).
      *
      * @param[event] The event to post
      * @return The created grammar rule
@@ -803,14 +854,15 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun post(event: Any): Rule<T> = skippableCommand { it.bus.post(event) }
 
     /**
-     * Post a dynamic event to the parser's event bus.
-     * Note that the event object is supplied by an event supplier at parser runtime
-     * which has access to the parser context (thus dynamic).
+     * Post a dynamic event to the parser's event bus. Note that the event object is supplied by an
+     * event supplier at parser runtime which has access to the parser context (thus dynamic).
      *
      * @param[supplier] An event supplier that is called when the rule is run
      * @return The created grammar rule
      */
-    protected open fun post(supplier: (RuleContext<T>) -> Any): Rule<T> = skippableCommand { it.bus.post(supplier(it)) }
+    protected open fun post(supplier: (RuleContext<T>) -> Any): Rule<T> = skippableCommand {
+        it.bus.post(supplier(it))
+    }
 
     /**
      * Pop the top level element from the stack.
@@ -828,8 +880,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun pop(down: Int): Rule<T> = command { it.stack.pop(down) }
 
     /**
-     * Replace the element on top of the stack.
-     * Note that the replacement value is constructed at grammar create time.
+     * Replace the element on top of the stack. Note that the replacement value is constructed at
+     * grammar create time.
      *
      * @param[value] A replacement value
      * @return The created grammar rule
@@ -837,8 +889,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun poke(value: T): Rule<T> = command { it.stack.poke(value) }
 
     /**
-     * Replace an element in the stack at a given position.
-     * Note that the replacement value is constructed at grammar create time.
+     * Replace an element in the stack at a given position. Note that the replacement value is
+     * constructed at grammar create time.
      *
      * @param[down] The number of elements on the stack to skip
      * @param[value] A replacement value
@@ -847,26 +899,27 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun poke(down: Int, value: T): Rule<T> = command { it.stack.poke(down, value) }
 
     /**
-     * Replace an element in the stack.
-     * Note that the replacement value is supplied by a value supplier at parser runtime
-     * which has access to the parser context.
+     * Replace an element in the stack. Note that the replacement value is supplied by a value
+     * supplier at parser runtime which has access to the parser context.
      *
      * @param[supplier] A replacement value supplier
      * @return The created grammar rule
      */
-    protected open fun poke(supplier: (RuleContext<T>) -> T): Rule<T> = command { it.stack.poke(supplier(it)) }
+    protected open fun poke(supplier: (RuleContext<T>) -> T): Rule<T> = command {
+        it.stack.poke(supplier(it))
+    }
 
     /**
-     * Replace an element in the stack at a given position.
-     * Note that the replacement value is supplied by a value supplier at parser runtime
-     * which has access to the parser context.
+     * Replace an element in the stack at a given position. Note that the replacement value is
+     * supplied by a value supplier at parser runtime which has access to the parser context.
      *
      * @param[down] The number of elements on the stack to skip
      * @param[supplier] A replacement value supplier
      * @return The created grammar rule
      */
-    protected open fun poke(down: Int, supplier: (RuleContext<T>) -> T): Rule<T> =
-        command { it.stack.poke(down, supplier(it)) }
+    protected open fun poke(down: Int, supplier: (RuleContext<T>) -> T): Rule<T> = command {
+        it.stack.poke(down, supplier(it))
+    }
 
     /**
      * Push a new element onto the stack. Note that the value is constructed at grammar create time.
@@ -877,8 +930,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun push(value: T): Rule<T> = command { it.stack.push(value) }
 
     /**
-     * Push a new element onto the stack at a given position.
-     * Note that the value is constructed at grammar create time.
+     * Push a new element onto the stack at a given position. Note that the value is constructed at
+     * grammar create time.
      *
      * @param[down] The number of elements on the stack to skip
      * @param[value] The value to push
@@ -887,24 +940,27 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun push(down: Int, value: T): Rule<T> = command { it.stack.push(down, value) }
 
     /**
-     * Push a new element onto the stack.
-     * Note that the value is supplied by a value supplier at parser runtime which has access to the parser context.
+     * Push a new element onto the stack. Note that the value is supplied by a value supplier at
+     * parser runtime which has access to the parser context.
      *
      * @param[supplier] The value supplier that supplies the value to push
      * @return The created grammar rule
      */
-    protected open fun push(supplier: (RuleContext<T>) -> T): Rule<T> = command { it.stack.push(supplier(it)) }
+    protected open fun push(supplier: (RuleContext<T>) -> T): Rule<T> = command {
+        it.stack.push(supplier(it))
+    }
 
     /**
-     * Push a new element onto the stack at a given position.
-     * Note that the value is supplied by a value supplier at parser runtime which has access to the parser context.
+     * Push a new element onto the stack at a given position. Note that the value is supplied by a
+     * value supplier at parser runtime which has access to the parser context.
      *
      * @param[down] The number of elements on the stack to skip
      * @param[supplier] The value supplier that supplies the value to push
      * @return The created grammar rule
      */
-    protected open fun push(down: Int, supplier: (RuleContext<T>) -> T): Rule<T> =
-        command { it.stack.push(down, supplier(it)) }
+    protected open fun push(down: Int, supplier: (RuleContext<T>) -> T): Rule<T> = command {
+        it.stack.push(down, supplier(it))
+    }
 
     /**
      * Duplicate the top stack element.
@@ -921,8 +977,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open fun swap(): Rule<T> = command { it.stack.swap() }
 
     /**
-     * Pop the top level element from the stack.
-     * This function may be called by an action or command where the rule context is available.
+     * Pop the top level element from the stack. This function may be called by an action or command
+     * where the rule context is available.
      *
      * @param[context] The action context
      * @return The popped element
@@ -930,8 +986,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected fun pop(context: RuleContext<T>): T = context.stack.pop()
 
     /**
-     * Pop an element from the stack at a given position.
-     * This function may be called by an action or command where the rule context is available.
+     * Pop an element from the stack at a given position. This function may be called by an action
+     * or command where the rule context is available.
      *
      * @param[down] The number of elements on the stack to skip
      * @param[context] The action context
@@ -940,8 +996,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected fun pop(down: Int, context: RuleContext<T>): T = context.stack.pop(down)
 
     /**
-     * Replace the element on top of the stack.
-     * This function may be called by an action or command where the rule context is available.
+     * Replace the element on top of the stack. This function may be called by an action or command
+     * where the rule context is available.
      *
      * @param[value] The replacement value
      * @return The replaced element
@@ -949,18 +1005,19 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected fun poke(context: RuleContext<T>, value: T): T = context.stack.poke(value)
 
     /**
-     * Replace an element on the stack at a given position.
-     * This function may be called by an action or command where the rule context is available.
+     * Replace an element on the stack at a given position. This function may be called by an action
+     * or command where the rule context is available.
      *
      * @param[down] The number of elements on the stack to skip
      * @param[value] The replacement value
      * @return The replaced element
      */
-    protected fun poke(down: Int, context: RuleContext<T>, value: T): T = context.stack.poke(down, value)
+    protected fun poke(down: Int, context: RuleContext<T>, value: T): T =
+        context.stack.poke(down, value)
 
     /**
-     * Peek the top level element from the stack.
-     * This function may be called by an action or command where the rule context is available.
+     * Peek the top level element from the stack. This function may be called by an action or
+     * command where the rule context is available.
      *
      * @param[context] The action context
      * @return The peeked element
@@ -968,8 +1025,8 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected fun peek(context: RuleContext<T>): T = context.stack.peek()
 
     /**
-     * Peek an element from the stack at a given position.
-     * This function may be called by an action or command where the rule is available.
+     * Peek an element from the stack at a given position. This function may be called by an action
+     * or command where the rule is available.
      *
      * @param[down] The number of elements on the stack to skip
      * @param[context] The action context

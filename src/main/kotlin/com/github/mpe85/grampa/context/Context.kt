@@ -11,15 +11,16 @@ import org.greenrobot.eventbus.EventBus
 /**
  * An internal context state.
  *
- * @author mpe85
  * @param[T] The type of the stack elements
  * @property[inputBuffer] The underlying input buffer
- * @property[level] The current context level, corresponds to the number of parents that a context (recursively) has
+ * @property[level] The current context level, corresponds to the number of parents that a context
+ *   (recursively) has
  * @property[rule] The rule that is currently executed
  * @property[startIndex] The start index at the beginning of the rule execution
  * @property[stack] The parser stack
  * @property[bus] The parser event bus
  * @property[parentContext] The optional parent context
+ * @author mpe85
  */
 internal data class ContextState<T>(
     val inputBuffer: InputBuffer,
@@ -34,12 +35,12 @@ internal data class ContextState<T>(
 /**
  * The internal context implementation.
  *
- * @author mpe85
  * @param[T] The type of the stack elements
  * @param[state] The current context state
  * @property[rule] The rule that is currently executed
  * @property[cachedCurrentChar] The cached current character
  * @property[cachedCurrentCodePoint] The cached current code point
+ * @author mpe85
  */
 internal class Context<T>(state: ContextState<T>) : ParserContext<T> {
 
@@ -53,7 +54,9 @@ internal class Context<T>(state: ContextState<T>) : ParserContext<T> {
 
     override var currentIndex = startIndex
         set(currentIndex) {
-            require(currentIndex in 0..inputBuffer.length) { "A 'currentIndex' must not be out of bounds." }
+            require(currentIndex in 0..inputBuffer.length) {
+                "A 'currentIndex' must not be out of bounds."
+            }
             if (currentIndex >= this.currentIndex) {
                 previousMatch = inputBuffer.subSequence(this.currentIndex, currentIndex)
             }
@@ -65,7 +68,8 @@ internal class Context<T>(state: ContextState<T>) : ParserContext<T> {
     private var cachedCurrentCodePoint: Int? = null
     override var previousMatch = parent?.previousMatch
 
-    override val atEndOfInput get() = currentIndex == inputBuffer.length
+    override val atEndOfInput
+        get() = currentIndex == inputBuffer.length
 
     override val currentChar: Char
         get() {
@@ -83,17 +87,23 @@ internal class Context<T>(state: ContextState<T>) : ParserContext<T> {
             return cachedCurrentCodePoint as Int
         }
 
-    override val numberOfCharsLeft get() = inputBuffer.length - currentIndex
+    override val numberOfCharsLeft
+        get() = inputBuffer.length - currentIndex
 
-    override val input get() = inputBuffer.subSequence(0, inputBuffer.length)
+    override val input
+        get() = inputBuffer.subSequence(0, inputBuffer.length)
 
-    override val matchedInput get() = inputBuffer.subSequence(0, currentIndex)
+    override val matchedInput
+        get() = inputBuffer.subSequence(0, currentIndex)
 
-    override val restOfInput get() = inputBuffer.subSequence(currentIndex, inputBuffer.length)
+    override val restOfInput
+        get() = inputBuffer.subSequence(currentIndex, inputBuffer.length)
 
-    override val position get() = inputBuffer.getPosition(currentIndex)
+    override val position
+        get() = inputBuffer.getPosition(currentIndex)
 
-    override val inTestRule get() = rule.testRule || parent?.inTestRule ?: false
+    override val inTestRule
+        get() = rule.testRule || parent?.inTestRule ?: false
 
     override fun advanceIndex(delta: Int): Boolean {
         require(delta >= 0) { "A 'delta' must be greater or equal to 0." }
@@ -122,9 +132,7 @@ internal class Context<T>(state: ContextState<T>) : ParserContext<T> {
     override fun createChildContext(rule: Rule<T>) =
         Context(ContextState(inputBuffer, level + 1, rule, currentIndex, stack, bus, this))
 
-    /**
-     * Invalidate the internal cache.
-     */
+    /** Invalidate the internal cache. */
     private fun invalidateCache() {
         cachedCurrentChar = null
         cachedCurrentCodePoint = null

@@ -3,10 +3,11 @@ package com.github.mpe85.grampa.rule
 import com.github.mpe85.grampa.context.RuleContext
 
 /**
- * A parser command. A command is a special [Action] that always succeeds (i.e. always returns true).
+ * A parser command. A command is a special [Action] that always succeeds (i.e. always returns
+ * true).
  *
- * @author mpe85
  * @param[T] The type of the stack elements
+ * @author mpe85
  */
 @FunctionalInterface
 public fun interface Command<T> {

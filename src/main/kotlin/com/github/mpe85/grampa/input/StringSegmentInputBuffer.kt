@@ -5,8 +5,8 @@ import com.ibm.icu.impl.StringSegment
 /**
  * An [InputBuffer] implementation using a [StringSegment].
  *
- * @author mpe85
  * @property[stringSegment] A string segment backing the input buffer
+ * @author mpe85
  */
 public class StringSegmentInputBuffer(private val stringSegment: StringSegment) :
     CharSequenceInputBuffer(stringSegment) {

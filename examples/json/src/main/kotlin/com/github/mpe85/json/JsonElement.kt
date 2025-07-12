@@ -30,10 +30,15 @@ data class JsonArray(val elements: MutableList<JsonElement>) : JsonElement() {
 
 interface JsonElementVisitor {
     fun visit(jsonNull: JsonNull, depth: Int = 0)
+
     fun visit(string: JsonString, depth: Int = 0)
+
     fun visit(number: JsonNumber, depth: Int = 0)
+
     fun visit(boolean: JsonBoolean, depth: Int = 0)
+
     fun visit(obj: JsonObject, depth: Int = 0)
+
     fun visit(array: JsonArray, depth: Int = 0)
 }
 

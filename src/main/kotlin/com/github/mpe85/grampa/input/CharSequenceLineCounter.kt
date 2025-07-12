@@ -7,12 +7,14 @@ import kotlin.streams.asSequence
 /**
  * A [LineCounter] implementation for [CharSequence]s.
  *
- * @author mpe85
  * @property[input] The input in which the lines are counted
+ * @author mpe85
  */
 public class CharSequenceLineCounter(private val input: CharSequence) : LineCounter {
 
-    override val lineCount: Int get() = lines.size
+    override val lineCount: Int
+        get() = lines.size
+
     private val lines = getLines(input)
 
     private fun getLines(input: CharSequence): NavigableMap<Int, Int> {
@@ -30,13 +32,12 @@ public class CharSequenceLineCounter(private val input: CharSequence) : LineCoun
         return map
     }
 
-    override fun getPosition(index: Int): InputPosition = if (index == 0 && input.isEmpty()) {
-        InputPosition(0, 0)
-    } else {
-        lines.floorEntry(checkBounds(index)).let {
-            InputPosition(it.value, index - it.key + 1)
+    override fun getPosition(index: Int): InputPosition =
+        if (index == 0 && input.isEmpty()) {
+            InputPosition(0, 0)
+        } else {
+            lines.floorEntry(checkBounds(index)).let { InputPosition(it.value, index - it.key + 1) }
         }
-    }
 
     private fun checkBounds(index: Int) = index.also { input[it] }
 

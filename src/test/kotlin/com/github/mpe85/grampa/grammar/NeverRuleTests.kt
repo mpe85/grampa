@@ -8,19 +8,23 @@ import io.kotest.property.Arb
 import io.kotest.property.arbitrary.string
 import io.kotest.property.checkAll
 
-class NeverRuleTests : StringSpec({
-    "Never rule matches no input" {
-        Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
-            override fun start() = never()
-        }).apply {
-            checkAll(Arb.string(1, 10, legalCodePoints())) { str ->
-                run(str).apply {
-                    matched shouldBe false
-                    matchedEntireInput shouldBe false
-                    matchedInput shouldBe null
-                    restOfInput shouldBe str
+class NeverRuleTests :
+    StringSpec({
+        "Never rule matches no input" {
+            Parser(
+                    object : AbstractGrammar<Unit>(), ValidGrammar {
+                        override fun start() = never()
+                    }
+                )
+                .apply {
+                    checkAll(Arb.string(1, 10, legalCodePoints())) { str ->
+                        run(str).apply {
+                            matched shouldBe false
+                            matchedEntireInput shouldBe false
+                            matchedInput shouldBe null
+                            restOfInput shouldBe str
+                        }
+                    }
                 }
-            }
         }
-    }
-})
+    })

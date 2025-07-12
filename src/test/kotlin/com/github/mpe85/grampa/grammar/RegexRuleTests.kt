@@ -7,28 +7,34 @@ import io.kotest.property.Arb
 import io.kotest.property.arbitrary.stringPattern
 import io.kotest.property.checkAll
 
-class RegexRuleTests : StringSpec({
-    val patterns = listOf(
-        "[A-Z]{5,9}",
-        "[0-3]([a-c]|[e-g]{1,2})",
-        "([a-z0-9]+)[@]([a-z0-9]+)[.]([a-z0-9]+)",
-        "(\\d+)",
-        "(\\D+)",
-        "(\\w+)",
-        "(\\W+)",
-    )
-    "Regex rule matches correct pattern" {
-        patterns.forEach { pattern ->
-            checkAll(Arb.stringPattern(pattern)) { str ->
-                Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
-                    override fun start() = pattern.toRegexRule()
-                }).run(str).apply {
-                    matched shouldBe true
-                    matchedEntireInput shouldBe true
-                    matchedInput shouldBe str
-                    restOfInput shouldBe ""
+class RegexRuleTests :
+    StringSpec({
+        val patterns =
+            listOf(
+                "[A-Z]{5,9}",
+                "[0-3]([a-c]|[e-g]{1,2})",
+                "([a-z0-9]+)[@]([a-z0-9]+)[.]([a-z0-9]+)",
+                "(\\d+)",
+                "(\\D+)",
+                "(\\w+)",
+                "(\\W+)",
+            )
+        "Regex rule matches correct pattern" {
+            patterns.forEach { pattern ->
+                checkAll(Arb.stringPattern(pattern)) { str ->
+                    Parser(
+                            object : AbstractGrammar<Unit>(), ValidGrammar {
+                                override fun start() = pattern.toRegexRule()
+                            }
+                        )
+                        .run(str)
+                        .apply {
+                            matched shouldBe true
+                            matchedEntireInput shouldBe true
+                            matchedInput shouldBe str
+                            restOfInput shouldBe ""
+                        }
                 }
             }
         }
-    }
-})
+    })

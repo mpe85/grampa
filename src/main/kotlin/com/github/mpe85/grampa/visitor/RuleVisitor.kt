@@ -6,9 +6,8 @@ import com.github.mpe85.grampa.rule.Rule
 /**
  * Visitor for [Rule]s.
  *
- * @author mpe85
- *
  * @param[T] The type of the parser stack values
+ * @author mpe85
  */
 public interface RuleVisitor<T> {
 

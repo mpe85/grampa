@@ -8,27 +8,34 @@ import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.core.spec.style.StringSpec
 import java.io.IOException
 
-class ParserTests : StringSpec({
-    class IntegerTestListener : ParseEventListener<Int>() {
-        override fun beforeMatch(event: PreMatchEvent<Int>) = throw IOException()
-    }
-    "Register listener" {
-        Parser(object : AbstractGrammar<Int>(), ValidGrammar {
-            override fun start() = empty()
-        }).apply {
-            shouldNotThrowAny { registerListener(IntegerTestListener()) }
-            shouldNotThrowAny { run("a") }
+class ParserTests :
+    StringSpec({
+        class IntegerTestListener : ParseEventListener<Int>() {
+            override fun beforeMatch(event: PreMatchEvent<Int>) = throw IOException()
         }
-    }
-    "Unregister listener" {
-        Parser(object : AbstractGrammar<Int>(), ValidGrammar {
-            override fun start() = empty()
-        }).apply {
-            IntegerTestListener().let {
-                shouldNotThrowAny { registerListener(it) }
-                shouldNotThrowAny { unregisterListener(it) }
-            }
-            shouldNotThrowAny { run("a") }
+        "Register listener" {
+            Parser(
+                    object : AbstractGrammar<Int>(), ValidGrammar {
+                        override fun start() = empty()
+                    }
+                )
+                .apply {
+                    shouldNotThrowAny { registerListener(IntegerTestListener()) }
+                    shouldNotThrowAny { run("a") }
+                }
         }
-    }
-})
+        "Unregister listener" {
+            Parser(
+                    object : AbstractGrammar<Int>(), ValidGrammar {
+                        override fun start() = empty()
+                    }
+                )
+                .apply {
+                    IntegerTestListener().let {
+                        shouldNotThrowAny { registerListener(it) }
+                        shouldNotThrowAny { unregisterListener(it) }
+                    }
+                    shouldNotThrowAny { run("a") }
+                }
+        }
+    })

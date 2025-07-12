@@ -6,11 +6,11 @@ import com.github.mpe85.grampa.rule.Rule
 /**
  * A context for parsers.
  *
- * @author mpe85
  * @param[T] The type of the stack elements
  * @property[inputBuffer] The underlying input buffer
  * @property[currentIndex] The current index inside the parser input
  * @property[parent] The parent context of the context
+ * @author mpe85
  */
 public interface ParserContext<T> : RuleContext<T> {
 

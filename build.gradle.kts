@@ -1,10 +1,12 @@
 import com.github.benmanes.gradle.versions.updates.gradle.GradleReleaseChannel.CURRENT
+import java.util.Locale
 import org.gradle.api.plugins.BasePlugin.BUILD_GROUP
 import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
-import java.util.Locale
 
 group = "com.github.mpe85"
+
 version = "1.6.1-SNAPSHOT"
+
 val additionalTestToolchains = listOf(8, 11, 21, 24)
 val gitUrl = "https://github.com/mpe85/${project.name}"
 val gitScmUrl = "https://github.com/mpe85/${project.name}.git"
@@ -14,15 +16,13 @@ plugins {
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("org.jetbrains.dokka") version "2.0.0"
     id("org.jetbrains.kotlinx.kover") version "0.9.1"
-    id("org.jlleitschuh.gradle.ktlint") version "12.3.0"
+    id("com.ncorti.ktfmt.gradle") version "0.23.0"
     id("org.gradle.maven-publish")
     id("org.gradle.signing")
     id("com.github.ben-manes.versions") version "0.52.0"
 }
 
-repositories {
-    mavenCentral()
-}
+repositories { mavenCentral() }
 
 dependencies {
     implementation("net.bytebuddy:byte-buddy:1.17.6")
@@ -37,11 +37,7 @@ dependencies {
     testImplementation("io.mockk:mockk:1.14.4")
 }
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(8))
-    }
-}
+java { toolchain { languageVersion.set(JavaLanguageVersion.of(8)) } }
 
 kotlin {
     explicitApi()
@@ -51,15 +47,9 @@ kotlin {
 kover {
     reports {
         total {
-            html {
-                onCheck = true
-            }
-            xml {
-                onCheck = true
-            }
-            verify {
-                onCheck = true
-            }
+            html { onCheck = true }
+            xml { onCheck = true }
+            verify { onCheck = true }
         }
     }
 }
@@ -70,29 +60,31 @@ dokka {
     }
 }
 
+ktfmt { kotlinLangStyle() }
+
 additionalTestToolchains.forEach {
     tasks.register<Test>("testOn$it") {
         group = JavaBasePlugin.VERIFICATION_GROUP
         javaLauncher.set(
-            javaToolchains.launcherFor {
-                languageVersion.set(JavaLanguageVersion.of(it))
-            },
+            javaToolchains.launcherFor { languageVersion.set(JavaLanguageVersion.of(it)) }
         )
     }
 }
 
-val javadocJar by tasks.registering(Jar::class) {
-    group = BUILD_GROUP
-    dependsOn(tasks.dokkaGenerate)
-    archiveClassifier.set("javadoc")
-    from(tasks.dokkaGeneratePublicationHtml.get().outputDirectory)
-}
-val sourcesJar by tasks.registering(Jar::class) {
-    group = BUILD_GROUP
-    dependsOn("classes")
-    archiveClassifier.set("sources")
-    from(sourceSets.main.get().allSource)
-}
+val javadocJar by
+    tasks.registering(Jar::class) {
+        group = BUILD_GROUP
+        dependsOn(tasks.dokkaGenerate)
+        archiveClassifier.set("javadoc")
+        from(tasks.dokkaGeneratePublicationHtml.get().outputDirectory)
+    }
+val sourcesJar by
+    tasks.registering(Jar::class) {
+        group = BUILD_GROUP
+        dependsOn("classes")
+        archiveClassifier.set("sources")
+        from(sourceSets.main.get().allSource)
+    }
 
 artifacts {
     archives(javadocJar)
@@ -105,7 +97,8 @@ tasks {
             attributes["Implementation-Title"] = project.name
             attributes["Implementation-Version"] = project.version
             attributes["Implementation-Vendor"] = project.group
-            attributes["Created-By"] = "${System.getProperty("java.version")} (${System.getProperty("java.vendor")})"
+            attributes["Created-By"] =
+                "${System.getProperty("java.version")} (${System.getProperty("java.vendor")})"
             attributes["Automatic-Module-Name"] = "${project.group}.${project.name}"
         }
     }
@@ -113,15 +106,11 @@ tasks {
         revision = "release"
         checkConstraints = false
         gradleReleaseChannel = CURRENT.id
-        rejectVersionIf {
-            candidate.version.isNonStable()
-        }
+        rejectVersionIf { candidate.version.isNonStable() }
     }
     withType<Test>().configureEach {
         useJUnitPlatform()
-        testLogging {
-            events("passed", "skipped", "failed")
-        }
+        testLogging { events("passed", "skipped", "failed") }
     }
 }
 
@@ -130,7 +119,11 @@ publishing {
         maven {
             val releasesRepoUrl = "https://s01.oss.sonatype.org/content/repositories/releases/"
             val snapshotsRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
-            url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl)
+            url =
+                uri(
+                    if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl
+                    else releasesRepoUrl
+                )
             credentials {
                 username = "ossrhUsername".property()
                 password = "ossrhPassword".property()
@@ -140,12 +133,8 @@ publishing {
     publications {
         register<MavenPublication>("mavenJava") {
             from(components["java"])
-            artifact(sourcesJar) {
-                classifier = "sources"
-            }
-            artifact(javadocJar) {
-                classifier = "javadoc"
-            }
+            artifact(sourcesJar) { classifier = "sources" }
+            artifact(javadocJar) { classifier = "javadoc" }
             groupId = "$group"
             artifactId = project.name
             version = "${project.version}"
@@ -177,12 +166,11 @@ publishing {
     }
 }
 
-signing {
-    sign(publishing.publications["mavenJava"])
-}
+signing { sign(publishing.publications["mavenJava"]) }
 
 fun String.isNonStable(): Boolean {
-    val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { uppercase(Locale.ENGLISH).contains(it) }
+    val stableKeyword =
+        listOf("RELEASE", "FINAL", "GA").any { uppercase(Locale.ENGLISH).contains(it) }
     val regex = "^[0-9,.v-]+(-r)?$".toRegex()
     val isStable = stableKeyword || regex.matches(this)
     return isStable.not()

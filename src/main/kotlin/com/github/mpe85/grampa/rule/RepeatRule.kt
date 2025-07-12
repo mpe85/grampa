@@ -8,11 +8,11 @@ import java.util.Objects.hash
 /**
  * A repeat rule implementation.
  *
- * @author mpe85
  * @param[T] The type of the stack elements
  * @param[rule] The rule to repeat
  * @param[min] The minimum number of cycles
  * @param[max] An optional maximum number of cycles
+ * @author mpe85
  */
 internal class RepeatRule<T>(rule: Rule<T>, private val min: Int, private val max: Int? = null) :
     AbstractRule<T>(rule) {
@@ -24,7 +24,8 @@ internal class RepeatRule<T>(rule: Rule<T>, private val min: Int, private val ma
         }
     }
 
-    private val rule get() = checkNotNull(child)
+    private val rule
+        get() = checkNotNull(child)
 
     override fun match(context: ParserContext<T>): Boolean {
         var iterations = 0
@@ -38,6 +39,9 @@ internal class RepeatRule<T>(rule: Rule<T>, private val min: Int, private val ma
     }
 
     override fun hashCode(): Int = hash(super.hashCode(), min, max)
-    override fun equals(other: Any?): Boolean = checkEquality(other, { super.equals(other) }, { it.min }, { it.max })
+
+    override fun equals(other: Any?): Boolean =
+        checkEquality(other, { super.equals(other) }, { it.min }, { it.max })
+
     override fun toString(): String = stringify("rule" to rule, "min" to min, "max" to max)
 }

@@ -5,8 +5,8 @@ import com.github.mpe85.grampa.context.RuleContext
 /**
  * A parser action.
  *
- * @author mpe85
  * @param[T] the type of the stack elements
+ * @author mpe85
  */
 @FunctionalInterface
 public fun interface Action<T> {

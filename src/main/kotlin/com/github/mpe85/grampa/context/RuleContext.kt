@@ -7,10 +7,10 @@ import org.greenrobot.eventbus.EventBus
 /**
  * Defines a context for parser action rules.
  *
- * @author mpe85
  * @param[T] The type of the stack elements
  * @property[level] The current level (depth) inside the context parent/child hierarchy
- * @property[startIndex] The start index inside the parser input where the context tries to match its rule
+ * @property[startIndex] The start index inside the parser input where the context tries to match
+ *   its rule
  * @property[currentIndex] The current index inside the parser input
  * @property[atEndOfInput] Whether the current index is at the end of the input
  * @property[currentChar] The character at the current index
@@ -25,6 +25,7 @@ import org.greenrobot.eventbus.EventBus
  * @property[stack] The parser stack
  * @property[bus] The parser event bus
  * @property[parent] The parent context of the context
+ * @author mpe85
  */
 public interface RuleContext<T> {
     public val level: Int

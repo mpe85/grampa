@@ -15,12 +15,13 @@ internal inline fun <reified T : Any> T.checkEquality(
     other: Any?,
     superEquals: () -> Boolean = { true },
     vararg properties: (T) -> Any? = emptyArray(),
-) = when {
-    other === this -> true
-    other !is T -> false
-    !superEquals() -> false
-    else -> properties.all { equals(it(this), it(other)) }
-}
+) =
+    when {
+        other === this -> true
+        other !is T -> false
+        !superEquals() -> false
+        else -> properties.all { equals(it(this), it(other)) }
+    }
 
 /**
  * Stringify an object using a variable argument list of object properties.

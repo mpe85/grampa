@@ -3,8 +3,8 @@ package com.github.mpe85.grampa.input
 /**
  * A counter for lines in texts.
  *
- * @author mpe85
  * @property[lineCount] The line count
+ * @author mpe85
  */
 public interface LineCounter {
 

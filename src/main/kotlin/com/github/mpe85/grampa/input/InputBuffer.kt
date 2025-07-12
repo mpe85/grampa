@@ -3,8 +3,8 @@ package com.github.mpe85.grampa.input
 /**
  * An input buffer that buffers the parser input.
  *
- * @author mpe85
  * @property[length] The length of the input
+ * @author mpe85
  */
 public interface InputBuffer {
 

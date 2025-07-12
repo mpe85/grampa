@@ -8,75 +8,94 @@ import io.kotest.property.arbitrary.char
 import io.kotest.property.arbitrary.filter
 import io.kotest.property.checkAll
 
-class CharIgnoreCaseRuleTests : StringSpec({
-    "CharIgnoreCase rule matches correct character" {
-        checkAll<Char> { ch ->
-            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
-                override fun start() = charIgnoreCase(ch)
-            }).run("$ch").apply {
-                matched shouldBe true
-                matchedEntireInput shouldBe true
-                matchedInput shouldBe "$ch"
-                restOfInput shouldBe ""
+class CharIgnoreCaseRuleTests :
+    StringSpec({
+        "CharIgnoreCase rule matches correct character" {
+            checkAll<Char> { ch ->
+                Parser(
+                        object : AbstractGrammar<Unit>(), ValidGrammar {
+                            override fun start() = charIgnoreCase(ch)
+                        }
+                    )
+                    .run("$ch")
+                    .apply {
+                        matched shouldBe true
+                        matchedEntireInput shouldBe true
+                        matchedInput shouldBe "$ch"
+                        restOfInput shouldBe ""
+                    }
             }
         }
-    }
-    "Lowercase CharIgnoreCase rule matches uppercase character" {
-        checkAll(Arb.char(CharRange('a', 'z'))) { ch ->
-            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
-                override fun start() = charIgnoreCase(ch)
-            }).apply {
-                val uppercase = ch.uppercaseChar()
-                run("$uppercase").apply {
-                    matched shouldBe true
-                    matchedEntireInput shouldBe true
-                    matchedInput shouldBe "$uppercase"
-                    restOfInput shouldBe ""
-                }
+        "Lowercase CharIgnoreCase rule matches uppercase character" {
+            checkAll(Arb.char(CharRange('a', 'z'))) { ch ->
+                Parser(
+                        object : AbstractGrammar<Unit>(), ValidGrammar {
+                            override fun start() = charIgnoreCase(ch)
+                        }
+                    )
+                    .apply {
+                        val uppercase = ch.uppercaseChar()
+                        run("$uppercase").apply {
+                            matched shouldBe true
+                            matchedEntireInput shouldBe true
+                            matchedInput shouldBe "$uppercase"
+                            restOfInput shouldBe ""
+                        }
+                    }
             }
         }
-    }
-    "Uppercase CharIgnoreCase rule matches lowercase character" {
-        checkAll(Arb.char(CharRange('A', 'Z'))) { ch ->
-            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
-                override fun start() = charIgnoreCase(ch)
-            }).apply {
-                val lowercase = ch.lowercaseChar()
-                run("$lowercase").apply {
-                    matched shouldBe true
-                    matchedEntireInput shouldBe true
-                    matchedInput shouldBe "$lowercase"
-                    restOfInput shouldBe ""
-                }
+        "Uppercase CharIgnoreCase rule matches lowercase character" {
+            checkAll(Arb.char(CharRange('A', 'Z'))) { ch ->
+                Parser(
+                        object : AbstractGrammar<Unit>(), ValidGrammar {
+                            override fun start() = charIgnoreCase(ch)
+                        }
+                    )
+                    .apply {
+                        val lowercase = ch.lowercaseChar()
+                        run("$lowercase").apply {
+                            matched shouldBe true
+                            matchedEntireInput shouldBe true
+                            matchedInput shouldBe "$lowercase"
+                            restOfInput shouldBe ""
+                        }
+                    }
             }
         }
-    }
-    "CharIgnoreCase rule does not match wrong character" {
-        checkAll<Char> { ch ->
-            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
-                override fun start() = charIgnoreCase(ch)
-            }).apply {
-                checkAll(Arb.char().filter { it.uppercaseChar() != ch.uppercaseChar() }) { c ->
-                    run("$c").apply {
+        "CharIgnoreCase rule does not match wrong character" {
+            checkAll<Char> { ch ->
+                Parser(
+                        object : AbstractGrammar<Unit>(), ValidGrammar {
+                            override fun start() = charIgnoreCase(ch)
+                        }
+                    )
+                    .apply {
+                        checkAll(Arb.char().filter { it.uppercaseChar() != ch.uppercaseChar() }) { c
+                            ->
+                            run("$c").apply {
+                                matched shouldBe false
+                                matchedEntireInput shouldBe false
+                                matchedInput shouldBe null
+                                restOfInput shouldBe "$c"
+                            }
+                        }
+                    }
+            }
+        }
+        "CharIgnoreCase rule does not match empty input" {
+            checkAll<Char> { ch ->
+                Parser(
+                        object : AbstractGrammar<Unit>(), ValidGrammar {
+                            override fun start() = charIgnoreCase(ch)
+                        }
+                    )
+                    .run("")
+                    .apply {
                         matched shouldBe false
                         matchedEntireInput shouldBe false
                         matchedInput shouldBe null
-                        restOfInput shouldBe "$c"
+                        restOfInput shouldBe ""
                     }
-                }
             }
         }
-    }
-    "CharIgnoreCase rule does not match empty input" {
-        checkAll<Char> { ch ->
-            Parser(object : AbstractGrammar<Unit>(), ValidGrammar {
-                override fun start() = charIgnoreCase(ch)
-            }).run("").apply {
-                matched shouldBe false
-                matchedEntireInput shouldBe false
-                matchedInput shouldBe null
-                restOfInput shouldBe ""
-            }
-        }
-    }
-})
+    })

@@ -6,14 +6,12 @@ import java.util.Deque
 /**
  * A linked list implementation of a restorable stack.
  *
- * @author mpe85
  * @param[E] The type of the stack elements
+ * @author mpe85
  */
 internal class LinkedListRestorableStack<E> : LinkedListStack<E>, RestorableStack<E> {
 
-    /**
-     * Construct an empty restorable stack.
-     */
+    /** Construct an empty restorable stack. */
     constructor() : super()
 
     /**
@@ -23,7 +21,8 @@ internal class LinkedListRestorableStack<E> : LinkedListStack<E>, RestorableStac
      */
     constructor(c: Collection<E>) : super(c)
 
-    override val snapshotCount: Int get() = snapshots.size
+    override val snapshotCount: Int
+        get() = snapshots.size
 
     private val snapshots = ArrayDeque<Deque<E>>()
 
@@ -40,7 +39,8 @@ internal class LinkedListRestorableStack<E> : LinkedListStack<E>, RestorableStac
         snapshots.pop()
     }
 
-    override fun removeSnapshot(restore: Boolean): Unit = if (restore) restoreSnapshot() else discardSnapshot()
+    override fun removeSnapshot(restore: Boolean): Unit =
+        if (restore) restoreSnapshot() else discardSnapshot()
 
     override fun clearSnapshots(): Unit = snapshots.clear()
 

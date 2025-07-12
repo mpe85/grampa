@@ -10,9 +10,9 @@ import java.util.regex.Pattern.compile
 /**
  * A regular expression rule implementation.
  *
- * @author mpe85
  * @param[T] The type of the stack elements
  * @param[pattern] A compiled regular expression
+ * @author mpe85
  */
 internal class RegexRule<T>(private val pattern: Pattern) : AbstractRule<T>() {
 
@@ -23,11 +23,15 @@ internal class RegexRule<T>(private val pattern: Pattern) : AbstractRule<T>() {
      */
     constructor(regex: String) : this(compile(regex))
 
-    override fun match(context: ParserContext<T>): Boolean = pattern.matcher(context.restOfInput).let { matcher ->
-        matcher.lookingAt() && context.advanceIndex(matcher.end())
-    }
+    override fun match(context: ParserContext<T>): Boolean =
+        pattern.matcher(context.restOfInput).let { matcher ->
+            matcher.lookingAt() && context.advanceIndex(matcher.end())
+        }
 
     override fun hashCode(): Int = hash(super.hashCode(), pattern)
-    override fun equals(other: Any?): Boolean = checkEquality(other, { super.equals(other) }, { it.pattern })
+
+    override fun equals(other: Any?): Boolean =
+        checkEquality(other, { super.equals(other) }, { it.pattern })
+
     override fun toString(): String = stringify("pattern" to pattern)
 }
