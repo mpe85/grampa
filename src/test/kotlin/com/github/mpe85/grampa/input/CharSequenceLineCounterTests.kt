@@ -73,5 +73,43 @@ class CharSequenceLineCounterTests :
                     getPosition(5)
                 }
             }
+            CharSequenceLineCounter("foo\r\nbar").apply {
+                lineCount shouldBe 2
+                getPosition(0).apply {
+                    line shouldBe 1
+                    column shouldBe 1
+                }
+                getPosition(4).apply {
+                    line shouldBe 1
+                    column shouldBe 5
+                }
+                getPosition(5).apply {
+                    line shouldBe 2
+                    column shouldBe 1
+                }
+                getPosition(7).apply {
+                    line shouldBe 2
+                    column shouldBe 3
+                }
+            }
+            CharSequenceLineCounter("foo\rbar\r").apply {
+                lineCount shouldBe 2
+                getPosition(0).apply {
+                    line shouldBe 1
+                    column shouldBe 1
+                }
+                getPosition(3).apply {
+                    line shouldBe 1
+                    column shouldBe 4
+                }
+                getPosition(4).apply {
+                    line shouldBe 2
+                    column shouldBe 1
+                }
+                getPosition(7).apply {
+                    line shouldBe 2
+                    column shouldBe 4
+                }
+            }
         }
     })

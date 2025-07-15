@@ -2,7 +2,6 @@ package com.github.mpe85.grampa.input
 
 import java.util.NavigableMap
 import java.util.TreeMap
-import kotlin.streams.asSequence
 
 /**
  * A [LineCounter] implementation for [CharSequence]s.
@@ -17,20 +16,10 @@ public class CharSequenceLineCounter(private val input: CharSequence) : LineCoun
 
     private val lines = getLines(input)
 
-    private fun getLines(input: CharSequence): NavigableMap<Int, Int> {
-        val map = TreeMap<Int, Int>()
-        var lineStartIdx = 0
-        var lineNumber = 0
-        input.chars().asSequence().forEachIndexed { index, ch ->
-            if (ch == LF) {
-                map[lineStartIdx] = ++lineNumber
-                lineStartIdx = index + 1
-            } else if (index == input.length - 1) {
-                map[lineStartIdx] = ++lineNumber
-            }
-        }
-        return map
-    }
+    private fun getLines(input: CharSequence): NavigableMap<Int, Int> =
+        REGEX.findAll(input)
+            .mapIndexed { index, match -> match.range.first to (index + 1) }
+            .toMap(TreeMap())
 
     override fun getPosition(index: Int): InputPosition =
         if (index == 0 && input.isEmpty()) {
@@ -42,6 +31,6 @@ public class CharSequenceLineCounter(private val input: CharSequence) : LineCoun
     private fun checkBounds(index: Int) = index.also { input[it] }
 
     private companion object {
-        private const val LF: Int = '\n'.code
+        private val REGEX = Regex(".*?(?:\r\n|\r|\n)|.+$")
     }
 }
