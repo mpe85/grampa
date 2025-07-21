@@ -22,8 +22,8 @@ public class CharSequenceLineCounter(private val input: CharSequence) : LineCoun
             .toMap(TreeMap())
 
     override fun getPosition(index: Int): InputPosition =
-        if (index == 0 && input.isEmpty()) {
-            InputPosition(0, 0)
+        if (index == input.length) {
+            InputPosition.EOI
         } else {
             lines.floorEntry(checkBounds(index)).let { InputPosition(it.value, index - it.key + 1) }
         }

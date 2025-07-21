@@ -60,7 +60,8 @@ class InputBufferTests :
                     }
                 }
                 shouldThrow<IndexOutOfBoundsException> { buffer.getPosition(-1) }
-                shouldThrow<IndexOutOfBoundsException> { buffer.getPosition(6) }
+                shouldThrow<IndexOutOfBoundsException> { buffer.getPosition(7) }
+                buffer.getPosition(6).isEoi() shouldBe true
             }
         }
     })
