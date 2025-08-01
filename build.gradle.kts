@@ -102,12 +102,14 @@ mavenPublishing {
 
     pom {
         name.set("Grampa")
-        description.set("Grampa")
+        description.set("A PEG parser library for Kotlin/JVM")
+        inceptionYear.set("2022")
         url.set(gitUrl)
         licenses {
             license {
-                name.set("MIT")
-                url.set("$gitUrl/blob/main/LICENSE")
+                name.set("The MIT License")
+                url.set("https://opensource.org/licenses/MIT")
+                distribution.set("https://opensource.org/licenses/MIT")
             }
         }
         developers {
