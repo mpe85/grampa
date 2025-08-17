@@ -25,7 +25,7 @@ plugins {
 repositories { mavenCentral() }
 
 dependencies {
-    implementation("net.bytebuddy:byte-buddy:1.17.6")
+    implementation("net.bytebuddy:byte-buddy:1.17.7")
     implementation("org.greenrobot:eventbus-java:3.3.1")
     implementation("com.ibm.icu:icu4j:77.1")
     implementation("org.jetbrains.kotlin:kotlin-reflect:2.2.10")
