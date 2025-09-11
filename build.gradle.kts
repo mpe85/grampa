@@ -13,7 +13,7 @@ val gitUrl = "https://github.com/mpe85/${project.name}"
 val gitScmUrl = "https://github.com/mpe85/${project.name}.git"
 
 plugins {
-    kotlin("jvm") version "2.2.10"
+    kotlin("jvm") version "2.2.20"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("org.jetbrains.dokka") version "2.0.0"
     id("org.jetbrains.kotlinx.kover") version "0.9.1"
