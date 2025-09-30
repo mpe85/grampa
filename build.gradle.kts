@@ -8,7 +8,7 @@ group = "com.github.mpe85"
 
 version = "1.6.1-SNAPSHOT"
 
-val additionalTestToolchains = listOf(8, 11, 21, 24)
+val additionalTestToolchains = listOf(8, 11, 21, 25)
 val gitUrl = "https://github.com/mpe85/${project.name}"
 val gitScmUrl = "https://github.com/mpe85/${project.name}.git"
 
