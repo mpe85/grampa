@@ -25,15 +25,27 @@ plugins {
 repositories { mavenCentral() }
 
 dependencies {
+    // Kotlin BOM
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:2.2.21"))
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib")
+
+    // Other libs
     implementation("net.bytebuddy:byte-buddy:1.17.8")
     implementation("org.greenrobot:eventbus-java:3.3.1")
     implementation("com.ibm.icu:icu4j:78.1")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:2.2.21")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.2.21")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.14.1")
-    testImplementation("io.kotest:kotest-assertions-core:5.9.1")
-    testImplementation("io.kotest:kotest-property:5.9.1")
-    testImplementation("io.kotest:kotest-runner-junit5:5.9.1")
+
+    // JUnit BOM
+    testImplementation(platform("org.junit:junit-bom:5.14.1"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+
+    // Kotest BOM
+    testImplementation(platform("io.kotest:kotest-bom:5.9.1"))
+    testImplementation("io.kotest:kotest-runner-junit5")
+    testImplementation("io.kotest:kotest-assertions-core")
+    testImplementation("io.kotest:kotest-property")
+
+    // Other test libs
     testImplementation("io.mockk:mockk:1.14.6")
 }
 
