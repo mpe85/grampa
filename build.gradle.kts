@@ -27,7 +27,7 @@ repositories { mavenCentral() }
 dependencies {
     implementation("net.bytebuddy:byte-buddy:1.17.8")
     implementation("org.greenrobot:eventbus-java:3.3.1")
-    implementation("com.ibm.icu:icu4j:77.1")
+    implementation("com.ibm.icu:icu4j:78.1")
     implementation("org.jetbrains.kotlin:kotlin-reflect:2.2.21")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.2.21")
     testImplementation("org.junit.jupiter:junit-jupiter:5.14.1")
