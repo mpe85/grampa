@@ -8,7 +8,7 @@ group = "com.github.mpe85"
 
 version = "1.7.0-SNAPSHOT"
 
-val additionalTestToolchains = listOf(8, 11, 21, 25)
+val additionalTestToolchains = listOf(11, 21, 25)
 val gitUrl = "https://github.com/mpe85/${project.name}"
 val gitScmUrl = "https://github.com/mpe85/${project.name}.git"
 
@@ -37,11 +37,11 @@ dependencies {
     testImplementation("io.mockk:mockk:1.14.6")
 }
 
-java { toolchain { languageVersion.set(JavaLanguageVersion.of(8)) } }
+java { toolchain { languageVersion.set(JavaLanguageVersion.of(11)) } }
 
 kotlin {
     explicitApi()
-    jvmToolchain(8)
+    jvmToolchain(11)
 }
 
 kover {
