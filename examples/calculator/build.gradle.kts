@@ -7,6 +7,6 @@ plugins {
 
 repositories { mavenCentral() }
 
-dependencies { implementation("com.github.mpe85:grampa:1.6.0") }
+dependencies { implementation("com.github.mpe85:grampa:1.6.1") }
 
 application { mainClass.set("com.github.mpe85.calculator.Main") }
