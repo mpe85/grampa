@@ -3,12 +3,13 @@ import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinJvm
 import java.util.Locale
 import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 group = "com.github.mpe85"
 
 version = "1.7.0-SNAPSHOT"
 
-val additionalTestToolchains = listOf(11, 21, 25)
+val additionalTestToolchains = listOf(17, 21, 25)
 val gitUrl = "https://github.com/mpe85/${project.name}"
 val gitScmUrl = "https://github.com/mpe85/${project.name}.git"
 
@@ -49,11 +50,23 @@ dependencies {
     testImplementation("io.mockk:mockk:1.14.6")
 }
 
-java { toolchain { languageVersion.set(JavaLanguageVersion.of(11)) } }
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(11))
+        vendor.set(JvmVendorSpec.ADOPTIUM)
+    }
+}
 
 kotlin {
     explicitApi()
-    jvmToolchain(11)
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(11))
+        vendor.set(JvmVendorSpec.ADOPTIUM)
+    }
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
+        freeCompilerArgs.add("-Xjdk-release=11")
+    }
 }
 
 kover {
@@ -74,11 +87,20 @@ dokka {
 
 ktfmt { kotlinLangStyle() }
 
+val baseTest = tasks.named<Test>("test")
+
 additionalTestToolchains.forEach {
     tasks.register<Test>("testOn$it") {
+        dependsOn(baseTest)
         group = JavaBasePlugin.VERIFICATION_GROUP
+        testClassesDirs = baseTest.get().testClassesDirs
+        classpath = baseTest.get().classpath
+
         javaLauncher.set(
-            javaToolchains.launcherFor { languageVersion.set(JavaLanguageVersion.of(it)) }
+            javaToolchains.launcherFor {
+                languageVersion.set(JavaLanguageVersion.of(it))
+                vendor.set(JvmVendorSpec.ADOPTIUM)
+            }
         )
     }
 }
