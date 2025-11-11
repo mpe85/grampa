@@ -19,7 +19,7 @@ plugins {
     id("org.jetbrains.dokka") version "2.1.0"
     id("org.jetbrains.kotlinx.kover") version "0.9.3"
     id("com.ncorti.ktfmt.gradle") version "0.25.0"
-    id("com.vanniktech.maven.publish") version "0.34.0"
+    id("com.vanniktech.maven.publish") version "0.35.0"
     id("com.github.ben-manes.versions") version "0.53.0"
 }
 
