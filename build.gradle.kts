@@ -1,17 +1,7 @@
-import com.github.benmanes.gradle.versions.updates.gradle.GradleReleaseChannel.CURRENT
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinJvm
-import java.util.Locale
 import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
-group = "com.github.mpe85"
-
-version = "1.7.0-SNAPSHOT"
-
-val additionalTestToolchains = listOf(17, 21, 25)
-val gitUrl = "https://github.com/mpe85/${project.name}"
-val gitScmUrl = "https://github.com/mpe85/${project.name}.git"
 
 plugins {
     kotlin("jvm") version "2.2.21"
@@ -20,8 +10,23 @@ plugins {
     id("org.jetbrains.kotlinx.kover") version "0.9.3"
     id("com.ncorti.ktfmt.gradle") version "0.25.0"
     id("com.vanniktech.maven.publish") version "0.35.0"
-    id("com.github.ben-manes.versions") version "0.53.0"
 }
+
+group = "com.github.mpe85"
+
+version = "1.7.0-SNAPSHOT"
+
+val baseJdk = 11
+val baseVendor = JvmVendorSpec.ADOPTIUM
+val baseLang = JavaLanguageVersion.of(baseJdk)
+val baseTarget = JvmTarget.fromTarget(baseJdk.toString())
+
+val gitUrl = "https://github.com/mpe85/${project.name}"
+val gitScmUrl = "https://github.com/mpe85/${project.name}.git"
+val testJdks = listOf(baseJdk, 17, 21, 25)
+
+val toolchains = extensions.getByType(JavaToolchainService::class.java)
+val baseTest = tasks.named<Test>("test")
 
 repositories { mavenCentral() }
 
@@ -52,20 +57,20 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(11))
-        vendor.set(JvmVendorSpec.ADOPTIUM)
+        languageVersion.set(baseLang)
+        vendor.set(baseVendor)
     }
 }
 
 kotlin {
     explicitApi()
     jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(11))
-        vendor.set(JvmVendorSpec.ADOPTIUM)
+        languageVersion.set(baseLang)
+        vendor.set(baseVendor)
     }
     compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_11)
-        freeCompilerArgs.add("-Xjdk-release=11")
+        jvmTarget.set(baseTarget)
+        freeCompilerArgs.add("-Xjdk-release=$baseJdk")
     }
 }
 
@@ -87,24 +92,6 @@ dokka {
 
 ktfmt { kotlinLangStyle() }
 
-val baseTest = tasks.named<Test>("test")
-
-additionalTestToolchains.forEach {
-    tasks.register<Test>("testOn$it") {
-        dependsOn(baseTest)
-        group = JavaBasePlugin.VERIFICATION_GROUP
-        testClassesDirs = baseTest.get().testClassesDirs
-        classpath = baseTest.get().classpath
-
-        javaLauncher.set(
-            javaToolchains.launcherFor {
-                languageVersion.set(JavaLanguageVersion.of(it))
-                vendor.set(JvmVendorSpec.ADOPTIUM)
-            }
-        )
-    }
-}
-
 tasks {
     jar {
         manifest {
@@ -116,17 +103,40 @@ tasks {
             attributes["Automatic-Module-Name"] = "${project.group}.${project.name}"
         }
     }
-    dependencyUpdates {
-        revision = "release"
-        checkConstraints = false
-        gradleReleaseChannel = CURRENT.id
-        rejectVersionIf { candidate.version.isNonStable() }
-    }
     withType<Test>().configureEach {
         useJUnitPlatform()
         testLogging { events("passed", "skipped", "failed") }
     }
+    named<Test>("test") {
+        javaLauncher.set(
+            toolchains.launcherFor {
+                languageVersion.set(baseLang)
+                vendor.set(baseVendor)
+            }
+        )
+    }
+    named("check") { dependsOn(testJdks.filter { it != baseJdk }.map { "testOn$it" }) }
 }
+
+testJdks
+    .filter { it != baseJdk }
+    .forEach { v ->
+        tasks.register<Test>("testOn$v") {
+            group = JavaBasePlugin.VERIFICATION_GROUP
+            description = "Runs unit tests on JDK $v"
+
+            testClassesDirs = baseTest.get().testClassesDirs
+            classpath = baseTest.get().classpath
+
+            javaLauncher.set(
+                toolchains.launcherFor {
+                    languageVersion.set(JavaLanguageVersion.of(v))
+                    vendor.set(baseVendor)
+                }
+            )
+            shouldRunAfter(baseTest)
+        }
+    }
 
 mavenPublishing {
     publishToMavenCentral()
@@ -163,12 +173,4 @@ mavenPublishing {
     configure(
         KotlinJvm(javadocJar = JavadocJar.Dokka("dokkaGeneratePublicationHtml"), sourcesJar = true)
     )
-}
-
-fun String.isNonStable(): Boolean {
-    val stableKeyword =
-        listOf("RELEASE", "FINAL", "GA").any { uppercase(Locale.ENGLISH).contains(it) }
-    val regex = "^[0-9,.v-]+(-r)?$".toRegex()
-    val isStable = stableKeyword || regex.matches(this)
-    return isStable.not()
 }
