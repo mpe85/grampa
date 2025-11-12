@@ -41,10 +41,6 @@ dependencies {
     implementation("org.greenrobot:eventbus-java:3.3.1")
     implementation("com.ibm.icu:icu4j:78.1")
 
-    // JUnit BOM
-    testImplementation(platform("org.junit:junit-bom:5.14.1"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
-
     // Kotest BOM
     testImplementation(platform("io.kotest:kotest-bom:6.0.4"))
     testImplementation("io.kotest:kotest-runner-junit5")
