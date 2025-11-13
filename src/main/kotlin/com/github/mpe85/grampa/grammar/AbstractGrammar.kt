@@ -747,31 +747,19 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
     protected open operator fun Rule<T>.not(): Rule<T> = testNot(this)
 
     /**
-     * A conditional rule that runs a child rule if a condition is true, otherwise it runs another
-     * child rule.
+     * A conditional rule that runs a child rule if a condition is true, otherwise it optionally
+     * runs another child rule.
      *
      * @param[condition] The condition to check
      * @param[thenRule] The rule to run if the condition is true
-     * @param[elseRule] The rule to run if the condition is false
+     * @param[elseRule] The optional rule to run if the condition is false
      * @return The created grammar rule
      */
     protected open fun conditional(
         condition: (RuleContext<T>) -> Boolean,
         thenRule: Rule<T>,
-        elseRule: Rule<T>,
+        elseRule: Rule<T>? = null,
     ): Rule<T> = ConditionalRule(condition, thenRule, elseRule)
-
-    /**
-     * A conditional rule that runs a child rule if a condition is true, otherwise it runs no rule.
-     *
-     * @param[condition] The condition to check
-     * @param[thenRule] The rule to run if the condition is true
-     * @return The created grammar rule
-     */
-    protected open fun conditional(
-        condition: (RuleContext<T>) -> Boolean,
-        thenRule: Rule<T>,
-    ): Rule<T> = ConditionalRule(condition, thenRule)
 
     /**
      * A rule that runs an action.

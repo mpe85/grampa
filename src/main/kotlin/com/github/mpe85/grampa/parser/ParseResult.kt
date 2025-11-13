@@ -24,5 +24,5 @@ public class ParseResult<T>(public val matched: Boolean, context: ParserContext<
     public val restOfInput: CharSequence = if (matched) context.restOfInput else context.input
     public val stack: RestorableStack<T> = context.stack.copy()
     public val stackTop: T?
-        get() = if (stack.size > 0) stack.peek() else null
+        get() = if (stack.isNotEmpty()) stack.peek() else null
 }
