@@ -38,6 +38,7 @@ class ParseEventListenerTests :
                     override fun beforeParse(event: PreParseEvent<String>) = throw ex
 
                     @Subscribe
+                    @Suppress("unused")
                     fun exHandler(event: SubscriberExceptionEvent) {
                         exEvent = event
                     }

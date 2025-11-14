@@ -1,5 +1,3 @@
-@file:JvmName("Grampa")
-
 package com.github.mpe85.grampa
 
 import com.github.mpe85.grampa.grammar.Grammar

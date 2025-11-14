@@ -18,6 +18,7 @@ open class TestGrammar(val dummy: String?) : AbstractGrammar<String>() {
 
     override fun start() = expr('a')
 
+    @Suppress("SameParameterValue")
     protected open fun expr(c: Char): Rule<String> =
         choice(char(c), sequence(empty(), start(66), noop(), char('('), start(), char(')')))
 
@@ -62,7 +63,7 @@ class GrampaTests :
             open class InvalidGrammar : AbstractGrammar<String>() {
                 override fun start() = expr('a')
 
-                private fun expr(c: Char) = char(c)
+                @Suppress("SameParameterValue") private fun expr(c: Char) = char(c)
             }
             shouldThrow<IllegalArgumentException> { InvalidGrammar::class.createGrammar() }
         }

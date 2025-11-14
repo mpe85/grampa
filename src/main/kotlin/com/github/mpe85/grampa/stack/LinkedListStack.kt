@@ -38,8 +38,4 @@ internal open class LinkedListStack<E> : LinkedList<E>, Stack<E> {
     override fun swap(): Unit = swap(this, 0, 1)
 
     override fun copy(): LinkedListStack<E> = LinkedListStack(this)
-
-    private companion object {
-        private const val serialVersionUID = -8417124164036326875L
-    }
 }

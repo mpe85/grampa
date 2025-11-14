@@ -20,6 +20,7 @@ class PostRuleTests :
                 private set
 
             @Subscribe
+            @Suppress("unused")
             fun onInt(event: Int?) {
                 this.event = event
             }

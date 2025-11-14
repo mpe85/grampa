@@ -14,9 +14,9 @@ import java.util.concurrent.Callable
 class ReferenceRuleTests :
     StringSpec({
         class RuleMethods : Callable<Rule<Int>> {
-            fun rule1() = EmptyRule<Int>()
+            @Suppress("unused") fun rule1() = EmptyRule<Int>()
 
-            fun rule2() = EmptyRule<Int>()
+            @Suppress("unused") fun rule2() = EmptyRule<Int>()
 
             override fun call() = EmptyRule<Int>()
         }

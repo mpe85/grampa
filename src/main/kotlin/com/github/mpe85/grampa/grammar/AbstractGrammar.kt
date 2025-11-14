@@ -35,7 +35,7 @@ import kotlin.streams.toList
  * @param[T] The type of the stack elements
  * @author mpe85
  */
-@Suppress("Detekt.TooManyFunctions")
+@Suppress("Detekt.TooManyFunctions", "SameParameterValue")
 public abstract class AbstractGrammar<T> : Grammar<T> {
 
     /**

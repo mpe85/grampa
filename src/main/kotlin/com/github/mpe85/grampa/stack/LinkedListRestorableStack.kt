@@ -50,8 +50,4 @@ internal class LinkedListRestorableStack<E> : LinkedListStack<E>, RestorableStac
     }
 
     override fun copy(): LinkedListRestorableStack<E> = LinkedListRestorableStack(this)
-
-    private companion object {
-        private const val serialVersionUID = 3875323652049358971L
-    }
 }
