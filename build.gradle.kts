@@ -4,7 +4,7 @@ import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    kotlin("jvm") version "2.2.21"
+    kotlin("jvm") version "2.3.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("org.jetbrains.dokka") version "2.1.0"
     id("org.jetbrains.kotlinx.kover") version "0.9.4"
@@ -17,15 +17,15 @@ group = "com.github.mpe85"
 version = "1.7.0-SNAPSHOT"
 
 val baseJdk = 11
-val baseVendor = JvmVendorSpec.ADOPTIUM
-val baseLang = JavaLanguageVersion.of(baseJdk)
+val baseVendor: JvmVendorSpec = JvmVendorSpec.ADOPTIUM
+val baseLang: JavaLanguageVersion = JavaLanguageVersion.of(baseJdk)
 val baseTarget = JvmTarget.fromTarget(baseJdk.toString())
 
 val gitUrl = "https://github.com/mpe85/${project.name}"
 val gitScmUrl = "https://github.com/mpe85/${project.name}.git"
 val testJdks = listOf(baseJdk, 17, 21, 25)
 
-val toolchains = extensions.getByType(JavaToolchainService::class.java)
+val toolchains: JavaToolchainService = extensions.getByType(JavaToolchainService::class.java)
 val baseTest = tasks.named<Test>("test")
 
 repositories { mavenCentral() }
