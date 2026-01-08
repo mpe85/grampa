@@ -39,7 +39,7 @@ dependencies {
     // Other libs
     implementation("net.bytebuddy:byte-buddy:1.18.3")
     implementation("org.greenrobot:eventbus-java:3.3.1")
-    implementation("com.ibm.icu:icu4j:78.1")
+    implementation("com.ibm.icu:icu4j:78.2")
 
     // Kotest BOM
     testImplementation(platform("io.kotest:kotest-bom:6.0.7"))
