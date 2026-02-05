@@ -32,7 +32,7 @@ repositories { mavenCentral() }
 
 dependencies {
     // Kotlin BOM
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom:2.3.0"))
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:2.3.10"))
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
 
