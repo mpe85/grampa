@@ -38,7 +38,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
 
     // Other libs
-    implementation("net.bytebuddy:byte-buddy:1.18.4")
+    implementation("net.bytebuddy:byte-buddy:1.18.5")
     implementation("org.greenrobot:eventbus-java:3.3.1")
     implementation("com.ibm.icu:icu4j:78.2")
 
