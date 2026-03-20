@@ -81,9 +81,8 @@ public class Parser<T>(grammar: Grammar<T>) {
      * @param[inputBuffer] An input buffer
      * @return A rule context
      */
-    private fun createStartContext(inputBuffer: InputBuffer) =
-        stack.run {
-            reset()
-            Context(ContextState(inputBuffer, 0, startRule, 0, this, bus))
-        }
+    private fun createStartContext(inputBuffer: InputBuffer) = stack.run {
+        reset()
+        Context(ContextState(inputBuffer, 0, startRule, 0, this, bus))
+    }
 }

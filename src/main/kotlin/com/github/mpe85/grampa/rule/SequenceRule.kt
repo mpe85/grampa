@@ -14,8 +14,9 @@ import java.util.Objects.hash
  */
 internal class SequenceRule<T>(rules: List<Rule<T>>) : AbstractRule<T>(rules) {
 
-    override fun match(context: ParserContext<T>): Boolean =
-        children.all { context.createChildContext(it).run() }
+    override fun match(context: ParserContext<T>): Boolean = children.all {
+        context.createChildContext(it).run()
+    }
 
     override fun hashCode(): Int = hash(super.hashCode())
 
