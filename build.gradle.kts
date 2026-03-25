@@ -8,7 +8,7 @@ plugins {
     kotlin("jvm") version "2.3.20"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("org.jetbrains.dokka") version "2.1.0"
-    id("org.jetbrains.kotlinx.kover") version "0.9.7"
+    id("org.jetbrains.kotlinx.kover") version "0.9.8"
     id("com.ncorti.ktfmt.gradle") version "0.26.0"
     id("com.vanniktech.maven.publish") version "0.36.0"
 }
