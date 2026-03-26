@@ -24,7 +24,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - run: ./gradlew build
-      - uses: codecov/codecov-action@v5
+      - uses: codecov/codecov-action@v6
         with:
           files: ./build/reports/kover/report.xml
         env:
