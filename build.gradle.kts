@@ -49,7 +49,7 @@ dependencies {
     testImplementation("io.kotest:kotest-property")
 
     // Other test libs
-    testImplementation("io.mockk:mockk:1.14.9")
+    testImplementation("io.mockk:mockk:1.14.11")
 }
 
 java {
