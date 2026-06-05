@@ -5,7 +5,7 @@ import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    kotlin("jvm") version "2.3.21"
+    kotlin("jvm") version "2.4.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("org.jetbrains.dokka") version "2.2.0"
     id("org.jetbrains.kotlinx.kover") version "0.9.8"
@@ -33,7 +33,7 @@ repositories { mavenCentral() }
 
 dependencies {
     // Kotlin BOM
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom:2.3.21"))
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:2.4.0"))
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
 
