@@ -24,7 +24,7 @@ val baseTarget = JvmTarget.fromTarget(baseJdk.toString())
 
 val gitUrl = "https://github.com/mpe85/${project.name}"
 val gitScmUrl = "https://github.com/mpe85/${project.name}.git"
-val testJdks = listOf(baseJdk, 17, 21, 25)
+val testJdks = listOf(baseJdk, 17, 21, 25, 26)
 
 val toolchains: JavaToolchainService = extensions.getByType(JavaToolchainService::class.java)
 val baseTest = tasks.named<Test>("test")
