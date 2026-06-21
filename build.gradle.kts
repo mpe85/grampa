@@ -10,7 +10,7 @@ plugins {
     id("org.jetbrains.dokka") version "2.2.0"
     id("org.jetbrains.kotlinx.kover") version "0.9.8"
     id("com.ncorti.ktfmt.gradle") version "0.26.0"
-    id("com.vanniktech.maven.publish") version "0.36.0"
+    id("com.vanniktech.maven.publish") version "0.37.0"
 }
 
 group = "com.github.mpe85"
