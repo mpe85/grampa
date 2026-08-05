@@ -15,7 +15,7 @@ plugins {
 
 group = "com.github.mpe85"
 
-version = "1.7.0"
+version = "1.7.1-SNAPSHOT"
 
 val baseJdk = 11
 val baseVendor: JvmVendorSpec = JvmVendorSpec.ADOPTIUM
