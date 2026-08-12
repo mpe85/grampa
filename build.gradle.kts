@@ -43,7 +43,7 @@ dependencies {
     implementation("com.ibm.icu:icu4j:78.3")
 
     // Kotest BOM
-    testImplementation(platform("io.kotest:kotest-bom:6.2.3"))
+    testImplementation(platform("io.kotest:kotest-bom:6.2.4"))
     testImplementation("io.kotest:kotest-runner-junit5")
     testImplementation("io.kotest:kotest-assertions-core")
     testImplementation("io.kotest:kotest-property")
