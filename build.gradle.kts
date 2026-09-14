@@ -1,6 +1,7 @@
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinJvm
 import com.vanniktech.maven.publish.SourcesJar
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -100,7 +101,13 @@ tasks {
     }
     withType<Test>().configureEach {
         useJUnitPlatform()
-        testLogging { events("passed", "skipped", "failed") }
+        testLogging {
+            events("passed", "skipped", "failed")
+            showExceptions = true
+            showCauses = true
+            showStackTraces = true
+            exceptionFormat = TestExceptionFormat.FULL
+        }
     }
     named<Test>("test") {
         javaLauncher.set(
