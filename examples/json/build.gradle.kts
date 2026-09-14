@@ -1,12 +1,12 @@
 group = "com.github.mpe85"
 
 plugins {
-    kotlin("jvm") version "2.4.10"
+    alias(libs.plugins.kotlin.jvm)
     application
 }
 
 repositories { mavenCentral() }
 
-dependencies { implementation("com.github.mpe85:grampa:1.7.0") }
+dependencies { implementation(project(":")) }
 
 application { mainClass.set("com.github.mpe85.json.Main") }

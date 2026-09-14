@@ -5,12 +5,12 @@ import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    kotlin("jvm") version "2.4.10"
-    id("io.gitlab.arturbosch.detekt") version "1.23.8"
-    id("org.jetbrains.dokka") version "2.2.0"
-    id("org.jetbrains.kotlinx.kover") version "0.9.9"
-    id("com.ncorti.ktfmt.gradle") version "0.27.0"
-    id("com.vanniktech.maven.publish") version "0.37.0"
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.kover)
+    alias(libs.plugins.ktfmt)
+    alias(libs.plugins.maven.publish)
 }
 
 group = "com.github.mpe85"
@@ -32,24 +32,22 @@ val baseTest = tasks.named<Test>("test")
 repositories { mavenCentral() }
 
 dependencies {
-    // Kotlin BOM
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom:2.4.10"))
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib")
+    // Kotlin BOM & Libraries
+    implementation(platform(libs.kotlin.bom))
+    implementation(libs.kotlin.reflect)
+    implementation(libs.kotlin.stdlib)
 
     // Other libs
-    implementation("net.bytebuddy:byte-buddy:1.18.13")
-    implementation("org.greenrobot:eventbus-java:3.3.1")
-    implementation("com.ibm.icu:icu4j:78.3")
+    implementation(libs.bytebuddy)
+    implementation(libs.eventbus)
+    implementation(libs.icu4j)
 
-    // Kotest BOM
-    testImplementation(platform("io.kotest:kotest-bom:6.2.5"))
-    testImplementation("io.kotest:kotest-runner-junit5")
-    testImplementation("io.kotest:kotest-assertions-core")
-    testImplementation("io.kotest:kotest-property")
+    // Kotest BOM & Bundle
+    testImplementation(platform(libs.kotest.bom))
+    testImplementation(libs.bundles.kotest)
 
     // Other test libs
-    testImplementation("io.mockk:mockk:1.14.11")
+    testImplementation(libs.mockk)
 }
 
 java {

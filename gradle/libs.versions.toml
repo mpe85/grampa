@@ -1,0 +1,43 @@
+[versions]
+bytebuddy = "1.18.13"
+detekt = "1.23.8"
+dokka = "2.2.0"
+eventbus = "3.3.1"
+icu4j = "78.3"
+kotest = "6.2.5"
+kotlin = "2.4.10"
+kover = "0.9.9"
+ktfmt = "0.27.0"
+maven-publish = "0.37.0"
+mockk = "1.14.11"
+
+[libraries]
+bytebuddy = { module = "net.bytebuddy:byte-buddy", version.ref = "bytebuddy" }
+eventbus = { module = "org.greenrobot:eventbus-java", version.ref = "eventbus" }
+icu4j = { module = "com.ibm.icu:icu4j", version.ref = "icu4j" }
+
+kotest-bom = { module = "io.kotest:kotest-bom", version.ref = "kotest" }
+kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5" }
+kotest-assertions-core = { module = "io.kotest:kotest-assertions-core" }
+kotest-property = { module = "io.kotest:kotest-property" }
+
+kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect" }
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib" }
+
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+
+[bundles]
+kotest = [
+    "kotest-runner-junit5",
+    "kotest-assertions-core",
+    "kotest-property"
+]
+
+[plugins]
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+ktfmt = { id = "com.ncorti.ktfmt.gradle", version.ref = "ktfmt" }
+maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish" }
