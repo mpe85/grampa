@@ -4,7 +4,7 @@ import com.github.mpe85.grampa.parser.Parser
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
-import io.kotest.property.arbitrary.stringPattern
+import io.kotest.property.arbitrary.pattern
 import io.kotest.property.checkAll
 
 class RegexRuleTests :
@@ -21,7 +21,7 @@ class RegexRuleTests :
             )
         "Regex rule matches correct pattern" {
             patterns.forEach { pattern ->
-                checkAll(Arb.stringPattern(pattern)) { str ->
+                checkAll(Arb.pattern(pattern)) { str ->
                     Parser(
                             object : AbstractGrammar<Unit>(), ValidGrammar {
                                 override fun start() = pattern.toRegexRule()
