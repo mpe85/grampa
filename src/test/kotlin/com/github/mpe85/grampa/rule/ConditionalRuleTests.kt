@@ -24,14 +24,17 @@ class ConditionalRuleTests :
             rule1.hashCode() shouldBe rule2.hashCode()
             rule1.hashCode() shouldNotBe rule3.hashCode()
             rule1.toString() shouldBe
-                "ConditionalRule(condition=(com.github.mpe85.grampa.context.RuleContext<kotlin.String>) -> kotlin.Boolean, " +
-                    "thenRule=EmptyRule, elseRule=NeverRule)"
+                "ConditionalRule(condition=" +
+                    "(com.github.mpe85.grampa.context.RuleContext<kotlin.String>) " +
+                    "-> kotlin.Boolean, thenRule=EmptyRule, elseRule=NeverRule)"
             rule2.toString() shouldBe
-                "ConditionalRule(condition=(com.github.mpe85.grampa.context.RuleContext<kotlin.String>) -> kotlin.Boolean, " +
-                    "thenRule=EmptyRule, elseRule=NeverRule)"
+                "ConditionalRule(condition=" +
+                    "(com.github.mpe85.grampa.context.RuleContext<kotlin.String>) " +
+                    "-> kotlin.Boolean, thenRule=EmptyRule, elseRule=NeverRule)"
             rule3.toString() shouldBe
-                "ConditionalRule(condition=(com.github.mpe85.grampa.context.RuleContext<kotlin.String>) -> kotlin.Boolean, " +
-                    "thenRule=EmptyRule, elseRule=null)"
+                "ConditionalRule(condition=" +
+                    "(com.github.mpe85.grampa.context.RuleContext<kotlin.String>) " +
+                    "-> kotlin.Boolean, thenRule=EmptyRule, elseRule=null)"
         }
         "Rule match" {
             val ctx =
