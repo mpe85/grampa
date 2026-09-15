@@ -1,5 +1,5 @@
 [versions]
-bytebuddy = "1.18.13"
+bytebuddy = "1.18.14-jdk5"
 detekt = "1.23.8"
 dokka = "2.2.0"
 eventbus = "3.3.1"
