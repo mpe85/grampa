@@ -22,7 +22,7 @@ jobs:
       - uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '25.0.4+101.0.LTS'
       - run: ./gradlew build
       - uses: codecov/codecov-action@v7
         with:
