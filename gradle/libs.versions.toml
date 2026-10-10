@@ -1,6 +1,6 @@
 [versions]
 bytebuddy = "1.18.14"
-detekt = "1.23.8"
+detekt = "2.0.0-alpha.6"
 dokka = "2.2.0"
 eventbus = "3.3.1"
 icu4j = "78.3"
@@ -35,7 +35,7 @@ kotest = [
 ]
 
 [plugins]
-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+detekt = { id = "dev.detekt", version.ref = "detekt" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
