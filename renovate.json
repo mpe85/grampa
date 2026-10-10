@@ -1,6 +1,20 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "config:recommended",
+    "group:kotlinMonorepo"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "(^|/)kotlinc\\.xml$"
+      ],
+      "matchStrings": [
+        "<option name=\"version\" value=\"(?<currentValue>[^\"]+)\"\\s*/>"
+      ],
+      "depNameTemplate": "org.jetbrains.kotlin:kotlin-stdlib",
+      "datasourceTemplate": "maven"
+    }
   ]
 }
