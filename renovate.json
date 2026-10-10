@@ -16,5 +16,14 @@
       "depNameTemplate": "org.jetbrains.kotlin:kotlin-stdlib",
       "datasourceTemplate": "maven"
     }
+  ],
+  "packageRules": [
+    {
+      "matchPackagePrefixes": [
+        "org.jetbrains.kotlin",
+        "kotlin-"
+      ],
+      "groupName": "Kotlin monorepo"
+    }
   ]
 }
