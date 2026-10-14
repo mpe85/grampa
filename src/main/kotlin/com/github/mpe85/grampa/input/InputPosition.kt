@@ -1,6 +1,5 @@
 package com.github.mpe85.grampa.input
 
-import com.github.mpe85.grampa.input.InputPosition.Companion.EOI
 import com.github.mpe85.grampa.util.stringify
 
 /**

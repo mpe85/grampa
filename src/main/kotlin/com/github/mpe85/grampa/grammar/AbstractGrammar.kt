@@ -24,7 +24,6 @@ import com.github.mpe85.grampa.rule.TestRule
 import com.github.mpe85.grampa.rule.TrieRule
 import com.github.mpe85.grampa.rule.toAction
 import com.github.mpe85.grampa.util.UnboundedRange
-import com.github.mpe85.grampa.util.max
 import com.ibm.icu.lang.UCharacter
 import kotlin.streams.toList
 

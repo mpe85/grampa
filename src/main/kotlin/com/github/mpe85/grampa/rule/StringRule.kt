@@ -15,11 +15,9 @@ import java.util.Objects.hash
 internal class StringRule<T>(private val string: String) : AbstractRule<T>() {
 
     override fun match(context: ParserContext<T>): Boolean {
-        if (context.numberOfCharsLeft >= string.length) {
-            return string == context.restOfInput.substring(0, string.length) &&
-                context.advanceIndex(string.length)
-        }
-        return false
+        return context.numberOfCharsLeft >= string.length &&
+            string == context.restOfInput.substring(0, string.length) &&
+            context.advanceIndex(string.length)
     }
 
     override fun hashCode(): Int = hash(super.hashCode(), string)
