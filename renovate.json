@@ -24,6 +24,13 @@
         "kotlin-"
       ],
       "groupName": "Kotlin monorepo"
+    },
+    {
+      "matchPackageNames": [
+        "net.bytebuddy:byte-buddy",
+        "net.bytebuddy:byte-buddy-agent"
+      ],
+      "allowedVersions": "!/.*-jdk5$/"
     }
   ]
 }
