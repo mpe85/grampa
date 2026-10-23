@@ -1,5 +1,5 @@
 [versions]
-bytebuddy = "1.18.14"
+bytebuddy = "1.18.15"
 detekt = "2.0.0-alpha.6"
 dokka = "2.2.0"
 eventbus = "3.3.1"
