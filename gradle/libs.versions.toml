@@ -9,7 +9,7 @@ kotlin = "2.4.21"
 kover = "0.9.11"
 ktfmt = "0.27.0"
 maven-publish = "0.37.0"
-mockk = "1.14.11"
+mockk = "1.14.12"
 
 [libraries]
 bytebuddy = { module = "net.bytebuddy:byte-buddy", version.ref = "bytebuddy" }
