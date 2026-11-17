@@ -9,36 +9,38 @@ import io.kotest.property.arbitrary.string
 import io.kotest.property.checkAll
 
 class EmptyRuleTests :
-    StringSpec({
-        "Empty rule matches non-empty input" {
-            Parser(
-                    object : AbstractGrammar<Unit>(), ValidGrammar {
-                        override fun start() = empty()
-                    }
-                )
-                .apply {
-                    checkAll(Arb.string(1, 10, legalCodePoints())) { str ->
-                        run(str).apply {
-                            matched shouldBe true
-                            matchedEntireInput shouldBe false
-                            matchedInput shouldBe ""
-                            restOfInput shouldBe str
+    StringSpec(
+        {
+            "Empty rule matches non-empty input" {
+                Parser(
+                        object : AbstractGrammar<Unit>(), ValidGrammar {
+                            override fun start() = empty()
+                        },
+                    )
+                    .apply {
+                        checkAll(Arb.string(1, 10, legalCodePoints())) { str ->
+                            run(str).apply {
+                                matched shouldBe true
+                                matchedEntireInput shouldBe false
+                                matchedInput shouldBe ""
+                                restOfInput shouldBe str
+                            }
                         }
                     }
-                }
-        }
-        "Empty rule matches empty input" {
-            Parser(
-                    object : AbstractGrammar<Unit>(), ValidGrammar {
-                        override fun start() = empty()
+            }
+            "Empty rule matches empty input" {
+                Parser(
+                        object : AbstractGrammar<Unit>(), ValidGrammar {
+                            override fun start() = empty()
+                        },
+                    )
+                    .run("")
+                    .apply {
+                        matched shouldBe true
+                        matchedEntireInput shouldBe true
+                        matchedInput shouldBe ""
+                        restOfInput shouldBe ""
                     }
-                )
-                .run("")
-                .apply {
-                    matched shouldBe true
-                    matchedEntireInput shouldBe true
-                    matchedInput shouldBe ""
-                    restOfInput shouldBe ""
-                }
-        }
-    })
+            }
+        },
+    )

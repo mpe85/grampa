@@ -8,30 +8,35 @@ import io.mockk.every
 import io.mockk.mockk
 
 class CharPredicateRuleTests :
-    StringSpec({
-        "equals/hashCode/ToString" {
-            val predicate: (Char) -> Boolean = @JvmSerializableLambda { it == 'a' }
-            val rule1 = CharPredicateRule<String>(predicate)
-            val rule2 = CharPredicateRule<String>(predicate)
-            val rule3 = CharPredicateRule<String> @JvmSerializableLambda { it == 'b' }
+    StringSpec(
+        {
+            "equals/hashCode/ToString" {
+                val predicate: (Char) -> Boolean = @JvmSerializableLambda { it == 'a' }
+                val rule1 = CharPredicateRule<String>(predicate)
+                val rule2 = CharPredicateRule<String>(predicate)
+                val rule3 = CharPredicateRule<String> @JvmSerializableLambda { it == 'b' }
 
-            rule1 shouldBe rule2
-            rule1 shouldNotBe rule3
-            rule1 shouldNotBe Any()
-            rule1.hashCode() shouldBe rule2.hashCode()
-            rule1.hashCode() shouldNotBe rule3.hashCode()
-            rule1.toString() shouldBe "CharPredicateRule(predicate=(kotlin.Char) -> kotlin.Boolean)"
-            rule2.toString() shouldBe "CharPredicateRule(predicate=(kotlin.Char) -> kotlin.Boolean)"
-            rule3.toString() shouldBe "CharPredicateRule(predicate=(kotlin.Char) -> kotlin.Boolean)"
-        }
-        "Rule match" {
-            val ctx =
-                mockk<ParserContext<String>> {
-                    every { atEndOfInput } returns false
-                    every { currentChar } returns 'a'
-                    every { advanceIndex(1) } returns true
-                }
-            CharPredicateRule<String>('a').match(ctx) shouldBe true
-            CharPredicateRule<String>('b').match(ctx) shouldBe false
-        }
-    })
+                rule1 shouldBe rule2
+                rule1 shouldNotBe rule3
+                rule1 shouldNotBe Any()
+                rule1.hashCode() shouldBe rule2.hashCode()
+                rule1.hashCode() shouldNotBe rule3.hashCode()
+                rule1.toString() shouldBe
+                    "CharPredicateRule(predicate=(kotlin.Char) -> kotlin.Boolean)"
+                rule2.toString() shouldBe
+                    "CharPredicateRule(predicate=(kotlin.Char) -> kotlin.Boolean)"
+                rule3.toString() shouldBe
+                    "CharPredicateRule(predicate=(kotlin.Char) -> kotlin.Boolean)"
+            }
+            "Rule match" {
+                val ctx =
+                    mockk<ParserContext<String>> {
+                        every { atEndOfInput } returns false
+                        every { currentChar } returns 'a'
+                        every { advanceIndex(1) } returns true
+                    }
+                CharPredicateRule<String>('a').match(ctx) shouldBe true
+                CharPredicateRule<String>('b').match(ctx) shouldBe false
+            }
+        },
+    )

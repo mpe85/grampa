@@ -57,7 +57,7 @@ public fun <U : Grammar<T>, T> KClass<U>.createGrammar(vararg args: Any?): U =
         .map { runCatching { it.call(*args) } }
         .firstNotNullOfOrNull { it.getOrNull() }
         ?: throw IllegalArgumentException(
-            "Failed to find a constructor that is callable with the given arguments."
+            "Failed to find a constructor that is callable with the given arguments.",
         )
 
 /**

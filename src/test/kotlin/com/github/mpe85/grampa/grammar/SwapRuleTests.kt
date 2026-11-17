@@ -7,42 +7,44 @@ import io.kotest.matchers.shouldBe
 import io.kotest.property.checkAll
 
 class SwapRuleTests :
-    StringSpec({
-        "Swap rule swaps values on parser stack" {
-            checkAll<Int, Int> { int1, int2 ->
-                Parser(
-                        object : AbstractGrammar<Int>(), ValidGrammar {
-                            override fun start() = push(int1) + push(int2) + swap()
+    StringSpec(
+        {
+            "Swap rule swaps values on parser stack" {
+                checkAll<Int, Int> { int1, int2 ->
+                    Parser(
+                            object : AbstractGrammar<Int>(), ValidGrammar {
+                                override fun start() = push(int1) + push(int2) + swap()
+                            },
+                        )
+                        .run("")
+                        .apply {
+                            matched shouldBe true
+                            matchedEntireInput shouldBe true
+                            matchedInput shouldBe ""
+                            restOfInput shouldBe ""
+                            stackTop shouldBe int1
+                            stack.size shouldBe 2
+                            stack.peek(1) shouldBe int2
                         }
-                    )
-                    .run("")
-                    .apply {
-                        matched shouldBe true
-                        matchedEntireInput shouldBe true
-                        matchedInput shouldBe ""
-                        restOfInput shouldBe ""
-                        stackTop shouldBe int1
-                        stack.size shouldBe 2
-                        stack.peek(1) shouldBe int2
-                    }
+                }
             }
-        }
-        "Swap rule throws IndexOutOfBoundsException when stack is empty" {
-            Parser(
-                    object : AbstractGrammar<Unit>(), ValidGrammar {
-                        override fun start() = swap()
-                    }
-                )
-                .apply { shouldThrow<IndexOutOfBoundsException> { run("") } }
-        }
-        "Swap rule throws IndexOutOfBoundsException when stack has one element only" {
-            checkAll<Int> { int ->
+            "Swap rule throws IndexOutOfBoundsException when stack is empty" {
                 Parser(
-                        object : AbstractGrammar<Int>(), ValidGrammar {
-                            override fun start() = push(int) + swap()
-                        }
+                        object : AbstractGrammar<Unit>(), ValidGrammar {
+                            override fun start() = swap()
+                        },
                     )
                     .apply { shouldThrow<IndexOutOfBoundsException> { run("") } }
             }
-        }
-    })
+            "Swap rule throws IndexOutOfBoundsException when stack has one element only" {
+                checkAll<Int> { int ->
+                    Parser(
+                            object : AbstractGrammar<Int>(), ValidGrammar {
+                                override fun start() = push(int) + swap()
+                            },
+                        )
+                        .apply { shouldThrow<IndexOutOfBoundsException> { run("") } }
+                }
+            }
+        },
+    )

@@ -46,6 +46,6 @@ internal open class CodePointPredicateRule<T>(private val predicate: (Int) -> Bo
  * @author mpe85
  */
 internal class IgnoreCaseCodePointRule<T>(codePoint: Int) :
-    CodePointPredicateRule<T>({
-        foldCase(toString(it), true) == foldCase(toString(codePoint), true)
-    })
+    CodePointPredicateRule<T>(
+        { foldCase(toString(it), true) == foldCase(toString(codePoint), true) },
+    )

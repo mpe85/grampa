@@ -6,46 +6,48 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 
 class SkippableCommandRuleTests :
-    StringSpec({
-        "SkippableCommand rule matches when command is executed" {
-            Parser(
-                    object : AbstractGrammar<Unit>(), ValidGrammar {
-                        override fun start() = skippableCommand {
-                            it.stack.push(Unit)
-                            it.level shouldBe 0
-                            it.position shouldNotBe null
-                        }
+    StringSpec(
+        {
+            "SkippableCommand rule matches when command is executed" {
+                Parser(
+                        object : AbstractGrammar<Unit>(), ValidGrammar {
+                            override fun start() = skippableCommand {
+                                it.stack.push(Unit)
+                                it.level shouldBe 0
+                                it.position shouldNotBe null
+                            }
+                        },
+                    )
+                    .run("")
+                    .apply {
+                        matched shouldBe true
+                        matchedEntireInput shouldBe true
+                        matchedInput shouldBe ""
+                        restOfInput shouldBe ""
+                        stackTop shouldBe Unit
                     }
-                )
-                .run("")
-                .apply {
-                    matched shouldBe true
-                    matchedEntireInput shouldBe true
-                    matchedInput shouldBe ""
-                    restOfInput shouldBe ""
-                    stackTop shouldBe Unit
-                }
-        }
-        "SkippableCommand rule is skipped when it is part of a Test rule" {
-            Parser(
-                    object : AbstractGrammar<Unit>(), ValidGrammar {
-                        override fun start() =
-                            test(
-                                skippableCommand {
-                                    it.stack.push(Unit)
-                                    it.level shouldBe 0
-                                    it.position shouldNotBe null
-                                }
-                            )
+            }
+            "SkippableCommand rule is skipped when it is part of a Test rule" {
+                Parser(
+                        object : AbstractGrammar<Unit>(), ValidGrammar {
+                            override fun start() =
+                                test(
+                                    skippableCommand {
+                                        it.stack.push(Unit)
+                                        it.level shouldBe 0
+                                        it.position shouldNotBe null
+                                    },
+                                )
+                        },
+                    )
+                    .run("")
+                    .apply {
+                        matched shouldBe true
+                        matchedEntireInput shouldBe true
+                        matchedInput shouldBe ""
+                        restOfInput shouldBe ""
+                        stackTop shouldBe null
                     }
-                )
-                .run("")
-                .apply {
-                    matched shouldBe true
-                    matchedEntireInput shouldBe true
-                    matchedInput shouldBe ""
-                    restOfInput shouldBe ""
-                    stackTop shouldBe null
-                }
-        }
-    })
+            }
+        },
+    )
