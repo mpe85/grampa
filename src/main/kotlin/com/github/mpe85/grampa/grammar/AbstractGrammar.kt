@@ -783,7 +783,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @return The created grammar rule
      */
     protected open fun ((RuleContext<T>) -> Boolean).toActionRule(
-        skippable: Boolean = false
+        skippable: Boolean = false,
     ): Rule<T> = ActionRule(this, skippable)
 
     /**
@@ -819,7 +819,7 @@ public abstract class AbstractGrammar<T> : Grammar<T> {
      * @return The created grammar rule
      */
     protected open fun ((RuleContext<T>) -> Unit).toCommandRule(
-        skippable: Boolean = false
+        skippable: Boolean = false,
     ): Rule<T> = ActionRule(toAction(), skippable)
 
     /**

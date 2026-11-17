@@ -6,91 +6,93 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 
 class SkippableActionRuleTests :
-    StringSpec({
-        "SkippableAction rule matches when action succeeds" {
-            Parser(
-                    object : AbstractGrammar<Unit>(), ValidGrammar {
-                        override fun start() = skippableAction {
-                            it.stack.push(Unit)
-                            it.level shouldBe 0
-                            it.position shouldNotBe null
-                            true
-                        }
+    StringSpec(
+        {
+            "SkippableAction rule matches when action succeeds" {
+                Parser(
+                        object : AbstractGrammar<Unit>(), ValidGrammar {
+                            override fun start() = skippableAction {
+                                it.stack.push(Unit)
+                                it.level shouldBe 0
+                                it.position shouldNotBe null
+                                true
+                            }
+                        },
+                    )
+                    .run("")
+                    .apply {
+                        matched shouldBe true
+                        matchedEntireInput shouldBe true
+                        matchedInput shouldBe ""
+                        restOfInput shouldBe ""
+                        stackTop shouldBe Unit
                     }
-                )
-                .run("")
-                .apply {
-                    matched shouldBe true
-                    matchedEntireInput shouldBe true
-                    matchedInput shouldBe ""
-                    restOfInput shouldBe ""
-                    stackTop shouldBe Unit
-                }
-        }
-        "SkippableAction rule does not match when action fails" {
-            Parser(
-                    object : AbstractGrammar<Unit>(), ValidGrammar {
-                        override fun start() = action {
-                            it.stack.push(Unit)
-                            it.level shouldBe 0
-                            it.position shouldNotBe null
-                            false
-                        }
+            }
+            "SkippableAction rule does not match when action fails" {
+                Parser(
+                        object : AbstractGrammar<Unit>(), ValidGrammar {
+                            override fun start() = action {
+                                it.stack.push(Unit)
+                                it.level shouldBe 0
+                                it.position shouldNotBe null
+                                false
+                            }
+                        },
+                    )
+                    .run("")
+                    .apply {
+                        matched shouldBe false
+                        matchedEntireInput shouldBe false
+                        matchedInput shouldBe null
+                        restOfInput shouldBe ""
+                        stackTop shouldBe null
                     }
-                )
-                .run("")
-                .apply {
-                    matched shouldBe false
-                    matchedEntireInput shouldBe false
-                    matchedInput shouldBe null
-                    restOfInput shouldBe ""
-                    stackTop shouldBe null
-                }
-        }
-        "SkippableAction rule with succeeding action is skipped when it is part of a Test rule" {
-            Parser(
-                    object : AbstractGrammar<Unit>(), ValidGrammar {
-                        override fun start() =
-                            test(
-                                skippableAction {
-                                    it.stack.push(Unit)
-                                    it.level shouldBe 0
-                                    it.position shouldNotBe null
-                                    true
-                                }
-                            )
+            }
+            "SkippableAction rule with succeeding action is skipped when it is part of a Test rule" {
+                Parser(
+                        object : AbstractGrammar<Unit>(), ValidGrammar {
+                            override fun start() =
+                                test(
+                                    skippableAction {
+                                        it.stack.push(Unit)
+                                        it.level shouldBe 0
+                                        it.position shouldNotBe null
+                                        true
+                                    },
+                                )
+                        },
+                    )
+                    .run("")
+                    .apply {
+                        matched shouldBe true
+                        matchedEntireInput shouldBe true
+                        matchedInput shouldBe ""
+                        restOfInput shouldBe ""
+                        stackTop shouldBe null
                     }
-                )
-                .run("")
-                .apply {
-                    matched shouldBe true
-                    matchedEntireInput shouldBe true
-                    matchedInput shouldBe ""
-                    restOfInput shouldBe ""
-                    stackTop shouldBe null
-                }
-        }
-        "SkippableAction rule with failing action is skipped when it is part of a Test rule" {
-            Parser(
-                    object : AbstractGrammar<Unit>(), ValidGrammar {
-                        override fun start() =
-                            test(
-                                skippableAction {
-                                    it.stack.push(Unit)
-                                    it.level shouldBe 0
-                                    it.position shouldNotBe null
-                                    false
-                                }
-                            )
+            }
+            "SkippableAction rule with failing action is skipped when it is part of a Test rule" {
+                Parser(
+                        object : AbstractGrammar<Unit>(), ValidGrammar {
+                            override fun start() =
+                                test(
+                                    skippableAction {
+                                        it.stack.push(Unit)
+                                        it.level shouldBe 0
+                                        it.position shouldNotBe null
+                                        false
+                                    },
+                                )
+                        },
+                    )
+                    .run("")
+                    .apply {
+                        matched shouldBe true
+                        matchedEntireInput shouldBe true
+                        matchedInput shouldBe ""
+                        restOfInput shouldBe ""
+                        stackTop shouldBe null
                     }
-                )
-                .run("")
-                .apply {
-                    matched shouldBe true
-                    matchedEntireInput shouldBe true
-                    matchedInput shouldBe ""
-                    restOfInput shouldBe ""
-                    stackTop shouldBe null
-                }
-        }
-    })
+            }
+        },
+    )

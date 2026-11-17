@@ -114,7 +114,7 @@ tasks {
             toolchains.launcherFor {
                 languageVersion.set(baseLang)
                 vendor.set(baseVendor)
-            }
+            },
         )
     }
     named("check") { dependsOn(testJdks.filter { it != baseJdk }.map { "testOn$it" }) }
@@ -134,7 +134,7 @@ testJdks
                 toolchains.launcherFor {
                     languageVersion.set(JavaLanguageVersion.of(v))
                     vendor.set(baseVendor)
-                }
+                },
             )
             shouldRunAfter(baseTest)
         }
@@ -176,6 +176,6 @@ mavenPublishing {
         KotlinJvm(
             javadocJar = JavadocJar.Dokka("dokkaGeneratePublicationHtml"),
             sourcesJar = SourcesJar.Sources(),
-        )
+        ),
     )
 }

@@ -44,67 +44,71 @@ open class TestGrammar(val dummy: String?) : AbstractGrammar<String>() {
 }
 
 class GrampaTests :
-    StringSpec({
-        "Create grammar" {
-            TestGrammar::class.createGrammar().apply {
-                dummy shouldBe null
-                verifyRules()
-                shouldBeInstanceOf<ValidGrammar>()
+    StringSpec(
+        {
+            "Create grammar" {
+                TestGrammar::class.createGrammar().apply {
+                    dummy shouldBe null
+                    verifyRules()
+                    shouldBeInstanceOf<ValidGrammar>()
+                }
+                TestGrammar::class.createGrammar("foo").apply {
+                    dummy shouldBe "foo"
+                    verifyRules()
+                    shouldBeInstanceOf<ValidGrammar>()
+                }
+                shouldThrow<IllegalArgumentException> { TestGrammar::class.createGrammar(4711) }
+                shouldThrow<IllegalArgumentException> {
+                    TestGrammar::class.createGrammar("foo", "bar")
+                }
             }
-            TestGrammar::class.createGrammar("foo").apply {
-                dummy shouldBe "foo"
-                verifyRules()
-                shouldBeInstanceOf<ValidGrammar>()
-            }
-            shouldThrow<IllegalArgumentException> { TestGrammar::class.createGrammar(4711) }
-            shouldThrow<IllegalArgumentException> { TestGrammar::class.createGrammar("foo", "bar") }
-        }
-        "Non-overridable rule method" {
-            open class InvalidGrammar : AbstractGrammar<String>() {
-                override fun start() = expr('a')
+            "Non-overridable rule method" {
+                open class InvalidGrammar : AbstractGrammar<String>() {
+                    override fun start() = expr('a')
 
-                @Suppress("SameParameterValue") private fun expr(c: Char) = char(c)
+                    @Suppress("SameParameterValue") private fun expr(c: Char) = char(c)
+                }
+                shouldThrow<IllegalArgumentException> { InvalidGrammar::class.createGrammar() }
             }
-            shouldThrow<IllegalArgumentException> { InvalidGrammar::class.createGrammar() }
-        }
-        "No no-arg constructor grammar" {
-            open class NoDefaultCtorTestGrammar(dummy: String) : TestGrammar(dummy)
-            shouldThrow<IllegalArgumentException> {
-                NoDefaultCtorTestGrammar::class.createGrammar()
+            "No no-arg constructor grammar" {
+                open class NoDefaultCtorTestGrammar(dummy: String) : TestGrammar(dummy)
+                shouldThrow<IllegalArgumentException> {
+                    NoDefaultCtorTestGrammar::class.createGrammar()
+                }
             }
-        }
-        "Final rule method grammar" {
-            class FinalRuleMethodTestGrammar : TestGrammar() {
-                override fun noop() = empty()
+            "Final rule method grammar" {
+                class FinalRuleMethodTestGrammar : TestGrammar() {
+                    override fun noop() = empty()
+                }
+                shouldThrow<IllegalArgumentException> {
+                    FinalRuleMethodTestGrammar::class.createGrammar()
+                }
             }
-            shouldThrow<IllegalArgumentException> {
-                FinalRuleMethodTestGrammar::class.createGrammar()
-            }
-        }
-        "Grammar inheritance" {
-            open class SuperGrammar : TestGrammar() {
-                override fun start(): Rule<String> = sequence(char('a'), start())
+            "Grammar inheritance" {
+                open class SuperGrammar : TestGrammar() {
+                    override fun start(): Rule<String> = sequence(char('a'), start())
 
-                override fun verifyRules() =
-                    start().apply {
-                        shouldBeInstanceOf<SequenceRule<String>>()
-                        children.size shouldBe 2
-                        children[0].shouldBeInstanceOf<CharPredicateRule<String>>()
-                        children[1].shouldBeInstanceOf<SequenceRule<String>>()
-                        children[1] shouldBe this
-                    }
-            }
+                    override fun verifyRules() =
+                        start().apply {
+                            shouldBeInstanceOf<SequenceRule<String>>()
+                            children.size shouldBe 2
+                            children[0].shouldBeInstanceOf<CharPredicateRule<String>>()
+                            children[1].shouldBeInstanceOf<SequenceRule<String>>()
+                            children[1] shouldBe this
+                        }
+                }
 
-            open class SubGrammar : SuperGrammar() {
-                override fun start() = super.start().also { it.toString() }
+                open class SubGrammar : SuperGrammar() {
+                    override fun start() = super.start().also { it.toString() }
+                }
+                SuperGrammar::class.createGrammar().apply {
+                    verifyRules()
+                    shouldBeInstanceOf<ValidGrammar>()
+                }
+                SubGrammar::class.createGrammar().apply {
+                    verifyRules()
+                    shouldBeInstanceOf<ValidGrammar>()
+                }
             }
-            SuperGrammar::class.createGrammar().apply {
-                verifyRules()
-                shouldBeInstanceOf<ValidGrammar>()
-            }
-            SubGrammar::class.createGrammar().apply {
-                verifyRules()
-                shouldBeInstanceOf<ValidGrammar>()
-            }
-        }
-    })
+        },
+    )

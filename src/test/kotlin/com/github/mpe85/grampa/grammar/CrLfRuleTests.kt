@@ -9,50 +9,52 @@ import io.kotest.property.arbitrary.string
 import io.kotest.property.checkAll
 
 class CrLfRuleTests :
-    StringSpec({
-        "CRLF rule matches CRLF character" {
-            Parser(
-                    object : AbstractGrammar<Unit>(), ValidGrammar {
-                        override fun start() = crlf()
+    StringSpec(
+        {
+            "CRLF rule matches CRLF character" {
+                Parser(
+                        object : AbstractGrammar<Unit>(), ValidGrammar {
+                            override fun start() = crlf()
+                        },
+                    )
+                    .run("\r\n")
+                    .apply {
+                        matched shouldBe true
+                        matchedEntireInput shouldBe true
+                        matchedInput shouldBe "\r\n"
+                        restOfInput shouldBe ""
                     }
-                )
-                .run("\r\n")
-                .apply {
-                    matched shouldBe true
-                    matchedEntireInput shouldBe true
-                    matchedInput shouldBe "\r\n"
-                    restOfInput shouldBe ""
-                }
-        }
-        "CRLF rule does not match non-CRLF strings" {
-            Parser(
-                    object : AbstractGrammar<Unit>(), ValidGrammar {
-                        override fun start() = crlf()
-                    }
-                )
-                .apply {
-                    checkAll(Arb.string().filterNot { it.startsWith("\r\n") }) { str ->
-                        run(str).apply {
-                            matched shouldBe false
-                            matchedEntireInput shouldBe false
-                            matchedInput shouldBe null
-                            restOfInput shouldBe str
+            }
+            "CRLF rule does not match non-CRLF strings" {
+                Parser(
+                        object : AbstractGrammar<Unit>(), ValidGrammar {
+                            override fun start() = crlf()
+                        },
+                    )
+                    .apply {
+                        checkAll(Arb.string().filterNot { it.startsWith("\r\n") }) { str ->
+                            run(str).apply {
+                                matched shouldBe false
+                                matchedEntireInput shouldBe false
+                                matchedInput shouldBe null
+                                restOfInput shouldBe str
+                            }
                         }
                     }
-                }
-        }
-        "CRLF rule does not match empty input" {
-            Parser(
-                    object : AbstractGrammar<Unit>(), ValidGrammar {
-                        override fun start() = crlf()
+            }
+            "CRLF rule does not match empty input" {
+                Parser(
+                        object : AbstractGrammar<Unit>(), ValidGrammar {
+                            override fun start() = crlf()
+                        },
+                    )
+                    .run("")
+                    .apply {
+                        matched shouldBe false
+                        matchedEntireInput shouldBe false
+                        matchedInput shouldBe null
+                        restOfInput shouldBe ""
                     }
-                )
-                .run("")
-                .apply {
-                    matched shouldBe false
-                    matchedEntireInput shouldBe false
-                    matchedInput shouldBe null
-                    restOfInput shouldBe ""
-                }
-        }
-    })
+            }
+        },
+    )
