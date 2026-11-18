@@ -91,21 +91,22 @@ class ConditionalRuleTests :
                         }
                 }
             }
-            "Conditional(then,else) rule does not match when condition evaluates to false and else rule does not match" {
-                checkAll(Codepoint.az()) { letter ->
-                    Parser(
-                            object : AbstractGrammar<Unit>(), ValidGrammar {
-                                override fun start() = conditional({ false }, letter(), digit())
-                            },
-                        )
-                        .run(toString(letter.value))
-                        .apply {
-                            matched shouldBe false
-                            matchedEntireInput shouldBe false
-                            matchedInput shouldBe null
-                            restOfInput shouldBe toString(letter.value)
-                        }
+            "Conditional(then,else) rule does not match when condition evaluates to false" +
+                "and else rule does not match" {
+                    checkAll(Codepoint.az()) { letter ->
+                        Parser(
+                                object : AbstractGrammar<Unit>(), ValidGrammar {
+                                    override fun start() = conditional({ false }, letter(), digit())
+                                },
+                            )
+                            .run(toString(letter.value))
+                            .apply {
+                                matched shouldBe false
+                                matchedEntireInput shouldBe false
+                                matchedInput shouldBe null
+                                restOfInput shouldBe toString(letter.value)
+                            }
+                    }
                 }
-            }
         },
     )
